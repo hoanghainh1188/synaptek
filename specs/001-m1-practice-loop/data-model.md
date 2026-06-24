@@ -30,11 +30,11 @@ File `content/questions/<topicId>.json` = mảng Question. Trường chính (sch
 
 ## B. Dữ liệu người dùng (Supabase — `0001_init.sql`, KHÔNG migration mới)
 
-| Bảng            | Dùng ở M1                                                                                          | RLS              |
-| --------------- | -------------------------------------------------------------------------------------------------- | ---------------- |
-| `profiles`      | hồ sơ HS (id, role=student, full_name, grade_level) — tạo tự động khi đăng ký                      | đọc/sửa của mình |
-| `attempts`      | mỗi lần trả lời: `student_id, question_id, skill_id, answer(jsonb), is_correct, score, created_at` | đọc/ghi của mình |
-| `skill_mastery` | M1 dùng tối giản: đếm `attempts_count` + suy ra số đúng theo skill (cột mastery để M2)             | đọc/ghi của mình |
+| Bảng            | Dùng ở M1                                                                                                   | RLS              |
+| --------------- | ----------------------------------------------------------------------------------------------------------- | ---------------- |
+| `profiles`      | hồ sơ HS (id, role=student, full_name, grade_level) — tạo tự động khi đăng ký                               | đọc/sửa của mình |
+| `attempts`      | mỗi lần trả lời: `student_id, question_id, skill_id, answer(jsonb), is_correct, score, created_at`          | đọc/ghi của mình |
+| `skill_mastery` | **M1 KHÔNG ghi** — tiến độ derive thuần từ `attempts` (T029); ghi `skill_mastery`/`mastery` dời sang **M2** | đọc/ghi của mình |
 
 > M1 **không** thêm bảng/migration. "Tiến độ theo chủ đề" được **gộp ở client** (`lib/progress.ts`) từ
 > `attempts` (+ map question→topic qua curriculum). Có thể tối ưu bằng view/materialized ở M2 nếu cần.

@@ -22,7 +22,7 @@ Monorepo: `packages/curriculum/` (TS thuần) · `apps/app/{lib,components,src/a
 - [ ] T002 Thêm deps M1 vào `apps/app/package.json` (`nativewind`, `tailwindcss`, `@supabase/supabase-js`, `@react-native-async-storage/async-storage`, `expo-secure-store`, `@tanstack/react-query`; dev: `@testing-library/react-native`, `vitest`) và chạy `npm install` từ root
 - [ ] T003 [P] Cấu hình NativeWind v4: `apps/app/tailwind.config.js`, cập nhật `apps/app/metro.config.js` + `babel.config.js` + `apps/app/src/global.css`
 - [ ] T004 [P] Tạo design tokens trong `apps/app/theme/tokens.ts` (màu theo mạch: Số=xanh dương, Hình học=cam, Đo lường=xanh lá; spacing, typography, duration, easing) — map sang tailwind theme
-- [ ] T005 [P] Cấu hình Vitest cho `apps/app` (`apps/app/vitest.config.ts`, alias `@`, inline `@synaptek/*`) và `packages/curriculum`
+- [ ] T005 [P] Cấu hình Vitest cho `apps/app` (`apps/app/vitest.config.ts`, alias `@`, inline `@synaptek/*`, **môi trường + preset `@testing-library/react-native` / jsdom cho component test**) và `packages/curriculum`
 
 **Checkpoint**: `npm install` xanh; `npm run web` mở được; tokens + NativeWind áp dụng.
 
@@ -52,7 +52,7 @@ Monorepo: `packages/curriculum/` (TS thuần) · `apps/app/{lib,components,src/a
 
 - [ ] T014 [P] [US1] Test session reducer trong `apps/app/lib/session.test.ts` (start→answer(gọi grade)→next→finish; bỏ trống→empty; tính SessionResult)
 - [ ] T015 [P] [US1] Snapshot test math render trong `apps/app/components/math/math.test.ts` (FractionView `1/2`, ExpressionView `x^2`)
-- [ ] T016 [P] [US1] E2E luồng luyện tập trong `apps/app/tests/e2e/practice.spec.ts` (chọn chủ đề → trả lời tương đương → Đúng tức thì → kết quả)
+- [ ] T016 [P] [US1] E2E luồng luyện tập trong `apps/app/tests/e2e/practice.spec.ts` (chọn chủ đề → trả lời tương đương → Đúng tức thì → kết quả; **assert phản hồi chấm < 200ms — SC-004**)
 
 ### Implementation
 
@@ -63,7 +63,7 @@ Monorepo: `packages/curriculum/` (TS thuần) · `apps/app/{lib,components,src/a
 - [ ] T021 [P] [US1] `apps/app/components/practice/QuestionCard.tsx` (hiển thị prompt qua math render + AnswerInput theo type)
 - [ ] T022 [P] [US1] `apps/app/components/practice/Feedback.tsx` (đúng/sai + giải thích, animation transform/opacity)
 - [ ] T023 [P] [US1] `apps/app/components/practice/SessionResult.tsx` (đúng/tổng, điểm, danh sách câu sai)
-- [ ] T024 [US1] Màn chọn chủ đề `apps/app/src/app/(student)/index.tsx` (liệt kê topic lớp 4 từ content loader)
+- [ ] T024 [US1] Màn chọn chủ đề `apps/app/src/app/(student)/index.tsx` (liệt kê topic lớp 4 từ content loader; **empty state** khi chủ đề chưa có câu hỏi)
 - [ ] T025 [US1] Route phiên `apps/app/src/app/(student)/practice/[topicId].tsx` (useReducer(session) + QuestionCard + Feedback) (depends T017–T022)
 - [ ] T026 [US1] Route kết quả `apps/app/src/app/(student)/result.tsx` (SessionResult) (depends T023)
 
@@ -88,7 +88,7 @@ Monorepo: `packages/curriculum/` (TS thuần) · `apps/app/{lib,components,src/a
 - [ ] T031 [US2] Màn đăng nhập/đăng ký `apps/app/src/app/(auth)/login.tsx` + `apps/app/components/auth/AuthForm.tsx` (depends T011)
 - [ ] T032 [US2] Nối lưu attempt vào phiên: khi đã đăng nhập, `answer()` → `useSaveAttempt` (optimistic) trong `practice/[topicId].tsx` (depends T030, T025)
 - [ ] T033 [US2] Màn tiến độ `apps/app/src/app/(student)/progress.tsx` (TopicProgress qua `useAttempts` + progress.ts) (depends T029, T030)
-- [ ] T034 [US2] Guest mode + nhắc đăng nhập để lưu; đẩy attempt tạm khi đăng nhập (trong `lib/supabase/attempts.ts` + practice route)
+- [ ] T034 [US2] Guest mode + nhắc đăng nhập để lưu; **hàng đợi attempt offline** (cả guest lẫn HS đã đăng nhập): lưu tạm khi mất mạng, **flush khi online / khi đăng nhập** (trong `lib/supabase/attempts.ts` + practice route)
 
 **Checkpoint**: US2 demo — đăng nhập, tiến độ bền vững (SC-003). Kiểm RLS qua Studio.
 
