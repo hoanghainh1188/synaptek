@@ -1,0 +1,9 @@
+node_modules/
+.expo/
+web-build/
+dist/
+build/
+coverage/
+playwright-report/
+test-results/
+*.tsbuildinfo

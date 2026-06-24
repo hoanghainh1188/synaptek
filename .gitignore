@@ -1,0 +1,26 @@
+node_modules/
+dist/
+build/
+.next/
+out/
+.expo/
+.env
+.env.local
+*.log
+.DS_Store
+.vscode/
+.idea/
+coverage/
+*.tsbuildinfo
+
+# Claude Code local/session settings (may hold auth artifacts — keep out of git)
+.claude/settings.local.json
+package-lock.json
+
+# Playwright
+playwright-report/
+test-results/
+
+# Expo / EAS
+.expo-shared/
+web-build/

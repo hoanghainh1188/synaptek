@@ -1,0 +1,68 @@
+# CLAUDE.md
+
+Hướng dẫn cho Claude Code khi làm việc trong repo này.
+
+## Đây là gì
+
+**Synaptek** (*synapse* + *tek*) là nền tảng học & luyện tập giúp học sinh Việt Nam **thôi sợ và chinh
+phục môn học**, khởi đầu với **Toán Tiểu học (lớp 1–5)**. Phần khó & khác biệt ("moat") là **bộ chấm
+tương đương** — học sinh nhập `0,5` hay `2/4` hay `2(x+2)` đều được chấm đúng, kèm lộ trình khắc phục
+điểm yếu. Phần còn lại (nội dung, tiến độ, lớp học) chủ yếu là CRUD + content.
+
+Vai trò: **học sinh / giáo viên / phụ huynh**. Cross-platform: **web ra trước, native (iOS/Android)
+sau**, một codebase Expo. Mở rộng sau: THCS/THPT, môn khác (Lý/Hóa/Anh).
+
+Docs & comment viết **tiếng Việt** — giữ đúng ngôn ngữ khi sửa prose có sẵn; định danh code **tiếng Anh**.
+
+## Lệnh
+
+```bash
+npm test            # test toàn bộ packages (hiện tại: grading-engine, 19/19). Không cần mạng/thiết bị.
+npm run format      # prettier --write .
+npm run format:check
+```
+
+- Node **≥ 22** (`.nvmrc` → `22`). Package lõi ship & test ở dạng raw `.ts` qua
+  `node --experimental-strip-types` — **không có build step / bundler**.
+- Monorepo npm workspaces: `packages/*` (TS thuần) + `apps/*` (app Expo, sẽ thêm). Husky pre-commit
+  tự format/lint staged files.
+
+## Kiến trúc — đọc trước khi thêm code
+
+Toàn bộ rationale ở `docs/00-architecture.md` §0 (Decision Log D1–D10). Bốn điều cốt lõi:
+
+1. **Logic nghiệp vụ = package TS thuần** (`packages/grading-engine`, sắp tới `curriculum`,
+   `learning-path`). Không import DOM/React/Node-only → test được không cần render, tái dùng across
+   client + Edge Function + native. (D2)
+2. **Ranh giới repo (D5):** phụ thuộc một chiều `apps/*` & `supabase/functions/*` → `packages/*`;
+   package không biết về app; không app nào import app khác; **dùng lại bằng tên package, không copy**;
+   chỉ tách package mới ở consumer **thứ 2**.
+3. **Backend = Supabase BaaS + Edge Functions (D3/D4).** Không có server riêng. CRUD/RLS qua Supabase;
+   logic đáng tin cậy (**chấm chính thức, ẩn đáp án, cấp quyền, job nền**) chạy ở Edge Function và
+   **import lại `@synaptek/grading-engine`** — client chỉ chạy engine cho phản hồi tức thì (low-stakes).
+4. **Nội dung = JSON versioned trong `content/` (D6).** Curriculum + ngân hàng câu hỏi là ground-truth,
+   review qua git; DB chỉ tham chiếu `id`. Với ngữ cảnh có điểm, Edge Function trả đề **không kèm đáp án**.
+
+## Bộ chấm bài (lõi)
+
+File đơn: `packages/grading-engine/src/grading-engine.ts`. Hàm `grade(input) → { isCorrect, score,
+feedbackCode, normalized }`. Hỗ trợ: `mcq` · `true-false` · `numeric` · `fraction` · `expression` ·
+`fill-blank`. Điểm thiết kế: chuẩn hóa số kiểu VN (phẩy = thập phân — D8); tương đương biểu thức qua
+**lấy mẫu giá trị x** (D9, không phải CAS). Sửa engine → chạy lại `npm test` và cập nhật test trước (TDD).
+
+## Quy trình làm việc (mặc định)
+
+Theo Spec Kit (`.specify/` + `specs/NNN-*`). Với mỗi task không-tầm-thường, như một senior engineer:
+**(1)** đọc spec/Decision Log liên quan; **(2)** làm rõ điểm mơ hồ & nêu trade-off *trước khi* code
+(dùng AskUserQuestion); **(3)** với UI bám design tokens + design-quality (anti-template); **(4)** code
+kèm test — **ưu tiên unit test** cho logic thuần, thêm Playwright e2e cho luồng chính; **(5)** branch →
+conventional commit → push → PR, CI xanh (format → lint → test → build → e2e); **(6) close-out:** cập
+nhật `docs/WORKING-NOTES.md` (điểm tiếp tục) + Decision Log/spec/file liên quan **trong cùng PR**.
+
+## Working norms
+
+- **`docs/WORKING-NOTES.md` là điểm tiếp tục** — đọc đầu phiên, cập nhật trước khi dừng.
+- Quyết định không hiển nhiên → thêm/cập nhật một dòng trong **Decision Log** (`docs/00-architecture.md` §0).
+- Roadmap **milestone-gated, không theo ngày** (`docs/02-roadmap.md`): M0 scaffolding → M1 vòng luyện
+  tập → M2 mastery/lộ trình → M3 giáo viên → M4 phụ huynh/nội dung → M5 native. Giữ mọi thay đổi ở
+  trạng thái chạy được.

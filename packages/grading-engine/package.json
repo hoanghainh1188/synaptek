@@ -1,0 +1,11 @@
+{
+  "name": "@synaptek/grading-engine",
+  "version": "0.1.0",
+  "description": "Bộ chấm bài — TS thuần, zero-dep, độc lập nền tảng. Chuẩn hóa & chấm tương đương đáp án (chạy được cả client lẫn Edge Function).",
+  "type": "module",
+  "main": "src/grading-engine.ts",
+  "scripts": {
+    "test": "node --experimental-strip-types --no-warnings tests/grading-engine.test.ts"
+  },
+  "license": "UNLICENSED"
+}
