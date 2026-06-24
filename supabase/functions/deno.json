@@ -1,0 +1,5 @@
+{
+  "imports": {
+    "@synaptek/grading-engine": "../../packages/grading-engine/src/grading-engine.ts"
+  }
+}

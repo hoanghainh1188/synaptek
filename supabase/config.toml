@@ -1,0 +1,40 @@
+# Synaptek — Supabase config-as-code (mirror twolody).
+# Local: `supabase start` · Hosted: `supabase db push` + `supabase functions deploy grade`.
+project_id = "synaptek"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 17
+
+[studio]
+enabled = true
+port = 54323
+
+[auth]
+enabled = true
+# Cổng mặc định của Expo web dev (expo start --web).
+site_url = "http://localhost:8081"
+additional_redirect_urls = ["http://localhost:8081", "synaptek://"]
+jwt_expiry = 3600
+enable_signup = true
+
+[auth.email]
+enable_signup = true
+# MVP: tắt xác nhận email cho dev; bật lại ở production.
+enable_confirmations = false
+
+[edge_runtime]
+enabled = true
+policy = "oneshot"
+
+# Chấm chính thức server-side: bắt buộc đăng nhập (D4).
+[functions.grade]
+verify_jwt = true

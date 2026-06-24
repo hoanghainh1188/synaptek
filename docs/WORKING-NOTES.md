@@ -7,6 +7,7 @@
 **Mốc:** M0 — Scaffolding & Spike (đang làm).
 
 **Đã xong:**
+
 - Monorepo npm workspaces + tooling mirror twolody: `package.json` (workspaces `apps/*` + `packages/*`,
   prettier/lint-staged inline, husky), `.nvmrc` (22), `.gitignore`, `.prettierignore`. Commit đầu `df28f29`.
 - `packages/grading-engine` — **TDD, 19/19 test xanh** (`npm test`). Chấm `mcq` · `true-false` ·
@@ -16,12 +17,17 @@
   Expo Router typed routes, web output `static`. `metro.config.js` cấu hình monorepo. **Build web OK**
   (`npx expo export -p web`). Route `src/app/grading-demo.tsx` import `@synaptek/grading-engine` đã
   bundle + pre-render → **khóa pattern 2-consumer phía client** (symlink workspace chuẩn).
-- Docs: `README.md`, `CLAUDE.md`, `docs/00-architecture.md` (Decision Log D1–D12), `docs/02-roadmap.md`.
+- **Supabase config-as-code** dựng xong (dạng file, chưa verify CLI vì môi trường thiếu deno/supabase):
+  `config.toml`; migration `0001_init.sql` (profiles · attempts · skill_mastery + RLS + trigger tạo
+  profile); **Edge Function `grade`** import `@synaptek/grading-engine` qua import map →
+  **consumer #2 (server) đã scaffold**, chấm `{questionId, answer}` không lộ đáp án (D4/D13).
+  Hướng dẫn chạy/deploy ở `supabase/README.md`.
+- Docs: `README.md`, `CLAUDE.md`, `docs/00-architecture.md` (Decision Log D1–D13), `docs/02-roadmap.md`.
 
 ## Việc tiếp theo (theo thứ tự)
 
-1. **Tích hợp Supabase**: `supabase init` (config-as-code), auth tối thiểu, **1 Edge Function "hello"
-   import `@synaptek/grading-engine`** để khóa nốt consumer thứ 2 (server / chấm chính thức).
+1. **Verify Supabase khi có CLI** (`supabase start` + `functions serve grade`): xác nhận engine chạy
+   trên Deno + import map bundle được file ngoài `functions/` (xem rủi ro D13 + `supabase/README.md`).
 2. **CI** `.github/workflows/ci.yml`: format → lint → test → `expo export -p web` → (sau) Playwright e2e.
 3. **Spike render Toán universal**: component vẽ phân số/biểu thức + UI nhập đáp số trên mobile;
    cân nhắc NativeWind cho design tokens dùng chung.
