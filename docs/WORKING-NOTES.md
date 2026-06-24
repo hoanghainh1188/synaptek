@@ -4,7 +4,8 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
-**Mốc:** M0 — Scaffolding & Spike (đang làm).
+**Mốc:** M0 **đã đóng** → đang ở **M1 — Vòng luyện tập học sinh** (spec xong, chuẩn bị plan).
+Nhánh hiện tại: `feature/m1-practice-loop`.
 
 **Đã xong:**
 
@@ -29,21 +30,29 @@
 - **Spec Kit khởi tạo** (`specify init --ai claude`): `.specify/` (templates, scripts, memory) +
   `.claude/skills/speckit-*`. **Constitution** `.specify/memory/constitution.md` viết cho Synaptek
   (5 principles, trỏ Decision Log; v0.1.0).
-- Docs: `README.md`, `CLAUDE.md`, `docs/00-architecture.md` (Decision Log D1–D13), `docs/02-roadmap.md`.
+- Docs: `README.md`, `CLAUDE.md`, `docs/00-architecture.md` (Decision Log **D1–D16**), `docs/02-roadmap.md`.
 - **Git**: repo public `github.com/hoanghainh1188/synaptek`, default branch **`develop`** (git-flow).
-  Remote origin qua HTTPS (token gh — SSH key không sẵn ở môi trường này).
+  Remote origin qua HTTPS (token gh — SSH key không sẵn ở môi trường này). PR #1 (CI+Spec Kit) đã
+  **merge squash** vào `develop` (`ea0fd48`). CI xanh trên GitHub Actions. → **M0 đóng.**
+- **M1 bắt đầu**: `specs/001-m1-practice-loop/spec.md` (Spec Kit specify) — 3 user stories (P1 luyện
+  tập+chấm tức thì · P2 auth+lưu tiến độ · P3 ôn lớp dưới), FR-001..012, success criteria. Quyết định
+  mới: **D14** (content thủ công JSON + import, luồng riêng), **D15** (lớp 4 + ôn lớp 1–3), **D16**
+  (auth tối thiểu Supabase).
 
 ## Việc tiếp theo (theo thứ tự)
 
-1. **Mở PR** `feature/m0-ci-speckit` → `develop`, chờ CI xanh trên GitHub Actions rồi merge.
-2. **Spike render Toán universal** (M0 còn lại): component vẽ phân số/biểu thức + UI nhập đáp số trên
-   mobile; cân nhắc NativeWind cho design tokens dùng chung.
-3. **Verify iOS sim** (`expo start --ios`) khi có Mac simulator — web đã pass, native chưa kiểm.
-4. Vào **M1**: dùng `/speckit-specify` cho "Vòng luyện tập học sinh" (chốt lớp khởi đầu — D7 đề xuất lớp 4).
+1. **(tùy chọn) `/speckit-clarify`** cho spec M1 nếu còn điểm mơ hồ; rồi **`/speckit-plan`** → thiết kế
+   kỹ thuật M1 (data model, `curriculum` schema đa lớp, contracts, auth flow, render Toán).
+2. **`/speckit-tasks`** → sinh task list, rồi **`/speckit-implement`** theo TDD.
+3. **Content pipeline (song song)**: chốt **schema câu hỏi/curriculum** (JSON) + cơ chế import; soạn bộ
+   mẫu **~120 câu lớp 4** + ít chủ đề lớp 1–3 để chạy end-to-end.
+4. Commit theo git-flow trên `feature/m1-practice-loop` → PR về `develop` (CI xanh).
+5. **Verify iOS sim** khi có Mac simulator (web đã pass).
 
 ## Ghi chú / quyết định mở
 
-- **Lớp khởi đầu M1**: đề xuất lớp 4 (D7) — chốt lại khi vào M1.
-- **Nguồn nội dung & bản quyền** (rủi ro lớn nhất): câu hỏi phải bám CT GDPT 2018 nhưng KHÔNG sao
-  chép nguyên văn SGK → cần quy trình biên soạn + review.
+- **Lớp khởi đầu M1**: ✅ chốt **lớp 4** + cho ôn lớp 1–3 (D15).
+- **Auth M1**: ✅ chốt **tối thiểu** (Supabase email/mật khẩu) (D16).
+- **Nguồn nội dung & bản quyền** (rủi ro #1): câu hỏi bám CT GDPT 2018 nhưng KHÔNG chép nguyên văn SGK
+  → biên soạn **thủ công JSON + import** (D14), luồng riêng, cần quy trình review.
 - **Tên `synaptek`**: kiểm tra trùng thương hiệu/tên miền/app store trước khi đăng ký chính thức.
