@@ -50,13 +50,13 @@ Monorepo: `packages/curriculum/` (TS thuần) · `apps/app/{lib,components,src/a
 
 ### Tests (TDD — viết trước)
 
-- [ ] T014 [P] [US1] Test session reducer trong `apps/app/lib/session.test.ts` (start→answer(gọi grade)→next→finish; bỏ trống→empty; tính SessionResult)
+- [x] T014 [P] [US1] Test session reducer trong `apps/app/lib/session.test.ts` (start→answer(gọi grade)→next→finish; bỏ trống→empty; tính SessionResult)
 - [ ] T015 [P] [US1] Snapshot test math render trong `apps/app/components/math/math.test.ts` (FractionView `1/2`, ExpressionView `x^2`)
 - [ ] T016 [P] [US1] E2E luồng luyện tập trong `apps/app/tests/e2e/practice.spec.ts` (chọn chủ đề → trả lời tương đương → Đúng tức thì → kết quả; **assert phản hồi chấm < 200ms — SC-004**)
 
 ### Implementation
 
-- [ ] T017 [US1] Session reducer thuần `apps/app/lib/session.ts` (dùng `grade()` từ `@synaptek/grading-engine`) → T014 GREEN (depends T013)
+- [x] T017 [US1] Session reducer thuần `apps/app/lib/session.ts` (dùng `grade()` từ `@synaptek/grading-engine`) → T014 GREEN (depends T013)
 - [ ] T018 [P] [US1] `apps/app/components/math/FractionView.tsx` + `ExpressionView.tsx` (tự vẽ, universal) → T015 GREEN
 - [ ] T019 [P] [US1] Parser markup Toán nhẹ (`[[frac:a/b]]`, `^`) trong `apps/app/lib/math-markup.ts` (+ test `math-markup.test.ts`)
 - [ ] T020 [P] [US1] `apps/app/components/practice/AnswerInput.tsx` (bàn phím số tùy biến + `/`,`,`; MCQ nút; fill-blank nhiều ô)
