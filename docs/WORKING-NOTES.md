@@ -4,8 +4,18 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
-**Mốc:** M0 **đã đóng** → đang ở **M1 — Vòng luyện tập học sinh** (spec xong, chuẩn bị plan).
-Nhánh hiện tại: `feature/m1-practice-loop`.
+**Mốc:** M0 đóng → **M1 — Vòng luyện tập** đang implement. Nhánh `feature/m1-practice-loop` (draft PR #2).
+**Đã tới Checkpoint US1 (MVP)** — chờ chủ repo nghiệm thu (`npm run web`).
+
+**Implement (speckit-implement) — đã xong qua US1:**
+
+- ✅ Phase 1 Setup: `@synaptek/curriculum` (T001), tokens (T004), **NativeWind v4 wired + web build verified** (T002/T003).
+- ✅ Phase 2 Foundational: types/validate/select + 12 test (T006-T009), content seed lớp 4 (T010), content loader (T013).
+- ✅ Phase 3 **US1**: session reducer 8 test (T014/T017), math-markup 5 test (T019), components math/practice (T018,T020-T023), routes home/practice/result (T024-T026). **expo export -p web xanh** (mọi route static-render).
+- ⏳ **Chưa làm**: T015 (component snapshot — cần Vitest RN env, T005), T016 (e2e Playwright). Defer tới sau nghiệm thu.
+- **Lưu ý**: components/lib/theme đặt dưới `apps/app/src/` (khớp alias `@`→`src`). Font Fredoka/Nunito CHƯA load (dùng system fallback) — polish sau.
+
+**Test toàn repo: 44 xanh** (engine 19 + curriculum 12 + session 8 + math-markup 5).
 
 **Đã xong:**
 
