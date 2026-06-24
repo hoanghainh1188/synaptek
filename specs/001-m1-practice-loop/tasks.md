@@ -19,8 +19,8 @@ Monorepo: `packages/curriculum/` (TS thuần) · `apps/app/{lib,components,src/a
 ## Phase 1: Setup (hạ tầng dùng chung)
 
 - [x] T001 Tạo scaffold package `@synaptek/curriculum` (zero-dep, raw `.ts`, `type: module`, `main: src/index.ts`, script test `node --experimental-strip-types`) trong `packages/curriculum/package.json` + `packages/curriculum/README.md`
-- [ ] T002 Thêm deps M1 vào `apps/app/package.json` (`nativewind`, `tailwindcss`, `@supabase/supabase-js`, `@react-native-async-storage/async-storage`, `expo-secure-store`, `@tanstack/react-query`; dev: `@testing-library/react-native`, `vitest`) và chạy `npm install` từ root
-- [ ] T003 [P] Cấu hình NativeWind v4: `apps/app/tailwind.config.js`, cập nhật `apps/app/metro.config.js` + `babel.config.js` + `apps/app/src/global.css`
+- [x] T002 Thêm deps M1 vào `apps/app/package.json` (`nativewind`, `tailwindcss`, `@supabase/supabase-js`, `@react-native-async-storage/async-storage`, `expo-secure-store`, `@tanstack/react-query`; dev: `@testing-library/react-native`, `vitest`) và chạy `npm install` từ root
+- [x] T003 [P] Cấu hình NativeWind v4: `apps/app/tailwind.config.js`, cập nhật `apps/app/metro.config.js` + `babel.config.js` + `apps/app/src/global.css`
 - [x] T004 [P] Tạo design tokens trong `apps/app/theme/tokens.ts` (màu theo mạch: Số=xanh dương, Hình học=cam, Đo lường=xanh lá; spacing, typography, duration, easing) — map sang tailwind theme
 - [ ] T005 [P] Cấu hình Vitest cho `apps/app` (`apps/app/vitest.config.ts`, alias `@`, inline `@synaptek/*`, **môi trường + preset `@testing-library/react-native` / jsdom cho component test**) và `packages/curriculum`
 
