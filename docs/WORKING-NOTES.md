@@ -17,23 +17,23 @@
   Expo Router typed routes, web output `static`. `metro.config.js` cấu hình monorepo. **Build web OK**
   (`npx expo export -p web`). Route `src/app/grading-demo.tsx` import `@synaptek/grading-engine` đã
   bundle + pre-render → **khóa pattern 2-consumer phía client** (symlink workspace chuẩn).
-- **Supabase config-as-code** dựng xong (dạng file, chưa verify CLI vì môi trường thiếu deno/supabase):
-  `config.toml`; migration `0001_init.sql` (profiles · attempts · skill_mastery + RLS + trigger tạo
-  profile); **Edge Function `grade`** import `@synaptek/grading-engine` qua import map →
-  **consumer #2 (server) đã scaffold**, chấm `{questionId, answer}` không lộ đáp án (D4/D13).
-  Hướng dẫn chạy/deploy ở `supabase/README.md`.
+- **Supabase config-as-code — ĐÃ VERIFY LOCAL** (supabase 2.107 / deno 2.8 / Docker): `config.toml`;
+  migration `0001_init.sql` (profiles · attempts · skill_mastery + RLS + trigger) — `supabase start` áp
+  **sạch**; **Edge Function `grade`** (consumer #2 server) chấm đúng qua `functions serve` (gồm
+  `2x+4 ≡ 2(x+2)`), **đáp án không lộ** (D4). Engine chạy trên Deno OK.
+  - ⚠️ Edge-runtime chỉ mount `supabase/functions` → engine phải đồng bộ vào `functions/_shared/` bằng
+    `npm run sync:edge` (import map trỏ `./_shared`). `packages/` vẫn là nguồn-sự-thật (D13). Chạy/deploy: `supabase/README.md`.
 - Docs: `README.md`, `CLAUDE.md`, `docs/00-architecture.md` (Decision Log D1–D13), `docs/02-roadmap.md`.
 
 ## Việc tiếp theo (theo thứ tự)
 
-1. **Verify Supabase khi có CLI** (`supabase start` + `functions serve grade`): xác nhận engine chạy
-   trên Deno + import map bundle được file ngoài `functions/` (xem rủi ro D13 + `supabase/README.md`).
-2. **CI** `.github/workflows/ci.yml`: format → lint → test → `expo export -p web` → (sau) Playwright e2e.
-3. **Spike render Toán universal**: component vẽ phân số/biểu thức + UI nhập đáp số trên mobile;
+1. **CI** `.github/workflows/ci.yml`: format → lint → test → **`npm run sync:edge` + `git diff --exit-code`**
+   (chống lệch engine ↔ `_shared`) → `expo export -p web` → (sau) Playwright e2e.
+2. **Spike render Toán universal**: component vẽ phân số/biểu thức + UI nhập đáp số trên mobile;
    cân nhắc NativeWind cho design tokens dùng chung.
-4. **Verify iOS sim** (`expo run:ios` / `expo start --ios`) khi có máy Mac có simulator runtime —
+3. **Verify iOS sim** (`expo run:ios` / `expo start --ios`) khi có máy Mac có simulator runtime —
    web đã pass, native chưa kiểm trên môi trường này.
-5. Khởi tạo **Spec Kit** (`.specify/` + constitution) trước khi vào M1.
+4. Khởi tạo **Spec Kit** (`.specify/` + constitution) trước khi vào M1.
 
 ## Ghi chú / quyết định mở
 

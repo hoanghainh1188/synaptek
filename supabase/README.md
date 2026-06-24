@@ -9,16 +9,17 @@ supabase/
 ├── migrations/
 │   └── 0001_init.sql        profiles · attempts · skill_mastery + RLS + trigger tạo profile
 └── functions/
-    ├── deno.json            import map: @synaptek/grading-engine → ../../packages/grading-engine/src
+    ├── deno.json            import map: @synaptek/grading-engine → ./_shared/grading-engine.ts
+    ├── _shared/             bản engine TỰ SINH (npm run sync:edge) — edge-runtime chỉ mount thư mục này
     └── grade/index.ts       chấm chính thức server-side, dùng lại engine (consumer #2)
 ```
 
-## Chạy & deploy (cần Supabase CLI — chưa cài ở môi trường này)
+## Chạy & deploy (cần Supabase CLI + Docker)
 
 ```bash
-# Cài CLI (một trong các cách): brew install supabase/tap/supabase | npx supabase ...
-supabase start                         # dựng Postgres + Auth + Edge runtime cục bộ (cần Docker ✓)
-supabase functions serve grade         # chạy thử Edge Function `grade`
+npm run sync:edge                      # đồng bộ engine → functions/_shared (BẮT BUỘC trước serve/deploy)
+supabase start                         # dựng Postgres + Auth + Edge runtime cục bộ (cần Docker)
+supabase functions serve grade --no-verify-jwt   # chạy thử Edge Function `grade`
 
 # Gọi thử (cần JWT vì verify_jwt = true; local có thể tắt tạm để test):
 curl -i -X POST http://localhost:54321/functions/v1/grade \
@@ -38,14 +39,15 @@ Client chỉ gửi `{ questionId, answer }`. **Đáp án đúng không bao giờ
 mới chấm bằng `@synaptek/grading-engine`. Học sinh không xem trước đáp án, không sửa điểm. Client vẫn
 chạy _cùng_ engine cho phản hồi tức thì khi luyện tập tự do (low-stakes).
 
-## ⚠️ Cần verify khi có CLI
+## ✅ Đã verify (local — supabase 2.107 / deno 2.8)
 
-1. **Bundling import ngoài `supabase/functions`**: Edge Function import `@synaptek/grading-engine` từ
-   `packages/` (ngoài thư mục functions) qua import map. Đa số bản Supabase CLI mới bundle được file ở
-   gốc monorepo; nếu `functions deploy` báo lỗi → fallback: publish engine lên **JSR/npm** rồi import
-   theo version, hoặc vendor vào `functions/_shared/`. (Engine zero-dep nên mọi cách đều nhẹ.)
-2. **`grading-engine` chạy trên Deno**: engine **không import gì** (chỉ JS thuần) → tương thích Deno;
-   chỉ cần xác nhận bằng `functions serve`.
+- `supabase start` áp `0001_init.sql` **sạch**; `functions serve grade` chấm **đúng** các case (gồm
+  `2x+4 ≡ 2(x+2)`), và response **không chứa đáp án** (đúng D4).
+- **Engine chạy trên Deno** (engine không import gì → tương thích).
+- **Bundling**: edge-runtime CHỈ mount `supabase/functions` nên KHÔNG import được `packages/` trực tiếp
+  (gặp `BOOT_ERROR`). Giải pháp: `npm run sync:edge` sinh `_shared/grading-engine.ts` (artifact, banner
+  cấm sửa tay), import map trỏ vào đó. `packages/` vẫn là nguồn-sự-thật; CI nên chạy sync +
+  `git diff --exit-code` để chống lệch.
 
 ## Chưa làm (migration sau, M3)
 

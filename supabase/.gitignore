@@ -1,0 +1,4 @@
+# Supabase local state (sinh bởi CLI)
+.branches/
+.temp/
+.env
