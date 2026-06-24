@@ -14,7 +14,7 @@ import {
   progress,
 } from "./session.ts";
 
-const root = join(import.meta.dirname, "../../..");
+const root = join(import.meta.dirname, "../../../..");
 const fractions: Question[] = JSON.parse(
   readFileSync(join(root, "content/questions/g4.num.fractions.json"), "utf8"),
 );

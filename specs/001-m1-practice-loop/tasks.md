@@ -37,7 +37,7 @@ Monorepo: `packages/curriculum/` (TS thuần) · `apps/app/{lib,components,src/a
 - [x] T010 [P] Tạo content **seed tối thiểu** để chạy E2E: `content/curriculum/grade-4.json` (3 chủ đề + skills) + `content/questions/g4.num.fractions.json` (~8–10 câu đủ loại) — đúng schema
 - [ ] T011 [P] Supabase client + auth helper trong `apps/app/lib/supabase/client.ts` + `auth.ts` (đọc `EXPO_PUBLIC_SUPABASE_*`, storage = SecureStore/AsyncStorage, `persistSession`)
 - [ ] T012 [P] Provider TanStack Query + bọc root trong `apps/app/src/app/_layout.tsx`
-- [ ] T013 Content loader `apps/app/lib/content.ts` (import bundle + `validate*()` qua `@synaptek/curriculum`; export `loadTopics()`, `loadQuestions(topicId)`) (depends T008, T009, T010)
+- [X] T013 Content loader `apps/app/lib/content.ts` (import bundle + `validate*()` qua `@synaptek/curriculum`; export `loadTopics()`, `loadQuestions(topicId)`) (depends T008, T009, T010)
 
 **Checkpoint**: `npm test` (engine + curriculum) xanh; content seed validate sạch; app boot có provider.
 
@@ -57,15 +57,15 @@ Monorepo: `packages/curriculum/` (TS thuần) · `apps/app/{lib,components,src/a
 ### Implementation
 
 - [x] T017 [US1] Session reducer thuần `apps/app/lib/session.ts` (dùng `grade()` từ `@synaptek/grading-engine`) → T014 GREEN (depends T013)
-- [ ] T018 [P] [US1] `apps/app/components/math/FractionView.tsx` + `ExpressionView.tsx` (tự vẽ, universal) → T015 GREEN
-- [ ] T019 [P] [US1] Parser markup Toán nhẹ (`[[frac:a/b]]`, `^`) trong `apps/app/lib/math-markup.ts` (+ test `math-markup.test.ts`)
-- [ ] T020 [P] [US1] `apps/app/components/practice/AnswerInput.tsx` (bàn phím số tùy biến + `/`,`,`; MCQ nút; fill-blank nhiều ô)
-- [ ] T021 [P] [US1] `apps/app/components/practice/QuestionCard.tsx` (hiển thị prompt qua math render + AnswerInput theo type)
-- [ ] T022 [P] [US1] `apps/app/components/practice/Feedback.tsx` (đúng/sai + giải thích, animation transform/opacity)
-- [ ] T023 [P] [US1] `apps/app/components/practice/SessionResult.tsx` (đúng/tổng, điểm, danh sách câu sai)
-- [ ] T024 [US1] Màn chọn chủ đề `apps/app/src/app/(student)/index.tsx` (liệt kê topic lớp 4 từ content loader; **empty state** khi chủ đề chưa có câu hỏi)
-- [ ] T025 [US1] Route phiên `apps/app/src/app/(student)/practice/[topicId].tsx` (useReducer(session) + QuestionCard + Feedback) (depends T017–T022)
-- [ ] T026 [US1] Route kết quả `apps/app/src/app/(student)/result.tsx` (SessionResult) (depends T023)
+- [X] T018 [P] [US1] `apps/app/components/math/FractionView.tsx` + `ExpressionView.tsx` (tự vẽ, universal) → T015 GREEN
+- [X] T019 [P] [US1] Parser markup Toán nhẹ (`[[frac:a/b]]`, `^`) trong `apps/app/lib/math-markup.ts` (+ test `math-markup.test.ts`)
+- [X] T020 [P] [US1] `apps/app/components/practice/AnswerInput.tsx` (bàn phím số tùy biến + `/`,`,`; MCQ nút; fill-blank nhiều ô)
+- [X] T021 [P] [US1] `apps/app/components/practice/QuestionCard.tsx` (hiển thị prompt qua math render + AnswerInput theo type)
+- [X] T022 [P] [US1] `apps/app/components/practice/Feedback.tsx` (đúng/sai + giải thích, animation transform/opacity)
+- [X] T023 [P] [US1] `apps/app/components/practice/SessionResult.tsx` (đúng/tổng, điểm, danh sách câu sai)
+- [X] T024 [US1] Màn chọn chủ đề `apps/app/src/app/(student)/index.tsx` (liệt kê topic lớp 4 từ content loader; **empty state** khi chủ đề chưa có câu hỏi)
+- [X] T025 [US1] Route phiên `apps/app/src/app/(student)/practice/[topicId].tsx` (useReducer(session) + QuestionCard + Feedback) (depends T017–T022)
+- [X] T026 [US1] Route kết quả `apps/app/src/app/(student)/result.tsx` (SessionResult) (depends T023)
 
 **Checkpoint**: US1 demo độc lập — luyện tập + chấm tức thì chạy trên web không cần auth. (Xoá route demo `grading-demo.tsx` hoặc giữ làm dev.)
 
