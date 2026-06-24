@@ -4,7 +4,7 @@ Hướng dẫn cho Claude Code khi làm việc trong repo này.
 
 ## Đây là gì
 
-**Synaptek** (*synapse* + *tek*) là nền tảng học & luyện tập giúp học sinh Việt Nam **thôi sợ và chinh
+**Synaptek** (_synapse_ + _tek_) là nền tảng học & luyện tập giúp học sinh Việt Nam **thôi sợ và chinh
 phục môn học**, khởi đầu với **Toán Tiểu học (lớp 1–5)**. Phần khó & khác biệt ("moat") là **bộ chấm
 tương đương** — học sinh nhập `0,5` hay `2/4` hay `2(x+2)` đều được chấm đúng, kèm lộ trình khắc phục
 điểm yếu. Phần còn lại (nội dung, tiến độ, lớp học) chủ yếu là CRUD + content.
@@ -24,12 +24,12 @@ npm run format:check
 
 - Node **≥ 22** (`.nvmrc` → `22`). Package lõi ship & test ở dạng raw `.ts` qua
   `node --experimental-strip-types` — **không có build step / bundler**.
-- Monorepo npm workspaces: `packages/*` (TS thuần) + `apps/*` (app Expo, sẽ thêm). Husky pre-commit
-  tự format/lint staged files.
+- Monorepo npm workspaces: `packages/*` (TS thuần) + `apps/*` (app Expo universal). Husky pre-commit
+  tự format/lint staged files. CI ở `.github/workflows/ci.yml` (chạy trên `develop`).
 
 ## Kiến trúc — đọc trước khi thêm code
 
-Toàn bộ rationale ở `docs/00-architecture.md` §0 (Decision Log D1–D10). Bốn điều cốt lõi:
+Toàn bộ rationale ở `docs/00-architecture.md` §0 (Decision Log D1–D13). Bốn điều cốt lõi:
 
 1. **Logic nghiệp vụ = package TS thuần** (`packages/grading-engine`, sắp tới `curriculum`,
    `learning-path`). Không import DOM/React/Node-only → test được không cần render, tái dùng across
@@ -53,10 +53,10 @@ feedbackCode, normalized }`. Hỗ trợ: `mcq` · `true-false` · `numeric` · `
 ## Quy trình làm việc (mặc định)
 
 Theo Spec Kit (`.specify/` + `specs/NNN-*`). Với mỗi task không-tầm-thường, như một senior engineer:
-**(1)** đọc spec/Decision Log liên quan; **(2)** làm rõ điểm mơ hồ & nêu trade-off *trước khi* code
+**(1)** đọc spec/Decision Log liên quan; **(2)** làm rõ điểm mơ hồ & nêu trade-off _trước khi_ code
 (dùng AskUserQuestion); **(3)** với UI bám design tokens + design-quality (anti-template); **(4)** code
 kèm test — **ưu tiên unit test** cho logic thuần, thêm Playwright e2e cho luồng chính; **(5)** branch →
-conventional commit → push → PR, CI xanh (format → lint → test → build → e2e); **(6) close-out:** cập
+conventional commit → push → PR (về `develop`), CI xanh (format → test → engine↔_shared → build web); **(6) close-out:** cập
 nhật `docs/WORKING-NOTES.md` (điểm tiếp tục) + Decision Log/spec/file liên quan **trong cùng PR**.
 
 ## Working norms

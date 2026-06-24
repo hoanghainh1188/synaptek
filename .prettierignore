@@ -7,3 +7,9 @@ coverage/
 playwright-report/
 test-results/
 *.tsbuildinfo
+
+# Third-party / generated (do not hand-format)
+.specify/
+.claude/
+.expo-shared/
+apps/app/expo-env.d.ts
