@@ -1,6 +1,6 @@
 # Synaptek
 
-> *Synapse* (khớp thần kinh — nơi việc học diễn ra) + *tek* — ứng dụng giúp học sinh Việt Nam **kết nối kiến thức, tự tin chinh phục môn học**.
+> _Synapse_ (khớp thần kinh — nơi việc học diễn ra) + _tek_ — ứng dụng giúp học sinh Việt Nam **kết nối kiến thức, tự tin chinh phục môn học**.
 
 Nền tảng học & luyện tập, khởi đầu với **Toán Tiểu học (lớp 1–5)**: ôn luyện kiến thức, làm bài
 tập **chấm tự động**, biết rõ **điểm yếu** và nhận **lộ trình cá nhân hóa**. Có vai trò **học sinh /

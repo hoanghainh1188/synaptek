@@ -23,17 +23,23 @@
   `2x+4 ≡ 2(x+2)`), **đáp án không lộ** (D4). Engine chạy trên Deno OK.
   - ⚠️ Edge-runtime chỉ mount `supabase/functions` → engine phải đồng bộ vào `functions/_shared/` bằng
     `npm run sync:edge` (import map trỏ `./_shared`). `packages/` vẫn là nguồn-sự-thật (D13). Chạy/deploy: `supabase/README.md`.
+- **CI** `.github/workflows/ci.yml` (chạy trên `develop`): install → format:check → test →
+  `sync:edge` + `git diff --exit-code` (chống lệch engine↔`_shared`) → `build:web` (expo export).
+  Đã mô phỏng local: **xanh toàn bộ**.
+- **Spec Kit khởi tạo** (`specify init --ai claude`): `.specify/` (templates, scripts, memory) +
+  `.claude/skills/speckit-*`. **Constitution** `.specify/memory/constitution.md` viết cho Synaptek
+  (5 principles, trỏ Decision Log; v0.1.0).
 - Docs: `README.md`, `CLAUDE.md`, `docs/00-architecture.md` (Decision Log D1–D13), `docs/02-roadmap.md`.
+- **Git**: repo public `github.com/hoanghainh1188/synaptek`, default branch **`develop`** (git-flow).
+  Remote origin qua HTTPS (token gh — SSH key không sẵn ở môi trường này).
 
 ## Việc tiếp theo (theo thứ tự)
 
-1. **CI** `.github/workflows/ci.yml`: format → lint → test → **`npm run sync:edge` + `git diff --exit-code`**
-   (chống lệch engine ↔ `_shared`) → `expo export -p web` → (sau) Playwright e2e.
-2. **Spike render Toán universal**: component vẽ phân số/biểu thức + UI nhập đáp số trên mobile;
-   cân nhắc NativeWind cho design tokens dùng chung.
-3. **Verify iOS sim** (`expo run:ios` / `expo start --ios`) khi có máy Mac có simulator runtime —
-   web đã pass, native chưa kiểm trên môi trường này.
-4. Khởi tạo **Spec Kit** (`.specify/` + constitution) trước khi vào M1.
+1. **Mở PR** `feature/m0-ci-speckit` → `develop`, chờ CI xanh trên GitHub Actions rồi merge.
+2. **Spike render Toán universal** (M0 còn lại): component vẽ phân số/biểu thức + UI nhập đáp số trên
+   mobile; cân nhắc NativeWind cho design tokens dùng chung.
+3. **Verify iOS sim** (`expo start --ios`) khi có Mac simulator — web đã pass, native chưa kiểm.
+4. Vào **M1**: dùng `/speckit-specify` cho "Vòng luyện tập học sinh" (chốt lớp khởi đầu — D7 đề xuất lớp 4).
 
 ## Ghi chú / quyết định mở
 

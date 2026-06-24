@@ -10,13 +10,13 @@ cho phản hồi tức thì ở client và chấm chính thức ở server (đá
 Học sinh nhập `0,5` hay `2/4` hay `2(x+2)` đều phải được chấm đúng. Engine chuẩn hóa rồi so
 **giá trị/tương đương**, không so ký tự thô:
 
-| Loại | Ví dụ tương đương |
-|------|-------------------|
-| `numeric` | `0,5` ≡ `0.5` · `1.000,5` ≡ `1000.5` (dấu phẩy = thập phân kiểu VN) |
-| `fraction` | `1/2` ≡ `2/4` ≡ `0,5` |
-| `expression` | `2x+4` ≡ `2(x+2)` · `x^2` ≡ `x*x` (lấy mẫu giá trị `x`) |
-| `mcq` / `true-false` | chuẩn hóa hoa/thường; `Đúng` ≡ `true` |
-| `fill-blank` | chấm theo tỉ lệ chỗ trống đúng (partial) |
+| Loại                 | Ví dụ tương đương                                                   |
+| -------------------- | ------------------------------------------------------------------- |
+| `numeric`            | `0,5` ≡ `0.5` · `1.000,5` ≡ `1000.5` (dấu phẩy = thập phân kiểu VN) |
+| `fraction`           | `1/2` ≡ `2/4` ≡ `0,5`                                               |
+| `expression`         | `2x+4` ≡ `2(x+2)` · `x^2` ≡ `x*x` (lấy mẫu giá trị `x`)             |
+| `mcq` / `true-false` | chuẩn hóa hoa/thường; `Đúng` ≡ `true`                               |
+| `fill-blank`         | chấm theo tỉ lệ chỗ trống đúng (partial)                            |
 
 ## API
 

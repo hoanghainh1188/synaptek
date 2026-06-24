@@ -101,7 +101,11 @@ export function fractionValue(raw: string): number | null {
 
 // ── Biểu thức: tokenize → RPN (shunting-yard) → eval, so tương đương qua lấy mẫu ──
 
-type Tok = { t: "num"; v: number } | { t: "var" } | { t: "op"; v: string } | { t: "paren"; v: "(" | ")" };
+type Tok =
+  | { t: "num"; v: number }
+  | { t: "var" }
+  | { t: "op"; v: string }
+  | { t: "paren"; v: "(" | ")" };
 
 const PREC: Record<string, number> = { "+": 1, "-": 1, "*": 2, "/": 2, "^": 4, neg: 3 };
 const RIGHT = new Set(["^", "neg"]);
@@ -162,14 +166,13 @@ function toRpn(toks: Tok[]): Tok[] | null {
     } else if (tok.t === "op") {
       // Dấu trừ một ngôi (unary): ở đầu, sau "(", hoặc sau toán tử khác.
       let op = tok.v;
-      if (op === "-" && (!prev || (prev.t === "op") || (prev.t === "paren" && prev.v === "("))) {
+      if (op === "-" && (!prev || prev.t === "op" || (prev.t === "paren" && prev.v === "("))) {
         op = "neg";
       }
       while (ops.length) {
         const top = ops[ops.length - 1];
         if (top.t !== "op") break;
-        const higher =
-          PREC[top.v] > PREC[op] || (PREC[top.v] === PREC[op] && !RIGHT.has(op));
+        const higher = PREC[top.v] > PREC[op] || (PREC[top.v] === PREC[op] && !RIGHT.has(op));
         if (higher) out.push(ops.pop() as Tok);
         else break;
       }
@@ -214,12 +217,23 @@ function evalRpn(rpn: Tok[], x: number): number | null {
       const a = st.pop() as number;
       let r: number;
       switch (tok.v) {
-        case "+": r = a + b; break;
-        case "-": r = a - b; break;
-        case "*": r = a * b; break;
-        case "/": r = b === 0 ? NaN : a / b; break;
-        case "^": r = Math.pow(a, b); break;
-        default: return null;
+        case "+":
+          r = a + b;
+          break;
+        case "-":
+          r = a - b;
+          break;
+        case "*":
+          r = a * b;
+          break;
+        case "/":
+          r = b === 0 ? NaN : a / b;
+          break;
+        case "^":
+          r = Math.pow(a, b);
+          break;
+        default:
+          return null;
       }
       st.push(r);
     }
