@@ -7,25 +7,27 @@
 **Mốc:** M0 — Scaffolding & Spike (đang làm).
 
 **Đã xong:**
-- Monorepo npm workspaces + tooling mirror twolody: `package.json` (workspaces `packages/*`,
-  prettier/lint-staged inline, husky), `.nvmrc` (22), `.gitignore`, `.prettierignore`.
+- Monorepo npm workspaces + tooling mirror twolody: `package.json` (workspaces `apps/*` + `packages/*`,
+  prettier/lint-staged inline, husky), `.nvmrc` (22), `.gitignore`, `.prettierignore`. Commit đầu `df28f29`.
 - `packages/grading-engine` — **TDD, 19/19 test xanh** (`npm test`). Chấm `mcq` · `true-false` ·
   `numeric` (chuẩn hóa số VN) · `fraction` (tương đương giá trị) · `expression` (tương đương đại số
   qua lấy mẫu x) · `fill-blank` (partial). Đây là moat của sản phẩm.
-- Docs: `README.md`, `CLAUDE.md`, `docs/00-architecture.md` (Decision Log D1–D10), `docs/02-roadmap.md`.
+- **`apps/app` (Expo Router universal, SDK 56)** dựng xong: React 19.2 / RN 0.85 / react-native-web,
+  Expo Router typed routes, web output `static`. `metro.config.js` cấu hình monorepo. **Build web OK**
+  (`npx expo export -p web`). Route `src/app/grading-demo.tsx` import `@synaptek/grading-engine` đã
+  bundle + pre-render → **khóa pattern 2-consumer phía client** (symlink workspace chuẩn).
+- Docs: `README.md`, `CLAUDE.md`, `docs/00-architecture.md` (Decision Log D1–D12), `docs/02-roadmap.md`.
 
 ## Việc tiếp theo (theo thứ tự)
 
-1. **Commit đầu tiên**: repo `synaptek` đã `git init` + stage toàn bộ; chờ chủ repo xác nhận quy ước
-   commit/attribution rồi commit (và tạo remote nếu cần).
-2. **Dựng `apps/app` (Expo Router universal)**: `create-expo-app`, chạy được web + iOS sim. Sau đó
-   thêm `"apps/*"` vào `workspaces` của root `package.json`. *(Cần mạng để cài deps.)*
-3. **Tích hợp Supabase**: `supabase init` (config-as-code), auth tối thiểu, 1 Edge Function "hello"
-   import thử `@synaptek/grading-engine` để khóa pattern 2-consumer (client + server).
-4. **CI** `.github/workflows/ci.yml`: format → lint → test → Expo web build → Playwright e2e.
-5. **Spike render Toán universal**: component vẽ phân số/biểu thức + UI nhập đáp số trên mobile.
-6. Xác nhận phiên bản stack (Expo SDK, Expo Router web output, NativeWind, @supabase/supabase-js,
-   Edge Functions Deno) qua Context7/docs chính chủ — ghi vào Decision Log.
+1. **Tích hợp Supabase**: `supabase init` (config-as-code), auth tối thiểu, **1 Edge Function "hello"
+   import `@synaptek/grading-engine`** để khóa nốt consumer thứ 2 (server / chấm chính thức).
+2. **CI** `.github/workflows/ci.yml`: format → lint → test → `expo export -p web` → (sau) Playwright e2e.
+3. **Spike render Toán universal**: component vẽ phân số/biểu thức + UI nhập đáp số trên mobile;
+   cân nhắc NativeWind cho design tokens dùng chung.
+4. **Verify iOS sim** (`expo run:ios` / `expo start --ios`) khi có máy Mac có simulator runtime —
+   web đã pass, native chưa kiểm trên môi trường này.
+5. Khởi tạo **Spec Kit** (`.specify/` + constitution) trước khi vào M1.
 
 ## Ghi chú / quyết định mở
 

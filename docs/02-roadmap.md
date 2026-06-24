@@ -4,7 +4,7 @@ Mỗi mốc giữ repo ở trạng thái chạy được. Mỗi mốc ≈ một 
 
 | Mốc | Nội dung | "Done" | Trạng thái |
 |-----|----------|--------|-----------|
-| **M0 — Scaffolding & Spike** | Monorepo + tooling (mirror twolody); `grading-engine` (TDD); Expo universal chạy web + iOS sim; Supabase auth + 1 Edge Function "hello"; CI; Spec Kit + constitution; Decision Log; theme tokens; spike render Toán | App "hello" chạy 2 nền tảng; CI xanh; engine xanh | 🟡 đang làm — engine ✅, docs ✅; còn app/Supabase/CI |
+| **M0 — Scaffolding & Spike** | Monorepo + tooling (mirror twolody); `grading-engine` (TDD); Expo universal chạy web + iOS sim; Supabase auth + 1 Edge Function "hello"; CI; Spec Kit + constitution; Decision Log; theme tokens; spike render Toán | App "hello" chạy 2 nền tảng; CI xanh; engine xanh | 🟡 đang làm — engine ✅, docs ✅, **Expo app build web ✅** (engine wired client-side); còn Supabase/CI/Spec Kit |
 | **M1 — Vòng luyện tập học sinh** | `grading-engine` wire vào client + Edge Function; `curriculum` (lớp 4, 3 chủ đề) + ~120 câu; UI phiên luyện, chấm tức thì + giải thích; lưu `attempts`; tiến độ cơ bản | HS luyện 3 chủ đề lớp 4, chấm đúng/tương đương, thấy tiến độ | ⬜ |
 | **M2 — Mastery & Lộ trình** | Diagnostic; `learning-path` (mastery + gợi ý + spaced review qua cron); error heatmap; gamification (streak/XP/huy hiệu) | App đề xuất "học gì tiếp" + chỉ điểm yếu | ⬜ |
 | **M3 — Giáo viên** | Tạo lớp + mã mời; soạn/giao bài; chấm chính thức server-side + ghi đè thủ công + nhận xét; phân tích lớp; RLS đầy đủ | GV vận hành một lớp end-to-end, điểm đáng tin | ⬜ |

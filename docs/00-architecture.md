@@ -18,6 +18,7 @@
 | **D9** | **Chấm tương đương biểu thức qua lấy mẫu giá trị** (sample x), không dùng CAS đầy đủ; một biến `x`, toán tử `+ - * / ^` + ngoặc, nhân ngầm | Đủ chính xác cho đa thức/biểu thức tiểu học, code nhỏ & test được; nâng cấp sau nếu cần | Chốt |
 | **D10** | **Spec Kit + docs tiếng Việt / code tiếng Anh**, milestone-gated (M0…M5) | Nhất quán với quy trình & ngôn ngữ của twolody | Chốt |
 | **D11** | **Tên dự án = `Synaptek`** (synapse + tek), `@synaptek/*`. Bỏ tên tạm `brava` | `brava` trùng nhiều thương hiệu lớn (Fiat/Brava oven…) → rủi ro trademark/SEO/tên miền. `synaptek` độc đáo, ascii sạch, hợp ed-tech (kết nối kiến thức) | Chốt (vẫn cần kiểm tra trademark/domain trước đăng ký) |
+| **D12** | **Stack app = Expo SDK 56** — Expo Router (typed routes), React 19.2 / RN 0.85 / react-native-web, web output `static`, thư mục gốc router = `src/app`. Monorepo qua `metro.config.js` (watchFolders + nodeModulesPaths) | Phiên bản ổn định mới nhất khi khởi tạo; web output static hợp Vercel & SEO; đã verify build web pass với engine import (route `/grading-demo`) | Chốt |
 
 ## §1. Tổng quan tầng
 
