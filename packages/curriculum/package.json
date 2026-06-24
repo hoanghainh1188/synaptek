@@ -1,0 +1,11 @@
+{
+  "name": "@synaptek/curriculum",
+  "version": "0.1.0",
+  "description": "Schema authority cho nội dung Synaptek — cây chương trình (Grade/Strand/Topic/Skill) + Question, validate & traversal. TS thuần, zero-dep.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "node --experimental-strip-types --no-warnings tests/curriculum.test.ts"
+  },
+  "license": "UNLICENSED"
+}

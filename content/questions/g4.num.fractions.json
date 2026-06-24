@@ -1,0 +1,76 @@
+[
+  {
+    "id": "g4.num.fractions.q001",
+    "skillId": "g4.num.fractions.compare",
+    "grade": 4,
+    "type": "mcq",
+    "prompt": "Phân số nào lớn hơn?",
+    "choices": ["1/2", "1/3"],
+    "correct": "1/2",
+    "explanation": "Cùng tử số 1, mẫu số nhỏ hơn thì phân số lớn hơn."
+  },
+  {
+    "id": "g4.num.fractions.q002",
+    "skillId": "g4.num.fractions.compare",
+    "grade": 4,
+    "type": "true-false",
+    "prompt": "2/4 = 1/2. Đúng hay sai?",
+    "correct": "true",
+    "explanation": "Rút gọn 2/4 bằng cách chia cả tử và mẫu cho 2 được 1/2."
+  },
+  {
+    "id": "g4.num.fractions.q003",
+    "skillId": "g4.num.fractions.concept",
+    "grade": 4,
+    "type": "numeric",
+    "prompt": "1/2 viết dưới dạng số thập phân bằng bao nhiêu?",
+    "correct": "0.5",
+    "explanation": "1 chia 2 bằng 0,5."
+  },
+  {
+    "id": "g4.num.fractions.q004",
+    "skillId": "g4.num.fractions.compare",
+    "grade": 4,
+    "type": "fraction",
+    "prompt": "Rút gọn phân số 2/4.",
+    "correct": "1/2",
+    "explanation": "Chia cả tử và mẫu cho 2."
+  },
+  {
+    "id": "g4.num.fractions.q005",
+    "skillId": "g4.num.fractions.addsub",
+    "grade": 4,
+    "type": "fraction",
+    "prompt": "Tính 1/4 + 1/4.",
+    "correct": "1/2",
+    "explanation": "Cùng mẫu: cộng tử số, 1/4 + 1/4 = 2/4 = 1/2."
+  },
+  {
+    "id": "g4.num.fractions.q006",
+    "skillId": "g4.num.fractions.addsub",
+    "grade": 4,
+    "type": "fill-blank",
+    "prompt": "Điền kết quả: 1/2 + 1/2 = __ ; 3/4 − 1/4 = __",
+    "correct": ["1", "1/2"],
+    "explanation": "1/2 + 1/2 = 1; 3/4 − 1/4 = 2/4 = 1/2."
+  },
+  {
+    "id": "g4.num.fractions.q007",
+    "skillId": "g4.num.fractions.concept",
+    "grade": 4,
+    "type": "mcq",
+    "prompt": "Phân số nào bằng 1/2?",
+    "choices": ["2/4", "2/3", "1/3"],
+    "correct": "2/4",
+    "explanation": "2/4 rút gọn được 1/2."
+  },
+  {
+    "id": "g4.num.fractions.q008",
+    "skillId": "g4.num.fractions.compare",
+    "grade": 4,
+    "type": "true-false",
+    "prompt": "1/3 lớn hơn 1/2. Đúng hay sai?",
+    "correct": "false",
+    "explanation": "Cùng tử số 1, mẫu lớn hơn (3 > 2) thì phân số nhỏ hơn, nên 1/3 < 1/2."
+  }
+]

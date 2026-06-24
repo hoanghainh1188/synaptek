@@ -18,10 +18,10 @@ Monorepo: `packages/curriculum/` (TS thuần) · `apps/app/{lib,components,src/a
 
 ## Phase 1: Setup (hạ tầng dùng chung)
 
-- [ ] T001 Tạo scaffold package `@synaptek/curriculum` (zero-dep, raw `.ts`, `type: module`, `main: src/index.ts`, script test `node --experimental-strip-types`) trong `packages/curriculum/package.json` + `packages/curriculum/README.md`
+- [x] T001 Tạo scaffold package `@synaptek/curriculum` (zero-dep, raw `.ts`, `type: module`, `main: src/index.ts`, script test `node --experimental-strip-types`) trong `packages/curriculum/package.json` + `packages/curriculum/README.md`
 - [ ] T002 Thêm deps M1 vào `apps/app/package.json` (`nativewind`, `tailwindcss`, `@supabase/supabase-js`, `@react-native-async-storage/async-storage`, `expo-secure-store`, `@tanstack/react-query`; dev: `@testing-library/react-native`, `vitest`) và chạy `npm install` từ root
 - [ ] T003 [P] Cấu hình NativeWind v4: `apps/app/tailwind.config.js`, cập nhật `apps/app/metro.config.js` + `babel.config.js` + `apps/app/src/global.css`
-- [ ] T004 [P] Tạo design tokens trong `apps/app/theme/tokens.ts` (màu theo mạch: Số=xanh dương, Hình học=cam, Đo lường=xanh lá; spacing, typography, duration, easing) — map sang tailwind theme
+- [x] T004 [P] Tạo design tokens trong `apps/app/theme/tokens.ts` (màu theo mạch: Số=xanh dương, Hình học=cam, Đo lường=xanh lá; spacing, typography, duration, easing) — map sang tailwind theme
 - [ ] T005 [P] Cấu hình Vitest cho `apps/app` (`apps/app/vitest.config.ts`, alias `@`, inline `@synaptek/*`, **môi trường + preset `@testing-library/react-native` / jsdom cho component test**) và `packages/curriculum`
 
 **Checkpoint**: `npm install` xanh; `npm run web` mở được; tokens + NativeWind áp dụng.
@@ -30,11 +30,11 @@ Monorepo: `packages/curriculum/` (TS thuần) · `apps/app/{lib,components,src/a
 
 ## Phase 2: Foundational (chặn — phải xong trước mọi user story)
 
-- [ ] T006 [P] Định nghĩa types nội dung trong `packages/curriculum/src/types.ts` (Grade/Strand/Topic/Skill/Question + re-export QuestionType từ `@synaptek/grading-engine`)
-- [ ] T007 [P] **(TDD)** Viết test trước cho validate + traversal + buildSession trong `packages/curriculum/tests/curriculum.test.ts` (dùng fixture nhỏ; kỳ vọng FAIL)
-- [ ] T008 Implement `validateCurriculum()` + `validateQuestion()` trong `packages/curriculum/src/schema.ts` (id duy nhất, ref tồn tại, mcq⇒choices, fill-blank⇒mảng, DAG không chu trình) — theo `contracts/content-schema.md` (depends T006, T007)
-- [ ] T009 Implement `topicsByGrade()`, `questionsByTopic()`, `buildSession(topicId, {count})` trong `packages/curriculum/src/select.ts` + `src/index.ts` re-export (depends T006, T007) → T007 chuyển GREEN
-- [ ] T010 [P] Tạo content **seed tối thiểu** để chạy E2E: `content/curriculum/grade-4.json` (3 chủ đề + skills) + `content/questions/g4.num.fractions.json` (~8–10 câu đủ loại) — đúng schema
+- [x] T006 [P] Định nghĩa types nội dung trong `packages/curriculum/src/types.ts` (Grade/Strand/Topic/Skill/Question + re-export QuestionType từ `@synaptek/grading-engine`)
+- [x] T007 [P] **(TDD)** Viết test trước cho validate + traversal + buildSession trong `packages/curriculum/tests/curriculum.test.ts` (dùng fixture nhỏ; kỳ vọng FAIL)
+- [x] T008 Implement `validateCurriculum()` + `validateQuestion()` trong `packages/curriculum/src/schema.ts` (id duy nhất, ref tồn tại, mcq⇒choices, fill-blank⇒mảng, DAG không chu trình) — theo `contracts/content-schema.md` (depends T006, T007)
+- [x] T009 Implement `topicsByGrade()`, `questionsByTopic()`, `buildSession(topicId, {count})` trong `packages/curriculum/src/select.ts` + `src/index.ts` re-export (depends T006, T007) → T007 chuyển GREEN
+- [x] T010 [P] Tạo content **seed tối thiểu** để chạy E2E: `content/curriculum/grade-4.json` (3 chủ đề + skills) + `content/questions/g4.num.fractions.json` (~8–10 câu đủ loại) — đúng schema
 - [ ] T011 [P] Supabase client + auth helper trong `apps/app/lib/supabase/client.ts` + `auth.ts` (đọc `EXPO_PUBLIC_SUPABASE_*`, storage = SecureStore/AsyncStorage, `persistSession`)
 - [ ] T012 [P] Provider TanStack Query + bọc root trong `apps/app/src/app/_layout.tsx`
 - [ ] T013 Content loader `apps/app/lib/content.ts` (import bundle + `validate*()` qua `@synaptek/curriculum`; export `loadTopics()`, `loadQuestions(topicId)`) (depends T008, T009, T010)
