@@ -4,29 +4,39 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
-**Mốc:** M0 đóng → **M1 — Vòng luyện tập** đang implement. Nhánh `feature/m1-practice-loop` (draft PR #2).
-**US1 ✅ + Content pipeline ✅ + US2 ✅ + US3 ✅** (cả 3 user story xong, verified bằng screenshot thật).
-Còn lại M1 = **Polish**: ~120 câu (T040, qua content pipeline), e2e vào CI (T041), đóng PR.
-Nội dung hiện: lớp 4 (phân số + hình học có ảnh) + lớp 1–3 (cộng trừ/bảng nhân/nhân chia) = **21 câu, 10 kỹ năng**.
+**Mốc:** M0 ✅ · M1 ✅ (đóng/merge) → **M2 — Mastery & Lộ trình** đang implement. Nhánh `feature/m2-mastery-path`.
+**Đã tới Checkpoint US1 (MVP) — chủ repo nghiệm thu OK** (xem screenshot: trang chủ/lộ trình, chẩn đoán,
+luyện tập phân số, heatmap). US2/US3 + Polish để sau (chủ trương: "sẽ cải tiến tiếp trong tương lai").
 
-> Chạy US2 local: `supabase start` → tạo `apps/app/.env` (xem `.env.example`, key từ `supabase status`)
-> → **restart dev server** để nạp env → đăng nhập/đăng ký, tiến độ lưu. Guest vẫn luyện được (không lưu).
-> **Đã tới Checkpoint US1 (MVP)** — chờ chủ repo nghiệm thu (`npm run web`).
+> **CHƯA commit** — toàn bộ thay đổi M2 US1 còn ở working tree trên `feature/m2-mastery-path`. Việc kế
+> tiếp rõ ràng nhất: **commit checkpoint US1** (conventional commit) rồi tiếp US2, hoặc tiếp US2 trước.
+> Chạy local: `supabase start` (migration `0002` đã áp) → `npm run web -w @synaptek/app`. Guest luyện
+> được; đăng nhập để lưu mastery + thấy heatmap/lộ trình cá nhân hóa.
 
-**Implement (speckit-implement) — đã xong qua US1:**
+**Spec Kit M2 (`specs/002-mastery-path/`):** specify → clarify → plan → tasks → analyze (+remediation) ✅.
+Clarify chốt: ngưỡng "đã đạt" **0.95**; chẩn đoán **~5–8 câu**; XP theo độ khó (field `difficulty` tùy
+chọn + fallback); push **best-effort** (in-app bắt buộc); mốc ngày **Asia/Ho_Chi_Minh**.
+Decision Log **D19** (BKT) · **D20** (gamification) · **D21** (cron+push) đã ghi.
 
-- ✅ Phase 1 Setup: `@synaptek/curriculum` (T001), tokens (T004), **NativeWind v4 wired + web build verified** (T002/T003).
-- ✅ Phase 2 Foundational: types/validate/select + 12 test (T006-T009), content seed lớp 4 (T010), content loader (T013).
-- ✅ Phase 3 **US1**: session reducer 8 test (T014/T017), math-markup 5 test (T019), components math/practice (T018,T020-T023), routes home/practice/result (T024-T026). **expo export -p web xanh** (mọi route static-render).
-- ✅ **Polish US1**: font **Be Vietnam Pro** (display) + Nunito (body) — Fredoka bị bỏ vì hỏng dấu TV (D17);
-  **T016 e2e Playwright 2/2** (chromium); T015 phủ qua e2e + math-markup.
-- ✅ **Content pipeline (D14/D18)**: `npm run gen:content` (manifest auto-discovery) + `npm run validate:content`
-  (GATE, vào CI); câu hỏi hỗ trợ **ảnh** (`image`, alt bắt buộc) — QuestionCard render qua expo-image.
-  Đã có nội dung Hình học (có ảnh data-URI SVG). **Hướng dẫn soạn bài: `docs/content-authoring.md`.**
-- ⏳ Chưa làm: T005 (Vitest RN env cho component snapshot — đã thay bằng e2e).
-- **Lưu ý**: components/lib/theme dưới `apps/app/src/` (alias `@`→`src`).
+**Implement US1 (27/57 task: T001–T027 ✅; US2/US3/Polish = 30 task còn lại):**
 
-**Test toàn repo: 46 xanh** (engine 19 + curriculum 14 + session 8 + math-markup 5) + **2 e2e**.
+- ✅ **Package mới `@synaptek/learning-path`** (TS thuần, zero-dep, test `node --experimental-strip-types`):
+  `bkt.ts` (BKT, `MASTERED=0.95`), `recommender.ts` (gate tiên quyết — 0 vi phạm, SC-002), `diagnostic.ts`,
+  `heatmap.ts`, `time.ts` (`dayKeyVN`). **25 test xanh.**
+- ✅ `@synaptek/curriculum`: thêm `difficulty?: 1|2|3` + validate (+3 test → 17).
+- ✅ Migration **`0002_m2_mastery.sql`** (gamification_state · student_badges · push_tokens · review_reminders)
+  — **đã áp local** (`supabase migration up`). `skill_mastery` (0001) giữ nguyên.
+- ✅ `content/gamification/badges.json` (6 huy hiệu seed — chưa dùng tới US2).
+- ✅ App: view-model thuần `lib/mastery.ts` (+4 test) · `lib/path.ts` (+2 test); `supabase/mastery.ts`
+  (read/upsert, guest no-op + flush khi login — U1); helpers content (skillOf/questionsBySkill/topicOfSkill…).
+- ✅ UI: `app/diagnostic.tsx`, `app/heatmap.tsx`, `app/index.tsx` (lộ trình "hôm nay" + cold-start gợi ý
+  kỹ năng nền), nối ghi `skill_mastery` sau phiên (`practice/[topicId].tsx`).
+- ✅ E2E `tests/e2e/diagnostic-path.spec.ts` (3 test, guest mode) — **6/6 e2e** xanh (gồm M1 cũ; đã chỉnh
+  `getByLabel(..., {exact:true})` cho nhãn chủ đề do thêm thẻ lộ trình).
+- ✅ **expo export -p web xanh** (11 routes); **format:check** sạch; **sync:edge** chưa đụng (US3 mới cần).
+
+**Test toàn repo: xanh** (engine 19 + curriculum 17 + learning-path 25 + app lib session/math-markup/progress
+/mastery 4/path 2) + **6 e2e**.
 
 **Đã xong:**
 
@@ -62,13 +72,20 @@ Nội dung hiện: lớp 4 (phân số + hình học có ảnh) + lớp 1–3 (c
 
 ## Việc tiếp theo (theo thứ tự)
 
-1. **(tùy chọn) `/speckit-clarify`** cho spec M1 nếu còn điểm mơ hồ; rồi **`/speckit-plan`** → thiết kế
-   kỹ thuật M1 (data model, `curriculum` schema đa lớp, contracts, auth flow, render Toán).
-2. **`/speckit-tasks`** → sinh task list, rồi **`/speckit-implement`** theo TDD.
-3. **Content pipeline (song song)**: chốt **schema câu hỏi/curriculum** (JSON) + cơ chế import; soạn bộ
-   mẫu **~120 câu lớp 4** + ít chủ đề lớp 1–3 để chạy end-to-end.
-4. Commit theo git-flow trên `feature/m1-practice-loop` → PR về `develop` (CI xanh).
+1. **Commit checkpoint US1** trên `feature/m2-mastery-path` (conventional commit; no-attribution). Cân nhắc
+   `git -c commit.gpgsign=false commit`. Husky pre-commit sẽ format. (Chưa cần PR — M2 chưa xong.)
+2. **US2 (P2) — Gamification** (T028–T039): `gamification.ts` (XP theo độ khó · streak mốc VN · huy hiệu
+   mở-một-lần) + validate `badges.json`; bảng `gamification_state`/`student_badges`; UI hồ sơ/huy hiệu +
+   ăn mừng (reduced-motion). TDD trước.
+3. **US3 (P3) — Spaced repetition + cron + push** (T040–T050): `schedule.ts` (SM-2) + mở rộng `sync:edge`
+   vào `_shared/learning-path`; Edge Function `review-scheduler` (idempotent); `expo-notifications`
+   (best-effort). **Cần xác nhận**: cú pháp Supabase scheduled function + API expo-notifications SDK 56.
+4. **Polish** (T051–T057): coverage ≥80% learning-path; thêm `diagnostic-path` vào CI; validate badges;
+   accessibility; cập nhật roadmap; PR `feature/m2-mastery-path` → `develop`.
 5. **Verify iOS sim** khi có Mac simulator (web đã pass).
+
+> **Định hướng tương lai (chủ repo nêu):** sẽ còn cải tiến tiếp. Ý tưởng để ngỏ: tinh chỉnh tham số BKT
+> bằng dữ liệu thật; heatmap dạng lỗi chi tiết hơn; populate heatmap demo (cần login). Ghi lại khi rõ.
 
 ## Ghi chú / quyết định mở
 

@@ -43,11 +43,13 @@ export function useAttempts() {
       if (!supabase || !user) return [];
       const { data, error } = await supabase
         .from("attempts")
-        .select("question_id, is_correct")
-        .eq("student_id", user.id);
+        .select("question_id, skill_id, is_correct, created_at")
+        .eq("student_id", user.id)
+        .order("created_at", { ascending: true });
       if (error) throw error;
       return (data ?? []).map((r) => ({
         questionId: r.question_id as string,
+        skillId: (r.skill_id as string | null) ?? null,
         isCorrect: r.is_correct as boolean,
       }));
     },

@@ -1,0 +1,44 @@
+[
+  {
+    "id": "streak-3",
+    "name": "Ba ngày bền bỉ",
+    "desc": "Luyện tập 3 ngày liên tiếp.",
+    "icon": "🔥",
+    "criteria": { "type": "streak", "gte": 3 }
+  },
+  {
+    "id": "streak-7",
+    "name": "Tuần lễ kiên trì",
+    "desc": "Luyện tập 7 ngày liên tiếp.",
+    "icon": "🔥",
+    "criteria": { "type": "streak", "gte": 7 }
+  },
+  {
+    "id": "xp-100",
+    "name": "Khởi động",
+    "desc": "Đạt 100 điểm kinh nghiệm.",
+    "icon": "⭐",
+    "criteria": { "type": "xp", "gte": 100 }
+  },
+  {
+    "id": "xp-500",
+    "name": "Chăm chỉ",
+    "desc": "Đạt 500 điểm kinh nghiệm.",
+    "icon": "🌟",
+    "criteria": { "type": "xp", "gte": 500 }
+  },
+  {
+    "id": "correct-100",
+    "name": "Trăm câu chuẩn xác",
+    "desc": "Trả lời đúng 100 câu.",
+    "icon": "🎯",
+    "criteria": { "type": "correct_count", "gte": 100 }
+  },
+  {
+    "id": "master-fractions",
+    "name": "Bậc thầy Phân số",
+    "desc": "Thành thạo toàn bộ kỹ năng chủ đề Phân số.",
+    "icon": "🏅",
+    "criteria": { "type": "topic_mastered", "topicId": "g4.num.fractions" }
+  }
+]

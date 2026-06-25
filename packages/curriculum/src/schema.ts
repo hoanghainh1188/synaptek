@@ -116,6 +116,9 @@ export function validateQuestion(q: unknown, knownSkillIds?: Set<string>): Valid
   if (x.type === "fill-blank" && !Array.isArray(x.correct))
     e("/correct", "fill-blank cần correct là mảng");
 
+  if (x.difficulty !== undefined && ![1, 2, 3].includes(x.difficulty as number))
+    e("/difficulty", "difficulty phải là 1, 2 hoặc 3");
+
   if (x.image !== undefined) {
     if (typeof x.image !== "object" || x.image === null) e("/image", "image phải là object");
     else {

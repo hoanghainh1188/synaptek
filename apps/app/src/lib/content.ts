@@ -36,3 +36,71 @@ export function topicOfQuestion(questionId: string): string | undefined {
   }
   return undefined;
 }
+
+/** Ánh xạ ngược questionId → skillId (cho mastery BKT — M2). */
+export function skillOfQuestion(questionId: string): string | undefined {
+  for (const qs of Object.values(QUESTIONS)) {
+    const q = qs.find((x) => x.id === questionId);
+    if (q) return q.skillId;
+  }
+  return undefined;
+}
+
+/** Tập kỹ năng có ≥1 câu hỏi (gate lộ trình — M2). */
+export function skillsWithQuestions(): Set<string> {
+  const set = new Set<string>();
+  for (const qs of Object.values(QUESTIONS)) {
+    for (const q of qs) set.add(q.skillId);
+  }
+  return set;
+}
+
+/** Loại câu hỏi theo id (cho heatmap dạng lỗi — M2). */
+export function questionTypeOf(questionId: string): string | undefined {
+  for (const qs of Object.values(QUESTIONS)) {
+    const q = qs.find((x) => x.id === questionId);
+    if (q) return q.type;
+  }
+  return undefined;
+}
+
+/** Tất cả lớp (curriculum) — cho dựng SkillNode lộ trình. */
+export function allGrades() {
+  return CURRICULA;
+}
+
+/** Map skillId → danh sách questionId (cho bài chẩn đoán). */
+export function questionsBySkill(): Map<string, string[]> {
+  const map = new Map<string, string[]>();
+  for (const qs of Object.values(QUESTIONS)) {
+    for (const q of qs) {
+      const arr = map.get(q.skillId) ?? [];
+      arr.push(q.id);
+      map.set(q.skillId, arr);
+    }
+  }
+  return map;
+}
+
+/** Tra Question theo id (cho dựng phiên chẩn đoán). */
+export function getQuestionById(questionId: string) {
+  for (const qs of Object.values(QUESTIONS)) {
+    const q = qs.find((x) => x.id === questionId);
+    if (q) return q;
+  }
+  return undefined;
+}
+
+/** Chủ đề chứa một kỹ năng (để điều hướng từ lộ trình → luyện tập). */
+export function topicOfSkill(skillId: string): string | undefined {
+  return allTopics(CURRICULA).find((t) => t.skillIds.includes(skillId))?.id;
+}
+
+/** Tên kỹ năng (hiển thị lộ trình/heatmap). */
+export function skillName(skillId: string): string {
+  for (const g of CURRICULA) {
+    const s = g.skills.find((x) => x.id === skillId);
+    if (s) return s.name;
+  }
+  return skillId;
+}
