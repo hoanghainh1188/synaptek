@@ -74,6 +74,7 @@ export default function Home() {
           return (
             <Pressable
               key={topic.id}
+              accessibilityLabel={topic.name}
               disabled={empty}
               onPress={() => router.push(`/practice/${topic.id}`)}
               className={`flex-row overflow-hidden rounded-lg bg-surface shadow-sm ${empty ? "opacity-60" : ""}`}

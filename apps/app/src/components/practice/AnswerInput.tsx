@@ -19,6 +19,7 @@ export function AnswerInput({ question, value, onChange }: AnswerInputProps) {
             return (
               <Pressable
                 key={c}
+                accessibilityLabel={c}
                 onPress={() => onChange(c)}
                 className={`min-h-[56px] flex-row items-center justify-center rounded-md border-2 px-4 ${
                   selected ? "border-num bg-num/10" : "border-line bg-surface"
@@ -47,6 +48,7 @@ export function AnswerInput({ question, value, onChange }: AnswerInputProps) {
             return (
               <Pressable
                 key={v}
+                accessibilityLabel={label}
                 onPress={() => onChange(v)}
                 className={`min-h-[56px] flex-1 items-center justify-center rounded-md border-2 ${
                   selected ? "border-num bg-num/10" : "border-line bg-surface"
