@@ -5,7 +5,9 @@
 ## Đang ở đâu (cập nhật mới nhất)
 
 **Mốc:** M0 đóng → **M1 — Vòng luyện tập** đang implement. Nhánh `feature/m1-practice-loop` (draft PR #2).
-**US1 ✅ + Content pipeline ✅ + US2 ✅** (auth + lưu tiến độ, backend verified). Còn: US3 (ôn lớp dưới) + Polish.
+**US1 ✅ + Content pipeline ✅ + US2 ✅ + US3 ✅** (cả 3 user story xong, verified bằng screenshot thật).
+Còn lại M1 = **Polish**: ~120 câu (T040, qua content pipeline), e2e vào CI (T041), đóng PR.
+Nội dung hiện: lớp 4 (phân số + hình học có ảnh) + lớp 1–3 (cộng trừ/bảng nhân/nhân chia) = **21 câu, 10 kỹ năng**.
 
 > Chạy US2 local: `supabase start` → tạo `apps/app/.env` (xem `.env.example`, key từ `supabase status`)
 > → **restart dev server** để nạp env → đăng nhập/đăng ký, tiến độ lưu. Guest vẫn luyện được (không lưu).
