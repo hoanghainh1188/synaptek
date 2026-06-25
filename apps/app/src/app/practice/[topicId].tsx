@@ -1,5 +1,5 @@
 // Route phiên luyện tập (US1, T025). useReducer(session) + chấm tức thì client.
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
@@ -17,6 +17,8 @@ import {
 import { QuestionCard } from "@/components/practice/QuestionCard";
 import { AnswerInput } from "@/components/practice/AnswerInput";
 import { Feedback } from "@/components/practice/Feedback";
+import { useAuth } from "@/lib/supabase/auth";
+import { useSaveAttempt } from "@/lib/supabase/attempts";
 
 export default function Practice() {
   const params = useLocalSearchParams<{ topicId: string }>();
@@ -30,11 +32,32 @@ export default function Practice() {
   const q = currentQuestion(state);
   const [value, setValue] = useState<string | string[]>("");
 
+  const { user } = useAuth();
+  const saveAttempt = useSaveAttempt();
+  const savedCount = useRef(0);
+
   // reset ô nhập khi sang câu mới
   useEffect(() => {
     setValue(currentQuestion(state)?.type === "fill-blank" ? [] : "");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.index]);
+
+  // lưu attempt mỗi khi có bản ghi mới (nếu đã đăng nhập). Guest → bỏ qua (T032/T034).
+  useEffect(() => {
+    if (state.records.length <= savedCount.current) return;
+    savedCount.current = state.records.length;
+    if (!user) return;
+    const r = state.records[state.records.length - 1];
+    const question = state.questions.find((qq) => qq.id === r.questionId);
+    saveAttempt.mutate({
+      questionId: r.questionId,
+      skillId: question?.skillId,
+      answer: r.answer,
+      isCorrect: r.isCorrect,
+      score: r.score,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.records.length]);
 
   // xong phiên → sang kết quả
   useEffect(() => {

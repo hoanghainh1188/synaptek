@@ -85,10 +85,10 @@ Monorepo: `packages/curriculum/` (TS thuần) · `apps/app/{lib,components,src/a
 
 - [x] T029 [P] [US2] `apps/app/lib/progress.ts` (gộp attempts → TopicProgress, map question→topic qua curriculum) → T027 GREEN
 - [x] T030 [P] [US2] `apps/app/lib/supabase/attempts.ts` (insert attempt + query attempts theo HS; hook TanStack `useSaveAttempt`, `useAttempts`)
-- [ ] T031 [US2] Màn đăng nhập/đăng ký `apps/app/src/app/(auth)/login.tsx` + `apps/app/components/auth/AuthForm.tsx` (depends T011)
-- [ ] T032 [US2] Nối lưu attempt vào phiên: khi đã đăng nhập, `answer()` → `useSaveAttempt` (optimistic) trong `practice/[topicId].tsx` (depends T030, T025)
-- [ ] T033 [US2] Màn tiến độ `apps/app/src/app/(student)/progress.tsx` (TopicProgress qua `useAttempts` + progress.ts) (depends T029, T030)
-- [ ] T034 [US2] Guest mode + nhắc đăng nhập để lưu; **hàng đợi attempt offline** (cả guest lẫn HS đã đăng nhập): lưu tạm khi mất mạng, **flush khi online / khi đăng nhập** (trong `lib/supabase/attempts.ts` + practice route)
+- [x] T031 [US2] Màn đăng nhập/đăng ký `apps/app/src/app/(auth)/login.tsx` + `apps/app/components/auth/AuthForm.tsx` (depends T011)
+- [x] T032 [US2] Nối lưu attempt vào phiên: khi đã đăng nhập, `answer()` → `useSaveAttempt` (optimistic) trong `practice/[topicId].tsx` (depends T030, T025)
+- [x] T033 [US2] Màn tiến độ `apps/app/src/app/(student)/progress.tsx` (TopicProgress qua `useAttempts` + progress.ts) (depends T029, T030)
+- [x] T034 [US2] Guest mode + nhắc đăng nhập để lưu; **hàng đợi attempt offline** (cả guest lẫn HS đã đăng nhập): lưu tạm khi mất mạng, **flush khi online / khi đăng nhập** (trong `lib/supabase/attempts.ts` + practice route)
 
 **Checkpoint**: US2 demo — đăng nhập, tiến độ bền vững (SC-003). Kiểm RLS qua Studio.
 

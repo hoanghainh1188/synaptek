@@ -6,6 +6,7 @@ import { router } from "expo-router";
 import { GRADE_FILTERS, getQuestions, listTopics, strandOf } from "@/lib/content";
 import { strandColors, type StrandKey } from "@/theme/tokens";
 import { Mascot } from "@/components/Mascot";
+import { useAuth } from "@/lib/supabase/auth";
 
 const STRAND_LABELS: Record<string, string> = {
   num: "Số và phép tính",
@@ -18,6 +19,7 @@ export default function Home() {
   const insets = useSafeAreaInsets();
   const [grade, setGrade] = useState(4);
   const topics = listTopics(grade);
+  const { user } = useAuth();
 
   return (
     <ScrollView
@@ -32,10 +34,25 @@ export default function Home() {
           <Text className="text-sm text-muted">Chào buổi sáng,</Text>
           <Text className="font-display text-3xl font-extrabold text-ink">Cùng học nhé! 👋</Text>
         </View>
-        <View className="flex-row items-center gap-1 rounded-full bg-orange-100 px-3 py-1.5">
-          <Text>🔥</Text>
-          <Text className="font-extrabold text-geo">5</Text>
-        </View>
+        {user ? (
+          <Pressable
+            onPress={() => router.push("/progress")}
+            accessibilityLabel="Tiến độ"
+            className="h-11 w-11 items-center justify-center rounded-full bg-brand"
+          >
+            <Text className="font-display text-lg font-extrabold text-white">
+              {(user.email ?? "?").charAt(0).toUpperCase()}
+            </Text>
+          </Pressable>
+        ) : (
+          <Pressable
+            onPress={() => router.push("/login")}
+            accessibilityLabel="Đăng nhập"
+            className="min-h-[40px] items-center justify-center rounded-full bg-brand px-4"
+          >
+            <Text className="font-display text-sm font-bold text-white">Đăng nhập</Text>
+          </Pressable>
+        )}
       </View>
 
       <View className="mt-5 flex-row items-center gap-3 rounded-lg bg-brand px-4 py-3">
