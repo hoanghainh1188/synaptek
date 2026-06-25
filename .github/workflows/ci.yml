@@ -45,5 +45,12 @@ jobs:
           npm run sync:edge
           git diff --exit-code -- supabase/functions/_shared
 
+      # GATE nội dung (D14): validate JSON + manifest auto-discovery không lệch.
+      - name: Content valid + manifest in sync
+        run: |
+          npm run validate:content
+          npm run gen:content
+          git diff --exit-code -- apps/app/src/lib/content.generated.ts
+
       - name: Build web (Expo export)
         run: npm run build:web --workspace @synaptek/app

@@ -12,10 +12,15 @@
 - ✅ Phase 1 Setup: `@synaptek/curriculum` (T001), tokens (T004), **NativeWind v4 wired + web build verified** (T002/T003).
 - ✅ Phase 2 Foundational: types/validate/select + 12 test (T006-T009), content seed lớp 4 (T010), content loader (T013).
 - ✅ Phase 3 **US1**: session reducer 8 test (T014/T017), math-markup 5 test (T019), components math/practice (T018,T020-T023), routes home/practice/result (T024-T026). **expo export -p web xanh** (mọi route static-render).
-- ⏳ **Chưa làm**: T015 (component snapshot — cần Vitest RN env, T005), T016 (e2e Playwright). Defer tới sau nghiệm thu.
-- **Lưu ý**: components/lib/theme đặt dưới `apps/app/src/` (khớp alias `@`→`src`). Font Fredoka/Nunito CHƯA load (dùng system fallback) — polish sau.
+- ✅ **Polish US1**: font **Be Vietnam Pro** (display) + Nunito (body) — Fredoka bị bỏ vì hỏng dấu TV (D17);
+  **T016 e2e Playwright 2/2** (chromium); T015 phủ qua e2e + math-markup.
+- ✅ **Content pipeline (D14/D18)**: `npm run gen:content` (manifest auto-discovery) + `npm run validate:content`
+  (GATE, vào CI); câu hỏi hỗ trợ **ảnh** (`image`, alt bắt buộc) — QuestionCard render qua expo-image.
+  Đã có nội dung Hình học (có ảnh data-URI SVG). **Hướng dẫn soạn bài: `docs/content-authoring.md`.**
+- ⏳ Chưa làm: T005 (Vitest RN env cho component snapshot — đã thay bằng e2e).
+- **Lưu ý**: components/lib/theme dưới `apps/app/src/` (alias `@`→`src`).
 
-**Test toàn repo: 44 xanh** (engine 19 + curriculum 12 + session 8 + math-markup 5).
+**Test toàn repo: 46 xanh** (engine 19 + curriculum 14 + session 8 + math-markup 5) + **2 e2e**.
 
 **Đã xong:**
 
