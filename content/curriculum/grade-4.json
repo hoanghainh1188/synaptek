@@ -1,0 +1,76 @@
+{
+  "grade": 4,
+  "strands": [
+    {
+      "id": "g4.num",
+      "name": "Số và phép tính",
+      "topics": [
+        {
+          "id": "g4.num.arithmetic",
+          "name": "Bốn phép tính với số tự nhiên",
+          "grade": 4,
+          "skillIds": ["g4.num.arithmetic.addsub", "g4.num.arithmetic.muldiv"]
+        },
+        {
+          "id": "g4.num.fractions",
+          "name": "Phân số",
+          "grade": 4,
+          "skillIds": [
+            "g4.num.fractions.concept",
+            "g4.num.fractions.compare",
+            "g4.num.fractions.addsub"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "g4.geo",
+      "name": "Hình học và đo lường",
+      "topics": [
+        {
+          "id": "g4.geo.perimeter-area",
+          "name": "Chu vi – Diện tích hình chữ nhật, hình vuông",
+          "grade": 4,
+          "skillIds": ["g4.geo.rect.perimeter", "g4.geo.rect.area"]
+        }
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "g4.num.arithmetic.addsub",
+      "name": "Cộng, trừ số tự nhiên",
+      "prerequisites": []
+    },
+    {
+      "id": "g4.num.arithmetic.muldiv",
+      "name": "Nhân, chia số tự nhiên",
+      "prerequisites": ["g4.num.arithmetic.addsub"]
+    },
+    {
+      "id": "g4.num.fractions.concept",
+      "name": "Khái niệm phân số",
+      "prerequisites": []
+    },
+    {
+      "id": "g4.num.fractions.compare",
+      "name": "So sánh, rút gọn phân số",
+      "prerequisites": ["g4.num.fractions.concept"]
+    },
+    {
+      "id": "g4.num.fractions.addsub",
+      "name": "Cộng, trừ phân số cùng mẫu",
+      "prerequisites": ["g4.num.fractions.concept"]
+    },
+    {
+      "id": "g4.geo.rect.perimeter",
+      "name": "Chu vi hình chữ nhật",
+      "prerequisites": ["g4.num.arithmetic.addsub"]
+    },
+    {
+      "id": "g4.geo.rect.area",
+      "name": "Diện tích hình chữ nhật",
+      "prerequisites": ["g4.num.arithmetic.muldiv"]
+    }
+  ]
+}

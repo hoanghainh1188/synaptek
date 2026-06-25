@@ -1,0 +1,30 @@
+[
+  {
+    "id": "g1.num.addsub.q001",
+    "skillId": "g1.num.addsub.10",
+    "grade": 1,
+    "type": "numeric",
+    "prompt": "3 + 2 = ?",
+    "correct": "5",
+    "explanation": "3 cộng 2 bằng 5."
+  },
+  {
+    "id": "g1.num.addsub.q002",
+    "skillId": "g1.num.addsub.10",
+    "grade": 1,
+    "type": "numeric",
+    "prompt": "7 − 4 = ?",
+    "correct": "3",
+    "explanation": "7 trừ 4 bằng 3."
+  },
+  {
+    "id": "g1.num.addsub.q003",
+    "skillId": "g1.num.addsub.10",
+    "grade": 1,
+    "type": "mcq",
+    "prompt": "6 + 3 = ?",
+    "choices": ["9", "8", "10"],
+    "correct": "9",
+    "explanation": "6 cộng 3 bằng 9."
+  }
+]

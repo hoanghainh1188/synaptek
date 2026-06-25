@@ -45,5 +45,21 @@ jobs:
           npm run sync:edge
           git diff --exit-code -- supabase/functions/_shared
 
+      # GATE nội dung (D14): validate JSON + manifest auto-discovery không lệch.
+      - name: Content valid + manifest in sync
+        run: |
+          npm run validate:content
+          npm run gen:content
+          git diff --exit-code -- apps/app/src/lib/content.generated.ts
+
       - name: Build web (Expo export)
         run: npm run build:web --workspace @synaptek/app
+
+      # E2E web — chỉ luồng KHÁCH (US1 luyện tập, US3 ôn lớp dưới). auth-progress cần Supabase → bỏ.
+      - name: Install Playwright (chromium)
+        run: npx playwright install --with-deps chromium
+        working-directory: apps/app
+
+      - name: E2E (Playwright, guest flows)
+        run: npx playwright test tests/e2e/practice.spec.ts tests/e2e/review-lower-grade.spec.ts
+        working-directory: apps/app

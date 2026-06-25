@@ -66,3 +66,16 @@ nhật `docs/WORKING-NOTES.md` (điểm tiếp tục) + Decision Log/spec/file l
 - Roadmap **milestone-gated, không theo ngày** (`docs/02-roadmap.md`): M0 scaffolding → M1 vòng luyện
   tập → M2 mastery/lộ trình → M3 giáo viên → M4 phụ huynh/nội dung → M5 native. Giữ mọi thay đổi ở
   trạng thái chạy được.
+
+## Active Technologies (managed by Spec Kit)
+
+- **Đang làm**: M1 — Vòng luyện tập (`specs/001-m1-practice-loop/`). Plan: `plan.md`.
+- **Stack**: TypeScript · Expo SDK 56 / Expo Router / React 19 / RN 0.85. Dùng lại
+  `@synaptek/grading-engine`; thêm `@synaptek/curriculum` (TS thuần). NativeWind v4,
+  `@supabase/supabase-js`, TanStack Query.
+- **Storage**: Supabase (`profiles` · `attempts` · `skill_mastery`, `0001_init.sql` — M1 không migration mới);
+  nội dung = JSON trong `content/` (D6).
+
+## Recent Changes
+
+- **001-m1-practice-loop**: spec + plan (practice loop: dùng lại engine, package `curriculum`, auth tối thiểu Supabase, render Toán tự vẽ).

@@ -1,0 +1,39 @@
+[
+  {
+    "id": "g2.num.mult.q001",
+    "skillId": "g2.num.mult.basic",
+    "grade": 2,
+    "type": "numeric",
+    "prompt": "2 × 3 = ?",
+    "correct": "6",
+    "explanation": "2 × 3 nghĩa là 3 lần số 2: 2 + 2 + 2 = 6."
+  },
+  {
+    "id": "g2.num.mult.q002",
+    "skillId": "g2.num.mult.basic",
+    "grade": 2,
+    "type": "mcq",
+    "prompt": "4 × 5 = ?",
+    "choices": ["20", "9", "45"],
+    "correct": "20",
+    "explanation": "4 × 5 = 20."
+  },
+  {
+    "id": "g2.num.mult.q003",
+    "skillId": "g2.num.mult.basic",
+    "grade": 2,
+    "type": "numeric",
+    "prompt": "5 × 5 = ?",
+    "correct": "25",
+    "explanation": "5 × 5 = 25."
+  },
+  {
+    "id": "g2.num.mult.q004",
+    "skillId": "g2.num.mult.basic",
+    "grade": 2,
+    "type": "true-false",
+    "prompt": "3 × 4 = 12. Đúng hay sai?",
+    "correct": "true",
+    "explanation": "3 × 4 = 12, đúng."
+  }
+]

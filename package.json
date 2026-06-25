@@ -8,6 +8,8 @@
   "scripts": {
     "test": "npm test --workspaces --if-present",
     "sync:edge": "node scripts/sync-edge-engine.mjs",
+    "gen:content": "node scripts/gen-content-manifest.mjs",
+    "validate:content": "node --experimental-strip-types --no-warnings scripts/validate-content.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "prepare": "husky || true"

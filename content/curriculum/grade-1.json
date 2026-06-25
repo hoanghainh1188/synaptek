@@ -1,0 +1,24 @@
+{
+  "grade": 1,
+  "strands": [
+    {
+      "id": "g1.num",
+      "name": "Số và phép tính",
+      "topics": [
+        {
+          "id": "g1.num.addsub10",
+          "name": "Cộng, trừ trong phạm vi 10",
+          "grade": 1,
+          "skillIds": ["g1.num.addsub.10"]
+        }
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "g1.num.addsub.10",
+      "name": "Cộng, trừ trong phạm vi 10",
+      "prerequisites": []
+    }
+  ]
+}

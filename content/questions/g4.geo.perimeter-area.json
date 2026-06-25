@@ -1,0 +1,35 @@
+[
+  {
+    "id": "g4.geo.area.q001",
+    "skillId": "g4.geo.rect.area",
+    "grade": 4,
+    "type": "numeric",
+    "prompt": "Tính diện tích hình chữ nhật bên (đơn vị cm²).",
+    "image": {
+      "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='210' height='120'><rect x='25' y='25' width='130' height='60' rx='4' fill='none' stroke='%23ea580c' stroke-width='3'/><text x='90' y='18' font-family='sans-serif' font-size='13' text-anchor='middle' fill='%2371717a'>5 cm</text><text x='162' y='60' font-family='sans-serif' font-size='13' fill='%2371717a'>3 cm</text></svg>",
+      "alt": "Hình chữ nhật dài 5cm, rộng 3cm",
+      "aspectRatio": 1.75
+    },
+    "correct": "15",
+    "explanation": "Diện tích hình chữ nhật = dài × rộng = 5 × 3 = 15 (cm²)."
+  },
+  {
+    "id": "g4.geo.perimeter.q001",
+    "skillId": "g4.geo.rect.perimeter",
+    "grade": 4,
+    "type": "numeric",
+    "prompt": "Một hình chữ nhật dài 5cm, rộng 3cm. Tính chu vi (cm).",
+    "correct": "16",
+    "explanation": "Chu vi hình chữ nhật = (dài + rộng) × 2 = (5 + 3) × 2 = 16 (cm)."
+  },
+  {
+    "id": "g4.geo.area.q002",
+    "skillId": "g4.geo.rect.area",
+    "grade": 4,
+    "type": "mcq",
+    "prompt": "Hình vuông cạnh 4cm có diện tích là bao nhiêu?",
+    "choices": ["16 cm²", "8 cm²", "12 cm²"],
+    "correct": "16 cm²",
+    "explanation": "Diện tích hình vuông = cạnh × cạnh = 4 × 4 = 16 (cm²)."
+  }
+]
