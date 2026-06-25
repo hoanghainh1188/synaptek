@@ -40,14 +40,22 @@ const imgEntries = images.map((f, i) => {
   return { key: f.replace(/\.[^.]+$/, ""), v: `img_${i}` };
 });
 
+// Xuất object dạng prettier-clean (rỗng → "{}"; có phần tử → block nhiều dòng).
+const objBlock = (decl, rows) => {
+  if (rows.length === 0) L.push(`${decl} = {};`);
+  else L.push(`${decl} = {`, ...rows, "};");
+};
+
 L.push("");
 L.push(`export const CURRICULA: Grade[] = [${curVars.map((v) => `${v} as Grade`).join(", ")}];`);
-L.push("export const QUESTIONS: Record<string, Question[]> = {");
-qEntries.forEach(({ topic, v }) => L.push(`  ${JSON.stringify(topic)}: ${v} as Question[],`));
-L.push("};");
-L.push("export const IMAGES: Record<string, unknown> = {");
-imgEntries.forEach(({ key, v }) => L.push(`  ${JSON.stringify(key)}: ${v},`));
-L.push("};");
+objBlock(
+  "export const QUESTIONS: Record<string, Question[]>",
+  qEntries.map(({ topic, v }) => `  ${JSON.stringify(topic)}: ${v} as Question[],`),
+);
+objBlock(
+  "export const IMAGES: Record<string, unknown>",
+  imgEntries.map(({ key, v }) => `  ${JSON.stringify(key)}: ${v},`),
+);
 L.push("");
 
 const out = join(ROOT, "apps/app/src/lib/content.generated.ts");

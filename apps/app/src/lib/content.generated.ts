@@ -9,5 +9,4 @@ export const QUESTIONS: Record<string, Question[]> = {
   "g4.geo.perimeter-area": q_0 as Question[],
   "g4.num.fractions": q_1 as Question[],
 };
-export const IMAGES: Record<string, unknown> = {
-};
+export const IMAGES: Record<string, unknown> = {};
