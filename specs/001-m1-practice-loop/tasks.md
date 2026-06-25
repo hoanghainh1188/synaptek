@@ -119,7 +119,7 @@ Monorepo: `packages/curriculum/` (TS thuần) · `apps/app/{lib,components,src/a
 - [ ] T040 Bổ sung ngân hàng câu hỏi đạt **~120 câu lớp 4 (3 chủ đề)** từ **content pipeline** (D14) — `content/questions/*.json`, qua `validateQuestion()` (SC-005)
 - [x] T041 Nối e2e vào CI: thêm bước `npm run e2e --workspace @synaptek/app` vào `.github/workflows/ci.yml` (Playwright chromium)
 - [x] T042 Cập nhật `docs/WORKING-NOTES.md` + roadmap (M1 done) + Decision Log nếu phát sinh; `quickstart.md` nghiệm thu
-- [X] T043 Mở PR `feature/m1-practice-loop` → `develop`, CI xanh
+- [x] T043 Mở PR `feature/m1-practice-loop` → `develop`, CI xanh
 
 ---
 
