@@ -2,13 +2,14 @@ import "../global.css";
 
 import { Stack } from "expo-router";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { Fredoka_600SemiBold, useFonts } from "@expo-google-fonts/fredoka";
+import { BeVietnamPro_800ExtraBold, useFonts } from "@expo-google-fonts/be-vietnam-pro";
 import { Nunito_400Regular, Nunito_700Bold } from "@expo-google-fonts/nunito";
 
 export default function RootLayout() {
-  // Nạp font (FOUT: render ngay với fallback, đổi sang Fredoka/Nunito khi sẵn sàng).
+  // Font display = Be Vietnam Pro (hỗ trợ ĐẦY ĐỦ dấu tiếng Việt); body = Nunito.
+  // FOUT: render ngay với fallback, đổi sang font thật khi sẵn sàng.
   useFonts({
-    Fredoka: Fredoka_600SemiBold,
+    Display: BeVietnamPro_800ExtraBold,
     Nunito: Nunito_400Regular,
     "Nunito-Bold": Nunito_700Bold,
   });

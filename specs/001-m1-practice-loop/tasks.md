@@ -52,7 +52,7 @@ Monorepo: `packages/curriculum/` (TS thuần) · `apps/app/{lib,components,src/a
 
 - [x] T014 [P] [US1] Test session reducer trong `apps/app/lib/session.test.ts` (start→answer(gọi grade)→next→finish; bỏ trống→empty; tính SessionResult)
 - [~] T015 [P] [US1] Render math: **phủ qua e2e** (render thật trong chromium) + unit test `math-markup` (parse phân số/mũ). RNTL snapshot HOÃN (tooling react-test-renderer chưa ổn trên React 19).
-- [X] T016 [P] [US1] E2E luồng luyện tập trong `apps/app/tests/e2e/practice.spec.ts` (chọn chủ đề → trả lời tương đương → Đúng tức thì → kết quả; **assert phản hồi chấm < 200ms — SC-004**)
+- [x] T016 [P] [US1] E2E luồng luyện tập trong `apps/app/tests/e2e/practice.spec.ts` (chọn chủ đề → trả lời tương đương → Đúng tức thì → kết quả; **assert phản hồi chấm < 200ms — SC-004**)
 
 ### Implementation
 

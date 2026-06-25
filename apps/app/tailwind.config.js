@@ -20,7 +20,7 @@ module.exports = {
         no: "#dc2626",
       },
       fontFamily: {
-        display: ["Fredoka", "system-ui", "sans-serif"],
+        display: ["Display", "system-ui", "sans-serif"], // Be Vietnam Pro (đủ dấu tiếng Việt)
         body: ["Nunito", "system-ui", "sans-serif"],
       },
       borderRadius: { sm: "8px", md: "12px", lg: "20px", xl: "28px", pill: "999px" },

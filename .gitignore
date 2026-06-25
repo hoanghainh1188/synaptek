@@ -24,3 +24,6 @@ test-results/
 # Expo / EAS
 .expo-shared/
 web-build/
+
+# Ảnh chụp tạm (Playwright screenshot script)
+screenshots/
