@@ -8,7 +8,7 @@ test("luyện tập chủ đề và được chấm tức thì", async ({ page }
   await expect(page.getByText("Cùng học nhé!")).toBeVisible();
 
   // Chọn chủ đề Phân số
-  await page.getByLabel("Phân số").click();
+  await page.getByLabel("Phân số", { exact: true }).click();
 
   // Màn luyện tập: câu đầu (mcq) "Phân số nào lớn hơn?"
   await expect(page.getByText("Phân số nào lớn hơn?")).toBeVisible();
@@ -25,7 +25,7 @@ test("luyện tập chủ đề và được chấm tức thì", async ({ page }
 // Chấm sai → phản hồi không phán xét.
 test("đáp án sai → phản hồi động viên", async ({ page }) => {
   await page.goto("/");
-  await page.getByLabel("Phân số").click();
+  await page.getByLabel("Phân số", { exact: true }).click();
   await expect(page.getByText("Phân số nào lớn hơn?")).toBeVisible();
   await page.getByLabel("1/3").click(); // đáp án sai
   await page.getByText("Kiểm tra").click();

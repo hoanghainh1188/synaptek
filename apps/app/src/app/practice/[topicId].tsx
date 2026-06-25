@@ -19,6 +19,9 @@ import { AnswerInput } from "@/components/practice/AnswerInput";
 import { Feedback } from "@/components/practice/Feedback";
 import { useAuth } from "@/lib/supabase/auth";
 import { useSaveAttempt } from "@/lib/supabase/attempts";
+import { useSkillMastery, useUpsertMastery } from "@/lib/supabase/mastery";
+import { applySession } from "@/lib/mastery";
+import { skillOfQuestion } from "@/lib/content";
 
 export default function Practice() {
   const params = useLocalSearchParams<{ topicId: string }>();
@@ -34,7 +37,10 @@ export default function Practice() {
 
   const { user } = useAuth();
   const saveAttempt = useSaveAttempt();
+  const upsertMastery = useUpsertMastery();
+  const priorMastery = useSkillMastery();
   const savedCount = useRef(0);
+  const masteryWritten = useRef(false);
 
   // reset ô nhập khi sang câu mới
   useEffect(() => {
@@ -59,9 +65,27 @@ export default function Practice() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.records.length]);
 
-  // xong phiên → sang kết quả
+  // xong phiên → cập nhật mastery (T026) rồi sang kết quả
   useEffect(() => {
     if (state.status !== "finished") return;
+    // Ghi snapshot mastery cho các kỹ năng vừa luyện (chỉ khi đăng nhập) — phục vụ lộ trình + lịch ôn (US3).
+    if (user && !masteryWritten.current) {
+      masteryWritten.current = true;
+      const sessionAttempts = state.records
+        .map((rec) => ({ skillId: skillOfQuestion(rec.questionId), isCorrect: rec.isCorrect }))
+        .filter((x): x is { skillId: string; isCorrect: boolean } => Boolean(x.skillId));
+      const prior = new Map((priorMastery.data ?? []).map((m) => [m.skillId, m.mastery]));
+      const counts = new Map((priorMastery.data ?? []).map((m) => [m.skillId, m.attemptsCount]));
+      const next = applySession(prior, sessionAttempts);
+      const touched = new Set(sessionAttempts.map((a) => a.skillId));
+      const rows = [...touched].map((skillId) => ({
+        skillId,
+        mastery: next.get(skillId)!,
+        attemptsCount:
+          (counts.get(skillId) ?? 0) + sessionAttempts.filter((a) => a.skillId === skillId).length,
+      }));
+      if (rows.length > 0) upsertMastery.mutate(rows);
+    }
     const r = sessionResult(state);
     router.replace({
       pathname: "/result",

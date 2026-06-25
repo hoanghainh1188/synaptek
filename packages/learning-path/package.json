@@ -1,0 +1,11 @@
+{
+  "name": "@synaptek/learning-path",
+  "version": "0.1.0",
+  "description": "Mastery (BKT) + bộ gợi ý lộ trình + lập lịch ôn (SM-2) + luật gamification + heatmap — TS thuần, zero-dep, chạy client + Deno Edge Function. (D19/D20/D21)",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "node --experimental-strip-types --no-warnings tests/time.test.ts && node --experimental-strip-types --no-warnings tests/bkt.test.ts && node --experimental-strip-types --no-warnings tests/diagnostic.test.ts && node --experimental-strip-types --no-warnings tests/recommender.test.ts && node --experimental-strip-types --no-warnings tests/heatmap.test.ts"
+  },
+  "license": "UNLICENSED"
+}

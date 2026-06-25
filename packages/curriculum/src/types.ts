@@ -52,6 +52,8 @@ export interface Question {
   grade: number;
   type: QuestionType;
   prompt: string;
+  /** Độ khó (tùy chọn): 1=dễ, 2=vừa, 3=khó. Dùng cho XP theo độ khó (M2/D20); vắng → suy theo loại câu. */
+  difficulty?: 1 | 2 | 3;
   /** Ảnh minh họa (tùy chọn) — hữu ích cho Hình học/biểu đồ. */
   image?: QuestionImage;
   choices?: string[];

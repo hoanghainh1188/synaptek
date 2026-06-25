@@ -1,12 +1,27 @@
-// Trang chủ — chọn chủ đề (US1, T024). Lọc theo lớp; empty state khi chưa có câu hỏi.
-import { useState } from "react";
+// Trang chủ — lộ trình "hôm nay học gì" (US1, T024) + duyệt chủ đề theo lớp.
+import { useMemo, useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
-import { GRADE_FILTERS, getQuestions, listTopics, strandOf } from "@/lib/content";
-import { strandColors, type StrandKey } from "@/theme/tokens";
+import type { Recommendation } from "@synaptek/learning-path";
+import {
+  GRADE_FILTERS,
+  allGrades,
+  getQuestions,
+  listTopics,
+  skillName,
+  skillOfQuestion,
+  skillsWithQuestions,
+  strandOf,
+  topicOfSkill,
+} from "@/lib/content";
+import { buildMasteryMap, toSkillAttempts } from "@/lib/mastery";
+import { buildPath, buildSkillNodes } from "@/lib/path";
+import { strandColorFromId, strandColors, type StrandKey } from "@/theme/tokens";
 import { Mascot } from "@/components/Mascot";
 import { useAuth } from "@/lib/supabase/auth";
+import { useAttempts } from "@/lib/supabase/attempts";
+import { useSkillMastery } from "@/lib/supabase/mastery";
 
 const STRAND_LABELS: Record<string, string> = {
   num: "Số và phép tính",
@@ -15,11 +30,43 @@ const STRAND_LABELS: Record<string, string> = {
   stats: "Thống kê",
 };
 
+const REASON_LABEL: Record<Recommendation["reason"], string> = {
+  due: "Đến hạn ôn",
+  weak: "Cần ôn lại",
+  new: "Học mới",
+};
+
 export default function Home() {
   const insets = useSafeAreaInsets();
   const [grade, setGrade] = useState(4);
   const topics = listTopics(grade);
   const { user } = useAuth();
+
+  const attemptsQ = useAttempts();
+  const masteryQ = useSkillMastery();
+
+  const mastery = useMemo(
+    () => buildMasteryMap(toSkillAttempts(attemptsQ.data ?? [], skillOfQuestion)),
+    [attemptsQ.data],
+  );
+  const dueAt = useMemo(() => {
+    const m = new Map<string, number>();
+    for (const r of masteryQ.data ?? []) if (r.dueAt) m.set(r.skillId, Date.parse(r.dueAt));
+    return m;
+  }, [masteryQ.data]);
+
+  const path = useMemo(() => {
+    const nodes = buildSkillNodes(allGrades(), skillsWithQuestions());
+    return buildPath(nodes, mastery, { now: Date.now(), dueAt, limit: 5 });
+  }, [mastery, dueAt]);
+
+  const hasData = (attemptsQ.data?.length ?? 0) > 0;
+  const recos = [...path.due, ...path.next];
+
+  const openSkill = (skillId: string) => {
+    const topicId = topicOfSkill(skillId);
+    if (topicId) router.push(`/practice/${topicId}`);
+  };
 
   return (
     <ScrollView
@@ -58,14 +105,81 @@ export default function Home() {
         )}
       </View>
 
-      <View className="mt-5 flex-row items-center gap-3 rounded-lg bg-brand px-4 py-3">
-        <View className="rounded-full bg-white/20 p-1">
-          <Mascot size={36} color="#ffffff" />
+      {/* Banner động viên — tùy trạng thái đăng nhập & dữ liệu */}
+      {!user ? (
+        <View className="mt-5 flex-row items-center gap-3 rounded-lg bg-brand px-4 py-3">
+          <View className="rounded-full bg-white/20 p-1">
+            <Mascot size={36} color="#ffffff" />
+          </View>
+          <Text className="flex-1 font-bold text-white">
+            Đăng nhập để lưu tiến độ & nhận lộ trình riêng.
+          </Text>
         </View>
-        <Text className="flex-1 font-bold text-white">Hôm nay mình chinh phục Phân số nhé!</Text>
-      </View>
+      ) : !hasData ? (
+        <Pressable
+          onPress={() => router.push("/diagnostic")}
+          accessibilityLabel="Làm bài chẩn đoán"
+          className="mt-5 flex-row items-center gap-3 rounded-lg bg-brand px-4 py-4"
+        >
+          <View className="rounded-full bg-white/20 p-1">
+            <Mascot size={36} color="#ffffff" />
+          </View>
+          <Text className="flex-1 font-bold text-white">
+            Làm bài chẩn đoán ngắn để mình gợi ý lộ trình riêng cho em nhé!
+          </Text>
+        </Pressable>
+      ) : (
+        <View className="mt-5 flex-row items-center gap-3 rounded-lg bg-brand px-4 py-3">
+          <View className="rounded-full bg-white/20 p-1">
+            <Mascot size={36} color="#ffffff" />
+          </View>
+          <Text className="flex-1 font-bold text-white">Hôm nay mình luyện tiếp nhé!</Text>
+        </View>
+      )}
 
-      <View className="mt-6 flex-row items-center gap-2">
+      {/* Lộ trình hôm nay (gồm cold-start: gợi ý kỹ năng nền khi chưa có dữ liệu) */}
+      {recos.length > 0 && (
+        <View className="mt-6">
+          <View className="flex-row items-center justify-between">
+            <Text className="font-display text-xl font-bold text-ink">Lộ trình hôm nay</Text>
+            <Pressable onPress={() => router.push("/heatmap")} accessibilityLabel="Bản đồ điểm yếu">
+              <Text className="text-sm font-bold text-brand">Điểm yếu ›</Text>
+            </Pressable>
+          </View>
+          <View className="mt-3 gap-2">
+            {recos.map((r) => {
+              const color = strandColorFromId(r.skillId);
+              return (
+                <Pressable
+                  key={r.skillId}
+                  accessibilityLabel={skillName(r.skillId)}
+                  onPress={() => openSkill(r.skillId)}
+                  className="flex-row items-center gap-3 rounded-lg bg-surface p-4 shadow-sm"
+                >
+                  <View
+                    className="h-10 w-10 items-center justify-center rounded-full"
+                    style={{ backgroundColor: color + "22" }}
+                  >
+                    <Mascot size={24} color={color} />
+                  </View>
+                  <View className="flex-1">
+                    <Text className="font-display text-base font-bold text-ink">
+                      {skillName(r.skillId)}
+                    </Text>
+                    <Text className="text-xs font-semibold" style={{ color }}>
+                      {REASON_LABEL[r.reason]}
+                    </Text>
+                  </View>
+                  <Text className="text-2xl text-muted">›</Text>
+                </Pressable>
+              );
+            })}
+          </View>
+        </View>
+      )}
+
+      {/* Duyệt chủ đề theo lớp */}
+      <View className="mt-7 flex-row items-center gap-2">
         <Text className="mr-1 text-sm font-bold text-muted">Lớp</Text>
         {GRADE_FILTERS.map((g) => {
           const active = g === grade;

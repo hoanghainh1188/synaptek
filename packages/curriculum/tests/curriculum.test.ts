@@ -147,6 +147,54 @@ test("Question: ảnh thiếu alt → lỗi", () => {
   assert.ok(errs.some((e) => e.path === "/image/alt"));
 });
 
+test("Question: difficulty vắng → không lỗi", () => {
+  const errs = validateQuestion({
+    id: "x",
+    skillId: "s",
+    grade: 4,
+    type: "numeric",
+    prompt: "p",
+    correct: "1",
+    explanation: "e",
+  });
+  assert.ok(!errs.some((e) => e.path === "/difficulty"));
+});
+
+test("Question: difficulty hợp lệ (1..3) → không lỗi", () => {
+  for (const d of [1, 2, 3]) {
+    const errs = validateQuestion({
+      id: "x",
+      skillId: "s",
+      grade: 4,
+      type: "numeric",
+      prompt: "p",
+      difficulty: d,
+      correct: "1",
+      explanation: "e",
+    });
+    assert.ok(!errs.some((e) => e.path === "/difficulty"), `difficulty=${d}`);
+  }
+});
+
+test("Question: difficulty ngoài {1,2,3} → lỗi", () => {
+  for (const d of [0, 4, 2.5, "a"]) {
+    const errs = validateQuestion({
+      id: "x",
+      skillId: "s",
+      grade: 4,
+      type: "numeric",
+      prompt: "p",
+      difficulty: d,
+      correct: "1",
+      explanation: "e",
+    } as never);
+    assert.ok(
+      errs.some((e) => e.path === "/difficulty"),
+      `difficulty=${d} phải lỗi`,
+    );
+  }
+});
+
 // ── traversal + buildSession ──────────────────────────────────────────────────
 test("topicsByGrade(4) trả đúng 3 chủ đề", () => {
   assert.equal(topicsByGrade([grade4], 4).length, 3);
