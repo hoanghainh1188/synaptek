@@ -1,0 +1,30 @@
+[
+  {
+    "id": "g3.num.muldiv.q001",
+    "skillId": "g3.num.muldiv.basic",
+    "grade": 3,
+    "type": "numeric",
+    "prompt": "6 × 7 = ?",
+    "correct": "42",
+    "explanation": "6 × 7 = 42."
+  },
+  {
+    "id": "g3.num.muldiv.q002",
+    "skillId": "g3.num.muldiv.basic",
+    "grade": 3,
+    "type": "numeric",
+    "prompt": "24 : 6 = ?",
+    "correct": "4",
+    "explanation": "24 chia 6 bằng 4."
+  },
+  {
+    "id": "g3.num.muldiv.q003",
+    "skillId": "g3.num.muldiv.basic",
+    "grade": 3,
+    "type": "mcq",
+    "prompt": "8 × 4 = ?",
+    "choices": ["32", "12", "24"],
+    "correct": "32",
+    "explanation": "8 × 4 = 32."
+  }
+]

@@ -1,0 +1,24 @@
+{
+  "grade": 2,
+  "strands": [
+    {
+      "id": "g2.num",
+      "name": "Số và phép tính",
+      "topics": [
+        {
+          "id": "g2.num.multiplication",
+          "name": "Bảng nhân",
+          "grade": 2,
+          "skillIds": ["g2.num.mult.basic"]
+        }
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "g2.num.mult.basic",
+      "name": "Bảng nhân 2, 3, 4, 5",
+      "prerequisites": []
+    }
+  ]
+}

@@ -69,6 +69,7 @@ export default function Home() {
           return (
             <Pressable
               key={g}
+              accessibilityLabel={`Lớp ${g}`}
               onPress={() => setGrade(g)}
               className={`h-10 w-10 items-center justify-center rounded-full ${active ? "bg-ink" : "bg-surface"}`}
             >

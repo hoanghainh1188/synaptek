@@ -1,0 +1,24 @@
+{
+  "grade": 3,
+  "strands": [
+    {
+      "id": "g3.num",
+      "name": "Số và phép tính",
+      "topics": [
+        {
+          "id": "g3.num.muldiv",
+          "name": "Nhân, chia số có một chữ số",
+          "grade": 3,
+          "skillIds": ["g3.num.muldiv.basic"]
+        }
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "g3.num.muldiv.basic",
+      "name": "Nhân, chia trong bảng",
+      "prerequisites": []
+    }
+  ]
+}

@@ -101,12 +101,12 @@ Monorepo: `packages/curriculum/` (TS thuần) · `apps/app/{lib,components,src/a
 
 ### Tests (TDD)
 
-- [ ] T035 [P] [US3] E2E lọc theo lớp trong `apps/app/tests/e2e/review-lower-grade.spec.ts`
+- [x] T035 [P] [US3] E2E lọc theo lớp trong `apps/app/tests/e2e/review-lower-grade.spec.ts`
 
 ### Implementation
 
-- [ ] T036 [P] [US3] Seed content lớp 1–3 rút gọn: `content/curriculum/grade-1.json`..`grade-3.json` + 1–2 file câu hỏi (vd bảng nhân)
-- [ ] T037 [US3] Bộ lọc lớp trong màn chọn chủ đề `apps/app/src/app/(student)/index.tsx` (chip chọn lớp 1–4, dùng `topicsByGrade`) (depends T024)
+- [x] T036 [P] [US3] Seed content lớp 1–3 rút gọn: `content/curriculum/grade-1.json`..`grade-3.json` + 1–2 file câu hỏi (vd bảng nhân)
+- [x] T037 [US3] Bộ lọc lớp trong màn chọn chủ đề `apps/app/src/app/(student)/index.tsx` (chip chọn lớp 1–4, dùng `topicsByGrade`) (depends T024)
 
 **Checkpoint**: US3 demo — chọn & luyện nội dung đa lớp.
 
