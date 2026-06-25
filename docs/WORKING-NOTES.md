@@ -5,7 +5,11 @@
 ## Đang ở đâu (cập nhật mới nhất)
 
 **Mốc:** M0 đóng → **M1 — Vòng luyện tập** đang implement. Nhánh `feature/m1-practice-loop` (draft PR #2).
-**Đã tới Checkpoint US1 (MVP)** — chờ chủ repo nghiệm thu (`npm run web`).
+**US1 ✅ + Content pipeline ✅ + US2 ✅** (auth + lưu tiến độ, backend verified). Còn: US3 (ôn lớp dưới) + Polish.
+
+> Chạy US2 local: `supabase start` → tạo `apps/app/.env` (xem `.env.example`, key từ `supabase status`)
+> → **restart dev server** để nạp env → đăng nhập/đăng ký, tiến độ lưu. Guest vẫn luyện được (không lưu).
+> **Đã tới Checkpoint US1 (MVP)** — chờ chủ repo nghiệm thu (`npm run web`).
 
 **Implement (speckit-implement) — đã xong qua US1:**
 
