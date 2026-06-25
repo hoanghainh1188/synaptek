@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Web: Nunito làm font nền (RN-web Text kế thừa nếu không tự đặt font-family). */
+html,
+body {
+  font-family: "Nunito", system-ui, sans-serif;
+}
