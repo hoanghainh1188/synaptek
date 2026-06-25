@@ -13,6 +13,9 @@ export default function Login() {
         paddingTop: insets.top + 16,
         paddingHorizontal: 20,
         paddingBottom: 40,
+        maxWidth: 480,
+        width: "100%",
+        alignSelf: "center",
       }}
     >
       <Pressable

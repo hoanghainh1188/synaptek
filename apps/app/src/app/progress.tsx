@@ -14,7 +14,14 @@ export default function Progress() {
   const { user } = useAuth();
   const attempts = useAttempts();
 
-  const top = { paddingTop: insets.top + 16, paddingHorizontal: 20, paddingBottom: 40 };
+  const top = {
+    paddingTop: insets.top + 16,
+    paddingHorizontal: 20,
+    paddingBottom: 40,
+    maxWidth: 640,
+    width: "100%" as const,
+    alignSelf: "center" as const,
+  };
 
   if (!user) {
     return (

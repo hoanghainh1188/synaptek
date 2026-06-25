@@ -28,6 +28,9 @@ export default function Result() {
         paddingTop: insets.top + 24,
         paddingBottom: 48,
         paddingHorizontal: 20,
+        maxWidth: 640,
+        width: "100%",
+        alignSelf: "center",
       }}
     >
       <SessionResult

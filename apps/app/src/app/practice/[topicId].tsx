@@ -94,7 +94,15 @@ export default function Practice() {
     : value.trim().length > 0;
 
   return (
-    <View style={{ flex: 1, paddingTop: insets.top + 8 }}>
+    <View
+      style={{
+        flex: 1,
+        paddingTop: insets.top + 8,
+        maxWidth: 640,
+        width: "100%",
+        alignSelf: "center",
+      }}
+    >
       <View className="flex-row items-center gap-3 px-5 pb-2">
         <Pressable
           onPress={() => router.back()}

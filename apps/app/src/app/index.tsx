@@ -27,6 +27,9 @@ export default function Home() {
         paddingTop: insets.top + 16,
         paddingBottom: 48,
         paddingHorizontal: 20,
+        maxWidth: 640,
+        width: "100%",
+        alignSelf: "center",
       }}
     >
       <View className="flex-row items-start justify-between">
