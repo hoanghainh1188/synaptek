@@ -116,5 +116,13 @@ export function validateQuestion(q: unknown, knownSkillIds?: Set<string>): Valid
   if (x.type === "fill-blank" && !Array.isArray(x.correct))
     e("/correct", "fill-blank cần correct là mảng");
 
+  if (x.image !== undefined) {
+    if (typeof x.image !== "object" || x.image === null) e("/image", "image phải là object");
+    else {
+      if (!isStr(x.image.src)) e("/image/src", "thiếu src (URL hoặc key ảnh bundle)");
+      if (!isStr(x.image.alt)) e("/image/alt", "thiếu alt (mô tả ảnh — bắt buộc)");
+    }
+  }
+
   return errs;
 }

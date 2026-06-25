@@ -119,6 +119,34 @@ test("Question: skillId không tồn tại (có knownSkillIds) → lỗi", () =>
   assert.ok(errs.some((e) => e.path === "/skillId"));
 });
 
+test("Question: ảnh hợp lệ (có src + alt) → không lỗi ảnh", () => {
+  const errs = validateQuestion({
+    id: "x",
+    skillId: "s",
+    grade: 4,
+    type: "numeric",
+    prompt: "p",
+    image: { src: "rect-5x3", alt: "Hình chữ nhật" },
+    correct: "15",
+    explanation: "e",
+  });
+  assert.ok(!errs.some((e) => e.path.startsWith("/image")));
+});
+
+test("Question: ảnh thiếu alt → lỗi", () => {
+  const errs = validateQuestion({
+    id: "x",
+    skillId: "s",
+    grade: 4,
+    type: "numeric",
+    prompt: "p",
+    image: { src: "rect-5x3" },
+    correct: "15",
+    explanation: "e",
+  });
+  assert.ok(errs.some((e) => e.path === "/image/alt"));
+});
+
 // ── traversal + buildSession ──────────────────────────────────────────────────
 test("topicsByGrade(4) trả đúng 3 chủ đề", () => {
   assert.equal(topicsByGrade([grade4], 4).length, 3);

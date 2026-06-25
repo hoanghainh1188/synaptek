@@ -52,10 +52,22 @@ export interface Question {
   grade: number;
   type: QuestionType;
   prompt: string;
+  /** Ảnh minh họa (tùy chọn) — hữu ích cho Hình học/biểu đồ. */
+  image?: QuestionImage;
   choices?: string[];
   correct: string | string[];
   options?: { tolerance?: number };
   explanation: string;
+}
+
+/** Ảnh trong câu hỏi. */
+export interface QuestionImage {
+  /** URL (http…/data:) HOẶC key ảnh bundle trong content/images (không đuôi file). */
+  src: string;
+  /** Mô tả ảnh — BẮT BUỘC (accessibility + fallback khi ảnh lỗi). */
+  alt: string;
+  /** Tỉ lệ rộng/cao để giữ khung (vd 1.5). Mặc định 1. */
+  aspectRatio?: number;
 }
 
 /** Lỗi validation — đường dẫn + thông điệp. */
