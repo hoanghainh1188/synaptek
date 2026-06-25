@@ -79,7 +79,7 @@ Monorepo: `packages/curriculum/` (TS thuần) · `apps/app/{lib,components,src/a
 ### Tests (TDD)
 
 - [x] T027 [P] [US2] Test gộp tiến độ trong `apps/app/lib/progress.test.ts` (attempts → TopicProgress: attempted/correct theo chủ đề)
-- [ ] T028 [P] [US2] E2E auth + persistence trong `apps/app/tests/e2e/auth-progress.spec.ts` (đăng ký → làm → đăng nhập lại → tiến độ)
+- [x] T028 [P] [US2] E2E auth + persistence trong `apps/app/tests/e2e/auth-progress.spec.ts` (đăng ký → làm → đăng nhập lại → tiến độ)
 
 ### Implementation
 

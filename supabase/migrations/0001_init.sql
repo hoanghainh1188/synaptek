@@ -75,3 +75,9 @@ create policy "skill_mastery_rw_own"
   on public.skill_mastery for all
   using (auth.uid() = student_id)
   with check (auth.uid() = student_id);
+
+-- ── Quyền bảng ───────────────────────────────────────────────────────────────
+-- RLS lọc HÀNG, nhưng vai trò vẫn cần GRANT để truy cập BẢNG. Cấp cho HS đã đăng nhập.
+grant select, insert, update, delete on public.profiles to authenticated;
+grant select, insert, update, delete on public.attempts to authenticated;
+grant select, insert, update, delete on public.skill_mastery to authenticated;
