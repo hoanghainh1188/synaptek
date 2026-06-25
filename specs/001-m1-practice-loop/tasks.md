@@ -35,8 +35,8 @@ Monorepo: `packages/curriculum/` (TS thuần) · `apps/app/{lib,components,src/a
 - [x] T008 Implement `validateCurriculum()` + `validateQuestion()` trong `packages/curriculum/src/schema.ts` (id duy nhất, ref tồn tại, mcq⇒choices, fill-blank⇒mảng, DAG không chu trình) — theo `contracts/content-schema.md` (depends T006, T007)
 - [x] T009 Implement `topicsByGrade()`, `questionsByTopic()`, `buildSession(topicId, {count})` trong `packages/curriculum/src/select.ts` + `src/index.ts` re-export (depends T006, T007) → T007 chuyển GREEN
 - [x] T010 [P] Tạo content **seed tối thiểu** để chạy E2E: `content/curriculum/grade-4.json` (3 chủ đề + skills) + `content/questions/g4.num.fractions.json` (~8–10 câu đủ loại) — đúng schema
-- [ ] T011 [P] Supabase client + auth helper trong `apps/app/lib/supabase/client.ts` + `auth.ts` (đọc `EXPO_PUBLIC_SUPABASE_*`, storage = SecureStore/AsyncStorage, `persistSession`)
-- [ ] T012 [P] Provider TanStack Query + bọc root trong `apps/app/src/app/_layout.tsx`
+- [x] T011 [P] Supabase client + auth helper trong `apps/app/lib/supabase/client.ts` + `auth.ts` (đọc `EXPO_PUBLIC_SUPABASE_*`, storage = SecureStore/AsyncStorage, `persistSession`)
+- [x] T012 [P] Provider TanStack Query + bọc root trong `apps/app/src/app/_layout.tsx`
 - [x] T013 Content loader `apps/app/lib/content.ts` (import bundle + `validate*()` qua `@synaptek/curriculum`; export `loadTopics()`, `loadQuestions(topicId)`) (depends T008, T009, T010)
 
 **Checkpoint**: `npm test` (engine + curriculum) xanh; content seed validate sạch; app boot có provider.
@@ -78,13 +78,13 @@ Monorepo: `packages/curriculum/` (TS thuần) · `apps/app/{lib,components,src/a
 
 ### Tests (TDD)
 
-- [ ] T027 [P] [US2] Test gộp tiến độ trong `apps/app/lib/progress.test.ts` (attempts → TopicProgress: attempted/correct theo chủ đề)
+- [x] T027 [P] [US2] Test gộp tiến độ trong `apps/app/lib/progress.test.ts` (attempts → TopicProgress: attempted/correct theo chủ đề)
 - [ ] T028 [P] [US2] E2E auth + persistence trong `apps/app/tests/e2e/auth-progress.spec.ts` (đăng ký → làm → đăng nhập lại → tiến độ)
 
 ### Implementation
 
-- [ ] T029 [P] [US2] `apps/app/lib/progress.ts` (gộp attempts → TopicProgress, map question→topic qua curriculum) → T027 GREEN
-- [ ] T030 [P] [US2] `apps/app/lib/supabase/attempts.ts` (insert attempt + query attempts theo HS; hook TanStack `useSaveAttempt`, `useAttempts`)
+- [x] T029 [P] [US2] `apps/app/lib/progress.ts` (gộp attempts → TopicProgress, map question→topic qua curriculum) → T027 GREEN
+- [x] T030 [P] [US2] `apps/app/lib/supabase/attempts.ts` (insert attempt + query attempts theo HS; hook TanStack `useSaveAttempt`, `useAttempts`)
 - [ ] T031 [US2] Màn đăng nhập/đăng ký `apps/app/src/app/(auth)/login.tsx` + `apps/app/components/auth/AuthForm.tsx` (depends T011)
 - [ ] T032 [US2] Nối lưu attempt vào phiên: khi đã đăng nhập, `answer()` → `useSaveAttempt` (optimistic) trong `practice/[topicId].tsx` (depends T030, T025)
 - [ ] T033 [US2] Màn tiến độ `apps/app/src/app/(student)/progress.tsx` (TopicProgress qua `useAttempts` + progress.ts) (depends T029, T030)

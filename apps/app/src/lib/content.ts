@@ -28,3 +28,11 @@ export function imageSource(image: QuestionImage): unknown {
   if (/^(https?:|data:)/.test(image.src)) return { uri: image.src };
   return IMAGES[image.src];
 }
+
+/** Ánh xạ ngược questionId → topicId (cho gộp tiến độ). */
+export function topicOfQuestion(questionId: string): string | undefined {
+  for (const [topicId, qs] of Object.entries(QUESTIONS)) {
+    if (qs.some((q) => q.id === questionId)) return topicId;
+  }
+  return undefined;
+}
