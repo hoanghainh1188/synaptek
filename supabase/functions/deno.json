@@ -1,5 +1,7 @@
 {
   "imports": {
-    "@synaptek/grading-engine": "./_shared/grading-engine.ts"
+    "@synaptek/grading-engine": "./_shared/grading-engine.ts",
+    "@synaptek/learning-path": "./_shared/learning-path/index.ts",
+    "@supabase/supabase-js": "jsr:@supabase/supabase-js@2"
   }
 }

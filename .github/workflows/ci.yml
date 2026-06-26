@@ -52,6 +52,16 @@ jobs:
           npm run gen:content
           git diff --exit-code -- apps/app/src/lib/content.generated.ts
 
+      # Edge Functions chạy trên Deno → test logic job nền (idempotency scheduler, SC-006).
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Tests (edge functions — Deno)
+        run: deno test review-scheduler/index.test.ts
+        working-directory: supabase/functions
+
       - name: Build web (Expo export)
         run: npm run build:web --workspace @synaptek/app
 

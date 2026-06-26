@@ -9,9 +9,10 @@ supabase/
 ├── migrations/
 │   └── 0001_init.sql        profiles · attempts · skill_mastery + RLS + trigger tạo profile
 └── functions/
-    ├── deno.json            import map: @synaptek/grading-engine → ./_shared/grading-engine.ts
-    ├── _shared/             bản engine TỰ SINH (npm run sync:edge) — edge-runtime chỉ mount thư mục này
-    └── grade/index.ts       chấm chính thức server-side, dùng lại engine (consumer #2)
+    ├── deno.json            import map: @synaptek/{grading-engine,learning-path} → ./_shared/*
+    ├── _shared/             bản TỰ SINH (npm run sync:edge): grading-engine.ts + learning-path/{schedule,time,index}
+    ├── grade/index.ts       chấm chính thức server-side, dùng lại engine (consumer #2)
+    └── review-scheduler/    job nền nhắc ôn (D21): đọc skill_mastery.due_at, ghi review_reminders, push best-effort
 ```
 
 ## Chạy & deploy (cần Supabase CLI + Docker)
@@ -32,6 +33,47 @@ supabase link --project-ref <ref>
 supabase db push                       # áp migrations
 supabase functions deploy grade
 ```
+
+## Job nền nhắc ôn `review-scheduler` (D21)
+
+Edge Function chạy bằng **service role** (bỏ qua RLS, đọc xuyên HS). Idempotent nhờ PK
+`review_reminders(student_id, due_date)` + `ON CONFLICT DO NOTHING`. Push Expo là **best-effort** —
+HS không có token / push lỗi vẫn tạo nhắc để hiện in-app ("đến hạn ôn" ở trang chủ). Tái dùng
+`dayKeyVN`/`nextDueAt` qua `_shared/learning-path` (D13).
+
+```bash
+npm run sync:edge                                   # sinh _shared/learning-path (BẮT BUỘC trước serve/deploy)
+supabase functions serve review-scheduler           # chạy thử
+# Gọi thử (cần service-role key trong Authorization — giống cách cron gọi):
+curl -i -X POST http://localhost:54321/functions/v1/review-scheduler \
+  -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY"
+# → { "ok":true, "dueDate":"YYYY-MM-DD", "students":N, "created":N, "pushed":N }
+
+supabase functions deploy review-scheduler          # hosted
+```
+
+**Lên lịch (Supabase Cron / pg_cron)** — chạy trên project hosted. KHÔNG commit service-role key vào
+migration; lưu ở Vault rồi tham chiếu. Ví dụ chạy mỗi sáng 8h giờ VN (01:00 UTC):
+
+```sql
+-- Bật extension (một lần): pg_cron + pg_net trong Dashboard → Database → Extensions.
+select cron.schedule(
+  'review-scheduler-daily',
+  '0 1 * * *',  -- 08:00 Asia/Ho_Chi_Minh
+  $$
+  select net.http_post(
+    url     := 'https://<project-ref>.supabase.co/functions/v1/review-scheduler',
+    headers := jsonb_build_object(
+      'Content-Type', 'application/json',
+      'Authorization', 'Bearer ' || (select decrypted_secret from vault.decrypted_secrets where name = 'service_role_key')
+    )
+  );
+  $$
+);
+```
+
+> Test idempotency (SC-006) ở `functions/review-scheduler/index.test.ts` (Deno, fake client) —
+> chạy 2 lần cùng `due_date` → đúng 1 dòng nhắc/HS; push chỉ gọi cho dòng mới.
 
 ## Vì sao chấm ở server (D4)
 

@@ -1,13 +1,15 @@
-// Hồ sơ học sinh (US2, T036): XP · streak · huy hiệu. Guest → mời đăng nhập.
-import { ScrollView, Text, View } from "react-native";
+// Hồ sơ học sinh (US2 T036 · US3 T048: nhắc ôn). XP · streak · huy hiệu · bật/tắt nhắc. Guest → mời đăng nhập.
+import { useState } from "react";
+import { Platform, Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { getBadges } from "@/lib/content";
 import { useAuth } from "@/lib/supabase/auth";
 import { useGamification } from "@/lib/supabase/gamification";
+import { registerForPush } from "@/lib/notifications";
+import { useSavePushToken, useSetPushEnabled } from "@/lib/supabase/push";
 import { BadgeGrid } from "@/components/gamification/BadgeGrid";
 import { Mascot } from "@/components/Mascot";
-import { Pressable } from "react-native";
 
 export default function Profile() {
   const insets = useSafeAreaInsets();
@@ -15,8 +17,31 @@ export default function Profile() {
   const gami = useGamification();
   const catalog = getBadges();
 
+  const savePush = useSavePushToken();
+  const setPushEnabled = useSetPushEnabled();
+  const [pushMsg, setPushMsg] = useState<string | null>(null);
+
   const state = gami.data?.state;
   const earned = new Set(gami.data?.earnedBadgeIds ?? []);
+
+  const enableReminders = async () => {
+    const reg = await registerForPush();
+    if (!reg) {
+      setPushMsg(
+        Platform.OS === "web"
+          ? "Nhắc qua thông báo chỉ có trên điện thoại — bạn vẫn thấy mục “đến hạn ôn” ở trang chủ."
+          : "Chưa bật được thông báo (cần thiết bị thật + cấp quyền).",
+      );
+      return;
+    }
+    savePush.mutate(reg);
+    setPushMsg("Đã bật nhắc ôn tập 🔔");
+  };
+
+  const disableReminders = () => {
+    setPushEnabled.mutate(false);
+    setPushMsg("Đã tắt nhắc ôn tập.");
+  };
 
   return (
     <ScrollView
@@ -49,6 +74,32 @@ export default function Profile() {
           <StatCard value={String(state?.totalXp ?? 0)} label="XP" accent="#4f46e5" />
           <StatCard value={`${state?.currentStreak ?? 0}🔥`} label="Streak" accent="#ea580c" />
           <StatCard value={String(state?.longestStreak ?? 0)} label="Kỷ lục" accent="#16a34a" />
+        </View>
+      )}
+
+      {user && (
+        <View className="mt-8">
+          <Text className="font-display text-xl font-bold text-ink">Nhắc ôn tập</Text>
+          <Text className="mt-1 text-sm text-muted">
+            Bật để nhận nhắc khi có kỹ năng đến hạn ôn. (Thông báo đẩy chỉ trên điện thoại.)
+          </Text>
+          <View className="mt-3 flex-row gap-2">
+            <Pressable
+              accessibilityLabel="Bật nhắc ôn tập"
+              onPress={enableReminders}
+              className="min-h-[48px] flex-1 items-center justify-center rounded-md bg-brand"
+            >
+              <Text className="font-display font-bold text-white">Bật nhắc</Text>
+            </Pressable>
+            <Pressable
+              accessibilityLabel="Tắt nhắc ôn tập"
+              onPress={disableReminders}
+              className="min-h-[48px] flex-1 items-center justify-center rounded-md bg-surface shadow-sm"
+            >
+              <Text className="font-display font-bold text-ink">Tắt nhắc</Text>
+            </Pressable>
+          </View>
+          {pushMsg && <Text className="mt-2 text-sm font-semibold text-brand">{pushMsg}</Text>}
         </View>
       )}
 

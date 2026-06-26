@@ -9,6 +9,7 @@ export {
 } from "./recommender.ts";
 export { buildDiagnostic } from "./diagnostic.ts";
 export { type HeatCell, skillWeakness, commonErrorType } from "./heatmap.ts";
+export { nextDueAt } from "./schedule.ts";
 export {
   type Difficulty,
   type GamificationState,

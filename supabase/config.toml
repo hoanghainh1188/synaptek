@@ -38,3 +38,7 @@ policy = "oneshot"
 # Chấm chính thức server-side: bắt buộc đăng nhập (D4).
 [functions.grade]
 verify_jwt = true
+
+# Job nền nhắc ôn (D21): gọi bởi cron, không có user JWT → tự kiểm secret trong code.
+[functions.review-scheduler]
+verify_jwt = false

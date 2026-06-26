@@ -71,3 +71,9 @@ grant select, insert, update, delete on public.gamification_state to authenticat
 grant select, insert, update, delete on public.student_badges     to authenticated;
 grant select, insert, update, delete on public.push_tokens        to authenticated;
 grant select                         on public.review_reminders   to authenticated;
+
+-- Job nền `review-scheduler` chạy bằng service_role (bypass RLS) → cần grant bảng tường minh (D21).
+-- skill_mastery (0001) chỉ grant authenticated; bổ sung service_role ở đây cho job đọc xuyên HS.
+grant select          on public.skill_mastery    to service_role;
+grant select          on public.push_tokens      to service_role;
+grant select, insert, update on public.review_reminders to service_role;
