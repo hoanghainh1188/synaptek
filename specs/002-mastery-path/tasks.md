@@ -130,34 +130,34 @@ hiệu mở một lần, không trùng.
 
 ### Tests (viết trước — RED)
 
-- [ ] T028 [P] [US2] `packages/learning-path/tests/gamification.test.ts`: `difficultyOf` (field ưu tiên,
+- [x] T028 [P] [US2] `packages/learning-path/tests/gamification.test.ts`: `difficultyOf` (field ưu tiên,
       fallback theo loại); `xpForAttempt` (sai→0, đúng×trọng số {1:1,2:1.5,3:2}); `updateStreak` (+1/ngày,
       reset khi cách ngày, không +2 cùng ngày, cập nhật longest); `evaluateBadges` mở **đúng một lần** (SC-005).
-- [ ] T029 [P] [US2] `packages/learning-path/tests/badges-schema.test.ts`: validate `content/gamification/
+- [x] T029 [P] [US2] `packages/learning-path/tests/badges-schema.test.ts`: validate `content/gamification/
 badges.json` hợp schema `Badge`/`BadgeCriteria` (gate nội dung như D6).
 
 ### Implementation
 
-- [ ] T030 [US2] Implement `packages/learning-path/src/gamification.ts` (`difficultyOf`, `xpForAttempt`,
+- [x] T030 [US2] Implement `packages/learning-path/src/gamification.ts` (`difficultyOf`, `xpForAttempt`,
       `updateStreak`, `evaluateBadges`, types `GamificationState`/`Badge`/`BadgeCriteria`) + validate badge
       catalog; export. Cho T028/T029 PASS.
 
 ### App
 
-- [ ] T031 [P] [US2] TDD `apps/app/src/lib/gamification.test.ts`: gộp một phiên → ΔXP + streak mới + huy hiệu mới.
-- [ ] T032 [US2] Implement `apps/app/src/lib/gamification.ts` cho T031 PASS (đọc badges từ content).
-- [ ] T033 [US2] `apps/app/src/lib/supabase/gamification.ts`: TanStack Query đọc/upsert `gamification_state` + `student_badges` (RLS của HS; guest → no-op).
-- [ ] T034 [US2] Hiển thị **XP nhận được** + tổng XP ở tổng kết phiên (`apps/app/src/app/result.tsx`) (FR-009).
-- [ ] T035 [US2] Hiển thị streak + XP ở trang chủ (`apps/app/src/app/index.tsx`).
-- [ ] T036 [US2] Màn hồ sơ + huy hiệu `apps/app/src/app/profile.tsx` + `apps/app/src/components/gamification/*`
+- [x] T031 [P] [US2] TDD `apps/app/src/lib/gamification.test.ts`: gộp một phiên → ΔXP + streak mới + huy hiệu mới.
+- [x] T032 [US2] Implement `apps/app/src/lib/gamification.ts` cho T031 PASS (đọc badges từ content).
+- [x] T033 [US2] `apps/app/src/lib/supabase/gamification.ts`: TanStack Query đọc/upsert `gamification_state` + `student_badges` (RLS của HS; guest → no-op).
+- [x] T034 [US2] Hiển thị **XP nhận được** + tổng XP ở tổng kết phiên (`apps/app/src/app/result.tsx`) (FR-009).
+- [x] T035 [US2] Hiển thị streak + XP ở trang chủ (`apps/app/src/app/index.tsx`).
+- [x] T036 [US2] Màn hồ sơ + huy hiệu `apps/app/src/app/profile.tsx` + `apps/app/src/components/gamification/*`
       (huy hiệu chưa mở ở trạng thái mờ + điều kiện) (FR-011).
-- [ ] T037 [US2] Component ăn mừng mở huy hiệu/đạt mốc `apps/app/src/components/gamification/Celebrate.tsx`
+- [x] T037 [US2] Component ăn mừng mở huy hiệu/đạt mốc `apps/app/src/components/gamification/Celebrate.tsx`
       (transform/opacity, **tôn trọng `reduced-motion`**) (FR-012).
-- [ ] T038 [US2] Nối cập nhật `gamification_state`/`student_badges` vào luồng kết thúc phiên (chỉ khi đăng nhập).
+- [x] T038 [US2] Nối cập nhật `gamification_state`/`student_badges` vào luồng kết thúc phiên (chỉ khi đăng nhập).
 
 ### E2E
 
-- [ ] T039 [US2] `apps/app/tests/e2e/streak-xp.spec.ts`: hoàn thành phiên → XP hiện; (mô phỏng ngày) streak;
+- [x] T039 [US2] `apps/app/tests/e2e/streak-xp.spec.ts`: hoàn thành phiên → XP hiện; (mô phỏng ngày) streak;
       đạt mốc → huy hiệu mở một lần.
 
 **Checkpoint US2**: Gamification đầy đủ chạy độc lập trên nền US1.

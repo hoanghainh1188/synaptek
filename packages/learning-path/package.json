@@ -5,7 +5,7 @@
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
-    "test": "node --experimental-strip-types --no-warnings tests/time.test.ts && node --experimental-strip-types --no-warnings tests/bkt.test.ts && node --experimental-strip-types --no-warnings tests/diagnostic.test.ts && node --experimental-strip-types --no-warnings tests/recommender.test.ts && node --experimental-strip-types --no-warnings tests/heatmap.test.ts"
+    "test": "node --experimental-strip-types --no-warnings tests/time.test.ts && node --experimental-strip-types --no-warnings tests/bkt.test.ts && node --experimental-strip-types --no-warnings tests/diagnostic.test.ts && node --experimental-strip-types --no-warnings tests/recommender.test.ts && node --experimental-strip-types --no-warnings tests/heatmap.test.ts && node --experimental-strip-types --no-warnings tests/gamification.test.ts && node --experimental-strip-types --no-warnings tests/badges-schema.test.ts"
   },
   "license": "UNLICENSED"
 }

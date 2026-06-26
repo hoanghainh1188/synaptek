@@ -22,9 +22,12 @@ const curricula = ls("curriculum", /\.json$/);
 const questions = ls("questions", /\.json$/);
 const images = ls("images", /\.(png|jpe?g|webp|gif)$/i);
 
+const badges = ls("gamification", /^badges\.json$/);
+
 const L = [
   "// ⚠️ AUTO-GENERATED bởi scripts/gen-content-manifest.mjs — KHÔNG sửa tay (npm run gen:content).",
   'import type { Grade, Question } from "@synaptek/curriculum";',
+  'import type { Badge } from "@synaptek/learning-path";',
 ];
 
 const curVars = curricula.map((f, i) => {
@@ -39,6 +42,8 @@ const imgEntries = images.map((f, i) => {
   L.push(`import img_${i} from "${REL}/images/${f}";`);
   return { key: f.replace(/\.[^.]+$/, ""), v: `img_${i}` };
 });
+const hasBadges = badges.length > 0;
+if (hasBadges) L.push(`import badges_0 from "${REL}/gamification/badges.json";`);
 
 // Xuất object dạng prettier-clean (rỗng → "{}"; có phần tử → block nhiều dòng).
 const objBlock = (decl, rows) => {
@@ -56,10 +61,11 @@ objBlock(
   "export const IMAGES: Record<string, unknown>",
   imgEntries.map(({ key, v }) => `  ${JSON.stringify(key)}: ${v},`),
 );
+L.push(`export const BADGES: Badge[] = ${hasBadges ? "badges_0 as Badge[]" : "[]"};`);
 L.push("");
 
 const out = join(ROOT, "apps/app/src/lib/content.generated.ts");
 writeFileSync(out, L.join("\n"));
 console.log(
-  `generated content.generated.ts: ${curricula.length} curriculum, ${questions.length} question files, ${images.length} images`,
+  `generated content.generated.ts: ${curricula.length} curriculum, ${questions.length} question files, ${images.length} images, ${badges.length} badge file(s)`,
 );

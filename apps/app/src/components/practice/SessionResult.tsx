@@ -1,4 +1,5 @@
-// Kết quả phiên: donut + thống kê + cần ôn lại + động viên.
+// Kết quả phiên: donut + thống kê + XP + huy hiệu mới + cần ôn lại + động viên.
+import type { ReactNode } from "react";
 import { Pressable, Text, View } from "react-native";
 import Svg, { Circle } from "react-native-svg";
 import { MathText } from "@/components/math/MathText";
@@ -15,6 +16,12 @@ interface SessionResultProps {
   score: number; // 0..1
   wrong: WrongItem[];
   topicName: string;
+  /** XP nhận được trong phiên (FR-009). */
+  xpGained?: number;
+  /** Tổng XP sau phiên (chỉ khi đăng nhập). */
+  totalXp?: number | null;
+  /** Khối ăn mừng huy hiệu mới (FR-012). */
+  celebration?: ReactNode;
   onRetry: () => void;
   onHome: () => void;
 }
@@ -61,6 +68,9 @@ export function SessionResult({
   correct,
   wrong,
   topicName,
+  xpGained,
+  totalXp,
+  celebration,
   onRetry,
   onHome,
 }: SessionResultProps) {
@@ -77,7 +87,16 @@ export function SessionResult({
       <View className="mt-6 flex-row gap-3">
         <Stat value={String(correct)} label="Đúng" tone="bg-ok/10 text-ok" />
         <Stat value={String(wrong.length)} label="Cần ôn" tone="bg-no/10 text-no" />
+        {typeof xpGained === "number" && (
+          <Stat value={`+${xpGained}`} label="XP" tone="bg-brand/10 text-brand" />
+        )}
       </View>
+
+      {typeof xpGained === "number" && typeof totalXp === "number" && (
+        <Text className="mt-2 text-xs font-bold text-muted">Tổng XP: {totalXp}</Text>
+      )}
+
+      {celebration && <View className="mt-6 w-full">{celebration}</View>}
 
       {wrong.length > 0 && (
         <View className="mt-6 w-full rounded-lg bg-surface p-4 shadow-sm">

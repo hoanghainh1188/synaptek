@@ -22,6 +22,7 @@ import { Mascot } from "@/components/Mascot";
 import { useAuth } from "@/lib/supabase/auth";
 import { useAttempts } from "@/lib/supabase/attempts";
 import { useSkillMastery } from "@/lib/supabase/mastery";
+import { useGamification } from "@/lib/supabase/gamification";
 
 const STRAND_LABELS: Record<string, string> = {
   num: "Số và phép tính",
@@ -44,6 +45,7 @@ export default function Home() {
 
   const attemptsQ = useAttempts();
   const masteryQ = useSkillMastery();
+  const gamiQ = useGamification();
 
   const mastery = useMemo(
     () => buildMasteryMap(toSkillAttempts(attemptsQ.data ?? [], skillOfQuestion)),
@@ -104,6 +106,30 @@ export default function Home() {
           </Pressable>
         )}
       </View>
+
+      {/* XP + streak (US2, T035) — chỉ khi đăng nhập */}
+      {user && gamiQ.data && (
+        <Pressable
+          onPress={() => router.push("/profile")}
+          accessibilityLabel={`Hồ sơ: ${gamiQ.data.state.totalXp} XP, streak ${gamiQ.data.state.currentStreak} ngày`}
+          className="mt-4 flex-row gap-2"
+        >
+          <View className="flex-1 flex-row items-center justify-center gap-1 rounded-lg bg-surface py-2.5 shadow-sm">
+            <Text className="text-base">⭐</Text>
+            <Text className="font-display text-base font-extrabold text-ink">
+              {gamiQ.data.state.totalXp}
+            </Text>
+            <Text className="text-xs font-bold text-muted">XP</Text>
+          </View>
+          <View className="flex-1 flex-row items-center justify-center gap-1 rounded-lg bg-surface py-2.5 shadow-sm">
+            <Text className="text-base">🔥</Text>
+            <Text className="font-display text-base font-extrabold text-ink">
+              {gamiQ.data.state.currentStreak}
+            </Text>
+            <Text className="text-xs font-bold text-muted">ngày</Text>
+          </View>
+        </Pressable>
+      )}
 
       {/* Banner động viên — tùy trạng thái đăng nhập & dữ liệu */}
       {!user ? (

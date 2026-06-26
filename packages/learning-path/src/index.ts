@@ -9,3 +9,17 @@ export {
 } from "./recommender.ts";
 export { buildDiagnostic } from "./diagnostic.ts";
 export { type HeatCell, skillWeakness, commonErrorType } from "./heatmap.ts";
+export {
+  type Difficulty,
+  type GamificationState,
+  type Badge,
+  type BadgeCriteria,
+  type BadgeContext,
+  type BadgeError,
+  difficultyOf,
+  xpForAttempt,
+  updateStreak,
+  evaluateBadges,
+  validateBadge,
+  validateBadges,
+} from "./gamification.ts";

@@ -4,14 +4,33 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
-**Mốc:** M0 ✅ · M1 ✅ (đóng/merge) → **M2 — Mastery & Lộ trình** đang implement. Nhánh `feature/m2-mastery-path`.
-**Đã tới Checkpoint US1 (MVP) — chủ repo nghiệm thu OK** (xem screenshot: trang chủ/lộ trình, chẩn đoán,
-luyện tập phân số, heatmap). US2/US3 + Polish để sau (chủ trương: "sẽ cải tiến tiếp trong tương lai").
+**Mốc:** M0 ✅ · M1 ✅ → **M2 — Mastery & Lộ trình** đang implement.
+**US1 (MVP) ✅ đã merge** vào `develop` qua **PR #3** (`70fd050`) — nhánh `feature/m2-mastery-path` đã
+squash-merge xong (có thể xóa). **US2 (Gamification) ✅ vừa xong** trên nhánh `feature/m2-us2-gamification`
+(chưa commit/PR lúc viết). Còn lại: **US3** (spaced repetition + cron + push) → **Polish** → PR M2.
 
-> **CHƯA commit** — toàn bộ thay đổi M2 US1 còn ở working tree trên `feature/m2-mastery-path`. Việc kế
-> tiếp rõ ràng nhất: **commit checkpoint US1** (conventional commit) rồi tiếp US2, hoặc tiếp US2 trước.
 > Chạy local: `supabase start` (migration `0002` đã áp) → `npm run web -w @synaptek/app`. Guest luyện
-> được; đăng nhập để lưu mastery + thấy heatmap/lộ trình cá nhân hóa.
+> được + thấy XP nhận/phiên; đăng nhập để tích XP/streak, mở huy hiệu, lưu mastery + heatmap/lộ trình.
+
+**US2 — Gamification (T028–T039 ✅ + T052 badges-gate):**
+
+- ✅ `@synaptek/learning-path/src/gamification.ts`: `difficultyOf` (field→fallback theo loại),
+  `xpForAttempt` (base 10 × {1:1,2:1.5,3:2}, sai=0), `updateStreak` (mốc ngày VN, không +2/ngày, reset khi
+  cách ngày, cập nhật longest), `evaluateBadges` (mở 1 lần), `validateBadge(s)` (gate D6). **+25 test**
+  (17 gamification + 8 badges-schema) → learning-path **50 test**.
+- ✅ `validate:content` + manifest sinh nội dung nay gồm `badges.json` (`BADGES` bundle vào app).
+- ✅ App: `lib/gamification.ts` thuần (`summarizeSession`, `masteredTopicsOf`, `xpForSession`; **+6 test**);
+  `lib/supabase/gamification.ts` (đọc/upsert `gamification_state`+`student_badges`, guest no-op, huy hiệu
+  idempotent); nối vào `practice/[topicId].tsx` lúc kết thúc phiên (chỉ ghi gamification khi state server
+  đã tải — tránh ghi đè total_xp về 0).
+- ✅ UI: `app/result.tsx` (XP nhận + tổng XP + `Celebrate`), `app/index.tsx` (chip XP/streak → `/profile`),
+  `app/profile.tsx` (XP/streak/kỷ lục + `BadgeGrid` mờ-khóa kèm điều kiện), `components/gamification/*`
+  (`Celebrate` transform/opacity tôn trọng reduced-motion qua hook `use-reduced-motion`).
+- ✅ E2E `tests/e2e/streak-xp.spec.ts` (guest: hồ sơ + result XP/huy hiệu) — **xanh**; thêm `diagnostic-path`
+  - `streak-xp` vào CI guest e2e. **expo export web xanh** (12 routes, có `/profile`). `format:check` sạch.
+- ⚠️ `correctCount` cho huy hiệu suy từ `attempts` server lúc kết thúc — có thể trễ vài câu sát ngưỡng
+  (đánh giá lại mỗi phiên nên hội tụ). `auth-progress.spec.ts` lỗi strict-mode 2×"Tiến độ" — **pre-existing**
+  (lỗi cả trên `develop` sạch; do hydration Expo static-render; không thuộc CI).
 
 **Spec Kit M2 (`specs/002-mastery-path/`):** specify → clarify → plan → tasks → analyze (+remediation) ✅.
 Clarify chốt: ngưỡng "đã đạt" **0.95**; chẩn đoán **~5–8 câu**; XP theo độ khó (field `difficulty` tùy
@@ -72,17 +91,16 @@ Decision Log **D19** (BKT) · **D20** (gamification) · **D21** (cron+push) đã
 
 ## Việc tiếp theo (theo thứ tự)
 
-1. **Commit checkpoint US1** trên `feature/m2-mastery-path` (conventional commit; no-attribution). Cân nhắc
-   `git -c commit.gpgsign=false commit`. Husky pre-commit sẽ format. (Chưa cần PR — M2 chưa xong.)
-2. **US2 (P2) — Gamification** (T028–T039): `gamification.ts` (XP theo độ khó · streak mốc VN · huy hiệu
-   mở-một-lần) + validate `badges.json`; bảng `gamification_state`/`student_badges`; UI hồ sơ/huy hiệu +
-   ăn mừng (reduced-motion). TDD trước.
-3. **US3 (P3) — Spaced repetition + cron + push** (T040–T050): `schedule.ts` (SM-2) + mở rộng `sync:edge`
-   vào `_shared/learning-path`; Edge Function `review-scheduler` (idempotent); `expo-notifications`
-   (best-effort). **Cần xác nhận**: cú pháp Supabase scheduled function + API expo-notifications SDK 56.
-4. **Polish** (T051–T057): coverage ≥80% learning-path; thêm `diagnostic-path` vào CI; validate badges;
-   accessibility; cập nhật roadmap; PR `feature/m2-mastery-path` → `develop`.
-5. **Verify iOS sim** khi có Mac simulator (web đã pass).
+1. **Commit + PR US2** (`feature/m2-us2-gamification` → `develop`, conventional commit; no-attribution).
+   Husky pre-commit format. CI xanh (format → test → engine↔_shared → build web + guest e2e).
+2. **US3 (P3) — Spaced repetition + cron + push** (T040–T050): `schedule.ts` (SM-2) + mở rộng `sync:edge`
+   đồng bộ `schedule.ts`/`time.ts` vào `_shared`; Edge Function `review-scheduler` (idempotent qua
+   `review_reminders`); mục "đến hạn ôn" trước "học mới" ở trang chủ; `expo-notifications` (best-effort).
+   **Cần xác nhận**: cú pháp Supabase scheduled function + API expo-notifications SDK 56 (đọc docs v56).
+3. **Polish** (T051–T057): coverage ≥80% learning-path; accessibility (đã có hook reduced-motion); trạng
+   thái rỗng/edge; cập nhật roadmap M2; gộp về PR M2.
+4. **Verify iOS sim** khi có Mac simulator (web đã pass).
+5. **Dọn nhánh**: xóa `feature/m2-mastery-path` (đã merge).
 
 > **Định hướng tương lai (chủ repo nêu):** sẽ còn cải tiến tiếp. Ý tưởng để ngỏ: tinh chỉnh tham số BKT
 > bằng dữ liệu thật; heatmap dạng lỗi chi tiết hơn; populate heatmap demo (cần login). Ghi lại khi rõ.
