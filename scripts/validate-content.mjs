@@ -3,6 +3,7 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { validateCurriculum, validateQuestion } from "@synaptek/curriculum";
+import { validateBadges } from "@synaptek/learning-path";
 
 const ROOT = process.cwd();
 const C = join(ROOT, "content");
@@ -58,8 +59,18 @@ for (const f of ls("questions", /\.json$/)) {
   });
 }
 
+// 3) Huy hiệu gamification (D6/D20) — gate như nội dung khác
+let badgeCount = 0;
+for (const f of ls("gamification", /^badges\.json$/)) {
+  const data = readJson(`gamification/${f}`);
+  badgeCount = Array.isArray(data) ? data.length : 0;
+  for (const e of validateBadges(data)) err(`gamification/${f} ${e.path}: ${e.message}`);
+}
+
 if (errors) {
   console.error(`\n${errors} lỗi nội dung.`);
   process.exit(1);
 }
-console.log(`✓ Nội dung hợp lệ (${seenIds.size} câu hỏi, ${skillIds.size} kỹ năng).`);
+console.log(
+  `✓ Nội dung hợp lệ (${seenIds.size} câu hỏi, ${skillIds.size} kỹ năng, ${badgeCount} huy hiệu).`,
+);

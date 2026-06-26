@@ -4,7 +4,8 @@ import { Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
 import { buildSession } from "@synaptek/curriculum";
-import { getQuestions, getTopic, strandOf } from "@/lib/content";
+import { dayKeyVN, difficultyOf } from "@synaptek/learning-path";
+import { getBadges, getQuestions, getTopic, strandOf, topicSkillsMap } from "@/lib/content";
 import { strandColors, type StrandKey } from "@/theme/tokens";
 import {
   currentQuestion,
@@ -18,9 +19,16 @@ import { QuestionCard } from "@/components/practice/QuestionCard";
 import { AnswerInput } from "@/components/practice/AnswerInput";
 import { Feedback } from "@/components/practice/Feedback";
 import { useAuth } from "@/lib/supabase/auth";
-import { useSaveAttempt } from "@/lib/supabase/attempts";
+import { useAttempts, useSaveAttempt } from "@/lib/supabase/attempts";
 import { useSkillMastery, useUpsertMastery } from "@/lib/supabase/mastery";
+import { useGamification, useSaveGamification } from "@/lib/supabase/gamification";
 import { applySession } from "@/lib/mastery";
+import {
+  INITIAL_GAMIFICATION,
+  masteredTopicsOf,
+  summarizeSession,
+  xpForSession,
+} from "@/lib/gamification";
 import { skillOfQuestion } from "@/lib/content";
 
 export default function Practice() {
@@ -39,6 +47,9 @@ export default function Practice() {
   const saveAttempt = useSaveAttempt();
   const upsertMastery = useUpsertMastery();
   const priorMastery = useSkillMastery();
+  const allAttempts = useAttempts();
+  const gami = useGamification();
+  const saveGamification = useSaveGamification();
   const savedCount = useRef(0);
   const masteryWritten = useRef(false);
 
@@ -65,10 +76,24 @@ export default function Practice() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.records.length]);
 
-  // xong phiên → cập nhật mastery (T026) rồi sang kết quả
+  // xong phiên → cập nhật mastery + gamification (T026/T038) rồi sang kết quả
   useEffect(() => {
     if (state.status !== "finished") return;
-    // Ghi snapshot mastery cho các kỹ năng vừa luyện (chỉ khi đăng nhập) — phục vụ lộ trình + lịch ôn (US3).
+
+    // XP nhận được tính cho mọi người (kể cả guest) — phản hồi động viên tức thì (FR-009).
+    const events = state.records.map((rec) => {
+      const q = state.questions.find((qq) => qq.id === rec.questionId);
+      return {
+        isCorrect: rec.isCorrect,
+        difficulty: difficultyOf({ type: q?.type ?? "", difficulty: q?.difficulty }),
+      };
+    });
+    const xpGained = xpForSession(events);
+
+    let totalXp: number | null = null;
+    let newBadgeIds: string[] = [];
+
+    // Ghi snapshot mastery + gamification (chỉ khi đăng nhập) — lộ trình/lịch ôn (US3) + động lực (US2).
     if (user && !masteryWritten.current) {
       masteryWritten.current = true;
       const sessionAttempts = state.records
@@ -85,7 +110,28 @@ export default function Practice() {
           (counts.get(skillId) ?? 0) + sessionAttempts.filter((a) => a.skillId === skillId).length,
       }));
       if (rows.length > 0) upsertMastery.mutate(rows);
+
+      // Gamification: chỉ ghi khi trạng thái server đã tải (tránh ghi đè total_xp về 0).
+      if (gami.data) {
+        const correctCount = (allAttempts.data ?? []).filter((a) => a.isCorrect).length;
+        const outcome = summarizeSession({
+          prior: gami.data.state ?? INITIAL_GAMIFICATION,
+          events,
+          dayKeyVN: dayKeyVN(Date.now()),
+          badgeCtx: {
+            mastery: next,
+            correctCount,
+            masteredTopics: masteredTopicsOf(next, topicSkillsMap()),
+          },
+          catalog: getBadges(),
+          earned: new Set(gami.data.earnedBadgeIds),
+        });
+        totalXp = outcome.state.totalXp;
+        newBadgeIds = outcome.newBadges;
+        saveGamification.mutate({ state: outcome.state, newBadgeIds });
+      }
     }
+
     const r = sessionResult(state);
     router.replace({
       pathname: "/result",
@@ -97,6 +143,9 @@ export default function Practice() {
           correct: r.correct,
           score: r.score,
           wrong: r.wrong.map((w) => ({ id: w.id, prompt: w.prompt })),
+          xpGained,
+          totalXp,
+          newBadgeIds,
         }),
       },
     });
