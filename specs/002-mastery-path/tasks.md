@@ -172,32 +172,32 @@ HS chưa cấp quyền vẫn thấy nhắc in-app.
 
 ### Tests (viết trước — RED)
 
-- [ ] T040 [P] [US3] `packages/learning-path/tests/schedule.test.ts`: `nextDueAt` — mastery thấp→khoảng cách
+- [x] T040 [P] [US3] `packages/learning-path/tests/schedule.test.ts`: `nextDueAt` — mastery thấp→khoảng cách
       ngắn hơn cao; tăng theo `repetition`; trả mốc theo ngày VN.
 
 ### Implementation (logic + edge)
 
-- [ ] T041 [US3] Implement `packages/learning-path/src/schedule.ts` (`nextDueAt`) cho T040 PASS; export.
-- [ ] T042 [US3] Mở rộng `scripts/sync-edge-engine.mjs`: đồng bộ `schedule.ts` + `time.ts` (+ phụ thuộc thuần)
+- [x] T041 [US3] Implement `packages/learning-path/src/schedule.ts` (`nextDueAt`) cho T040 PASS; export.
+- [x] T042 [US3] Mở rộng `scripts/sync-edge-engine.mjs`: đồng bộ `schedule.ts` + `time.ts` (+ phụ thuộc thuần)
       → `supabase/functions/_shared/learning-path/` (banner AUTO-GENERATED). Chạy `npm run sync:edge`.
-- [ ] T043 [US3] Edge Function `supabase/functions/review-scheduler/index.ts` theo `contracts/review-scheduler.md`
+- [x] T043 [US3] Edge Function `supabase/functions/review-scheduler/index.ts` theo `contracts/review-scheduler.md`
       (đọc `skill_mastery.due_at ≤ now` theo HS, insert `review_reminders` on-conflict-do-nothing, push best-effort
       qua Expo); cập nhật import map/`deno.json`. **Xác nhận cú pháp scheduled function Supabase hiện hành (docs).**
-- [ ] T044 [P] [US3] Test idempotency scheduler `supabase/functions/review-scheduler/index.test.ts` (hoặc
+- [x] T044 [P] [US3] Test idempotency scheduler `supabase/functions/review-scheduler/index.test.ts` (hoặc
       script integration): chạy 2 lần cùng `due_date` → đúng 1 dòng `review_reminders`/HS (SC-006).
 
 ### App
 
-- [ ] T045 [US3] Nối ghi `skill_mastery.due_at` bằng `nextDueAt` sau mỗi lần cập nhật mastery (mở rộng T026).
-- [ ] T046 [US3] Mục "Đến hạn ôn" ưu tiên trước "học mới" ở trang chủ (mở rộng `lib/path.ts`/`index.tsx`) (FR-015).
-- [ ] T047 [P] [US3] `apps/app/src/lib/notifications.ts`: xin quyền + lấy Expo push token (best-effort),
+- [x] T045 [US3] Nối ghi `skill_mastery.due_at` bằng `nextDueAt` sau mỗi lần cập nhật mastery (mở rộng T026).
+- [x] T046 [US3] Mục "Đến hạn ôn" ưu tiên trước "học mới" ở trang chủ (mở rộng `lib/path.ts`/`index.tsx`) (FR-015).
+- [x] T047 [P] [US3] `apps/app/src/lib/notifications.ts`: xin quyền + lấy Expo push token (best-effort),
       **xác nhận API expo-notifications ở Expo SDK 56** (docs.expo.dev/versions/v56.0.0/).
-- [ ] T048 [US3] `apps/app/src/lib/supabase/push.ts`: lưu/cập nhật `push_tokens` (enabled); toggle tắt thông báo (FR-019).
-- [ ] T049 [US3] Cài `expo-notifications` vào `apps/app` (phiên bản hợp SDK 56) + cấu hình app.json nếu cần.
+- [x] T048 [US3] `apps/app/src/lib/supabase/push.ts`: lưu/cập nhật `push_tokens` (enabled); toggle tắt thông báo (FR-019).
+- [x] T049 [US3] Cài `expo-notifications` vào `apps/app` (phiên bản hợp SDK 56) + cấu hình app.json nếu cần.
 
 ### E2E
 
-- [ ] T050 [US3] `apps/app/tests/e2e/due-reminder.spec.ts`: kỹ năng `due_at` quá khứ → hiện ở mục "đến hạn"
+- [x] T050 [US3] `apps/app/tests/e2e/due-reminder.spec.ts`: kỹ năng `due_at` quá khứ → hiện ở mục "đến hạn"
       in-app cho HS chưa cấp quyền (SC-007). (Push native không kiểm ở web.)
 
 **Checkpoint US3**: ôn ngắt quãng + cron idempotent + in-app reminder; push best-effort (không chặn done).

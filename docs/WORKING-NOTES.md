@@ -4,13 +4,40 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
-**Mốc:** M0 ✅ · M1 ✅ → **M2 — Mastery & Lộ trình** đang implement.
-**US1 (MVP) ✅ đã merge** vào `develop` qua **PR #3** (`70fd050`) — nhánh `feature/m2-mastery-path` đã
-squash-merge xong (có thể xóa). **US2 (Gamification) ✅ vừa xong** trên nhánh `feature/m2-us2-gamification`
-(chưa commit/PR lúc viết). Còn lại: **US3** (spaced repetition + cron + push) → **Polish** → PR M2.
+**Mốc:** M0 ✅ · M1 ✅ → **M2 — Mastery & Lộ trình** gần xong.
+**US1 ✅ merge** (PR #3 `70fd050`) · **US2 ✅ merge** (PR #4 `80235bc`). **US3 (spaced repetition + cron +
+push) ✅ vừa xong** trên nhánh `feature/m2-us3-spaced-repetition` (chưa PR lúc viết). Còn lại: **Polish**
+(T051–T057) → đóng M2.
 
 > Chạy local: `supabase start` (migration `0002` đã áp) → `npm run web -w @synaptek/app`. Guest luyện
-> được + thấy XP nhận/phiên; đăng nhập để tích XP/streak, mở huy hiệu, lưu mastery + heatmap/lộ trình.
+> được + thấy XP nhận/phiên; đăng nhập để tích XP/streak, mở huy hiệu, lưu mastery + heatmap/lộ trình + due_at.
+
+**US3 — Spaced repetition + cron + push (T040–T050 ✅):**
+
+- ✅ `@synaptek/learning-path/src/schedule.ts`: `nextDueAt` (SM-2 rút gọn — interval theo repetition ×
+  hệ số mastery [0.5,1.5], tối thiểu 1 ngày, tất định). **+6 test** → learning-path **56 test**.
+- ✅ `scripts/sync-edge-engine.mjs` mở rộng: đồng bộ `schedule.ts`+`time.ts` → `_shared/learning-path/`
+  (+ `index.ts` re-export). `deno.json` thêm import map `@synaptek/learning-path` + `@supabase/supabase-js`.
+- ✅ Edge Function `supabase/functions/review-scheduler/index.ts` (service-role; đọc `skill_mastery.due_at
+≤ now` theo HS → upsert `review_reminders` ON CONFLICT DO NOTHING → Expo push best-effort). Tách
+  `runScheduler(client, now, push)` thuần để test; `Deno.serve` guard `import.meta.main`. **Verify LIVE**
+  (local supabase): 401 khi thiếu service-role; chạy 2× cùng due_date → `created:1` rồi `created:0`, đúng
+  **1** dòng `review_reminders`, `pushed:0` khi không token (SC-006 ✓). Bug đã bắt: 0001 chỉ grant bảng
+  cho `authenticated` → **0002 thêm grant `service_role`** trên skill_mastery/push_tokens/review_reminders.
+- ✅ Test idempotency Deno `review-scheduler/index.test.ts` (fake client, 3 ca SC-006) — xanh; **thêm step
+  Setup Deno + `deno test` vào CI**.
+- ✅ App: `practice/[topicId].tsx` ghi `due_at`/`last_reviewed` bằng `nextDueAt` (T045); home "đến hạn ôn"
+  đã ưu tiên sẵn từ US1 (buildPath due/next) — nay có dữ liệu due_at; `lib/notifications.ts` (registerForPush
+  best-effort, native-only, guard web/simulator/no-EAS) + `lib/supabase/push.ts` (save token + toggle FR-019);
+  profile thêm khối "Nhắc ôn tập" (bật/tắt). Cài `expo-notifications ~56.0.18`.
+- ✅ SC-007 (in-app due không cần push) kiểm TẤT ĐỊNH ở `lib/path.test.ts`. E2E `due-reminder.spec.ts` là
+  **auth-gated** (`test.skip`, cần Supabase + seed) — không vào CI, như `auth-progress`.
+- ✅ `npm test` toàn repo xanh; `sync:edge` không lệch; `validate:content` xanh; **expo export web 12 routes**;
+  `deno check` review-scheduler sạch; guest e2e 8/8.
+
+> **Cron deploy (hosted)**: lên lịch bằng Supabase Cron (pg_cron + pg_net) gọi function với service-role
+> key từ Vault — **không commit key**. Snippet + hướng dẫn ở `supabase/README.md`. Chưa chạy trên project
+> hosted (chưa link). expo-notifications: chưa có **EAS projectId** → push token trả null (best-effort, OK).
 
 **US2 — Gamification (T028–T039 ✅ + T052 badges-gate):**
 
@@ -91,14 +118,13 @@ Decision Log **D19** (BKT) · **D20** (gamification) · **D21** (cron+push) đã
 
 ## Việc tiếp theo (theo thứ tự)
 
-1. **Commit + PR US2** (`feature/m2-us2-gamification` → `develop`, conventional commit; no-attribution).
-   Husky pre-commit format. CI xanh (format → test → engine↔_shared → build web + guest e2e).
-2. **US3 (P3) — Spaced repetition + cron + push** (T040–T050): `schedule.ts` (SM-2) + mở rộng `sync:edge`
-   đồng bộ `schedule.ts`/`time.ts` vào `_shared`; Edge Function `review-scheduler` (idempotent qua
-   `review_reminders`); mục "đến hạn ôn" trước "học mới" ở trang chủ; `expo-notifications` (best-effort).
-   **Cần xác nhận**: cú pháp Supabase scheduled function + API expo-notifications SDK 56 (đọc docs v56).
-3. **Polish** (T051–T057): coverage ≥80% learning-path; accessibility (đã có hook reduced-motion); trạng
-   thái rỗng/edge; cập nhật roadmap M2; gộp về PR M2.
+1. **Commit + PR US3** (`feature/m2-us3-spaced-repetition` → `develop`; no-attribution). CI xanh (format →
+   test → engine↔_shared → content → **deno test** → build web → guest e2e).
+2. **Polish + đóng M2** (T051–T057): coverage ≥80% learning-path (hiện 56 test phủ nhánh chính — đo/bổ
+   sung ca thiếu); trạng thái rỗng/edge UI; a11y (reduced-motion ✓, tương phản heatmap, chạm ≥48px);
+   cập nhật `docs/02-roadmap.md` (M2 ✅) + xác nhận Decision Log D19–D21.
+3. **Deploy hosted** (khi sẵn sàng): `supabase link` → `db push` → `functions deploy review-scheduler` +
+   lên lịch cron (Vault key); cấu hình **EAS projectId** để push token hoạt động.
 4. **Verify iOS sim** khi có Mac simulator (web đã pass).
 5. **Dọn nhánh**: xóa `feature/m2-mastery-path` (đã merge).
 

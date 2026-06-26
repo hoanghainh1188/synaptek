@@ -4,7 +4,7 @@ import { Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
 import { buildSession } from "@synaptek/curriculum";
-import { dayKeyVN, difficultyOf } from "@synaptek/learning-path";
+import { dayKeyVN, difficultyOf, nextDueAt } from "@synaptek/learning-path";
 import { getBadges, getQuestions, getTopic, strandOf, topicSkillsMap } from "@/lib/content";
 import { strandColors, type StrandKey } from "@/theme/tokens";
 import {
@@ -103,12 +103,23 @@ export default function Practice() {
       const counts = new Map((priorMastery.data ?? []).map((m) => [m.skillId, m.attemptsCount]));
       const next = applySession(prior, sessionAttempts);
       const touched = new Set(sessionAttempts.map((a) => a.skillId));
-      const rows = [...touched].map((skillId) => ({
-        skillId,
-        mastery: next.get(skillId)!,
-        attemptsCount:
-          (counts.get(skillId) ?? 0) + sessionAttempts.filter((a) => a.skillId === skillId).length,
-      }));
+      const nowMs = Date.now();
+      const rows = [...touched].map((skillId) => {
+        const masteryVal = next.get(skillId)!;
+        const attemptsCount =
+          (counts.get(skillId) ?? 0) + sessionAttempts.filter((a) => a.skillId === skillId).length;
+        // Hạn ôn kế tiếp (SM-2, US3 T045) — recommender + job nền đọc due_at.
+        const dueAt = new Date(
+          nextDueAt({ mastery: masteryVal, lastReviewed: nowMs, repetition: attemptsCount }),
+        ).toISOString();
+        return {
+          skillId,
+          mastery: masteryVal,
+          attemptsCount,
+          lastReviewed: new Date(nowMs).toISOString(),
+          dueAt,
+        };
+      });
       if (rows.length > 0) upsertMastery.mutate(rows);
 
       // Gamification: chỉ ghi khi trạng thái server đã tải (tránh ghi đè total_xp về 0).
