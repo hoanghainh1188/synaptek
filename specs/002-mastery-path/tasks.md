@@ -206,17 +206,17 @@ HS chưa cấp quyền vẫn thấy nhắc in-app.
 
 ## Phase 6: Polish & Cross-Cutting
 
-- [ ] T051 [P] Kiểm coverage `@synaptek/learning-path` ≥ 80% (đếm nhánh chính bkt/recommender/schedule/
+- [x] T051 [P] Kiểm coverage `@synaptek/learning-path` ≥ 80% (đếm nhánh chính bkt/recommender/schedule/
       gamification/heatmap/time); bổ sung ca thiếu.
-- [ ] T052 [P] Chạy `npm run validate:content` (gồm badges.json) — xanh.
-- [ ] T053 [P] Chạy `npm run sync:edge` + `git diff --exit-code supabase/functions/_shared` — sạch (CI gate).
-- [ ] T054 [P] Trạng thái rỗng + edge cases UI: "đã vững — ôn nâng cao", chẩn đoán bỏ qua, guest (mời đăng
+- [x] T052 [P] Chạy `npm run validate:content` (gồm badges.json) — xanh.
+- [x] T053 [P] Chạy `npm run sync:edge` + `git diff --exit-code supabase/functions/_shared` — sạch (CI gate).
+- [x] T054 [P] Trạng thái rỗng + edge cases UI: "đã vững — ôn nâng cao", chẩn đoán bỏ qua, guest (mời đăng
       nhập để lưu) — bám spec Edge Cases.
-- [ ] T055 [P] Kiểm accessibility: `reduced-motion` cho ăn mừng; tương phản thang heatmap; vùng chạm ≥ 48px;
+- [x] T055 [P] Kiểm accessibility: `reduced-motion` cho ăn mừng; tương phản thang heatmap; vùng chạm ≥ 48px;
       chữ Việt có dấu.
-- [ ] T056 [P] `npm run format` + chạy `npm test` toàn workspace xanh — gồm test `grading-engine`
+- [x] T056 [P] `npm run format` + chạy `npm test` toàn workspace xanh — gồm test `grading-engine`
       (chốt regression FR-021: M2 KHÔNG đổi hành vi chấm M1).
-- [ ] T057 Cập nhật `docs/WORKING-NOTES.md` (điểm tiếp tục) + `docs/02-roadmap.md` (M2 trạng thái) trong cùng PR;
+- [x] T057 Cập nhật `docs/WORKING-NOTES.md` (điểm tiếp tục) + `docs/02-roadmap.md` (M2 trạng thái) trong cùng PR;
       xác nhận Decision Log D19–D21 đã ghi.
 
 ---

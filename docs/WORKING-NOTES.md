@@ -4,10 +4,10 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
-**Mốc:** M0 ✅ · M1 ✅ → **M2 — Mastery & Lộ trình** gần xong.
-**US1 ✅ merge** (PR #3 `70fd050`) · **US2 ✅ merge** (PR #4 `80235bc`). **US3 (spaced repetition + cron +
-push) ✅ vừa xong** trên nhánh `feature/m2-us3-spaced-repetition` (chưa PR lúc viết). Còn lại: **Polish**
-(T051–T057) → đóng M2.
+**Mốc:** M0 ✅ · M1 ✅ → **M2 — Mastery & Lộ trình: 57/57 task ✅ (đang đóng).**
+**US1 ✅ merge** (PR #3 `70fd050`) · **US2 ✅ merge** (PR #4 `80235bc`) · **US3 ✅ merge** (PR #5 `b895f99`).
+**Polish (T051–T057) ✅ vừa xong** trên nhánh `feature/m2-polish` (PR đang mở). Sau khi merge → **M2 đóng**,
+chuyển sang **M3 — Giáo viên**. Việc hậu-M2 (không chặn): deploy hosted (cron + EAS projectId), iOS sim.
 
 > Chạy local: `supabase start` (migration `0002` đã áp) → `npm run web -w @synaptek/app`. Guest luyện
 > được + thấy XP nhận/phiên; đăng nhập để tích XP/streak, mở huy hiệu, lưu mastery + heatmap/lộ trình + due_at.
@@ -118,15 +118,21 @@ Decision Log **D19** (BKT) · **D20** (gamification) · **D21** (cron+push) đã
 
 ## Việc tiếp theo (theo thứ tự)
 
-1. **Commit + PR US3** (`feature/m2-us3-spaced-repetition` → `develop`; no-attribution). CI xanh (format →
-   test → engine↔_shared → content → **deno test** → build web → guest e2e).
-2. **Polish + đóng M2** (T051–T057): coverage ≥80% learning-path (hiện 56 test phủ nhánh chính — đo/bổ
-   sung ca thiếu); trạng thái rỗng/edge UI; a11y (reduced-motion ✓, tương phản heatmap, chạm ≥48px);
-   cập nhật `docs/02-roadmap.md` (M2 ✅) + xác nhận Decision Log D19–D21.
-3. **Deploy hosted** (khi sẵn sàng): `supabase link` → `db push` → `functions deploy review-scheduler` +
-   lên lịch cron (Vault key); cấu hình **EAS projectId** để push token hoạt động.
+1. **Merge PR `feature/m2-polish`** → `develop` (CI xanh) → **đóng M2**.
+2. **M3 — Giáo viên** (`specs/003-*`, chưa tạo): tạo lớp + mã mời; soạn/giao bài; chấm chính thức
+   server-side + ghi đè thủ công + nhận xét; phân tích lớp; **RLS chéo vai trò đầy đủ**. Bắt đầu bằng
+   Spec Kit `specify`. (Edge Function `grade` hiện dùng stub đáp án — M3 đọc `content/questions` phía server.)
+3. **Deploy hosted M2** (khi sẵn sàng, không chặn M3): `supabase link` → `db push` →
+   `functions deploy grade review-scheduler` + lên lịch cron (Vault key); cấu hình **EAS projectId** cho push.
 4. **Verify iOS sim** khi có Mac simulator (web đã pass).
 5. **Dọn nhánh**: xóa `feature/m2-mastery-path` (đã merge).
+
+## Nợ kỹ thuật / để ý sau
+
+- `correctCount` (huy hiệu) suy từ `attempts` server lúc kết thúc phiên → có thể trễ vài câu sát ngưỡng;
+  đánh giá lại mỗi phiên nên hội tụ. Cân nhắc đếm chính xác nếu cần.
+- `auth-progress.spec.ts`: strict-mode 2×"Tiến độ" — pre-existing (hydration Expo static-render), không CI.
+- Push token trả null tới khi có **EAS projectId**; cron chưa lên lịch trên hosted (best-effort, đã tài liệu).
 
 > **Định hướng tương lai (chủ repo nêu):** sẽ còn cải tiến tiếp. Ý tưởng để ngỏ: tinh chỉnh tham số BKT
 > bằng dữ liệu thật; heatmap dạng lỗi chi tiết hơn; populate heatmap demo (cần login). Ghi lại khi rõ.
