@@ -90,7 +90,7 @@ export default function Home() {
           <Pressable
             onPress={() => router.push("/progress")}
             accessibilityLabel="Tiến độ"
-            className="h-11 w-11 items-center justify-center rounded-full bg-brand"
+            className="h-12 w-12 items-center justify-center rounded-full bg-brand"
           >
             <Text className="font-display text-lg font-extrabold text-white">
               {(user.email ?? "?").charAt(0).toUpperCase()}
@@ -100,7 +100,7 @@ export default function Home() {
           <Pressable
             onPress={() => router.push("/login")}
             accessibilityLabel="Đăng nhập"
-            className="min-h-[40px] items-center justify-center rounded-full bg-brand px-4"
+            className="min-h-[48px] items-center justify-center rounded-full bg-brand px-4"
           >
             <Text className="font-display text-sm font-bold text-white">Đăng nhập</Text>
           </Pressable>
@@ -201,6 +201,17 @@ export default function Home() {
               );
             })}
           </View>
+        </View>
+      )}
+
+      {/* Đã vững toàn bộ kỹ năng hiện có (T054) — không còn gợi ý nào */}
+      {user && hasData && recos.length === 0 && (
+        <View className="mt-6 flex-row items-center gap-3 rounded-lg bg-ok/10 p-4">
+          <Text style={{ fontSize: 28 }}>🌟</Text>
+          <Text className="flex-1 font-semibold text-ink">
+            Em đã vững các kỹ năng hiện có — quá giỏi! Ôn lại để giữ phong độ, hoặc chờ nội dung mới
+            nhé.
+          </Text>
         </View>
       )}
 

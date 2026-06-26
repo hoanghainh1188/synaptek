@@ -58,6 +58,12 @@ test("tất định: cùng input → cùng output", () => {
   assert.equal(a, b);
 });
 
+test("repetition vượt chuỗi SM-2 → giãn tiếp (nhân đôi), vẫn tăng đơn điệu", () => {
+  const r4 = nextDueAt({ mastery: 0.6, lastReviewed: T0, repetition: 4 });
+  const r6 = nextDueAt({ mastery: 0.6, lastReviewed: T0, repetition: 6 });
+  assert.ok(r6 - T0 > r4 - T0, `r6=${r6 - T0} r4=${r4 - T0}`);
+});
+
 test("kết quả là mốc thời gian hợp lệ (dayKeyVN ổn định)", () => {
   const due = nextDueAt({ mastery: 0.8, lastReviewed: T0, repetition: 1 });
   assert.match(dayKeyVN(due), /^\d{4}-\d{2}-\d{2}$/);
