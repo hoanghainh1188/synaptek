@@ -35,6 +35,16 @@ writeFileSync(
 );
 console.log(`generated ${LP_DEST}/index.ts`);
 
+// 2b) classroom — luật giới hạn nộp (submit-rules) cho Edge enforce (D4/D13/D25).
+const CR_DEST = "supabase/functions/_shared/classroom";
+syncFile("packages/classroom/src/submit-rules.ts", `${CR_DEST}/submit-rules.ts`);
+writeFileSync(
+  `${CR_DEST}/index.ts`,
+  `// ⚠️ AUTO-GENERATED (npm run sync:edge) — re-export tối thiểu cho Edge Function. Lý do: D13.\n` +
+    `export { checkSubmitAllowed } from "./submit-rules.ts";\n`,
+);
+console.log(`generated ${CR_DEST}/index.ts`);
+
 // 3) answer-keys — đáp án cho CHẤM CHÍNH THỨC server-side (D4). Sinh từ content/questions (D6);
 //    edge chỉ mount supabase/functions (D13) nên đáp án phải là artifact tự sinh ở _shared (KHÔNG vào client/DB).
 const QDIR = "content/questions";

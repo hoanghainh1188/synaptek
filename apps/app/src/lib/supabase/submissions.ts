@@ -12,7 +12,25 @@ export interface SubmissionRow {
   isOverride: boolean;
   feedback: string | null;
   displayScore: number | null;
-  submittedAt: string;
+  attemptCount: number;
+  startedAt: string | null;
+  submittedAt: string | null;
+}
+
+/** Bắt đầu làm bài (đặt mốc started_at cho timer — RPC start_attempt). Trả mốc bắt đầu (ISO). */
+export function useStartAttempt() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (assignmentId: string): Promise<string | null> => {
+      if (!supabase) return null;
+      const { data, error } = await supabase.rpc("start_attempt", {
+        p_assignment_id: assignmentId,
+      });
+      if (error) throw error;
+      return (data as string | null) ?? null;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["submission"] }),
+  });
 }
 
 export interface GradeResponse {
@@ -110,7 +128,9 @@ export function useMySubmission(assignmentId: string) {
       if (!supabase || !user) return null;
       const { data, error } = await supabase
         .from("submissions")
-        .select("assignment_id, auto_score, final_score, is_override, feedback, submitted_at")
+        .select(
+          "assignment_id, auto_score, final_score, is_override, feedback, attempt_count, started_at, submitted_at",
+        )
         .eq("assignment_id", assignmentId)
         .eq("student_id", user.id)
         .maybeSingle();
@@ -125,7 +145,9 @@ export function useMySubmission(assignmentId: string) {
         isOverride: Boolean(data.is_override),
         feedback: (data.feedback as string | null) ?? null,
         displayScore: displayScore(auto, final),
-        submittedAt: data.submitted_at as string,
+        attemptCount: (data.attempt_count as number) ?? 0,
+        startedAt: (data.started_at as string | null) ?? null,
+        submittedAt: (data.submitted_at as string | null) ?? null,
       };
     },
   });

@@ -9,8 +9,14 @@ export interface AssignmentRow {
   title: string;
   questionIds: string[];
   dueAt: string | null;
+  allowLate: boolean;
+  maxAttempts: number | null;
+  timeLimitMinutes: number | null;
   createdAt: string;
 }
+
+const SELECT_COLS =
+  "id, class_id, title, question_ids, due_at, allow_late, max_attempts, time_limit_minutes, created_at";
 
 function mapRow(r: Record<string, unknown>): AssignmentRow {
   return {
@@ -19,6 +25,9 @@ function mapRow(r: Record<string, unknown>): AssignmentRow {
     title: r.title as string,
     questionIds: (r.question_ids as string[]) ?? [],
     dueAt: (r.due_at as string | null) ?? null,
+    allowLate: (r.allow_late as boolean) ?? true,
+    maxAttempts: (r.max_attempts as number | null) ?? null,
+    timeLimitMinutes: (r.time_limit_minutes as number | null) ?? null,
     createdAt: r.created_at as string,
   };
 }
@@ -33,7 +42,7 @@ export function useClassAssignments(classId: string) {
       if (!supabase || !user) return [];
       const { data, error } = await supabase
         .from("assignments")
-        .select("id, class_id, title, question_ids, due_at, created_at")
+        .select(SELECT_COLS)
         .eq("class_id", classId)
         .order("created_at", { ascending: false });
       if (error) throw error;
@@ -52,7 +61,7 @@ export function useMyAssignments() {
       if (!supabase || !user) return [];
       const { data, error } = await supabase
         .from("assignments")
-        .select("id, class_id, title, question_ids, due_at, created_at")
+        .select(SELECT_COLS)
         .order("created_at", { ascending: false });
       if (error) throw error;
       return (data ?? []).map(mapRow);
@@ -70,7 +79,7 @@ export function useAssignment(assignmentId: string) {
       if (!supabase || !user) return null;
       const { data, error } = await supabase
         .from("assignments")
-        .select("id, class_id, title, question_ids, due_at, created_at")
+        .select(SELECT_COLS)
         .eq("id", assignmentId)
         .maybeSingle();
       if (error) throw error;
@@ -84,9 +93,12 @@ export interface NewAssignment {
   title: string;
   questionIds: string[];
   dueAt?: string | null;
+  allowLate?: boolean;
+  maxAttempts?: number | null;
+  timeLimitMinutes?: number | null;
 }
 
-/** GV tạo bài tập (RLS owns_class). */
+/** GV tạo bài tập (RLS owns_class) + cấu hình giới hạn nộp (D25). */
 export function useCreateAssignment() {
   const { user } = useAuth();
   const qc = useQueryClient();
@@ -98,6 +110,9 @@ export function useCreateAssignment() {
         title: a.title,
         question_ids: a.questionIds,
         due_at: a.dueAt ?? null,
+        allow_late: a.allowLate ?? true,
+        max_attempts: a.maxAttempts ?? null,
+        time_limit_minutes: a.timeLimitMinutes ?? null,
       });
       if (error) throw error;
     },

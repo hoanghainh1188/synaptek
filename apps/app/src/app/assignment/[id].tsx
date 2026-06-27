@@ -1,17 +1,26 @@
-// Route HS — làm + nộp bài tập (M3 US2, T024). Chấm CHÍNH THỨC ở server (đáp án ẩn — D4).
-import { useMemo, useState } from "react";
+// Route HS — làm + nộp bài tập (M3 US2 + giới hạn D25). Chấm CHÍNH THỨC server (ẩn đáp án — D4).
+// Giới hạn (hạn nộp/số lần/thời gian) enforce ở server; client khoá nút + đồng hồ đếm ngược + auto-nộp.
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
+import { checkSubmitAllowed, type SubmitBlock } from "@synaptek/classroom";
 import { getQuestionById } from "@/lib/content";
 import { useAssignment } from "@/lib/supabase/assignments";
 import {
   useMySubmission,
+  useStartAttempt,
   useSubmitAssignment,
   type GradeResponse,
 } from "@/lib/supabase/submissions";
 import { QuestionCard } from "@/components/practice/QuestionCard";
 import { AnswerInput } from "@/components/practice/AnswerInput";
+
+const BLOCK_MSG: Record<SubmitBlock, string> = {
+  past_due: "Đã quá hạn nộp.",
+  no_attempts_left: "Em đã hết lượt nộp.",
+  time_expired: "Đã hết thời gian làm bài.",
+};
 
 export default function DoAssignment() {
   const insets = useSafeAreaInsets();
@@ -19,19 +28,85 @@ export default function DoAssignment() {
   const assignmentId = String(id);
   const assignment = useAssignment(assignmentId);
   const submit = useSubmitAssignment();
+  const startAttempt = useStartAttempt();
   const prior = useMySubmission(assignmentId);
   const [answers, setAnswers] = useState<Record<string, string | string[]>>({});
   const [result, setResult] = useState<GradeResponse | null>(null);
+  const [startedAt, setStartedAt] = useState<number | null>(null);
+  const [nowTick, setNowTick] = useState(Date.now());
+  const startedRef = useRef(false);
+  const autoSubmitRef = useRef(false);
 
+  const a = assignment.data;
   const questions = useMemo(
-    () => (assignment.data?.questionIds ?? []).map((qid) => getQuestionById(qid)).filter(Boolean),
-    [assignment.data],
+    () => (a?.questionIds ?? []).map((qid) => getQuestionById(qid)).filter(Boolean),
+    [a],
   );
+
+  // Bắt đầu làm (đặt mốc cho đồng hồ) khi bài có giới hạn thời gian và chưa bắt đầu.
+  useEffect(() => {
+    if (!a || startedRef.current) return;
+    const existing = prior.data?.startedAt ? Date.parse(prior.data.startedAt) : null;
+    if (existing) {
+      setStartedAt(existing);
+      startedRef.current = true;
+    } else if (a.timeLimitMinutes) {
+      startedRef.current = true;
+      startAttempt.mutate(assignmentId, {
+        onSuccess: (iso) => setStartedAt(iso ? Date.parse(iso) : Date.now()),
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [a, prior.data?.startedAt]);
+
+  // Đồng hồ đếm ngược (1s) khi có giới hạn thời gian.
+  useEffect(() => {
+    if (!a?.timeLimitMinutes || !startedAt) return;
+    const t = setInterval(() => setNowTick(Date.now()), 1000);
+    return () => clearInterval(t);
+  }, [a?.timeLimitMinutes, startedAt]);
+
+  const deadline =
+    a?.timeLimitMinutes && startedAt ? startedAt + a.timeLimitMinutes * 60_000 : null;
+  const remainingMs = deadline ? Math.max(0, deadline - nowTick) : null;
+
+  const decision = a
+    ? checkSubmitAllowed(
+        {
+          dueAt: a.dueAt ? Date.parse(a.dueAt) : null,
+          allowLate: a.allowLate,
+          maxAttempts: a.maxAttempts,
+          timeLimitMinutes: a.timeLimitMinutes,
+        },
+        { attemptCount: prior.data?.attemptCount ?? 0, startedAt },
+        nowTick,
+      )
+    : { allowed: true as const };
 
   const doSubmit = () =>
     submit.mutate({ assignmentId, answers }, { onSuccess: (r) => setResult(r) });
 
+  // Tự nộp khi hết giờ (một lần).
+  useEffect(() => {
+    if (
+      remainingMs === 0 &&
+      !autoSubmitRef.current &&
+      !result &&
+      (prior.data?.attemptCount ?? 0) === 0
+    ) {
+      autoSubmitRef.current = true;
+      doSubmit();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [remainingMs]);
+
+  const mmss = (ms: number) => {
+    const s = Math.floor(ms / 1000);
+    return `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
+  };
   const submitted = result ?? (prior.data ? "prior" : null);
+  const attemptsLeft =
+    a?.maxAttempts != null ? Math.max(0, a.maxAttempts - (prior.data?.attemptCount ?? 0)) : null;
 
   return (
     <ScrollView
@@ -51,11 +126,27 @@ export default function DoAssignment() {
       >
         <Text className="text-lg text-muted">←</Text>
       </Pressable>
-      <Text className="font-display text-2xl font-extrabold text-ink">
-        {assignment.data?.title ?? "Bài tập"}
-      </Text>
+      <Text className="font-display text-2xl font-extrabold text-ink">{a?.title ?? "Bài tập"}</Text>
 
-      {/* Đã có điểm (đã nộp trước đó hoặc vừa nộp) */}
+      {/* Thông tin giới hạn */}
+      <View className="mt-2 flex-row flex-wrap gap-2">
+        {remainingMs !== null && (
+          <View
+            className={`rounded-full px-3 py-1 ${remainingMs === 0 ? "bg-no/10" : "bg-brand/10"}`}
+          >
+            <Text className={`text-xs font-bold ${remainingMs === 0 ? "text-no" : "text-brand"}`}>
+              ⏱ {mmss(remainingMs)}
+            </Text>
+          </View>
+        )}
+        {attemptsLeft !== null && (
+          <View className="rounded-full bg-surface px-3 py-1 shadow-sm">
+            <Text className="text-xs font-bold text-muted">Còn {attemptsLeft} lượt nộp</Text>
+          </View>
+        )}
+      </View>
+
+      {/* Điểm (đã nộp trước / vừa nộp) */}
       {submitted && (
         <View className="mt-4 rounded-lg bg-ok/10 p-4">
           <Text className="font-display text-lg font-extrabold text-ink">
@@ -76,7 +167,7 @@ export default function DoAssignment() {
         </View>
       )}
 
-      {/* Đề bài — KHÔNG có đáp án (ẩn ở server) */}
+      {/* Đề bài — KHÔNG có đáp án */}
       <View className="mt-4 gap-4">
         {questions.map((q) =>
           q ? (
@@ -107,21 +198,25 @@ export default function DoAssignment() {
       >
         <Pressable
           accessibilityLabel="Nộp bài"
-          disabled={submit.isPending || questions.length === 0}
+          disabled={submit.isPending || questions.length === 0 || !decision.allowed}
           onPress={doSubmit}
-          className={`min-h-[52px] items-center justify-center rounded-md ${submit.isPending ? "bg-line" : "bg-brand"}`}
+          className={`min-h-[52px] items-center justify-center rounded-md ${submit.isPending || !decision.allowed ? "bg-line" : "bg-brand"}`}
         >
           {submit.isPending ? (
             <ActivityIndicator color="#fff" />
           ) : (
             <Text className="font-display text-lg font-bold text-white">
-              {result ? "Nộp lại" : "Nộp bài"}
+              {!decision.allowed
+                ? (decision.reason && BLOCK_MSG[decision.reason]) || "Không thể nộp"
+                : result
+                  ? "Nộp lại"
+                  : "Nộp bài"}
             </Text>
           )}
         </Pressable>
         {submit.isError && (
           <Text className="mt-2 text-center text-sm font-semibold text-no">
-            Chưa nộp được. Em đã ở trong lớp của bài này chưa?
+            Chưa nộp được (có thể đã quá hạn/hết lượt/hết giờ).
           </Text>
         )}
       </View>
