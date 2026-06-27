@@ -37,6 +37,10 @@ insert into public.submissions (id, assignment_id, student_id, answers, auto_sco
   ('eeeeeeee-0000-0000-0000-000000000001','dddddddd-0000-0000-0000-000000000001','bbbbbbbb-0000-0000-0000-000000000001','{}'::jsonb, 0.5),
   ('eeeeeeee-0000-0000-0000-000000000002','dddddddd-0000-0000-0000-000000000002','bbbbbbbb-0000-0000-0000-000000000002','{}'::jsonb, 0.5);
 
+insert into public.skill_mastery (student_id, skill_id, mastery) values
+  ('bbbbbbbb-0000-0000-0000-000000000001','g4.num.fractions.compare', 0.3)
+  on conflict (student_id, skill_id) do update set mastery = excluded.mastery;
+
 -- ── Helper kiểm: chạy 1 query đếm dưới danh tính `uid`, so kỳ vọng ───────────────
 create or replace function pg_temp.as_user_count(uid text, q text)
   returns int language plpgsql as $$
@@ -180,6 +184,19 @@ begin
   if n1 <> 1 then raise exception 'FAIL 11a: GV1 KHÔNG đọc được profile HS mình dạy (n=%)', n1; end if;
   if n2 <> 0 then raise exception 'FAIL 11b: GV2 đọc được profile HS không dạy (n=%)', n2; end if;
   raise notice 'RLS 0003 teacher-reads-taught-profile: OK';
+end $$;
+
+-- 12. GV1 ĐỌC được skill_mastery HS_A (phân tích lớp); GV2 thì KHÔNG.
+do $$
+declare n1 int; n2 int;
+begin
+  n1 := pg_temp.as_user_count('aaaaaaaa-0000-0000-0000-000000000001',
+    'select count(*) from public.skill_mastery where student_id=''bbbbbbbb-0000-0000-0000-000000000001''');
+  n2 := pg_temp.as_user_count('aaaaaaaa-0000-0000-0000-000000000002',
+    'select count(*) from public.skill_mastery where student_id=''bbbbbbbb-0000-0000-0000-000000000001''');
+  if n1 < 1 then raise exception 'FAIL 12a: GV1 KHÔNG đọc được mastery HS mình dạy (n=%)', n1; end if;
+  if n2 <> 0 then raise exception 'FAIL 12b: GV2 đọc được mastery HS không dạy (n=%)', n2; end if;
+  raise notice 'RLS 0003 teacher-reads-taught-mastery: OK';
 end $$;
 
 -- ── Dọn ──────────────────────────────────────────────────────────────────────

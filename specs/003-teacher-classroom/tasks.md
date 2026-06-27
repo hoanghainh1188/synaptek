@@ -128,20 +128,20 @@ Monorepo (D5): `packages/classroom/` (TS thuần mới), `apps/app/src/{app,lib,
 
 ### Tests (viết trước — RED)
 
-- [ ] T026 [P] [US3] `packages/classroom/tests/analytics.test.ts`: `assignmentProgress` (chỉ thành viên,
+- [x] T026 [P] [US3] `packages/classroom/tests/analytics.test.ts`: `assignmentProgress` (chỉ thành viên,
       bỏ HS chưa nộp khỏi trung bình), `classWeakSkills` (gộp mastery HS trong lớp, xếp yếu nhất).
 
 ### Implementation
 
-- [ ] T027 [US3] Implement `packages/classroom/src/analytics.ts` (dùng lại `@synaptek/learning-path`
+- [x] T027 [US3] Implement `packages/classroom/src/analytics.ts` (dùng lại `@synaptek/learning-path`
       `skillWeakness`) cho T026 PASS; export.
-- [ ] T028 [US3] `apps/app/src/lib/supabase/submissions.ts` (tiếp): GV đọc bài nộp theo assignment (RLS lớp);
+- [x] T028 [US3] `apps/app/src/lib/supabase/submissions.ts` (tiếp): GV đọc bài nộp theo assignment (RLS lớp);
       ghi đè `final_score` + `feedback` + `is_override` (validate qua `isValidScore`); giữ `auto_score`.
-- [ ] T029 [US3] Route GV `apps/app/src/app/(teacher)/submission/[id].tsx`: xem bài nộp + ghi đè điểm + nhận xét.
-- [ ] T030 [US3] HS xem **điểm cuối** + nhận xét (mở rộng `assignment/[id].tsx` hoặc màn kết quả bài).
-- [ ] T031 [US3] Phân tích lớp ở `(teacher)/class/[id].tsx`: tiến độ bài + điểm yếu lớp (`@synaptek/classroom`
+- [x] T029 [US3] Route GV `apps/app/src/app/(teacher)/submission/[id].tsx`: xem bài nộp + ghi đè điểm + nhận xét.
+- [x] T030 [US3] HS xem **điểm cuối** + nhận xét (mở rộng `assignment/[id].tsx` hoặc màn kết quả bài).
+- [x] T031 [US3] Phân tích lớp ở `(teacher)/class/[id].tsx`: tiến độ bài + điểm yếu lớp (`@synaptek/classroom`
       `analytics` + heatmap learning-path), chỉ HS trong lớp (SC-005).
-- [ ] T032 [US3] `apps/app/tests/e2e/override-analytics.spec.ts` (auth-gated, ngoài CI): GV ghi đè + nhận xét
+- [x] T032 [US3] `apps/app/tests/e2e/override-analytics.spec.ts` (auth-gated, ngoài CI): GV ghi đè + nhận xét
       → HS thấy điểm cuối; phân tích lớp hiển thị.
 
 **Checkpoint US3**: "điểm đáng tin" (audit) + phân tích lớp đầy đủ → GV vận hành lớp end-to-end (done M3).
@@ -150,13 +150,13 @@ Monorepo (D5): `packages/classroom/` (TS thuần mới), `apps/app/src/{app,lib,
 
 ## Phase 6: Polish & Cross-Cutting
 
-- [ ] T033 [P] Coverage `@synaptek/classroom` ≥ 80% (invite/grading-policy/analytics) — bổ sung ca thiếu.
-- [ ] T034 [P] `npm run sync:edge` + `git diff --exit-code supabase/functions/_shared` (gồm `answer-keys.ts`) — sạch (CI gate).
-- [ ] T035 [P] Thêm `grade-assignment` vào step `deno test` của CI; cân nhắc thêm bộ RLS test vào CI (cần Postgres dịch vụ — nếu khả thi).
-- [ ] T036 [P] Trạng thái rỗng + edge cases UI: lớp chưa có HS, chưa có bài, HS chưa nộp, mã hết hạn; guest/role=student không vào route GV.
-- [ ] T037 [P] A11y: vùng chạm ≥ 48px, tương phản, chữ Việt có dấu; bám design tokens (anti-template).
-- [ ] T038 [P] `npm run format` + `npm test` toàn workspace xanh — gồm **regression** engine (FR-021: chấm M1 không đổi) + `expo export` web xanh.
-- [ ] T039 Cập nhật `docs/WORKING-NOTES.md` (điểm tiếp tục) + `docs/02-roadmap.md` (M3 trạng thái) + xác nhận Decision Log D22–D24 — trong cùng PR đóng M3.
+- [x] T033 [P] Coverage `@synaptek/classroom` ≥ 80% (invite/grading-policy/analytics) — bổ sung ca thiếu.
+- [x] T034 [P] `npm run sync:edge` + `git diff --exit-code supabase/functions/_shared` (gồm `answer-keys.ts`) — sạch (CI gate).
+- [x] T035 [P] Thêm `grade-assignment` vào step `deno test` của CI; cân nhắc thêm bộ RLS test vào CI (cần Postgres dịch vụ — nếu khả thi).
+- [x] T036 [P] Trạng thái rỗng + edge cases UI: lớp chưa có HS, chưa có bài, HS chưa nộp, mã hết hạn; guest/role=student không vào route GV.
+- [x] T037 [P] A11y: vùng chạm ≥ 48px, tương phản, chữ Việt có dấu; bám design tokens (anti-template).
+- [x] T038 [P] `npm run format` + `npm test` toàn workspace xanh — gồm **regression** engine (FR-021: chấm M1 không đổi) + `expo export` web xanh.
+- [x] T039 Cập nhật `docs/WORKING-NOTES.md` (điểm tiếp tục) + `docs/02-roadmap.md` (M3 trạng thái) + xác nhận Decision Log D22–D24 — trong cùng PR đóng M3.
 
 ---
 

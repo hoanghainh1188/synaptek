@@ -2,3 +2,9 @@
 // TS thuần, zero-dep, tất định (thời gian/seed truyền vào) → chạy client + Deno Edge Function. (D22–D24)
 export { makeInviteCode, normalizeInviteCode, isInviteValid } from "./invite.ts";
 export { isLate, isValidScore, displayScore, aggregateScore } from "./grading-policy.ts";
+export {
+  type ClassProgress,
+  type WeakSkill,
+  assignmentProgress,
+  classWeakSkills,
+} from "./analytics.ts";

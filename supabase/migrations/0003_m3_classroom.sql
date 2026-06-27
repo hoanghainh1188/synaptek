@@ -107,6 +107,11 @@ alter table public.submissions   enable row level security;
 create policy profiles_select_taught on public.profiles for select
   using (public.teaches_student(id));
 
+-- skill_mastery (0001 chỉ cho đọc của mình) — THÊM: GV đọc mastery HS mình dạy (phân tích lớp — FR-014).
+-- Chỉ SELECT, scoped theo teaches_student. KHÔNG nới `attempts` (R6).
+create policy skill_mastery_select_taught on public.skill_mastery for select
+  using (public.teaches_student(student_id));
+
 -- classes: GV sở hữu thấy & sửa; thành viên chỉ đọc. Tạo lớp cần role=teacher.
 create policy classes_select on public.classes for select
   using (owns_class(id) or is_member(id));

@@ -132,6 +132,38 @@ export function useRoster(classId: string) {
   });
 }
 
+/** Mastery của các HS trong lớp (GV; RLS teaches_student) — cho phân tích điểm yếu lớp (US3). */
+export function useClassMastery(classId: string) {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: ["class-mastery", classId, user?.id ?? "guest"],
+    enabled: Boolean(supabase && user && classId),
+    queryFn: async (): Promise<{ studentId: string; mastery: Map<string, number> }[]> => {
+      if (!supabase || !user) return [];
+      const { data: members, error: mErr } = await supabase
+        .from("class_members")
+        .select("student_id")
+        .eq("class_id", classId);
+      if (mErr) throw mErr;
+      const ids = (members ?? []).map((m) => m.student_id as string);
+      if (ids.length === 0) return [];
+      const { data, error } = await supabase
+        .from("skill_mastery")
+        .select("student_id, skill_id, mastery")
+        .in("student_id", ids);
+      if (error) throw error;
+      const byStudent = new Map<string, Map<string, number>>();
+      for (const r of data ?? []) {
+        const sid = r.student_id as string;
+        const map = byStudent.get(sid) ?? new Map<string, number>();
+        map.set(r.skill_id as string, Number(r.mastery));
+        byStudent.set(sid, map);
+      }
+      return [...byStudent.entries()].map(([studentId, mastery]) => ({ studentId, mastery }));
+    },
+  });
+}
+
 /** Xóa HS khỏi lớp (GV). Dữ liệu luyện tập cá nhân của HS giữ nguyên. */
 export function useRemoveMember(classId: string) {
   const qc = useQueryClient();

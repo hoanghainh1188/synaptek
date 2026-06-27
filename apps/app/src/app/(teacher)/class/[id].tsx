@@ -2,13 +2,16 @@
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
+import { classWeakSkills } from "@synaptek/classroom";
 import {
+  useClassMastery,
   useMyClasses,
   useRegenerateInvite,
   useRemoveMember,
   useRoster,
 } from "@/lib/supabase/classes";
 import { useClassAssignments } from "@/lib/supabase/assignments";
+import { skillName } from "@/lib/content";
 
 export default function ClassDetail() {
   const insets = useSafeAreaInsets();
@@ -17,10 +20,12 @@ export default function ClassDetail() {
   const classes = useMyClasses();
   const roster = useRoster(classId);
   const assignments = useClassAssignments(classId);
+  const classMastery = useClassMastery(classId);
   const regenerate = useRegenerateInvite();
   const removeMember = useRemoveMember(classId);
 
   const cls = classes.data?.find((c) => c.id === classId);
+  const weak = classWeakSkills(classMastery.data ?? [], 5);
 
   return (
     <ScrollView
@@ -78,12 +83,47 @@ export default function ClassDetail() {
           <Text className="text-sm text-muted">Chưa giao bài nào.</Text>
         )}
         {assignments.data?.map((a) => (
-          <View key={a.id} className="rounded-lg bg-surface p-3 shadow-sm">
-            <Text className="font-display font-bold text-ink">{a.title}</Text>
-            <Text className="text-xs font-semibold text-muted">{a.questionIds.length} câu</Text>
-          </View>
+          <Pressable
+            key={a.id}
+            accessibilityLabel={`Chấm ${a.title}`}
+            onPress={() => router.push(`/grade/${a.id}`)}
+            className="flex-row items-center rounded-lg bg-surface p-3 shadow-sm"
+          >
+            <View className="flex-1">
+              <Text className="font-display font-bold text-ink">{a.title}</Text>
+              <Text className="text-xs font-semibold text-muted">
+                {a.questionIds.length} câu · chạm để chấm
+              </Text>
+            </View>
+            <Text className="text-2xl text-muted">›</Text>
+          </Pressable>
         ))}
       </View>
+
+      {/* Phân tích lớp — điểm yếu chung (FR-014, dùng @synaptek/classroom) */}
+      {weak.length > 0 && (
+        <View className="mt-7">
+          <Text className="font-display text-xl font-bold text-ink">Điểm yếu của lớp</Text>
+          <View className="mt-3 gap-2">
+            {weak.map((w) => (
+              <View key={w.skillId} className="rounded-lg bg-surface p-3 shadow-sm">
+                <View className="flex-row items-center justify-between">
+                  <Text className="flex-1 font-semibold text-ink">{skillName(w.skillId)}</Text>
+                  <Text className="text-sm font-bold text-no">
+                    {Math.round(w.avgMastery * 100)}%
+                  </Text>
+                </View>
+                <View className="mt-1.5 h-2 overflow-hidden rounded-full bg-line">
+                  <View
+                    className="h-full rounded-full bg-brand"
+                    style={{ width: `${Math.round(w.avgMastery * 100)}%` }}
+                  />
+                </View>
+              </View>
+            ))}
+          </View>
+        </View>
+      )}
 
       {/* Roster */}
       <Text className="mt-7 font-display text-xl font-bold text-ink">
