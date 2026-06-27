@@ -1,7 +1,7 @@
 // Bài nộp (M3 US2): HS nộp → Edge `grade-assignment` (service-role chấm + ghi auto_score, ẩn đáp án D4).
 // HS đọc bài nộp của mình; điểm hiển thị = final ?? auto (qua @synaptek/classroom). Guest → no-op/null.
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { displayScore } from "@synaptek/classroom";
+import { displayScore, isValidScore } from "@synaptek/classroom";
 import { supabase } from "./client";
 import { useAuth } from "./auth";
 
@@ -35,6 +35,66 @@ export function useSubmitAssignment() {
       });
       if (error) throw error;
       return data as GradeResponse;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["submission"] }),
+  });
+}
+
+export interface GradedSubmission {
+  studentId: string;
+  fullName: string | null;
+  autoScore: number | null;
+  finalScore: number | null;
+  isOverride: boolean;
+  feedback: string | null;
+  displayScore: number | null;
+}
+
+/** GV xem mọi bài nộp của một assignment (RLS owns_class) + tên HS (teaches_student). */
+export function useAssignmentSubmissions(assignmentId: string) {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: ["submission", "assignment", assignmentId, user?.id ?? "guest"],
+    enabled: Boolean(supabase && user && assignmentId),
+    queryFn: async (): Promise<GradedSubmission[]> => {
+      if (!supabase || !user) return [];
+      const { data, error } = await supabase
+        .from("submissions")
+        .select("student_id, auto_score, final_score, is_override, feedback, profiles(full_name)")
+        .eq("assignment_id", assignmentId);
+      if (error) throw error;
+      return (data ?? []).map((r) => {
+        const auto = r.auto_score === null ? null : Number(r.auto_score);
+        const final = r.final_score === null ? null : Number(r.final_score);
+        return {
+          studentId: r.student_id as string,
+          fullName:
+            ((r.profiles as { full_name?: string | null } | null)?.full_name as string | null) ??
+            null,
+          autoScore: auto,
+          finalScore: final,
+          isOverride: Boolean(r.is_override),
+          feedback: (r.feedback as string | null) ?? null,
+          displayScore: displayScore(auto, final),
+        };
+      });
+    },
+  });
+}
+
+/** GV ghi đè điểm + nhận xét (audit: auto_score giữ nguyên — chỉ server ghi). */
+export function useOverrideGrade(assignmentId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (args: { studentId: string; finalScore: number; feedback: string }) => {
+      if (!supabase) return;
+      if (!isValidScore(args.finalScore)) throw new Error("Điểm phải trong khoảng 0–1.");
+      const { error } = await supabase
+        .from("submissions")
+        .update({ final_score: args.finalScore, feedback: args.feedback, is_override: true })
+        .eq("assignment_id", assignmentId)
+        .eq("student_id", args.studentId);
+      if (error) throw error;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["submission"] }),
   });

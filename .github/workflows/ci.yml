@@ -59,7 +59,7 @@ jobs:
           deno-version: v2.x
 
       - name: Tests (edge functions — Deno)
-        run: deno test review-scheduler/index.test.ts
+        run: deno test review-scheduler/index.test.ts grade-assignment/index.test.ts
         working-directory: supabase/functions
 
       - name: Build web (Expo export)

@@ -4,13 +4,36 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
-**Mốc:** M0 ✅ · M1 ✅ → **M2 — Mastery & Lộ trình: 57/57 task ✅ (đang đóng).**
-**US1 ✅ merge** (PR #3 `70fd050`) · **US2 ✅ merge** (PR #4 `80235bc`) · **US3 ✅ merge** (PR #5 `b895f99`).
-**Polish (T051–T057) ✅ vừa xong** trên nhánh `feature/m2-polish` (PR đang mở). Sau khi merge → **M2 đóng**,
-chuyển sang **M3 — Giáo viên**. Việc hậu-M2 (không chặn): deploy hosted (cron + EAS projectId), iOS sim.
+**Mốc:** M0 ✅ · M1 ✅ · M2 ✅ (đóng) → **M3 — Giáo viên: US1+US2+US3 + Polish ✅.**
+**M3 US1 ✅ merge** (PR #7 `63b41d5`) · **US2 ✅ merge** (PR #8 `c14c579`) · **US3 + Polish ✅ vừa xong**
+trên nhánh `feature/m3-us3-grading-analytics` (PR đang mở). Sau khi merge → **M3 đóng** → **M4 (phụ huynh)**.
+Việc hậu-M3 (không chặn): deploy hosted (`db push` 0003 + `functions deploy grade-assignment`), iOS sim.
 
-> Chạy local: `supabase start` (migration `0002` đã áp) → `npm run web -w @synaptek/app`. Guest luyện
-> được + thấy XP nhận/phiên; đăng nhập để tích XP/streak, mở huy hiệu, lưu mastery + heatmap/lộ trình + due_at.
+> Chạy local: `supabase start` (0001+0002+0003) + `supabase functions serve` (cho `grade-assignment`) →
+> `npm run web -w @synaptek/app`. GV: đăng ký vai trò GV → tạo lớp → giao bài → chấm/ghi đè. HS: vào lớp
+> bằng mã → làm/nộp bài (chấm server-side, ẩn đáp án). Bộ test RLS: `supabase/tests/rls-0003.sql` (9 ca).
+
+**M3 — Giáo viên (39/39 task ✅):**
+
+- ✅ **Foundational** (migration `0003` + RLS chéo vai trò): `classes`/`class_members`/`assignments`/
+  `submissions`; helper `SECURITY DEFINER` `owns_class`/`is_member`/`teaches_student`; RPC
+  `join_class_by_code`; policy GV đọc profile+skill_mastery HS mình dạy. **Bộ test RLS 9 ca PASS (live)**.
+  `profiles.role` đã có ở 0001 (D22). Bug bắt được & sửa: (1) table-level UPDATE che revoke cấp cột →
+  HS không ghi submissions trực tiếp; (2) profiles/skill_mastery RLS chặn GV đọc tên/mastery HS → policy `teaches_student`.
+- ✅ **`@synaptek/classroom`** (TS thuần, **19 test, cov 100%/98% nhánh**): `invite` (Crockford base32) ·
+  `grading-policy` (hạn nộp/điểm hợp lệ/display/aggregate) · `analytics` (assignmentProgress/classWeakSkills).
+- ✅ **US1** (lớp+mã+tham gia): role.ts/classes.ts; route GV `(teacher)/classes`+`class/[id]`; HS `join`.
+  E2E `class-join` live PASS.
+- ✅ **US2** (giao bài + chấm chính thức): Edge `grade-assignment` (dùng engine + answer-keys tự sinh từ
+  content/, **ẩn đáp án D4**, Deno test 5 ca); `assignments.ts`/`submissions.ts`; route GV soạn bài, HS
+  làm/nộp. E2E `assignment-grade` live PASS (Điểm 100%).
+- ✅ **US3** (ghi đè + phân tích): override điểm/nhận xét (audit giữ auto); `class/[id]` "Điểm yếu của lớp"
+  (classWeakSkills từ skill_mastery HS); HS thấy điểm cuối + nhận xét. E2E `override-analytics` live PASS (100%→70%).
+- ✅ **Polish**: cov ≥80% ✅; `_shared` (gồm `answer-keys.ts`) vào `.prettierignore` (gate=git diff sync);
+  Deno test (scheduler+grade-assignment) vào CI; prettier pin 3.8.4; format/regression/web build xanh.
+
+> **CI fix dọc đường (đã ghi):** prettier 3.9.0 mới phát hành reformat file cũ → **pin 3.8.4**; artifact
+> tự sinh `answer-keys.ts` bị husky reformat lệch generator → **`_shared/` vào `.prettierignore`**.
 
 **US3 — Spaced repetition + cron + push (T040–T050 ✅):**
 
