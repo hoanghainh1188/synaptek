@@ -161,6 +161,28 @@ export default function Home() {
         </Pressable>
       )}
 
+      {/* Lớp học (HS đăng nhập) — bài được giao + vào lớp bằng mã */}
+      {!isTeacher && user && (
+        <View className="mt-4 flex-row gap-2">
+          <Pressable
+            accessibilityLabel="Bài được giao"
+            onPress={() => router.push("/assignments")}
+            className="flex-1 items-center justify-center rounded-lg bg-surface py-3 shadow-sm"
+          >
+            <Text className="text-lg">📝</Text>
+            <Text className="mt-0.5 font-display text-sm font-bold text-ink">Bài được giao</Text>
+          </Pressable>
+          <Pressable
+            accessibilityLabel="Vào lớp bằng mã"
+            onPress={() => router.push("/join")}
+            className="flex-1 items-center justify-center rounded-lg bg-surface py-3 shadow-sm"
+          >
+            <Text className="text-lg">🔑</Text>
+            <Text className="mt-0.5 font-display text-sm font-bold text-ink">Vào lớp bằng mã</Text>
+          </Pressable>
+        </View>
+      )}
+
       {/* Banner động viên — HS (bỏ qua cho GV) */}
       {!isTeacher &&
         (!user ? (
