@@ -69,18 +69,22 @@ nhật `docs/WORKING-NOTES.md` (điểm tiếp tục) + Decision Log/spec/file l
 
 ## Active Technologies (managed by Spec Kit)
 
-- **Đang làm**: M2 — Mastery & Lộ trình (`specs/002-mastery-path/`). Plan: `specs/002-mastery-path/plan.md`. (M1 ✅ đóng.)
+- **Đang làm**: M3 — Giáo viên (`specs/003-teacher-classroom/`). Plan: `specs/003-teacher-classroom/plan.md`.
+  (M0/M1/M2 ✅ đóng — M2 US1+US2+US3+Polish merge.)
 - **Stack**: TypeScript · Expo SDK 56 / Expo Router / React 19 / RN 0.85. Dùng lại
-  `@synaptek/grading-engine` + `@synaptek/curriculum`; **mới** `@synaptek/learning-path` (BKT + recommender
-  - SM-2 + gamification, TS thuần test-first). NativeWind v4, `@supabase/supabase-js`, TanStack Query;
-    `expo-notifications` (push best-effort).
-- **Storage**: Supabase — `skill_mastery` (đã có, lưu P(L) của BKT) + **migration `0002`** mới
-  (`gamification_state`/`student_badges`/`push_tokens`/`review_reminders`). Nội dung = JSON trong
-  `content/` (D6), thêm `content/gamification/badges.json`. Job nền = scheduled Edge Function `review-scheduler`
-  dùng lại scheduler qua `_shared` (D13).
+  `@synaptek/grading-engine` (chấm chính thức server-side, thay stub) + `@synaptek/curriculum` +
+  `@synaptek/learning-path` (heatmap/mastery cho phân tích lớp); **mới** `@synaptek/classroom` (mã mời +
+  hạn nộp + điểm hợp lệ + tổng hợp lớp, TS thuần test-first). NativeWind v4, `@supabase/supabase-js`, TanStack Query.
+- **Storage**: Supabase — **migration `0003`** mới: `profiles.role` + `classes`/`class_members`/`assignments`/
+  `submissions` + **RLS chéo vai trò** qua helper `SECURITY DEFINER` (`owns_class`/`is_member`) + RPC
+  `join_class_by_code`. Đề/đáp án = JSON `content/` (D6); **answer-keys** cho chấm server = artifact tự sinh
+  đồng bộ `_shared` (D13). Chấm chính thức = Edge Function `grade-assignment` (ẩn đáp án — D4).
 
 ## Recent Changes
 
-- **002-mastery-path**: spec + clarify + plan (BKT mastery, lộ trình "học gì tiếp", gamification đầy đủ,
-  spaced repetition + cron + push). Decision Log **D19** (BKT) · **D20** (gamification) · **D21** (cron+push).
-- **001-m1-practice-loop**: spec + plan (practice loop: dùng lại engine, package `curriculum`, auth tối thiểu Supabase, render Toán tự vẽ).
+- **003-teacher-classroom**: spec + clarify + plan (lớp + mã mời, giao bài, chấm chính thức server-side +
+  ghi đè/nhận xét, phân tích lớp, RLS chéo vai trò). Decision Log **D22** (vai trò) · **D23** (lớp/bài/nộp +
+  audit) · **D24** (RLS SECURITY DEFINER + chấm server qua answer-keys).
+- **002-mastery-path**: ✅ đóng — BKT mastery + lộ trình + gamification + spaced repetition/cron/push.
+  Decision Log **D19** (BKT) · **D20** (gamification) · **D21** (cron+push).
+- **001-m1-practice-loop**: ✅ đóng — practice loop: dùng lại engine, package `curriculum`, auth tối thiểu Supabase.
