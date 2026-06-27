@@ -8,6 +8,7 @@ import {
   useRemoveMember,
   useRoster,
 } from "@/lib/supabase/classes";
+import { useClassAssignments } from "@/lib/supabase/assignments";
 
 export default function ClassDetail() {
   const insets = useSafeAreaInsets();
@@ -15,6 +16,7 @@ export default function ClassDetail() {
   const classId = String(id);
   const classes = useMyClasses();
   const roster = useRoster(classId);
+  const assignments = useClassAssignments(classId);
   const regenerate = useRegenerateInvite();
   const removeMember = useRemoveMember(classId);
 
@@ -55,6 +57,32 @@ export default function ClassDetail() {
         >
           <Text className="font-display font-bold text-ink">Tạo lại mã (thu hồi mã cũ)</Text>
         </Pressable>
+      </View>
+
+      {/* Bài tập */}
+      <View className="mt-7 flex-row items-center justify-between">
+        <Text className="font-display text-xl font-bold text-ink">
+          Bài tập{" "}
+          <Text className="text-base font-bold text-muted">({assignments.data?.length ?? 0})</Text>
+        </Text>
+        <Pressable
+          accessibilityLabel="Soạn bài tập"
+          onPress={() => router.push(`/assignment/new?classId=${classId}`)}
+          className="min-h-[40px] items-center justify-center rounded-md bg-brand px-3"
+        >
+          <Text className="font-display font-bold text-white">+ Giao bài</Text>
+        </Pressable>
+      </View>
+      <View className="mt-3 gap-2">
+        {assignments.data?.length === 0 && (
+          <Text className="text-sm text-muted">Chưa giao bài nào.</Text>
+        )}
+        {assignments.data?.map((a) => (
+          <View key={a.id} className="rounded-lg bg-surface p-3 shadow-sm">
+            <Text className="font-display font-bold text-ink">{a.title}</Text>
+            <Text className="text-xs font-semibold text-muted">{a.questionIds.length} câu</Text>
+          </View>
+        ))}
       </View>
 
       {/* Roster */}

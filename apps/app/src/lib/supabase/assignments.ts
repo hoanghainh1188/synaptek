@@ -1,0 +1,106 @@
+// Bài tập (M3 US2): GV tạo/liệt kê theo lớp; HS xem bài được giao (RLS lo cô lập). Guest → [].
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "./client";
+import { useAuth } from "./auth";
+
+export interface AssignmentRow {
+  id: string;
+  classId: string;
+  title: string;
+  questionIds: string[];
+  dueAt: string | null;
+  createdAt: string;
+}
+
+function mapRow(r: Record<string, unknown>): AssignmentRow {
+  return {
+    id: r.id as string,
+    classId: r.class_id as string,
+    title: r.title as string,
+    questionIds: (r.question_ids as string[]) ?? [],
+    dueAt: (r.due_at as string | null) ?? null,
+    createdAt: r.created_at as string,
+  };
+}
+
+/** Bài tập của một lớp (GV xem; RLS owns_class). */
+export function useClassAssignments(classId: string) {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: ["assignments", "class", classId, user?.id ?? "guest"],
+    enabled: Boolean(supabase && user && classId),
+    queryFn: async (): Promise<AssignmentRow[]> => {
+      if (!supabase || !user) return [];
+      const { data, error } = await supabase
+        .from("assignments")
+        .select("id, class_id, title, question_ids, due_at, created_at")
+        .eq("class_id", classId)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return (data ?? []).map(mapRow);
+    },
+  });
+}
+
+/** Bài được giao cho HS hiện tại (mọi lớp em là thành viên; RLS is_member). */
+export function useMyAssignments() {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: ["assignments", "mine", user?.id ?? "guest"],
+    enabled: Boolean(supabase && user),
+    queryFn: async (): Promise<AssignmentRow[]> => {
+      if (!supabase || !user) return [];
+      const { data, error } = await supabase
+        .from("assignments")
+        .select("id, class_id, title, question_ids, due_at, created_at")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return (data ?? []).map(mapRow);
+    },
+  });
+}
+
+/** Một bài tập theo id (cho màn làm bài). */
+export function useAssignment(assignmentId: string) {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: ["assignment", assignmentId, user?.id ?? "guest"],
+    enabled: Boolean(supabase && user && assignmentId),
+    queryFn: async (): Promise<AssignmentRow | null> => {
+      if (!supabase || !user) return null;
+      const { data, error } = await supabase
+        .from("assignments")
+        .select("id, class_id, title, question_ids, due_at, created_at")
+        .eq("id", assignmentId)
+        .maybeSingle();
+      if (error) throw error;
+      return data ? mapRow(data) : null;
+    },
+  });
+}
+
+export interface NewAssignment {
+  classId: string;
+  title: string;
+  questionIds: string[];
+  dueAt?: string | null;
+}
+
+/** GV tạo bài tập (RLS owns_class). */
+export function useCreateAssignment() {
+  const { user } = useAuth();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (a: NewAssignment) => {
+      if (!supabase || !user) return;
+      const { error } = await supabase.from("assignments").insert({
+        class_id: a.classId,
+        title: a.title,
+        question_ids: a.questionIds,
+        due_at: a.dueAt ?? null,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["assignments"] }),
+  });
+}

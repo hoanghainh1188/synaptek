@@ -42,3 +42,7 @@ verify_jwt = true
 # Job nền nhắc ôn (D21): gọi bởi cron, không có user JWT → tự kiểm secret trong code.
 [functions.review-scheduler]
 verify_jwt = false
+
+# Chấm chính thức bài tập (M3 US2, D4): HS phải đăng nhập (xác thực JWT trong code + kiểm membership).
+[functions.grade-assignment]
+verify_jwt = true

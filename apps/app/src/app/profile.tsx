@@ -91,13 +91,22 @@ export default function Profile() {
               <Text className="font-display font-bold text-white">Lớp của tôi ›</Text>
             </Pressable>
           ) : (
-            <Pressable
-              accessibilityLabel="Vào lớp bằng mã"
-              onPress={() => router.push("/join")}
-              className="mt-3 min-h-[48px] flex-row items-center justify-center gap-2 rounded-md bg-brand"
-            >
-              <Text className="font-display font-bold text-white">Vào lớp bằng mã ›</Text>
-            </Pressable>
+            <View className="mt-3 gap-2">
+              <Pressable
+                accessibilityLabel="Bài được giao"
+                onPress={() => router.push("/assignments")}
+                className="min-h-[48px] flex-row items-center justify-center gap-2 rounded-md bg-brand"
+              >
+                <Text className="font-display font-bold text-white">Bài được giao ›</Text>
+              </Pressable>
+              <Pressable
+                accessibilityLabel="Vào lớp bằng mã"
+                onPress={() => router.push("/join")}
+                className="min-h-[48px] flex-row items-center justify-center gap-2 rounded-md bg-surface shadow-sm"
+              >
+                <Text className="font-display font-bold text-ink">Vào lớp bằng mã ›</Text>
+              </Pressable>
+            </View>
           )}
         </View>
       )}

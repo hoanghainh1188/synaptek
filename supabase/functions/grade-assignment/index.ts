@@ -1,0 +1,122 @@
+// Edge Function `grade-assignment` — CHẤM CHÍNH THỨC một bài nộp (M3 US2, D4). HS phải đăng nhập.
+// Dùng lại @synaptek/grading-engine (moat) + ANSWER_KEYS tự sinh từ content/ (D6/D13). ĐÁP ÁN KHÔNG
+// rời server: phản hồi chỉ gồm isCorrect/feedbackCode/score, KHÔNG kèm `correct`. auto_score do server ghi.
+import { grade, type GradeInput } from "@synaptek/grading-engine";
+import { createClient } from "@supabase/supabase-js";
+import { ANSWER_KEYS, type AnswerKey } from "../_shared/answer-keys.ts";
+
+const CORS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
+
+function json(body: unknown, status = 200): Response {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { ...CORS, "Content-Type": "application/json" },
+  });
+}
+
+export interface PerQuestion {
+  isCorrect: boolean;
+  feedbackCode: string;
+}
+
+export interface GradeResult {
+  autoScore: number;
+  perQuestion: Record<string, PerQuestion>;
+}
+
+/**
+ * Chấm thuần một bài nộp: với mỗi questionId, tra đáp án ở `keys`, chấm bằng engine.
+ * Câu thiếu key → BỎ QUA (FR-017). KHÔNG trả `correct`. Tất định.
+ */
+export function gradeSubmission(
+  questionIds: string[],
+  answers: Record<string, string | string[]>,
+  keys: Record<string, AnswerKey> = ANSWER_KEYS,
+): GradeResult {
+  const perQuestion: Record<string, PerQuestion> = {};
+  let sum = 0;
+  let n = 0;
+  for (const qid of questionIds) {
+    const key = keys[qid];
+    if (!key) continue; // câu thiếu trong answer-keys → bỏ qua, không vỡ
+    const input: GradeInput = {
+      type: key.type,
+      correct: key.correct,
+      answer: answers[qid] ?? "",
+      options: key.tolerance !== undefined ? { tolerance: key.tolerance } : undefined,
+    };
+    const r = grade(input);
+    perQuestion[qid] = { isCorrect: r.isCorrect, feedbackCode: r.feedbackCode };
+    sum += r.score;
+    n++;
+  }
+  return { autoScore: n > 0 ? sum / n : 0, perQuestion };
+}
+
+export async function handler(req: Request): Promise<Response> {
+  if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
+  if (req.method !== "POST") return json({ error: "method_not_allowed" }, 405);
+
+  const url = Deno.env.get("SUPABASE_URL")!;
+  const anon = Deno.env.get("SUPABASE_ANON_KEY")!;
+  const serviceRole = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  const authHeader = req.headers.get("Authorization") ?? "";
+
+  // Xác thực HS từ JWT.
+  const userClient = createClient(url, anon, {
+    global: { headers: { Authorization: authHeader } },
+    auth: { persistSession: false },
+  });
+  const { data: userData, error: userErr } = await userClient.auth.getUser();
+  if (userErr || !userData.user) return json({ error: "unauthorized" }, 401);
+  const studentId = userData.user.id;
+
+  let body: { assignmentId?: string; answers?: Record<string, string | string[]> };
+  try {
+    body = await req.json();
+  } catch {
+    return json({ error: "invalid_json" }, 400);
+  }
+  const { assignmentId, answers } = body;
+  if (!assignmentId || !answers) return json({ error: "missing_fields" }, 400);
+
+  // Service-role: đọc assignment + kiểm membership + ghi auto_score (bỏ qua RLS, có kiểm tay).
+  const admin = createClient(url, serviceRole, { auth: { persistSession: false } });
+  const { data: asg, error: asgErr } = await admin
+    .from("assignments")
+    .select("class_id, question_ids")
+    .eq("id", assignmentId)
+    .maybeSingle();
+  if (asgErr || !asg) return json({ error: "unknown_assignment" }, 404);
+
+  const { data: member } = await admin
+    .from("class_members")
+    .select("student_id")
+    .eq("class_id", asg.class_id)
+    .eq("student_id", studentId)
+    .maybeSingle();
+  if (!member) return json({ error: "not_member" }, 403);
+
+  const { autoScore, perQuestion } = gradeSubmission(asg.question_ids as string[], answers);
+
+  const { error: upErr } = await admin.from("submissions").upsert(
+    {
+      assignment_id: assignmentId,
+      student_id: studentId,
+      answers,
+      auto_score: autoScore,
+      graded_at: new Date().toISOString(),
+    },
+    { onConflict: "assignment_id,student_id" },
+  );
+  if (upErr) return json({ error: "save_failed", detail: upErr.message }, 500);
+
+  // KHÔNG kèm đáp án (D4).
+  return json({ assignmentId, autoScore, perQuestion });
+}
+
+if (import.meta.main) Deno.serve(handler);
