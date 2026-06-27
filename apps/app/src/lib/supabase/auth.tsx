@@ -8,7 +8,12 @@ interface AuthValue {
   loading: boolean;
   enabled: boolean;
   signIn(email: string, password: string): Promise<{ error?: string }>;
-  signUp(email: string, password: string, fullName?: string): Promise<{ error?: string }>;
+  signUp(
+    email: string,
+    password: string,
+    fullName?: string,
+    role?: "student" | "teacher",
+  ): Promise<{ error?: string }>;
   signOut(): Promise<void>;
 }
 
@@ -42,12 +47,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       return error ? { error: error.message } : {};
     },
-    async signUp(email, password, fullName) {
+    async signUp(email, password, fullName, role) {
       if (!supabase) return { error: "Chưa cấu hình đăng nhập." };
       const { error } = await supabase.auth.signUp({
         email,
         password,
-        options: { data: { full_name: fullName ?? "" } },
+        options: { data: { full_name: fullName ?? "", role: role ?? "student" } },
       });
       return error ? { error: error.message } : {};
     },

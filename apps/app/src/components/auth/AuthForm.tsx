@@ -23,6 +23,7 @@ export function AuthForm({ onDone }: { onDone: () => void }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [role, setRole] = useState<"student" | "teacher">("student");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -44,7 +45,7 @@ export function AuthForm({ onDone }: { onDone: () => void }) {
     const res =
       mode === "in"
         ? await signIn(email.trim(), password)
-        : await signUp(email.trim(), password, name.trim());
+        : await signUp(email.trim(), password, name.trim(), role);
     setBusy(false);
     if (res.error) setError(res.error);
     else onDone();
@@ -56,7 +57,36 @@ export function AuthForm({ onDone }: { onDone: () => void }) {
         {mode === "in" ? "Đăng nhập" : "Tạo tài khoản"}
       </Text>
       {mode === "up" && (
-        <Field label="Họ tên" value={name} onChangeText={setName} placeholder="Tên của em" />
+        <>
+          <Field label="Họ tên" value={name} onChangeText={setName} placeholder="Tên của em" />
+          <View>
+            <Text className="mb-1 text-sm font-bold text-muted">Bạn là</Text>
+            <View className="flex-row gap-2">
+              {(
+                [
+                  ["student", "Học sinh"],
+                  ["teacher", "Giáo viên"],
+                ] as const
+              ).map(([value, label]) => {
+                const active = role === value;
+                return (
+                  <Pressable
+                    key={value}
+                    accessibilityLabel={label}
+                    onPress={() => setRole(value)}
+                    className={`min-h-[48px] flex-1 items-center justify-center rounded-md border-2 ${active ? "border-brand bg-brand/10" : "border-line bg-surface"}`}
+                  >
+                    <Text
+                      className={`font-display font-bold ${active ? "text-brand" : "text-muted"}`}
+                    >
+                      {label}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+          </View>
+        </>
       )}
       <Field
         label="Email"

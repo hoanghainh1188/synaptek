@@ -63,10 +63,22 @@ create or replace function public.is_member(cid uuid)
   select exists (select 1 from public.class_members m where m.class_id = cid and m.student_id = auth.uid());
 $$;
 
+-- GV có dạy HS này? (HS là thành viên lớp GV sở hữu) — cho roster đọc tên HS (profiles).
+create or replace function public.teaches_student(pid uuid)
+  returns boolean language sql stable security definer set search_path = public as $$
+  select exists (
+    select 1 from public.class_members m
+      join public.classes c on c.id = m.class_id
+    where m.student_id = pid and c.owner_teacher_id = auth.uid()
+  );
+$$;
+
 revoke all on function public.owns_class(uuid) from public;
 revoke all on function public.is_member(uuid) from public;
+revoke all on function public.teaches_student(uuid) from public;
 grant execute on function public.owns_class(uuid) to authenticated;
 grant execute on function public.is_member(uuid) to authenticated;
+grant execute on function public.teaches_student(uuid) to authenticated;
 
 -- ── RPC tham gia lớp (auto-join; không lộ bảng classes — D24/R4) ─────────────────
 create or replace function public.join_class_by_code(code text)
@@ -89,6 +101,11 @@ alter table public.classes       enable row level security;
 alter table public.class_members enable row level security;
 alter table public.assignments   enable row level security;
 alter table public.submissions   enable row level security;
+
+-- profiles (0001 chỉ cho đọc của mình) — THÊM: GV đọc được profile HS mình dạy (roster hiển thị tên).
+-- Policy OR với policy 0001 (không nới ngoài HS trong lớp GV). Chỉ SELECT.
+create policy profiles_select_taught on public.profiles for select
+  using (public.teaches_student(id));
 
 -- classes: GV sở hữu thấy & sửa; thành viên chỉ đọc. Tạo lớp cần role=teacher.
 create policy classes_select on public.classes for select
@@ -136,3 +153,18 @@ grant update (final_score, feedback, is_override) on public.submissions to authe
 -- Edge `grade-assignment` (service_role bỏ qua RLS): ghi answers + auto_score xuyên HS.
 grant select, insert, update on public.submissions to service_role;
 grant select on public.assignments, public.class_members to service_role;
+
+-- ── Vai trò lúc đăng ký (D22) ──────────────────────────────────────────────────
+-- Trigger 0001 chỉ set full_name → thay để cũng copy `role` từ metadata đăng ký (atomic, không race
+-- client). Chỉ chấp nhận 'teacher'/'student' (mặc định student); 'parent' để M4.
+create or replace function public.handle_new_user()
+  returns trigger language plpgsql security definer set search_path = public as $$
+begin
+  insert into public.profiles (id, full_name, role)
+  values (
+    new.id,
+    new.raw_user_meta_data ->> 'full_name',
+    case when new.raw_user_meta_data ->> 'role' = 'teacher' then 'teacher' else 'student' end
+  );
+  return new;
+end; $$;

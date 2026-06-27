@@ -6,6 +6,7 @@ import { router } from "expo-router";
 import { getBadges } from "@/lib/content";
 import { useAuth } from "@/lib/supabase/auth";
 import { useGamification } from "@/lib/supabase/gamification";
+import { useMyRole } from "@/lib/supabase/role";
 import { registerForPush } from "@/lib/notifications";
 import { useSavePushToken, useSetPushEnabled } from "@/lib/supabase/push";
 import { BadgeGrid } from "@/components/gamification/BadgeGrid";
@@ -17,6 +18,7 @@ export default function Profile() {
   const gami = useGamification();
   const catalog = getBadges();
 
+  const role = useMyRole();
   const savePush = useSavePushToken();
   const setPushEnabled = useSetPushEnabled();
   const [pushMsg, setPushMsg] = useState<string | null>(null);
@@ -74,6 +76,29 @@ export default function Profile() {
           <StatCard value={String(state?.totalXp ?? 0)} label="XP" accent="#4f46e5" />
           <StatCard value={`${state?.currentStreak ?? 0}🔥`} label="Streak" accent="#ea580c" />
           <StatCard value={String(state?.longestStreak ?? 0)} label="Kỷ lục" accent="#16a34a" />
+        </View>
+      )}
+
+      {user && (
+        <View className="mt-8">
+          <Text className="font-display text-xl font-bold text-ink">Lớp học</Text>
+          {role.data === "teacher" ? (
+            <Pressable
+              accessibilityLabel="Lớp của tôi"
+              onPress={() => router.push("/classes")}
+              className="mt-3 min-h-[48px] flex-row items-center justify-center gap-2 rounded-md bg-brand"
+            >
+              <Text className="font-display font-bold text-white">Lớp của tôi ›</Text>
+            </Pressable>
+          ) : (
+            <Pressable
+              accessibilityLabel="Vào lớp bằng mã"
+              onPress={() => router.push("/join")}
+              className="mt-3 min-h-[48px] flex-row items-center justify-center gap-2 rounded-md bg-brand"
+            >
+              <Text className="font-display font-bold text-white">Vào lớp bằng mã ›</Text>
+            </Pressable>
+          )}
         </View>
       )}
 

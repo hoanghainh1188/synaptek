@@ -23,11 +23,11 @@ Monorepo (D5): `packages/classroom/` (TS thuần mới), `apps/app/src/{app,lib,
 
 **Purpose**: Khởi tạo package mới; chưa logic nghiệp vụ.
 
-- [ ] T001 Tạo skeleton package `@synaptek/classroom`: `packages/classroom/package.json` (`"type":"module"`,
+- [x] T001 Tạo skeleton package `@synaptek/classroom`: `packages/classroom/package.json` (`"type":"module"`,
       `"main":"src/index.ts"`, `"test"` chạy lần lượt `tests/*.test.ts` qua `node --experimental-strip-types
-    --no-warnings`), `packages/classroom/src/index.ts` (rỗng, export dần), `packages/classroom/README.md`
+--no-warnings`), `packages/classroom/src/index.ts` (rỗng, export dần), `packages/classroom/README.md`
       (vai trò + D22/D23/D24).
-- [ ] T002 [P] Xác minh workspace link: `npm install` ở gốc rồi kiểm `ls node_modules/@synaptek/classroom`
+- [x] T002 [P] Xác minh workspace link: `npm install` ở gốc rồi kiểm `ls node_modules/@synaptek/classroom`
       (symlink). `.env` app giữ nguyên.
 
 **Checkpoint**: `npm test -w @synaptek/classroom` chạy (0 test cũng OK); workspace được nhận.
@@ -38,13 +38,13 @@ Monorepo (D5): `packages/classroom/` (TS thuần mới), `apps/app/src/{app,lib,
 
 **Purpose**: Storage + RLS chéo vai trò là nền cho US1/US2/US3. Phải xong trước.
 
-- [ ] T003 Tạo migration `supabase/migrations/0003_m3_classroom.sql` theo `contracts/db-schema-0003.md`
+- [x] T003 Tạo migration `supabase/migrations/0003_m3_classroom.sql` theo `contracts/db-schema-0003.md`
       §1–6 **đầy đủ**: `profiles.role`; bảng `classes`/`class_members`/`assignments`/`submissions` + indexes;
       helper `SECURITY DEFINER` `owns_class`/`is_member`; RPC `join_class_by_code`; RLS policies mọi bảng;
       grants (gồm `service_role` + revoke `update(auto_score)` khỏi `authenticated`). M1/M2 KHÔNG đổi.
-- [ ] T004 Áp migration local: `supabase db reset` (hoặc `migration up`) — 0001+0002+0003 áp **sạch**;
+- [x] T004 Áp migration local: `supabase db reset` (hoặc `migration up`) — 0001+0002+0003 áp **sạch**;
       kiểm bảng/policy tồn tại.
-- [ ] T005 [P] Bộ test RLS `supabase/tests/rls-0003.sql` theo `contracts/db-schema-0003.md §7` (seed 2 GV +
+- [x] T005 [P] Bộ test RLS `supabase/tests/rls-0003.sql` theo `contracts/db-schema-0003.md §7` (seed 2 GV +
       2 HS chéo lớp; 6 mệnh đề cô lập SC-002/007 + `join_class_by_code` mã sai/hết hạn + revoke `auto_score`).
       Chạy local **xanh**.
 
@@ -59,24 +59,24 @@ Monorepo (D5): `packages/classroom/` (TS thuần mới), `apps/app/src/{app,lib,
 
 ### Tests (viết trước — RED)
 
-- [ ] T006 [P] [US1] `packages/classroom/tests/invite.test.ts`: `makeInviteCode` (tất định theo seed, chỉ
+- [x] T006 [P] [US1] `packages/classroom/tests/invite.test.ts`: `makeInviteCode` (tất định theo seed, chỉ
       ký tự base32 an toàn, đúng độ dài), `normalizeInviteCode`, `isInviteValid` (biên now==expiresAt, null).
 
 ### Implementation
 
-- [ ] T007 [US1] Implement `packages/classroom/src/invite.ts` (`makeInviteCode`/`normalizeInviteCode`/
+- [x] T007 [US1] Implement `packages/classroom/src/invite.ts` (`makeInviteCode`/`normalizeInviteCode`/
       `isInviteValid`) cho T006 PASS; export qua `src/index.ts`.
-- [ ] T008 [US1] `apps/app/src/lib/supabase/role.ts`: đọc/cập nhật `profiles.role` (TanStack); helper `useRole()`.
-- [ ] T009 [US1] `apps/app/src/lib/supabase/classes.ts`: tạo lớp (sinh `invite_code` qua `@synaptek/classroom`),
+- [x] T008 [US1] `apps/app/src/lib/supabase/role.ts`: đọc/cập nhật `profiles.role` (TanStack); helper `useRole()`.
+- [x] T009 [US1] `apps/app/src/lib/supabase/classes.ts`: tạo lớp (sinh `invite_code` qua `@synaptek/classroom`),
       liệt kê lớp của GV, thu hồi/tạo lại mã (RLS của GV); guest → no-op.
-- [ ] T010 [US1] `apps/app/src/lib/supabase/classes.ts` (tiếp): `joinByCode` (gọi RPC `join_class_by_code`),
+- [x] T010 [US1] `apps/app/src/lib/supabase/classes.ts` (tiếp): `joinByCode` (gọi RPC `join_class_by_code`),
       roster (đọc `class_members` + profiles), xóa HS khỏi lớp.
-- [ ] T011 [US1] UI chọn vai trò khi đăng ký + đổi trong hồ sơ (`apps/app/src/app/login.tsx` + `profile.tsx`),
+- [x] T011 [US1] UI chọn vai trò khi đăng ký + đổi trong hồ sơ (`apps/app/src/app/login.tsx` + `profile.tsx`),
       set `profiles.role` (FR-001).
-- [ ] T012 [US1] Route GV `apps/app/src/app/(teacher)/classes.tsx`: danh sách lớp + tạo lớp; **guard `role=teacher`**.
-- [ ] T013 [US1] Route `apps/app/src/app/(teacher)/class/[id].tsx`: roster + hiển thị/thu hồi mã mời + (chỗ cho bài/phân tích sau).
-- [ ] T014 [US1] Route `apps/app/src/app/join.tsx`: HS nhập mã → `joinByCode` → vào lớp; lỗi mã rõ ràng (FR-004).
-- [ ] T015 [US1] `apps/app/tests/e2e/class-join.spec.ts` (auth-gated, ngoài CI): GV tạo lớp → HS nhập mã →
+- [x] T012 [US1] Route GV `apps/app/src/app/(teacher)/classes.tsx`: danh sách lớp + tạo lớp; **guard `role=teacher`**.
+- [x] T013 [US1] Route `apps/app/src/app/(teacher)/class/[id].tsx`: roster + hiển thị/thu hồi mã mời + (chỗ cho bài/phân tích sau).
+- [x] T014 [US1] Route `apps/app/src/app/join.tsx`: HS nhập mã → `joinByCode` → vào lớp; lỗi mã rõ ràng (FR-004).
+- [x] T015 [US1] `apps/app/tests/e2e/class-join.spec.ts` (auth-gated, ngoài CI): GV tạo lớp → HS nhập mã →
       GV thấy roster; người ngoài không thấy lớp.
 
 **Checkpoint US1**: vai trò GV vận hành được lớp + roster độc lập (MVP M3). RLS cô lập (T005).

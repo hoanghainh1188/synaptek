@@ -169,6 +169,19 @@ begin
   raise notice 'RLS 0003 student-cannot-set-final: OK';
 end $$;
 
+-- 11. GV1 ĐỌC được profile HS_A (HS mình dạy — cho roster); GV2 thì KHÔNG.
+do $$
+declare n1 int; n2 int;
+begin
+  n1 := pg_temp.as_user_count('aaaaaaaa-0000-0000-0000-000000000001',
+    'select count(*) from public.profiles where id=''bbbbbbbb-0000-0000-0000-000000000001''');
+  n2 := pg_temp.as_user_count('aaaaaaaa-0000-0000-0000-000000000002',
+    'select count(*) from public.profiles where id=''bbbbbbbb-0000-0000-0000-000000000001''');
+  if n1 <> 1 then raise exception 'FAIL 11a: GV1 KHÔNG đọc được profile HS mình dạy (n=%)', n1; end if;
+  if n2 <> 0 then raise exception 'FAIL 11b: GV2 đọc được profile HS không dạy (n=%)', n2; end if;
+  raise notice 'RLS 0003 teacher-reads-taught-profile: OK';
+end $$;
+
 -- ── Dọn ──────────────────────────────────────────────────────────────────────
 delete from auth.users where id in (
   'aaaaaaaa-0000-0000-0000-000000000001','aaaaaaaa-0000-0000-0000-000000000002',
