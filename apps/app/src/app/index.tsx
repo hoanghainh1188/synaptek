@@ -23,6 +23,7 @@ import { useAuth } from "@/lib/supabase/auth";
 import { useAttempts } from "@/lib/supabase/attempts";
 import { useSkillMastery } from "@/lib/supabase/mastery";
 import { useGamification } from "@/lib/supabase/gamification";
+import { useMyRole } from "@/lib/supabase/role";
 
 const STRAND_LABELS: Record<string, string> = {
   num: "Số và phép tính",
@@ -46,6 +47,8 @@ export default function Home() {
   const attemptsQ = useAttempts();
   const masteryQ = useSkillMastery();
   const gamiQ = useGamification();
+  const role = useMyRole();
+  const isTeacher = role.data === "teacher";
 
   const mastery = useMemo(
     () => buildMasteryMap(toSkillAttempts(attemptsQ.data ?? [], skillOfQuestion)),
@@ -84,12 +87,14 @@ export default function Home() {
       <View className="flex-row items-start justify-between">
         <View>
           <Text className="text-sm text-muted">Chào buổi sáng,</Text>
-          <Text className="font-display text-3xl font-extrabold text-ink">Cùng học nhé! 👋</Text>
+          <Text className="font-display text-3xl font-extrabold text-ink">
+            {isTeacher ? "Khu vực giáo viên 👋" : "Cùng học nhé! 👋"}
+          </Text>
         </View>
         {user ? (
           <Pressable
-            onPress={() => router.push("/progress")}
-            accessibilityLabel="Tiến độ"
+            onPress={() => router.push(isTeacher ? "/profile" : "/progress")}
+            accessibilityLabel={isTeacher ? "Hồ sơ" : "Tiến độ"}
             className="h-12 w-12 items-center justify-center rounded-full bg-brand"
           >
             <Text className="font-display text-lg font-extrabold text-white">
@@ -107,8 +112,33 @@ export default function Home() {
         )}
       </View>
 
-      {/* XP + streak (US2, T035) — chỉ khi đăng nhập */}
-      {user && gamiQ.data && (
+      {/* GIÁO VIÊN — lối vào lớp học nổi bật (khác hẳn HS) */}
+      {isTeacher && (
+        <View className="mt-5">
+          <Pressable
+            onPress={() => router.push("/classes")}
+            accessibilityLabel="Lớp của tôi"
+            className="flex-row items-center gap-3 rounded-lg bg-brand px-4 py-4"
+          >
+            <View className="rounded-full bg-white/20 p-1">
+              <Mascot size={36} color="#ffffff" />
+            </View>
+            <View className="flex-1">
+              <Text className="font-display text-lg font-extrabold text-white">Lớp của tôi</Text>
+              <Text className="text-sm font-semibold text-white/90">
+                Tạo lớp, giao bài, chấm điểm & xem điểm yếu của lớp
+              </Text>
+            </View>
+            <Text className="text-2xl text-white">›</Text>
+          </Pressable>
+          <Text className="mt-4 text-sm font-bold text-muted">
+            Xem trước nội dung (giống màn của học sinh) ở dưới ↓
+          </Text>
+        </View>
+      )}
+
+      {/* XP + streak (US2, T035) — chỉ HS đăng nhập */}
+      {!isTeacher && user && gamiQ.data && (
         <Pressable
           onPress={() => router.push("/profile")}
           accessibilityLabel={`Hồ sơ: ${gamiQ.data.state.totalXp} XP, streak ${gamiQ.data.state.currentStreak} ngày`}
@@ -131,40 +161,41 @@ export default function Home() {
         </Pressable>
       )}
 
-      {/* Banner động viên — tùy trạng thái đăng nhập & dữ liệu */}
-      {!user ? (
-        <View className="mt-5 flex-row items-center gap-3 rounded-lg bg-brand px-4 py-3">
-          <View className="rounded-full bg-white/20 p-1">
-            <Mascot size={36} color="#ffffff" />
+      {/* Banner động viên — HS (bỏ qua cho GV) */}
+      {!isTeacher &&
+        (!user ? (
+          <View className="mt-5 flex-row items-center gap-3 rounded-lg bg-brand px-4 py-3">
+            <View className="rounded-full bg-white/20 p-1">
+              <Mascot size={36} color="#ffffff" />
+            </View>
+            <Text className="flex-1 font-bold text-white">
+              Đăng nhập để lưu tiến độ & nhận lộ trình riêng.
+            </Text>
           </View>
-          <Text className="flex-1 font-bold text-white">
-            Đăng nhập để lưu tiến độ & nhận lộ trình riêng.
-          </Text>
-        </View>
-      ) : !hasData ? (
-        <Pressable
-          onPress={() => router.push("/diagnostic")}
-          accessibilityLabel="Làm bài chẩn đoán"
-          className="mt-5 flex-row items-center gap-3 rounded-lg bg-brand px-4 py-4"
-        >
-          <View className="rounded-full bg-white/20 p-1">
-            <Mascot size={36} color="#ffffff" />
+        ) : !hasData ? (
+          <Pressable
+            onPress={() => router.push("/diagnostic")}
+            accessibilityLabel="Làm bài chẩn đoán"
+            className="mt-5 flex-row items-center gap-3 rounded-lg bg-brand px-4 py-4"
+          >
+            <View className="rounded-full bg-white/20 p-1">
+              <Mascot size={36} color="#ffffff" />
+            </View>
+            <Text className="flex-1 font-bold text-white">
+              Làm bài chẩn đoán ngắn để mình gợi ý lộ trình riêng cho em nhé!
+            </Text>
+          </Pressable>
+        ) : (
+          <View className="mt-5 flex-row items-center gap-3 rounded-lg bg-brand px-4 py-3">
+            <View className="rounded-full bg-white/20 p-1">
+              <Mascot size={36} color="#ffffff" />
+            </View>
+            <Text className="flex-1 font-bold text-white">Hôm nay mình luyện tiếp nhé!</Text>
           </View>
-          <Text className="flex-1 font-bold text-white">
-            Làm bài chẩn đoán ngắn để mình gợi ý lộ trình riêng cho em nhé!
-          </Text>
-        </Pressable>
-      ) : (
-        <View className="mt-5 flex-row items-center gap-3 rounded-lg bg-brand px-4 py-3">
-          <View className="rounded-full bg-white/20 p-1">
-            <Mascot size={36} color="#ffffff" />
-          </View>
-          <Text className="flex-1 font-bold text-white">Hôm nay mình luyện tiếp nhé!</Text>
-        </View>
-      )}
+        ))}
 
-      {/* Lộ trình hôm nay (gồm cold-start: gợi ý kỹ năng nền khi chưa có dữ liệu) */}
-      {recos.length > 0 && (
+      {/* Lộ trình hôm nay (HS) — gồm cold-start gợi ý kỹ năng nền */}
+      {!isTeacher && recos.length > 0 && (
         <View className="mt-6">
           <View className="flex-row items-center justify-between">
             <Text className="font-display text-xl font-bold text-ink">Lộ trình hôm nay</Text>
@@ -204,8 +235,8 @@ export default function Home() {
         </View>
       )}
 
-      {/* Đã vững toàn bộ kỹ năng hiện có (T054) — không còn gợi ý nào */}
-      {user && hasData && recos.length === 0 && (
+      {/* Đã vững toàn bộ kỹ năng hiện có (T054) — không còn gợi ý nào (HS) */}
+      {!isTeacher && user && hasData && recos.length === 0 && (
         <View className="mt-6 flex-row items-center gap-3 rounded-lg bg-ok/10 p-4">
           <Text style={{ fontSize: 28 }}>🌟</Text>
           <Text className="flex-1 font-semibold text-ink">

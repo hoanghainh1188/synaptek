@@ -17,7 +17,10 @@ test("GV tạo lớp + HS vào bằng mã → GV thấy roster", async ({ browse
   await gvPage.getByPlaceholder("••••••").fill("matkhau123");
   await gvPage.getByText("Đăng ký", { exact: true }).click();
 
-  await gvPage.goto("/classes");
+  // Trang chủ GV phải có lối vào "Lớp của tôi" (khác HS) — discoverability.
+  await gvPage.goto("/");
+  await expect(gvPage.getByText("Khu vực giáo viên 👋")).toBeVisible({ timeout: 15_000 });
+  await gvPage.getByLabel("Lớp của tôi").click();
   await gvPage.getByPlaceholder("Tên lớp (vd: Toán 4A)").fill("Toán 4A");
   await gvPage.getByLabel("Tạo lớp").click();
   await gvPage.getByLabel("Toán 4A").click();
