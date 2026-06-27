@@ -90,31 +90,31 @@ Monorepo (D5): `packages/classroom/` (TS thuần mới), `apps/app/src/{app,lib,
 
 ### Tests (viết trước — RED)
 
-- [ ] T016 [P] [US2] `packages/classroom/tests/grading-policy.test.ts`: `isLate` (dueAt null/biên),
+- [x] T016 [P] [US2] `packages/classroom/tests/grading-policy.test.ts`: `isLate` (dueAt null/biên),
       `isValidScore` ([0,1]/NaN), `displayScore` (final ?? auto), `aggregateScore` (rỗng=0, trung bình).
-- [ ] T017 [P] [US2] Deno test `supabase/functions/grade-assignment/index.test.ts`: chấm ẩn đáp án (payload
+- [x] T017 [P] [US2] Deno test `supabase/functions/grade-assignment/index.test.ts`: chấm ẩn đáp án (payload
       không chứa `correct`), bỏ qua `questionId` thiếu (FR-017), không đụng `final_score` (audit). Dùng
       fake answer-keys + fake client (như `review-scheduler`).
 
 ### Implementation
 
-- [ ] T018 [US2] Implement `packages/classroom/src/grading-policy.ts` cho T016 PASS; export.
-- [ ] T019 [US2] Mở rộng `scripts/sync-edge-engine.mjs`: sinh `supabase/functions/_shared/answer-keys.ts`
+- [x] T018 [US2] Implement `packages/classroom/src/grading-policy.ts` cho T016 PASS; export.
+- [x] T019 [US2] Mở rộng `scripts/sync-edge-engine.mjs`: sinh `supabase/functions/_shared/answer-keys.ts`
       (`Record<questionId,{type,correct,tolerance?}>`) từ `content/questions/*.json` (banner AUTO-GENERATED);
       chạy `npm run sync:edge`. (D6/D13)
-- [ ] T020 [US2] Edge Function `supabase/functions/grade-assignment/index.ts` theo `contracts/grade-assignment.md`
+- [x] T020 [US2] Edge Function `supabase/functions/grade-assignment/index.ts` theo `contracts/grade-assignment.md`
       (membership check + answer-keys + engine + upsert `auto_score`, **không trả đáp án**); `deno.json` import
       map (đã có engine/learning-path/supabase-js); `config.toml` `[functions.grade-assignment] verify_jwt=true`.
       Cho T017 PASS.
-- [ ] T021 [US2] `apps/app/src/lib/supabase/assignments.ts`: GV tạo bài (chọn `questionId` từ `content/` +
+- [x] T021 [US2] `apps/app/src/lib/supabase/assignments.ts`: GV tạo bài (chọn `questionId` từ `content/` +
       `due_at`), liệt kê bài cho lớp (GV) + cho HS (thành viên).
-- [ ] T022 [US2] `apps/app/src/lib/supabase/submissions.ts`: HS nộp → gọi Edge `grade-assignment`; đọc bài
+- [x] T022 [US2] `apps/app/src/lib/supabase/submissions.ts`: HS nộp → gọi Edge `grade-assignment`; đọc bài
       nộp của mình (điểm hiển thị qua `displayScore`).
-- [ ] T023 [US2] Route GV `apps/app/src/app/(teacher)/assignment/new.tsx`: soạn bài (duyệt câu theo chủ đề
+- [x] T023 [US2] Route GV `apps/app/src/app/(teacher)/assignment/new.tsx`: soạn bài (duyệt câu theo chủ đề
       từ `content/`, chọn, đặt hạn) → tạo assignment.
-- [ ] T024 [US2] Route HS `apps/app/src/app/assignments.tsx` (bài được giao) + `assignment/[id].tsx` (làm +
+- [x] T024 [US2] Route HS `apps/app/src/app/assignments.tsx` (bài được giao) + `assignment/[id].tsx` (làm +
       nộp; dùng lại `QuestionCard`/`AnswerInput` M1; **không** lộ đáp án — chấm qua Edge).
-- [ ] T025 [US2] `apps/app/tests/e2e/assignment-grade.spec.ts` (auth-gated, ngoài CI): GV giao bài → HS nộp →
+- [x] T025 [US2] `apps/app/tests/e2e/assignment-grade.spec.ts` (auth-gated, ngoài CI): GV giao bài → HS nộp →
       điểm hiện; HS ngoài lớp không thấy/không nộp được.
 
 **Checkpoint US2**: vòng giao bài → nộp → chấm chính thức (đáng tin, ẩn đáp án) chạy trên nền US1.
