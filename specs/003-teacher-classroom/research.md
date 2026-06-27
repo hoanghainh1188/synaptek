@@ -5,8 +5,9 @@ Tóm tắt vào Decision Log **D22–D24** (`docs/00-architecture.md §0`).
 
 ## R1 — Vai trò người dùng (→ D22)
 
-- **Quyết định**: Thêm cột `profiles.role text not null default 'student' check (role in ('student','teacher'))`.
-  Người dùng **tự chọn** khi đăng ký (hoặc đổi trong hồ sơ). UI/route GV guard theo `role`. (clarify Q1)
+- **Quyết định**: Dùng `profiles.role` (**đã có sẵn từ 0001**: `student|teacher|parent`, default `student`).
+  M3 dùng giá trị `'teacher'`; người dùng **tự chọn** khi đăng ký (hoặc đổi trong hồ sơ). UI/route GV guard
+  theo `role`. (clarify Q1) — KHÔNG cần migration cột (0001 đã lường trước; `parent` để M4).
 - **Lý do**: Tối thiểu, không thêm bảng; `profiles` đã là nơi tự nhiên cho thuộc tính định danh. Self-select
   đủ cho M3 (sản phẩm giáo dục giai đoạn đầu); siết duyệt (mã GV/admin) để M4+.
 - **Loại bỏ**: bảng `roles` riêng (thừa cho 2 vai trò); tài khoản GV tách riêng (trùng luồng auth); RBAC

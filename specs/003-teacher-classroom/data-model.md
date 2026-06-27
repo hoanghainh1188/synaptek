@@ -9,7 +9,7 @@ vẫn ở `content/` (D6). Phần "đầu vào" tái dùng M1/M2; phần "mới"
   **suy ra** (sync `_shared`), không sửa content.
 - **`attempts` / `skill_mastery` (0001/0002)**: dùng cho phân tích lớp (mastery/heatmap của learning-path).
   **Không** nới RLS `attempts` (R6) — phân tích từ `submissions` + `skill_mastery` của HS trong lớp.
-- **`profiles` (0001)**: **THÊM cột** `role` (xem mục 3).
+- **`profiles` (0001)**: cột `role` **đã có sẵn** (`student|teacher|parent`) — M3 chỉ dùng giá trị `teacher`.
 
 ## 2. Suy ra (KHÔNG lưu)
 
@@ -23,11 +23,11 @@ vẫn ở `content/` (D6). Phần "đầu vào" tái dùng M1/M2; phần "mới"
 > RLS chéo vai trò qua helper `SECURITY DEFINER` (chống đệ quy — R3). SQL đầy đủ ở
 > `contracts/db-schema-0003.md`. M1=`0001`, M2=`0002` **không đổi**.
 
-### profiles (mở rộng)
+### profiles.role — **ĐÃ CÓ ở 0001** (không thêm)
 
-| Cột    | Kiểu                                                                 | Ghi chú                        |
-| ------ | -------------------------------------------------------------------- | ------------------------------ |
-| `role` | text not null default `'student'` check in (`'student'`,`'teacher'`) | tự chọn (D22); đổi trong hồ sơ |
+| Cột    | Kiểu                                                                            | Ghi chú                                             |
+| ------ | ------------------------------------------------------------------------------- | --------------------------------------------------- |
+| `role` | text not null default `'student'` check in (`'student'`,`'teacher'`,`'parent'`) | M0/M1 đã lường trước; M3 dùng `'teacher'` (tự chọn) |
 
 ### classes (lớp — chủ sở hữu = GV)
 

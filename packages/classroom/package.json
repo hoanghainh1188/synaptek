@@ -1,0 +1,11 @@
+{
+  "name": "@synaptek/classroom",
+  "version": "0.1.0",
+  "description": "Logic lớp học GV thuần (mã mời + quy tắc hạn nộp/điểm + tổng hợp phân tích lớp) — TS thuần, zero-dep, chạy client + Deno Edge Function. (D22/D23/D24)",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "node --experimental-strip-types --no-warnings tests/invite.test.ts"
+  },
+  "license": "UNLICENSED"
+}
