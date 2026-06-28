@@ -26,5 +26,76 @@
     "choices": ["32", "12", "24"],
     "correct": "32",
     "explanation": "8 × 4 = 32."
+  },
+  {
+    "id": "g3.num.muldiv.q004",
+    "skillId": "g3.num.muldiv.basic",
+    "grade": 3,
+    "type": "numeric",
+    "prompt": "7 × 8 = ?",
+    "correct": "56",
+    "explanation": "7 nhân 8 bằng 56.",
+    "difficulty": 1
+  },
+  {
+    "id": "g3.num.muldiv.q005",
+    "skillId": "g3.num.muldiv.basic",
+    "grade": 3,
+    "type": "numeric",
+    "prompt": "48 ÷ 6 = ?",
+    "correct": "8",
+    "explanation": "48 chia 6 bằng 8.",
+    "difficulty": 1
+  },
+  {
+    "id": "g3.num.muldiv.q006",
+    "skillId": "g3.num.muldiv.basic",
+    "grade": 3,
+    "type": "numeric",
+    "prompt": "9 × 6 = ?",
+    "correct": "54",
+    "explanation": "9 nhân 6 bằng 54.",
+    "difficulty": 1
+  },
+  {
+    "id": "g3.num.muldiv.q007",
+    "skillId": "g3.num.muldiv.basic",
+    "grade": 3,
+    "type": "mcq",
+    "prompt": "56 ÷ 7 = ?",
+    "choices": ["8", "7", "9"],
+    "correct": "8",
+    "explanation": "56 chia 7 bằng 8.",
+    "difficulty": 1
+  },
+  {
+    "id": "g3.num.muldiv.q008",
+    "skillId": "g3.num.muldiv.basic",
+    "grade": 3,
+    "type": "numeric",
+    "prompt": "8 × 8 = ?",
+    "correct": "64",
+    "explanation": "8 nhân 8 bằng 64.",
+    "difficulty": 1
+  },
+  {
+    "id": "g3.num.muldiv.q009",
+    "skillId": "g3.num.muldiv.basic",
+    "grade": 3,
+    "type": "true-false",
+    "prompt": "63 ÷ 9 = 7. Đúng hay sai?",
+    "correct": "true",
+    "explanation": "63 chia 9 bằng 7, nên đúng.",
+    "difficulty": 1
+  },
+  {
+    "id": "g3.num.muldiv.q010",
+    "skillId": "g3.num.muldiv.basic",
+    "grade": 3,
+    "type": "numeric",
+    "prompt": "Chia đều 36 viên kẹo cho 4 bạn. Mỗi bạn được mấy viên?",
+    "correct": "9",
+    "explanation": "36 chia 4 bằng 9 (viên).",
+    "difficulty": 2
   }
 ]

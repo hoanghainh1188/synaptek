@@ -14,6 +14,34 @@ export const ANSWER_KEYS: Record<string, AnswerKey> = {
     "type": "mcq",
     "correct": "9"
   },
+  "g1.num.addsub.q004": {
+    "type": "numeric",
+    "correct": "9"
+  },
+  "g1.num.addsub.q005": {
+    "type": "numeric",
+    "correct": "5"
+  },
+  "g1.num.addsub.q006": {
+    "type": "numeric",
+    "correct": "8"
+  },
+  "g1.num.addsub.q007": {
+    "type": "mcq",
+    "correct": "3"
+  },
+  "g1.num.addsub.q008": {
+    "type": "true-false",
+    "correct": "true"
+  },
+  "g1.num.addsub.q009": {
+    "type": "numeric",
+    "correct": "4"
+  },
+  "g1.num.addsub.q010": {
+    "type": "numeric",
+    "correct": "7"
+  },
   "g2.num.mult.q001": {
     "type": "numeric",
     "correct": "6"
@@ -30,6 +58,30 @@ export const ANSWER_KEYS: Record<string, AnswerKey> = {
     "type": "true-false",
     "correct": "true"
   },
+  "g2.num.mult.q005": {
+    "type": "numeric",
+    "correct": "12"
+  },
+  "g2.num.mult.q006": {
+    "type": "numeric",
+    "correct": "14"
+  },
+  "g2.num.mult.q007": {
+    "type": "mcq",
+    "correct": "24"
+  },
+  "g2.num.mult.q008": {
+    "type": "numeric",
+    "correct": "24"
+  },
+  "g2.num.mult.q009": {
+    "type": "true-false",
+    "correct": "true"
+  },
+  "g2.num.mult.q010": {
+    "type": "numeric",
+    "correct": "12"
+  },
   "g3.num.muldiv.q001": {
     "type": "numeric",
     "correct": "42"
@@ -41,6 +93,34 @@ export const ANSWER_KEYS: Record<string, AnswerKey> = {
   "g3.num.muldiv.q003": {
     "type": "mcq",
     "correct": "32"
+  },
+  "g3.num.muldiv.q004": {
+    "type": "numeric",
+    "correct": "56"
+  },
+  "g3.num.muldiv.q005": {
+    "type": "numeric",
+    "correct": "8"
+  },
+  "g3.num.muldiv.q006": {
+    "type": "numeric",
+    "correct": "54"
+  },
+  "g3.num.muldiv.q007": {
+    "type": "mcq",
+    "correct": "8"
+  },
+  "g3.num.muldiv.q008": {
+    "type": "numeric",
+    "correct": "64"
+  },
+  "g3.num.muldiv.q009": {
+    "type": "true-false",
+    "correct": "true"
+  },
+  "g3.num.muldiv.q010": {
+    "type": "numeric",
+    "correct": "9"
   },
   "g4.geo.area.q001": {
     "type": "numeric",

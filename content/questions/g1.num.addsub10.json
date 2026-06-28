@@ -26,5 +26,76 @@
     "choices": ["9", "8", "10"],
     "correct": "9",
     "explanation": "6 cộng 3 bằng 9."
+  },
+  {
+    "id": "g1.num.addsub.q004",
+    "skillId": "g1.num.addsub.10",
+    "grade": 1,
+    "type": "numeric",
+    "prompt": "4 + 5 = ?",
+    "correct": "9",
+    "explanation": "4 cộng 5 bằng 9.",
+    "difficulty": 1
+  },
+  {
+    "id": "g1.num.addsub.q005",
+    "skillId": "g1.num.addsub.10",
+    "grade": 1,
+    "type": "numeric",
+    "prompt": "8 − 3 = ?",
+    "correct": "5",
+    "explanation": "8 trừ 3 bằng 5.",
+    "difficulty": 1
+  },
+  {
+    "id": "g1.num.addsub.q006",
+    "skillId": "g1.num.addsub.10",
+    "grade": 1,
+    "type": "numeric",
+    "prompt": "2 + 6 = ?",
+    "correct": "8",
+    "explanation": "2 cộng 6 bằng 8.",
+    "difficulty": 1
+  },
+  {
+    "id": "g1.num.addsub.q007",
+    "skillId": "g1.num.addsub.10",
+    "grade": 1,
+    "type": "mcq",
+    "prompt": "7 − 4 = ?",
+    "choices": ["3", "2", "4"],
+    "correct": "3",
+    "explanation": "7 trừ 4 bằng 3.",
+    "difficulty": 1
+  },
+  {
+    "id": "g1.num.addsub.q008",
+    "skillId": "g1.num.addsub.10",
+    "grade": 1,
+    "type": "true-false",
+    "prompt": "5 + 5 = 10. Đúng hay sai?",
+    "correct": "true",
+    "explanation": "5 cộng 5 bằng 10, nên đúng.",
+    "difficulty": 1
+  },
+  {
+    "id": "g1.num.addsub.q009",
+    "skillId": "g1.num.addsub.10",
+    "grade": 1,
+    "type": "numeric",
+    "prompt": "Có 6 quả táo, cho đi 2 quả. Còn lại mấy quả?",
+    "correct": "4",
+    "explanation": "6 trừ 2 bằng 4 (quả).",
+    "difficulty": 2
+  },
+  {
+    "id": "g1.num.addsub.q010",
+    "skillId": "g1.num.addsub.10",
+    "grade": 1,
+    "type": "numeric",
+    "prompt": "An có 3 viên bi, được cho thêm 4 viên. An có mấy viên bi?",
+    "correct": "7",
+    "explanation": "3 cộng 4 bằng 7 (viên).",
+    "difficulty": 1
   }
 ]
