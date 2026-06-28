@@ -4,8 +4,17 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
-**Mốc:** M0 ✅ · M1 ✅ · M2 ✅ · M3 ✅ (đóng, US1+US2+US3+Polish, PR #7/#8/#9) + giới hạn nộp bài (D25, PR #11).
-Tiếp theo: **M4 — Phụ huynh** (chưa bắt đầu) hoặc nội dung câu hỏi (D14).
+**Mốc:** M0–M3 ✅ đóng + giới hạn nộp bài (D25) + **100 câu nội dung** (lớp 1–4, mỗi skill ≥10) + sprint
+hoàn thiện (GV sửa/xoá bài · đổi vai trò · jwt 1 tuần) + **deploy hosted AUTO** (web Vercel + backend Action).
+**M4 — Phụ huynh: US1 (liên kết) + US2 (theo dõi read-only) ✅ vừa xong** trên nhánh `005-parent-monitoring`
+(PR đang mở) → **đủ 3 vai trò**. Decision Log **D26**. Còn: giao-bài-tại-nhà (đợt sau), nội dung lớp 5, M5 native.
+
+**M4 chi tiết:** migration `0005` (`parent_links` + `profiles.parent_link_code` + helper `is_parent_of`/
+`is_linked_parent` + RPC `link_parent_by_code`); RLS đọc chéo PH→con **chỉ SELECT** (read-only) — **RLS test
+0005 5 nhóm PASS live** (cô lập/read-only/chống tự-liên-kết/hiển thị/đọc tên PH). App: `lib/supabase/parent.ts`,
+route `(parent)/children` + `child/[id]`, profile HS có "Mã liên kết phụ huynh", trang chủ phân biệt PH.
+Tái dùng `@synaptek/classroom` (mã) + `@synaptek/learning-path` (điểm yếu) — KHÔNG package/Edge mới.
+E2E `parent-monitor.spec.ts` live PASS. Regression: engine 19 · RLS 0003 PASS · 152 unit · 11 e2e.
 
 **🚀 DEPLOY HOSTED — LIVE + AUTO** (đã làm xong, ngoài kế hoạch milestone):
 

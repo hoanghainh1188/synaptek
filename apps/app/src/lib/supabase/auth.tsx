@@ -12,7 +12,7 @@ interface AuthValue {
     email: string,
     password: string,
     fullName?: string,
-    role?: "student" | "teacher",
+    role?: "student" | "teacher" | "parent",
   ): Promise<{ error?: string }>;
   signOut(): Promise<void>;
 }

@@ -7,6 +7,13 @@ import { getBadges } from "@/lib/content";
 import { useAuth } from "@/lib/supabase/auth";
 import { useGamification } from "@/lib/supabase/gamification";
 import { useMyRole, useSetRole } from "@/lib/supabase/role";
+import {
+  useMyParentCode,
+  useRegenerateParentCode,
+  useClearParentCode,
+  useMyParents,
+  useUnlink,
+} from "@/lib/supabase/parent";
 import { registerForPush } from "@/lib/notifications";
 import { useSavePushToken, useSetPushEnabled } from "@/lib/supabase/push";
 import { BadgeGrid } from "@/components/gamification/BadgeGrid";
@@ -20,6 +27,11 @@ export default function Profile() {
 
   const role = useMyRole();
   const setRole = useSetRole();
+  const parentCode = useMyParentCode();
+  const regenCode = useRegenerateParentCode();
+  const clearCode = useClearParentCode();
+  const myParents = useMyParents();
+  const unlink = useUnlink();
   const savePush = useSavePushToken();
   const setPushEnabled = useSetPushEnabled();
   const [pushMsg, setPushMsg] = useState<string | null>(null);
@@ -91,6 +103,14 @@ export default function Profile() {
             >
               <Text className="font-display font-bold text-white">Lớp của tôi ›</Text>
             </Pressable>
+          ) : role.data === "parent" ? (
+            <Pressable
+              accessibilityLabel="Con của tôi"
+              onPress={() => router.push("/children")}
+              className="mt-3 min-h-[48px] flex-row items-center justify-center gap-2 rounded-md bg-brand"
+            >
+              <Text className="font-display font-bold text-white">Con của tôi ›</Text>
+            </Pressable>
           ) : (
             <View className="mt-3 gap-2">
               <Pressable
@@ -117,6 +137,7 @@ export default function Profile() {
               [
                 ["student", "Học sinh"],
                 ["teacher", "Giáo viên"],
+                ["parent", "Phụ huynh"],
               ] as const
             ).map(([value, label]) => {
               const active = role.data === value;
@@ -137,6 +158,68 @@ export default function Profile() {
               );
             })}
           </View>
+        </View>
+      )}
+
+      {/* HS: mã liên kết phụ huynh (M4) — chỉ HS */}
+      {user && role.data === "student" && (
+        <View className="mt-8">
+          <Text className="font-display text-xl font-bold text-ink">Liên kết phụ huynh</Text>
+          <Text className="mt-1 text-sm text-muted">
+            Đưa mã này cho ba/mẹ để theo dõi tiến độ học của em.
+          </Text>
+          {parentCode.data ? (
+            <View className="mt-3 rounded-lg bg-brand/10 p-4">
+              <Text className="font-display text-3xl font-extrabold tracking-widest text-brand">
+                {parentCode.data}
+              </Text>
+              <View className="mt-3 flex-row gap-2">
+                <Pressable
+                  accessibilityLabel="Tạo lại mã"
+                  onPress={() => regenCode.mutate()}
+                  className="min-h-[44px] flex-1 items-center justify-center rounded-md bg-surface shadow-sm"
+                >
+                  <Text className="font-display font-bold text-ink">Tạo lại</Text>
+                </Pressable>
+                <Pressable
+                  accessibilityLabel="Thu hồi mã"
+                  onPress={() => clearCode.mutate()}
+                  className="min-h-[44px] flex-1 items-center justify-center rounded-md bg-surface shadow-sm"
+                >
+                  <Text className="font-display font-bold text-no">Thu hồi</Text>
+                </Pressable>
+              </View>
+            </View>
+          ) : (
+            <Pressable
+              accessibilityLabel="Tạo mã liên kết phụ huynh"
+              onPress={() => regenCode.mutate()}
+              className="mt-3 min-h-[48px] items-center justify-center rounded-md bg-brand"
+            >
+              <Text className="font-display font-bold text-white">Tạo mã liên kết</Text>
+            </Pressable>
+          )}
+
+          {(myParents.data?.length ?? 0) > 0 && (
+            <View className="mt-3 gap-2">
+              <Text className="text-sm font-bold text-muted">Phụ huynh đang theo dõi</Text>
+              {myParents.data?.map((p) => (
+                <View
+                  key={p.id}
+                  className="flex-row items-center gap-3 rounded-lg bg-surface p-3 shadow-sm"
+                >
+                  <Text className="flex-1 font-semibold text-ink">{p.fullName ?? "Phụ huynh"}</Text>
+                  <Pressable
+                    accessibilityLabel={`Gỡ ${p.fullName ?? "phụ huynh"}`}
+                    onPress={() => user && unlink.mutate({ parentId: p.id, studentId: user.id })}
+                    className="min-h-[40px] items-center justify-center rounded-md px-2"
+                  >
+                    <Text className="font-bold text-no">Gỡ</Text>
+                  </Pressable>
+                </View>
+              ))}
+            </View>
+          )}
         </View>
       )}
 

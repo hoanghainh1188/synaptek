@@ -23,7 +23,7 @@ export function AuthForm({ onDone }: { onDone: () => void }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [role, setRole] = useState<"student" | "teacher">("student");
+  const [role, setRole] = useState<"student" | "teacher" | "parent">("student");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -66,6 +66,7 @@ export function AuthForm({ onDone }: { onDone: () => void }) {
                 [
                   ["student", "Học sinh"],
                   ["teacher", "Giáo viên"],
+                  ["parent", "Phụ huynh"],
                 ] as const
               ).map(([value, label]) => {
                 const active = role === value;

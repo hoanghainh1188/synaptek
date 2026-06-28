@@ -49,6 +49,8 @@ export default function Home() {
   const gamiQ = useGamification();
   const role = useMyRole();
   const isTeacher = role.data === "teacher";
+  const isParent = role.data === "parent";
+  const isStudent = !isTeacher && !isParent; // HS hoặc guest
 
   const mastery = useMemo(
     () => buildMasteryMap(toSkillAttempts(attemptsQ.data ?? [], skillOfQuestion)),
@@ -88,13 +90,17 @@ export default function Home() {
         <View>
           <Text className="text-sm text-muted">Chào buổi sáng,</Text>
           <Text className="font-display text-3xl font-extrabold text-ink">
-            {isTeacher ? "Khu vực giáo viên 👋" : "Cùng học nhé! 👋"}
+            {isTeacher
+              ? "Khu vực giáo viên 👋"
+              : isParent
+                ? "Khu vực phụ huynh 👋"
+                : "Cùng học nhé! 👋"}
           </Text>
         </View>
         {user ? (
           <Pressable
-            onPress={() => router.push(isTeacher ? "/profile" : "/progress")}
-            accessibilityLabel={isTeacher ? "Hồ sơ" : "Tiến độ"}
+            onPress={() => router.push(isStudent ? "/progress" : "/profile")}
+            accessibilityLabel={isStudent ? "Tiến độ" : "Hồ sơ"}
             className="h-12 w-12 items-center justify-center rounded-full bg-brand"
           >
             <Text className="font-display text-lg font-extrabold text-white">
@@ -137,8 +143,33 @@ export default function Home() {
         </View>
       )}
 
+      {/* PHỤ HUYNH — lối vào theo dõi con */}
+      {isParent && (
+        <View className="mt-5">
+          <Pressable
+            onPress={() => router.push("/children")}
+            accessibilityLabel="Con của tôi"
+            className="flex-row items-center gap-3 rounded-lg bg-brand px-4 py-4"
+          >
+            <View className="rounded-full bg-white/20 p-1">
+              <Mascot size={36} color="#ffffff" />
+            </View>
+            <View className="flex-1">
+              <Text className="font-display text-lg font-extrabold text-white">Con của tôi</Text>
+              <Text className="text-sm font-semibold text-white/90">
+                Liên kết con & theo dõi tiến độ học tại nhà
+              </Text>
+            </View>
+            <Text className="text-2xl text-white">›</Text>
+          </Pressable>
+          <Text className="mt-4 text-sm font-bold text-muted">
+            Xem trước nội dung (giống màn của học sinh) ở dưới ↓
+          </Text>
+        </View>
+      )}
+
       {/* XP + streak (US2, T035) — chỉ HS đăng nhập */}
-      {!isTeacher && user && gamiQ.data && (
+      {isStudent && user && gamiQ.data && (
         <Pressable
           onPress={() => router.push("/profile")}
           accessibilityLabel={`Hồ sơ: ${gamiQ.data.state.totalXp} XP, streak ${gamiQ.data.state.currentStreak} ngày`}
@@ -162,7 +193,7 @@ export default function Home() {
       )}
 
       {/* Lớp học (HS đăng nhập) — bài được giao + vào lớp bằng mã */}
-      {!isTeacher && user && (
+      {isStudent && user && (
         <View className="mt-4 flex-row gap-2">
           <Pressable
             accessibilityLabel="Bài được giao"
@@ -184,7 +215,7 @@ export default function Home() {
       )}
 
       {/* Banner động viên — HS (bỏ qua cho GV) */}
-      {!isTeacher &&
+      {isStudent &&
         (!user ? (
           <View className="mt-5 flex-row items-center gap-3 rounded-lg bg-brand px-4 py-3">
             <View className="rounded-full bg-white/20 p-1">
@@ -217,7 +248,7 @@ export default function Home() {
         ))}
 
       {/* Lộ trình hôm nay (HS) — gồm cold-start gợi ý kỹ năng nền */}
-      {!isTeacher && recos.length > 0 && (
+      {isStudent && recos.length > 0 && (
         <View className="mt-6">
           <View className="flex-row items-center justify-between">
             <Text className="font-display text-xl font-bold text-ink">Lộ trình hôm nay</Text>
@@ -258,7 +289,7 @@ export default function Home() {
       )}
 
       {/* Đã vững toàn bộ kỹ năng hiện có (T054) — không còn gợi ý nào (HS) */}
-      {!isTeacher && user && hasData && recos.length === 0 && (
+      {isStudent && user && hasData && recos.length === 0 && (
         <View className="mt-6 flex-row items-center gap-3 rounded-lg bg-ok/10 p-4">
           <Text style={{ fontSize: 28 }}>🌟</Text>
           <Text className="flex-1 font-semibold text-ink">
