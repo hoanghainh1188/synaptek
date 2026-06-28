@@ -58,3 +58,13 @@ jobs:
 
       - name: Deploy Edge Functions
         run: supabase functions deploy grade grade-assignment review-scheduler --project-ref "$REF"
+
+      # Đồng bộ auth config hosted theo chủ ý repo (idempotent). jwt_exp = 604800 (1 tuần) khớp config.toml;
+      # mailer_autoconfirm = true để luồng đăng-ký-đăng-nhập-ngay chạy (chưa cấu hình SMTP).
+      - name: Ensure auth config (jwt expiry + auto-confirm)
+        run: |
+          curl -fsS -X PATCH "https://api.supabase.com/v1/projects/$REF/config/auth" \
+            -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{"jwt_exp": 604800, "mailer_autoconfirm": true}' > /dev/null
+          echo "auth config: jwt_exp=604800, mailer_autoconfirm=true"
