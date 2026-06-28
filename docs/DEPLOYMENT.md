@@ -3,7 +3,7 @@
 > Tài liệu này: (1) kiến trúc deploy, (2) cấu trúc repo liên quan, (3) deploy, (4) **GitHub auto-deploy**
 > (Vercel ĐÃ tự động; Supabase còn thủ công). Chi tiết lệnh CLI: `supabase/deploy/DEPLOY.md`.
 >
-> **TL;DR**: Web **tự deploy** khi merge vào `develop` (Vercel ↔ GitHub). Backend (Supabase) deploy **thủ công**.
+> **TL;DR**: Web **tự deploy** (Vercel ↔ GitHub) VÀ Backend **tự deploy** (GitHub Action) khi merge vào `develop`.
 
 ## 1. Kiến trúc deploy
 
@@ -25,24 +25,25 @@
 
 ## 2. Cấu trúc repo liên quan deploy
 
-| Thư mục                          | Vai trò khi deploy                                                                       |
-| -------------------------------- | ---------------------------------------------------------------------------------------- |
-| `apps/app/`                      | App Expo → `npx expo export -p web` ra `apps/app/dist` (tĩnh) → Vercel                   |
-| `apps/app/.env.production.local` | **(local, gitignored)** env hosted cho build web — xem §3                                |
-| `packages/*`                     | Logic thuần (engine/curriculum/learning-path/classroom) — bundle vào web + vào `_shared` |
-| `content/`                       | Câu hỏi/curriculum (D6) — bundle vào web khi build                                       |
-| `supabase/migrations/*.sql`      | Schema + RLS — áp lên DB hosted                                                          |
-| `supabase/functions/*`           | Edge Functions; `_shared/` là artifact `npm run sync:edge`                               |
-| `supabase/config.toml`           | `verify_jwt` mỗi function (đọc khi `functions deploy`)                                   |
-| `.github/workflows/ci.yml`       | **CHỈ test** (format/test/build/e2e) — **KHÔNG deploy**                                  |
-| `vercel.json` (gốc repo)         | Cấu hình **Vercel auto-build** từ Git: buildCommand/outputDirectory + SPA rewrite        |
+| Thư mục                                 | Vai trò khi deploy                                                                       |
+| --------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `apps/app/`                             | App Expo → `npx expo export -p web` ra `apps/app/dist` (tĩnh) → Vercel                   |
+| `apps/app/.env.production.local`        | **(local, gitignored)** env hosted cho build web — xem §3                                |
+| `packages/*`                            | Logic thuần (engine/curriculum/learning-path/classroom) — bundle vào web + vào `_shared` |
+| `content/`                              | Câu hỏi/curriculum (D6) — bundle vào web khi build                                       |
+| `supabase/migrations/*.sql`             | Schema + RLS — áp lên DB hosted                                                          |
+| `supabase/functions/*`                  | Edge Functions; `_shared/` là artifact `npm run sync:edge`                               |
+| `supabase/config.toml`                  | `verify_jwt` mỗi function (đọc khi `functions deploy`)                                   |
+| `.github/workflows/ci.yml`              | **CHỈ test** (format/test/build/e2e + deno) — KHÔNG deploy                               |
+| `.github/workflows/deploy-supabase.yml` | **Auto-deploy backend**: `db push` + `functions deploy` khi push `develop`               |
+| `vercel.json` (gốc repo)                | Cấu hình **Vercel auto-build** từ Git: buildCommand/outputDirectory + SPA rewrite        |
 
 ## 3. Deploy
 
-- **Web (Vercel)**: **TỰ ĐỘNG** — xem §4. (Mục §3.B chỉ là cách deploy tay khi cần khẩn cấp.)
-- **Backend (Supabase)**: **thủ công** — §3.A.
+- **Web (Vercel)** + **Backend (Supabase)**: **TỰ ĐỘNG** khi merge `develop` — xem §4.
+- Mục §3.A/§3.B dưới chỉ là cách **làm tay khi khẩn cấp** (Git build hỏng).
 
-### A. Supabase (thủ công)
+### A. Supabase (thủ công — chỉ khi khẩn cấp)
 
 ```bash
 # 1) Đăng nhập (1 lần): mở trình duyệt
@@ -100,16 +101,21 @@ monorepo Expo đúng):
 > Lưu ý: mọi push `develop` đều rebuild web (kể cả đổi docs). Muốn bỏ qua khi không đụng web → cấu hình
 > **Ignored Build Step** trong Vercel (vd `git diff --quiet HEAD^ HEAD -- apps/app packages content vercel.json`).
 
-### Backend (Supabase) — ⬜ CÒN THỦ CÔNG
+### Backend (Supabase) — ✅ ĐÃ TỰ ĐỘNG
 
-Chưa auto. Khi muốn bật (chọn 1):
+**GitHub Action `.github/workflows/deploy-supabase.yml`** chạy khi push `develop` đụng:
+`supabase/**` · `content/questions/**` · `packages/{grading-engine,learning-path,classroom}/**` ·
+`scripts/sync-edge-engine.mjs`. Có thể chạy tay qua **Actions → Deploy Supabase → Run workflow**.
 
-- **GitHub Actions (khuyến nghị)**: workflow chạy `supabase db push` + `supabase functions deploy` khi push
-  `develop`, dùng **GitHub Secrets** (`SUPABASE_ACCESS_TOKEN`=PAT, mật khẩu DB, project ref).
-- **Supabase Branching** (dashboard integration): preview DB theo PR + áp migration khi merge (có thể tốn phí).
-- ⚠️ **Vướng baseline**: migration 0001–0004 đã áp bằng **SQL trực tiếp** (Management API), KHÔNG qua hệ
-  migration → `supabase_migrations.schema_migrations` trống. Trước khi bật auto phải **baseline**
-  (`supabase migration repair --status applied 0001 0002 0003 0004`) để khỏi chạy lại → lỗi.
+Các bước: `npm run sync:edge` → `supabase link` → **baseline** (`migration repair --status applied
+0001 0002 0003 0004` — vì 0001–04 đã áp bằng SQL trực tiếp, chưa vào hệ migration) → `db push` (áp
+migration mới) → `functions deploy grade grade-assignment review-scheduler`.
+
+**GitHub Secrets** (đã nạp, mã hoá): `SUPABASE_ACCESS_TOKEN` (PAT) · `SUPABASE_DB_PASSWORD` ·
+`SUPABASE_PROJECT_REF`. Đổi/rotate → cập nhật secret (`gh secret set <NAME>` hoặc dashboard GitHub).
+
+> Migration mới: thêm `supabase/migrations/000N_*.sql`, push `develop` → tự áp. Auth settings (auto-confirm,
+> site_url) làm **một lần** trên dashboard (không qua workflow).
 
 ### Bảo mật
 
@@ -118,5 +124,12 @@ Chưa auto. Khi muốn bật (chọn 1):
 
 ## 5. Hiện trạng (production)
 
-- Web: **https://synaptek-hoanghainh.vercel.app** (auto-deploy từ `develop`) · Supabase ref `uolyirkydjgtmuogjtfr`.
-- Chưa làm (không chặn): Supabase auto-deploy; cron `review-scheduler` (Supabase Cron + Vault); EAS `projectId` cho push.
+- **Web** (Vercel) + **Backend** (Supabase) đều **auto-deploy** từ `develop`. CI test mỗi PR.
+- Web: **https://synaptek-hoanghainh.vercel.app** · Supabase ref `uolyirkydjgtmuogjtfr`.
+
+### Hoãn sang M5 (native) — có lý do
+
+- **cron `review-scheduler` + EAS `projectId`**: cron chỉ để gửi **push** "đến giờ ôn"; push cần EAS
+  projectId + **app native** mới có token. Hiện web-only → chưa có token → cron chạy cũng không gửi gì.
+  Nhắc **in-app** "đến hạn ôn" đã hoạt động (suy từ `due_at` phía client, không cần cron). → Làm cả hai
+  ở **M5** (cùng EAS Build) mới có giá trị.

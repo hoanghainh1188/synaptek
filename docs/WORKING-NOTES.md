@@ -4,10 +4,17 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
-**Mốc:** M0 ✅ · M1 ✅ · M2 ✅ (đóng) → **M3 — Giáo viên: US1+US2+US3 + Polish ✅.**
-**M3 US1 ✅ merge** (PR #7 `63b41d5`) · **US2 ✅ merge** (PR #8 `c14c579`) · **US3 + Polish ✅ vừa xong**
-trên nhánh `feature/m3-us3-grading-analytics` (PR đang mở). Sau khi merge → **M3 đóng** → **M4 (phụ huynh)**.
-Việc hậu-M3 (không chặn): deploy hosted (`db push` 0003 + `functions deploy grade-assignment`), iOS sim.
+**Mốc:** M0 ✅ · M1 ✅ · M2 ✅ · M3 ✅ (đóng, US1+US2+US3+Polish, PR #7/#8/#9) + giới hạn nộp bài (D25, PR #11).
+Tiếp theo: **M4 — Phụ huynh** (chưa bắt đầu) hoặc nội dung câu hỏi (D14).
+
+**🚀 DEPLOY HOSTED — LIVE + AUTO** (đã làm xong, ngoài kế hoạch milestone):
+
+- **Web**: https://synaptek-hoanghainh.vercel.app — Vercel auto-deploy từ `develop` (vercel.json gốc +
+  rootDirectory=root + env trên Vercel). PR → preview.
+- **Backend**: Supabase `uolyirkydjgtmuogjtfr` — DB 0001–0004 + 3 Edge Functions + auth auto-confirm.
+  Auto-deploy qua GitHub Action `deploy-supabase.yml` (baseline → db push → functions deploy), secrets ở
+  GitHub. Edge import dùng `npm:@supabase/supabase-js` (jsr lỗi 403 khi bundle).
+- **Hoãn M5**: cron `review-scheduler` + EAS projectId (push chỉ có giá trị khi có app native). Chi tiết: `docs/DEPLOYMENT.md`.
 
 > Chạy local: `supabase start` (0001+0002+0003) + `supabase functions serve` (cho `grade-assignment`) →
 > `npm run web -w @synaptek/app`. GV: đăng ký vai trò GV → tạo lớp → giao bài → chấm/ghi đè. HS: vào lớp
