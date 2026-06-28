@@ -1,0 +1,204 @@
+[
+  {
+    "id": "g4.num.arithmetic.q001",
+    "skillId": "g4.num.arithmetic.addsub",
+    "grade": 4,
+    "type": "numeric",
+    "prompt": "3456 + 2789 = ?",
+    "correct": "6245",
+    "explanation": "3456 cộng 2789 bằng 6245.",
+    "difficulty": 1
+  },
+  {
+    "id": "g4.num.arithmetic.q002",
+    "skillId": "g4.num.arithmetic.addsub",
+    "grade": 4,
+    "type": "numeric",
+    "prompt": "7000 − 2345 = ?",
+    "correct": "4655",
+    "explanation": "7000 trừ 2345 bằng 4655.",
+    "difficulty": 2
+  },
+  {
+    "id": "g4.num.arithmetic.q003",
+    "skillId": "g4.num.arithmetic.addsub",
+    "grade": 4,
+    "type": "numeric",
+    "prompt": "4582 + 1968 = ?",
+    "correct": "6550",
+    "explanation": "4582 cộng 1968 bằng 6550.",
+    "difficulty": 1
+  },
+  {
+    "id": "g4.num.arithmetic.q004",
+    "skillId": "g4.num.arithmetic.addsub",
+    "grade": 4,
+    "type": "numeric",
+    "prompt": "9000 − 1234 = ?",
+    "correct": "7766",
+    "explanation": "9000 trừ 1234 bằng 7766.",
+    "difficulty": 2
+  },
+  {
+    "id": "g4.num.arithmetic.q005",
+    "skillId": "g4.num.arithmetic.addsub",
+    "grade": 4,
+    "type": "mcq",
+    "prompt": "5000 − 2500 = ?",
+    "choices": ["2500", "2000", "3000"],
+    "correct": "2500",
+    "explanation": "5000 trừ 2500 bằng 2500.",
+    "difficulty": 1
+  },
+  {
+    "id": "g4.num.arithmetic.q006",
+    "skillId": "g4.num.arithmetic.addsub",
+    "grade": 4,
+    "type": "true-false",
+    "prompt": "2345 + 1255 = 3600. Đúng hay sai?",
+    "correct": "true",
+    "explanation": "2345 cộng 1255 bằng 3600, nên đúng.",
+    "difficulty": 1
+  },
+  {
+    "id": "g4.num.arithmetic.q007",
+    "skillId": "g4.num.arithmetic.addsub",
+    "grade": 4,
+    "type": "numeric",
+    "prompt": "An có 1250 đồng, mua bút hết 780 đồng. An còn lại bao nhiêu đồng?",
+    "correct": "470",
+    "explanation": "1250 trừ 780 bằng 470 (đồng).",
+    "difficulty": 2
+  },
+  {
+    "id": "g4.num.arithmetic.q008",
+    "skillId": "g4.num.arithmetic.addsub",
+    "grade": 4,
+    "type": "numeric",
+    "prompt": "Lớp 4A có 32 học sinh, lớp 4B có 29 học sinh. Cả hai lớp có bao nhiêu học sinh?",
+    "correct": "61",
+    "explanation": "32 cộng 29 bằng 61 (học sinh).",
+    "difficulty": 1
+  },
+  {
+    "id": "g4.num.arithmetic.q009",
+    "skillId": "g4.num.arithmetic.addsub",
+    "grade": 4,
+    "type": "numeric",
+    "prompt": "12345 + 6789 = ?",
+    "correct": "19134",
+    "explanation": "12345 cộng 6789 bằng 19134.",
+    "difficulty": 2
+  },
+  {
+    "id": "g4.num.arithmetic.q010",
+    "skillId": "g4.num.arithmetic.addsub",
+    "grade": 4,
+    "type": "numeric",
+    "prompt": "10000 − 3567 = ?",
+    "correct": "6433",
+    "explanation": "10000 trừ 3567 bằng 6433.",
+    "difficulty": 2
+  },
+  {
+    "id": "g4.num.arithmetic.q011",
+    "skillId": "g4.num.arithmetic.muldiv",
+    "grade": 4,
+    "type": "numeric",
+    "prompt": "234 × 5 = ?",
+    "correct": "1170",
+    "explanation": "234 nhân 5 bằng 1170.",
+    "difficulty": 1
+  },
+  {
+    "id": "g4.num.arithmetic.q012",
+    "skillId": "g4.num.arithmetic.muldiv",
+    "grade": 4,
+    "type": "numeric",
+    "prompt": "1234 × 6 = ?",
+    "correct": "7404",
+    "explanation": "1234 nhân 6 bằng 7404.",
+    "difficulty": 2
+  },
+  {
+    "id": "g4.num.arithmetic.q013",
+    "skillId": "g4.num.arithmetic.muldiv",
+    "grade": 4,
+    "type": "numeric",
+    "prompt": "4825 ÷ 5 = ?",
+    "correct": "965",
+    "explanation": "4825 chia 5 bằng 965.",
+    "difficulty": 2
+  },
+  {
+    "id": "g4.num.arithmetic.q014",
+    "skillId": "g4.num.arithmetic.muldiv",
+    "grade": 4,
+    "type": "numeric",
+    "prompt": "936 ÷ 4 = ?",
+    "correct": "234",
+    "explanation": "936 chia 4 bằng 234.",
+    "difficulty": 1
+  },
+  {
+    "id": "g4.num.arithmetic.q015",
+    "skillId": "g4.num.arithmetic.muldiv",
+    "grade": 4,
+    "type": "mcq",
+    "prompt": "125 × 8 = ?",
+    "choices": ["1000", "100", "800"],
+    "correct": "1000",
+    "explanation": "125 nhân 8 bằng 1000.",
+    "difficulty": 1
+  },
+  {
+    "id": "g4.num.arithmetic.q016",
+    "skillId": "g4.num.arithmetic.muldiv",
+    "grade": 4,
+    "type": "true-false",
+    "prompt": "7 × 8 = 54. Đúng hay sai?",
+    "correct": "false",
+    "explanation": "7 nhân 8 bằng 56, nên sai.",
+    "difficulty": 1
+  },
+  {
+    "id": "g4.num.arithmetic.q017",
+    "skillId": "g4.num.arithmetic.muldiv",
+    "grade": 4,
+    "type": "numeric",
+    "prompt": "Có 6 hộp bút, mỗi hộp 24 bút. Tất cả có bao nhiêu bút?",
+    "correct": "144",
+    "explanation": "6 nhân 24 bằng 144 (bút).",
+    "difficulty": 2
+  },
+  {
+    "id": "g4.num.arithmetic.q018",
+    "skillId": "g4.num.arithmetic.muldiv",
+    "grade": 4,
+    "type": "numeric",
+    "prompt": "Chia đều 252 viên kẹo cho 6 bạn. Mỗi bạn được bao nhiêu viên?",
+    "correct": "42",
+    "explanation": "252 chia 6 bằng 42 (viên).",
+    "difficulty": 2
+  },
+  {
+    "id": "g4.num.arithmetic.q019",
+    "skillId": "g4.num.arithmetic.muldiv",
+    "grade": 4,
+    "type": "numeric",
+    "prompt": "408 × 7 = ?",
+    "correct": "2856",
+    "explanation": "408 nhân 7 bằng 2856.",
+    "difficulty": 2
+  },
+  {
+    "id": "g4.num.arithmetic.q020",
+    "skillId": "g4.num.arithmetic.muldiv",
+    "grade": 4,
+    "type": "numeric",
+    "prompt": "6000 ÷ 8 = ?",
+    "correct": "750",
+    "explanation": "6000 chia 8 bằng 750.",
+    "difficulty": 2
+  }
+]
