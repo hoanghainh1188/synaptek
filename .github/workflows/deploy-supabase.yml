@@ -1,0 +1,60 @@
+name: Deploy Supabase
+
+# Tự động áp migration + deploy Edge Functions lên Supabase hosted khi push develop (chỉ khi đụng backend).
+# Bí mật ở GitHub Secrets: SUPABASE_ACCESS_TOKEN (PAT), SUPABASE_DB_PASSWORD, SUPABASE_PROJECT_REF.
+on:
+  push:
+    branches: [develop]
+    paths:
+      - "supabase/migrations/**"
+      - "supabase/functions/**"
+      - "supabase/config.toml"
+      - "content/questions/**" # answer-keys tự sinh từ content khi sync:edge
+      - "packages/grading-engine/**"
+      - "packages/learning-path/**"
+      - "packages/classroom/**"
+      - "scripts/sync-edge-engine.mjs"
+  workflow_dispatch: {} # cho phép chạy tay (để test lần đầu)
+
+jobs:
+  deploy:
+    name: db push + functions deploy
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+      REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node (from .nvmrc)
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Install deps
+        run: npm install --no-audit --no-fund
+
+      # _shared (grading-engine + learning-path + classroom + answer-keys) là artifact tự sinh — phải sync
+      # trước khi deploy functions để bản trên hosted khớp nguồn ở packages/ + content/ (D13).
+      - name: Sync edge _shared
+        run: npm run sync:edge
+
+      - name: Link project
+        run: supabase link --project-ref "$REF"
+
+      # Baseline: 0001–0004 đã áp lúc deploy đầu bằng SQL trực tiếp (Management API), CHƯA ghi vào hệ
+      # migration → đánh dấu "applied" để `db push` không chạy lại (tránh lỗi "đã tồn tại"). Idempotent.
+      - name: Baseline migration history (0001–0004)
+        run: supabase migration repair --status applied 0001 0002 0003 0004
+
+      - name: DB push (áp migration mới, nếu có)
+        run: supabase db push
+
+      - name: Deploy Edge Functions
+        run: supabase functions deploy grade grade-assignment review-scheduler --project-ref "$REF"
