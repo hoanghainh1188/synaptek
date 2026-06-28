@@ -16,6 +16,9 @@ export default function NewAssignment() {
   const [grade, setGrade] = useState(4);
   const [topicId, setTopicId] = useState<string | null>(null);
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [allowLate, setAllowLate] = useState(true);
+  const [maxAttempts, setMaxAttempts] = useState(""); // "" = không giới hạn
+  const [timeLimit, setTimeLimit] = useState(""); // phút; "" = không có đồng hồ
 
   const topics = listTopics(grade).filter((t) => getQuestions(t.id).length > 0);
   const questions = useMemo(() => (topicId ? getQuestions(topicId) : []), [topicId]);
@@ -30,8 +33,19 @@ export default function NewAssignment() {
   const canCreate = title.trim().length > 0 && selected.size > 0 && !create.isPending;
 
   const submit = () => {
+    const toNum = (s: string) => {
+      const n = parseInt(s, 10);
+      return Number.isFinite(n) && n >= 1 ? n : null;
+    };
     create.mutate(
-      { classId: String(classId), title: title.trim(), questionIds: [...selected] },
+      {
+        classId: String(classId),
+        title: title.trim(),
+        questionIds: [...selected],
+        allowLate,
+        maxAttempts: toNum(maxAttempts),
+        timeLimitMinutes: toNum(timeLimit),
+      },
       { onSuccess: () => router.back() },
     );
   };
@@ -64,6 +78,54 @@ export default function NewAssignment() {
         placeholderTextColor="#a1a1aa"
         className="min-h-[48px] rounded-md border-2 border-line bg-surface px-3 text-base text-ink"
       />
+
+      {/* Giới hạn nộp (D25) */}
+      <View className="mt-5 rounded-lg bg-surface p-4 shadow-sm">
+        <Text className="font-display text-base font-bold text-ink">Giới hạn nộp</Text>
+        <Pressable
+          accessibilityLabel="Cho phép nộp trễ"
+          onPress={() => setAllowLate((v) => !v)}
+          className="mt-3 flex-row items-center justify-between"
+        >
+          <Text className="flex-1 text-sm font-semibold text-ink">
+            Cho phép nộp sau hạn (đánh dấu trễ)
+          </Text>
+          <View
+            className={`h-7 w-12 justify-center rounded-full px-0.5 ${allowLate ? "bg-brand" : "bg-line"}`}
+          >
+            <View
+              className={`h-6 w-6 rounded-full bg-white ${allowLate ? "self-end" : "self-start"}`}
+            />
+          </View>
+        </Pressable>
+        <View className="mt-3 flex-row gap-3">
+          <View className="flex-1">
+            <Text className="mb-1 text-xs font-bold text-muted">Số lần nộp tối đa</Text>
+            <TextInput
+              value={maxAttempts}
+              onChangeText={setMaxAttempts}
+              keyboardType="number-pad"
+              placeholder="∞"
+              placeholderTextColor="#a1a1aa"
+              accessibilityLabel="Số lần nộp tối đa"
+              className="min-h-[44px] rounded-md border-2 border-line bg-paper px-3 text-base text-ink"
+            />
+          </View>
+          <View className="flex-1">
+            <Text className="mb-1 text-xs font-bold text-muted">Thời gian làm (phút)</Text>
+            <TextInput
+              value={timeLimit}
+              onChangeText={setTimeLimit}
+              keyboardType="number-pad"
+              placeholder="∞"
+              placeholderTextColor="#a1a1aa"
+              accessibilityLabel="Thời gian làm bài"
+              className="min-h-[44px] rounded-md border-2 border-line bg-paper px-3 text-base text-ink"
+            />
+          </View>
+        </View>
+        <Text className="mt-2 text-[11px] text-muted">Để trống = không giới hạn.</Text>
+      </View>
 
       {/* Lớp nội dung */}
       <View className="mt-5 flex-row items-center gap-2">

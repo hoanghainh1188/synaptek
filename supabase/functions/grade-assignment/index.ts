@@ -3,6 +3,7 @@
 // rời server: phản hồi chỉ gồm isCorrect/feedbackCode/score, KHÔNG kèm `correct`. auto_score do server ghi.
 import { grade, type GradeInput } from "@synaptek/grading-engine";
 import { createClient } from "@supabase/supabase-js";
+import { checkSubmitAllowed } from "@synaptek/classroom";
 import { ANSWER_KEYS, type AnswerKey } from "../_shared/answer-keys.ts";
 
 const CORS = {
@@ -88,7 +89,7 @@ export async function handler(req: Request): Promise<Response> {
   const admin = createClient(url, serviceRole, { auth: { persistSession: false } });
   const { data: asg, error: asgErr } = await admin
     .from("assignments")
-    .select("class_id, question_ids")
+    .select("class_id, question_ids, due_at, allow_late, max_attempts, time_limit_minutes")
     .eq("id", assignmentId)
     .maybeSingle();
   if (asgErr || !asg) return json({ error: "unknown_assignment" }, 404);
@@ -101,6 +102,30 @@ export async function handler(req: Request): Promise<Response> {
     .maybeSingle();
   if (!member) return json({ error: "not_member" }, 403);
 
+  // Trạng thái bài nộp hiện có (số lần đã nộp + mốc bắt đầu cho timer).
+  const { data: existing } = await admin
+    .from("submissions")
+    .select("attempt_count, started_at")
+    .eq("assignment_id", assignmentId)
+    .eq("student_id", studentId)
+    .maybeSingle();
+
+  // ENFORCE giới hạn ở server (D4) — logic chung với client qua @synaptek/classroom.
+  const decision = checkSubmitAllowed(
+    {
+      dueAt: asg.due_at ? Date.parse(asg.due_at as string) : null,
+      allowLate: asg.allow_late as boolean,
+      maxAttempts: (asg.max_attempts as number | null) ?? null,
+      timeLimitMinutes: (asg.time_limit_minutes as number | null) ?? null,
+    },
+    {
+      attemptCount: (existing?.attempt_count as number) ?? 0,
+      startedAt: existing?.started_at ? Date.parse(existing.started_at as string) : null,
+    },
+    Date.now(),
+  );
+  if (!decision.allowed) return json({ error: decision.reason }, 403);
+
   const { autoScore, perQuestion } = gradeSubmission(asg.question_ids as string[], answers);
 
   const { error: upErr } = await admin.from("submissions").upsert(
@@ -109,6 +134,7 @@ export async function handler(req: Request): Promise<Response> {
       student_id: studentId,
       answers,
       auto_score: autoScore,
+      attempt_count: ((existing?.attempt_count as number) ?? 0) + 1,
       graded_at: new Date().toISOString(),
     },
     { onConflict: "assignment_id,student_id" },
