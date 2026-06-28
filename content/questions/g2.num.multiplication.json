@@ -35,5 +35,66 @@
     "prompt": "3 × 4 = 12. Đúng hay sai?",
     "correct": "true",
     "explanation": "3 × 4 = 12, đúng."
+  },
+  {
+    "id": "g2.num.mult.q005",
+    "skillId": "g2.num.mult.basic",
+    "grade": 2,
+    "type": "numeric",
+    "prompt": "3 × 4 = ?",
+    "correct": "12",
+    "explanation": "3 nhân 4 bằng 12.",
+    "difficulty": 1
+  },
+  {
+    "id": "g2.num.mult.q006",
+    "skillId": "g2.num.mult.basic",
+    "grade": 2,
+    "type": "numeric",
+    "prompt": "2 × 7 = ?",
+    "correct": "14",
+    "explanation": "2 nhân 7 bằng 14.",
+    "difficulty": 1
+  },
+  {
+    "id": "g2.num.mult.q007",
+    "skillId": "g2.num.mult.basic",
+    "grade": 2,
+    "type": "mcq",
+    "prompt": "4 × 6 = ?",
+    "choices": ["24", "20", "28"],
+    "correct": "24",
+    "explanation": "4 nhân 6 bằng 24.",
+    "difficulty": 1
+  },
+  {
+    "id": "g2.num.mult.q008",
+    "skillId": "g2.num.mult.basic",
+    "grade": 2,
+    "type": "numeric",
+    "prompt": "3 × 8 = ?",
+    "correct": "24",
+    "explanation": "3 nhân 8 bằng 24.",
+    "difficulty": 1
+  },
+  {
+    "id": "g2.num.mult.q009",
+    "skillId": "g2.num.mult.basic",
+    "grade": 2,
+    "type": "true-false",
+    "prompt": "5 × 4 = 20. Đúng hay sai?",
+    "correct": "true",
+    "explanation": "5 nhân 4 bằng 20, nên đúng.",
+    "difficulty": 1
+  },
+  {
+    "id": "g2.num.mult.q010",
+    "skillId": "g2.num.mult.basic",
+    "grade": 2,
+    "type": "numeric",
+    "prompt": "Mỗi bàn có 2 bạn, lớp có 6 bàn. Có tất cả mấy bạn?",
+    "correct": "12",
+    "explanation": "2 nhân 6 bằng 12 (bạn).",
+    "difficulty": 2
   }
 ]
