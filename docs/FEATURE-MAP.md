@@ -32,8 +32,9 @@ mindmap
       ✅ Phân tích lớp + RLS chéo vai trò
       ⏳ Sửa xóa bài · đổi vai trò
     👪 Phụ huynh M4
-      🔮 Liên kết phụ huynh - con
-      🔮 Theo dõi giao bài tại nhà
+      ✅ Liên kết phụ huynh - con (mã)
+      ✅ Theo dõi tiến độ con (read-only)
+      🔮 Giao bài tại nhà
     📚 Nội dung D14
       ✅ Pipeline JSON + validate
       ⏳ Khối lượng câu hỏi còn mỏng
@@ -73,7 +74,8 @@ flowchart LR
   WIP --> B4["Nội dung câu hỏi mỏng + authoring UI"]
   WIP --> B5["Verify iOS/Android"]
 
-  FUTURE --> C1["M4 Phụ huynh đủ 3 vai trò"]
+  SHIPPED --> A7["M4 Phụ huynh: liên kết PH-con + theo dõi read-only (đủ 3 vai trò)"]
+  FUTURE --> C1["M4+: PH giao bài tại nhà"]
   FUTURE --> C2["M5 Native EAS · offline · push"]
   FUTURE --> C3["THCS/THPT · môn khác · chấm từng bước + LaTeX · gia sư AI"]
 ```
