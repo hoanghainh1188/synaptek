@@ -69,22 +69,22 @@ nhật `docs/WORKING-NOTES.md` (điểm tiếp tục) + Decision Log/spec/file l
 
 ## Active Technologies (managed by Spec Kit)
 
-- **Đang làm**: M3 — Giáo viên (`specs/003-teacher-classroom/`). Plan: `specs/003-teacher-classroom/plan.md`.
-  (M0/M1/M2 ✅ đóng — M2 US1+US2+US3+Polish merge.)
-- **Stack**: TypeScript · Expo SDK 56 / Expo Router / React 19 / RN 0.85. Dùng lại
-  `@synaptek/grading-engine` (chấm chính thức server-side, thay stub) + `@synaptek/curriculum` +
-  `@synaptek/learning-path` (heatmap/mastery cho phân tích lớp); **mới** `@synaptek/classroom` (mã mời +
-  hạn nộp + điểm hợp lệ + tổng hợp lớp, TS thuần test-first). NativeWind v4, `@supabase/supabase-js`, TanStack Query.
-- **Storage**: Supabase — **migration `0003`** mới: `profiles.role` + `classes`/`class_members`/`assignments`/
-  `submissions` + **RLS chéo vai trò** qua helper `SECURITY DEFINER` (`owns_class`/`is_member`) + RPC
-  `join_class_by_code`. Đề/đáp án = JSON `content/` (D6); **answer-keys** cho chấm server = artifact tự sinh
-  đồng bộ `_shared` (D13). Chấm chính thức = Edge Function `grade-assignment` (ẩn đáp án — D4).
+- **Đang làm**: M4 — Phụ huynh (`specs/005-parent-monitoring/`). Plan: `specs/005-parent-monitoring/plan.md`.
+  (M0–M3 ✅ đóng + giới hạn nộp bài (D25) + 100 câu nội dung + deploy hosted AUTO web/backend.)
+- **Stack**: TypeScript · Expo SDK 56 / Expo Router / React 19 / RN 0.85. Tái dùng `@synaptek/grading-engine`
+  - `@synaptek/curriculum` + `@synaptek/learning-path` (heatmap/mastery) + `@synaptek/classroom` (mã mời +
+    giới hạn nộp + điểm + tổng hợp). M4 **không thêm package/Edge** — tái dùng. NativeWind v4, `@supabase/supabase-js`, TanStack Query.
+- **Storage**: Supabase — **migration `0005`** mới (M4): `profiles.parent_link_code` + `parent_links`
+  (nhiều–nhiều) + **RLS đọc chéo PH→con read-only** qua helper `SECURITY DEFINER` `is_parent_of` + RPC
+  `link_parent_by_code` (chống tự-liên-kết). M1–M4limits (`0001`–`0004`) giữ nguyên. Deploy: web Vercel
+  auto + backend GitHub Action auto (db push + functions deploy + ensure auth config) từ `develop`.
 
 ## Recent Changes
 
-- **003-teacher-classroom**: spec + clarify + plan (lớp + mã mời, giao bài, chấm chính thức server-side +
-  ghi đè/nhận xét, phân tích lớp, RLS chéo vai trò). Decision Log **D22** (vai trò) · **D23** (lớp/bài/nộp +
-  audit) · **D24** (RLS SECURITY DEFINER + chấm server qua answer-keys).
+- **005-parent-monitoring**: spec + clarify + plan (liên kết PH–con qua mã, theo dõi read-only, RLS đọc
+  chéo). Decision Log **D26** (PH read-only qua `parent_links` + `is_parent_of`).
+- **003-teacher-classroom**: ✅ đóng — lớp + mã mời, chấm chính thức server-side (ẩn đáp án), ghi đè/nhận
+  xét, phân tích lớp, RLS chéo vai trò. **D22/D23/D24**; + giới hạn nộp bài **D25**.
 - **002-mastery-path**: ✅ đóng — BKT mastery + lộ trình + gamification + spaced repetition/cron/push.
   Decision Log **D19** (BKT) · **D20** (gamification) · **D21** (cron+push).
 - **001-m1-practice-loop**: ✅ đóng — practice loop: dùng lại engine, package `curriculum`, auth tối thiểu Supabase.
