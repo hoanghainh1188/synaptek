@@ -1,4 +1,5 @@
-// Route GV — chi tiết lớp: mã mời + roster + xóa HS (M3 US1, T013). (Bài tập/phân tích: US2/US3.)
+// Route GV — chi tiết lớp: mã mời + roster + xóa HS + quản lý bài tập (M3 + polish).
+import { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
@@ -10,7 +11,7 @@ import {
   useRemoveMember,
   useRoster,
 } from "@/lib/supabase/classes";
-import { useClassAssignments } from "@/lib/supabase/assignments";
+import { useClassAssignments, useDeleteAssignment } from "@/lib/supabase/assignments";
 import { skillName } from "@/lib/content";
 
 export default function ClassDetail() {
@@ -23,6 +24,8 @@ export default function ClassDetail() {
   const classMastery = useClassMastery(classId);
   const regenerate = useRegenerateInvite();
   const removeMember = useRemoveMember(classId);
+  const deleteAssignment = useDeleteAssignment();
+  const [pendingDelete, setPendingDelete] = useState<string | null>(null);
 
   const cls = classes.data?.find((c) => c.id === classId);
   const weak = classWeakSkills(classMastery.data ?? [], 5);
@@ -83,20 +86,62 @@ export default function ClassDetail() {
           <Text className="text-sm text-muted">Chưa giao bài nào.</Text>
         )}
         {assignments.data?.map((a) => (
-          <Pressable
-            key={a.id}
-            accessibilityLabel={`Chấm ${a.title}`}
-            onPress={() => router.push(`/grade/${a.id}`)}
-            className="flex-row items-center rounded-lg bg-surface p-3 shadow-sm"
-          >
-            <View className="flex-1">
-              <Text className="font-display font-bold text-ink">{a.title}</Text>
-              <Text className="text-xs font-semibold text-muted">
-                {a.questionIds.length} câu · chạm để chấm
-              </Text>
+          <View key={a.id} className="rounded-lg bg-surface p-3 shadow-sm">
+            <Pressable
+              accessibilityLabel={`Chấm ${a.title}`}
+              onPress={() => router.push(`/grade/${a.id}`)}
+              className="flex-row items-center"
+            >
+              <View className="flex-1">
+                <Text className="font-display font-bold text-ink">{a.title}</Text>
+                <Text className="text-xs font-semibold text-muted">
+                  {a.questionIds.length} câu · chạm để chấm
+                </Text>
+              </View>
+              <Text className="text-2xl text-muted">›</Text>
+            </Pressable>
+            <View className="mt-2 flex-row gap-2 border-t border-line pt-2">
+              <Pressable
+                accessibilityLabel={`Sửa ${a.title}`}
+                onPress={() => router.push(`/assignment/new?editId=${a.id}`)}
+                className="min-h-[36px] flex-1 items-center justify-center rounded-md bg-paper"
+              >
+                <Text className="font-bold text-ink">Sửa</Text>
+              </Pressable>
+              <Pressable
+                accessibilityLabel={`Xoá ${a.title}`}
+                onPress={() => setPendingDelete(pendingDelete === a.id ? null : a.id)}
+                className="min-h-[36px] flex-1 items-center justify-center rounded-md bg-paper"
+              >
+                <Text className="font-bold text-no">Xoá</Text>
+              </Pressable>
             </View>
-            <Text className="text-2xl text-muted">›</Text>
-          </Pressable>
+            {pendingDelete === a.id && (
+              <View className="mt-2 rounded-md bg-no/10 p-2">
+                <Text className="text-sm text-ink">
+                  Xoá bài "{a.title}"? Bài nộp của học sinh cũng bị xoá.
+                </Text>
+                <View className="mt-2 flex-row gap-2">
+                  <Pressable
+                    accessibilityLabel="Xác nhận xoá"
+                    onPress={() =>
+                      deleteAssignment.mutate(a.id, { onSuccess: () => setPendingDelete(null) })
+                    }
+                    className="min-h-[36px] flex-1 items-center justify-center rounded-md bg-no"
+                  >
+                    <Text className="font-bold text-white">Xoá hẳn</Text>
+                  </Pressable>
+                  <Pressable
+                    accessibilityLabel="Huỷ xoá"
+                    onPress={() => setPendingDelete(null)}
+                    className="min-h-[36px] flex-1 items-center justify-center rounded-md bg-surface shadow-sm"
+                  >
+                    <Text className="font-bold text-ink">Huỷ</Text>
+                  </Pressable>
+                </View>
+              </View>
+            )}
+          </View>
         ))}
       </View>
 

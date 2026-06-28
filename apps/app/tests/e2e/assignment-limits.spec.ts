@@ -26,7 +26,7 @@ test("giới hạn số lần nộp: 1 lần → hết lượt sau khi nộp", a
   await gvPage.getByPlaceholder("VD: Ôn tập Phân số").fill("KT 1 lần");
   await gvPage.getByLabel("Số lần nộp tối đa").fill("1");
   await gvPage.getByLabel("Phân số").first().click();
-  await gvPage.getByText("Phân số nào lớn hơn?").click();
+  await gvPage.getByLabel("g4.num.fractions.q001").click();
   await gvPage.getByLabel("Giao bài").click();
   await expect(gvPage.getByText("1 câu")).toBeVisible({ timeout: 15_000 });
 

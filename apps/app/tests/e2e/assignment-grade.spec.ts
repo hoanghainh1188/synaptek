@@ -27,7 +27,7 @@ test("GV giao bài → HS nộp → chấm chính thức hiện điểm", async 
   await gvPage.getByPlaceholder("VD: Ôn tập Phân số").fill("Phân số");
   await gvPage.getByLabel("Phân số").first().click(); // chủ đề Phân số
   // chọn câu đầu tiên hiện ra (checkbox row)
-  await gvPage.getByText("Phân số nào lớn hơn?").click();
+  await gvPage.getByLabel("g4.num.fractions.q001").click();
   await gvPage.getByLabel("Giao bài").click(); // nút giao (đáy composer)
   await expect(gvPage.getByText("1 câu")).toBeVisible({ timeout: 15_000 });
 

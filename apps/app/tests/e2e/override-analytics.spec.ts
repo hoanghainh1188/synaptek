@@ -25,7 +25,7 @@ test("GV ghi đè điểm + nhận xét → HS thấy điểm cuối", async ({ 
   await gvPage.getByLabel("Soạn bài tập").click();
   await gvPage.getByPlaceholder("VD: Ôn tập Phân số").fill("KT Phân số");
   await gvPage.getByLabel("Phân số").first().click();
-  await gvPage.getByText("Phân số nào lớn hơn?").click();
+  await gvPage.getByLabel("g4.num.fractions.q001").click();
   await gvPage.getByLabel("Giao bài").click();
   await expect(gvPage.getByText("1 câu")).toBeVisible({ timeout: 15_000 });
 

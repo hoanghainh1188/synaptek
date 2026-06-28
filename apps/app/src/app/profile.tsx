@@ -6,7 +6,7 @@ import { router } from "expo-router";
 import { getBadges } from "@/lib/content";
 import { useAuth } from "@/lib/supabase/auth";
 import { useGamification } from "@/lib/supabase/gamification";
-import { useMyRole } from "@/lib/supabase/role";
+import { useMyRole, useSetRole } from "@/lib/supabase/role";
 import { registerForPush } from "@/lib/notifications";
 import { useSavePushToken, useSetPushEnabled } from "@/lib/supabase/push";
 import { BadgeGrid } from "@/components/gamification/BadgeGrid";
@@ -19,6 +19,7 @@ export default function Profile() {
   const catalog = getBadges();
 
   const role = useMyRole();
+  const setRole = useSetRole();
   const savePush = useSavePushToken();
   const setPushEnabled = useSetPushEnabled();
   const [pushMsg, setPushMsg] = useState<string | null>(null);
@@ -108,6 +109,34 @@ export default function Profile() {
               </Pressable>
             </View>
           )}
+
+          {/* Đổi vai trò (polish) — lỡ chọn sai khi đăng ký vẫn đổi được */}
+          <Text className="mt-4 mb-1 text-sm font-bold text-muted">Vai trò</Text>
+          <View className="flex-row gap-2">
+            {(
+              [
+                ["student", "Học sinh"],
+                ["teacher", "Giáo viên"],
+              ] as const
+            ).map(([value, label]) => {
+              const active = role.data === value;
+              return (
+                <Pressable
+                  key={value}
+                  accessibilityLabel={`Đặt vai trò ${label}`}
+                  disabled={active || setRole.isPending}
+                  onPress={() => setRole.mutate(value)}
+                  className={`min-h-[44px] flex-1 items-center justify-center rounded-md border-2 ${active ? "border-brand bg-brand/10" : "border-line bg-surface"}`}
+                >
+                  <Text
+                    className={`font-display font-bold ${active ? "text-brand" : "text-muted"}`}
+                  >
+                    {label}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </View>
         </View>
       )}
 
