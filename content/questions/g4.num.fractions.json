@@ -72,5 +72,232 @@
     "prompt": "1/3 lớn hơn 1/2. Đúng hay sai?",
     "correct": "false",
     "explanation": "Cùng tử số 1, mẫu lớn hơn (3 > 2) thì phân số nhỏ hơn, nên 1/3 < 1/2."
+  },
+  {
+    "id": "g4.num.fractions.q009",
+    "skillId": "g4.num.fractions.concept",
+    "grade": 4,
+    "type": "mcq",
+    "prompt": "Phân số 3/4 có tử số là mấy?",
+    "choices": ["3", "4", "7"],
+    "correct": "3",
+    "explanation": "Tử số là số ở trên gạch ngang: 3.",
+    "difficulty": 1
+  },
+  {
+    "id": "g4.num.fractions.q010",
+    "skillId": "g4.num.fractions.concept",
+    "grade": 4,
+    "type": "mcq",
+    "prompt": "Phân số 5/8 có mẫu số là mấy?",
+    "choices": ["8", "5", "13"],
+    "correct": "8",
+    "explanation": "Mẫu số là số ở dưới gạch ngang: 8.",
+    "difficulty": 1
+  },
+  {
+    "id": "g4.num.fractions.q011",
+    "skillId": "g4.num.fractions.concept",
+    "grade": 4,
+    "type": "true-false",
+    "prompt": "Trong phân số 2/7, mẫu số là 7. Đúng hay sai?",
+    "correct": "true",
+    "explanation": "Mẫu số nằm dưới gạch ngang, là 7, nên đúng.",
+    "difficulty": 1
+  },
+  {
+    "id": "g4.num.fractions.q012",
+    "skillId": "g4.num.fractions.concept",
+    "grade": 4,
+    "type": "mcq",
+    "prompt": "Một hình tròn chia 4 phần bằng nhau, tô màu 1 phần. Phân số chỉ phần đã tô là?",
+    "choices": ["1/4", "1/3", "3/4"],
+    "correct": "1/4",
+    "explanation": "Tô 1 trong 4 phần bằng nhau, viết là 1/4.",
+    "difficulty": 1
+  },
+  {
+    "id": "g4.num.fractions.q013",
+    "skillId": "g4.num.fractions.concept",
+    "grade": 4,
+    "type": "fraction",
+    "prompt": "Viết phân số: ba phần năm.",
+    "correct": "3/5",
+    "explanation": "Ba phần năm viết là 3/5.",
+    "difficulty": 2
+  },
+  {
+    "id": "g4.num.fractions.q014",
+    "skillId": "g4.num.fractions.concept",
+    "grade": 4,
+    "type": "mcq",
+    "prompt": "Một cái bánh chia 6 phần bằng nhau, ăn 2 phần. Phân số chỉ phần đã ăn là?",
+    "choices": ["2/6", "2/4", "6/2"],
+    "correct": "2/6",
+    "explanation": "Ăn 2 trong 6 phần bằng nhau, viết là 2/6.",
+    "difficulty": 2
+  },
+  {
+    "id": "g4.num.fractions.q015",
+    "skillId": "g4.num.fractions.concept",
+    "grade": 4,
+    "type": "true-false",
+    "prompt": "Phân số 4/4 bằng 1. Đúng hay sai?",
+    "correct": "true",
+    "explanation": "Lấy đủ 4 trong 4 phần là cả đơn vị, bằng 1.",
+    "difficulty": 2
+  },
+  {
+    "id": "g4.num.fractions.q016",
+    "skillId": "g4.num.fractions.concept",
+    "grade": 4,
+    "type": "numeric",
+    "prompt": "Phân số 7/10 có tử số là mấy?",
+    "correct": "7",
+    "explanation": "Tử số nằm trên gạch ngang, là 7.",
+    "difficulty": 1
+  },
+  {
+    "id": "g4.num.fractions.q017",
+    "skillId": "g4.num.fractions.compare",
+    "grade": 4,
+    "type": "fraction",
+    "prompt": "Rút gọn phân số 4/8.",
+    "correct": "1/2",
+    "explanation": "Chia cả tử và mẫu cho 4 được 1/2.",
+    "difficulty": 2
+  },
+  {
+    "id": "g4.num.fractions.q018",
+    "skillId": "g4.num.fractions.compare",
+    "grade": 4,
+    "type": "fraction",
+    "prompt": "Rút gọn phân số 6/9.",
+    "correct": "2/3",
+    "explanation": "Chia cả tử và mẫu cho 3 được 2/3.",
+    "difficulty": 2
+  },
+  {
+    "id": "g4.num.fractions.q019",
+    "skillId": "g4.num.fractions.compare",
+    "grade": 4,
+    "type": "mcq",
+    "prompt": "Phân số nào lớn hơn: 3/5 hay 2/5?",
+    "choices": ["3/5", "2/5"],
+    "correct": "3/5",
+    "explanation": "Cùng mẫu số, tử số lớn hơn thì phân số lớn hơn: 3/5.",
+    "difficulty": 1
+  },
+  {
+    "id": "g4.num.fractions.q020",
+    "skillId": "g4.num.fractions.compare",
+    "grade": 4,
+    "type": "true-false",
+    "prompt": "1/2 = 2/4. Đúng hay sai?",
+    "correct": "true",
+    "explanation": "Nhân cả tử và mẫu của 1/2 với 2 được 2/4, nên bằng nhau.",
+    "difficulty": 2
+  },
+  {
+    "id": "g4.num.fractions.q021",
+    "skillId": "g4.num.fractions.compare",
+    "grade": 4,
+    "type": "mcq",
+    "prompt": "So sánh 3/4 và 1/2, phân số nào lớn hơn?",
+    "choices": ["3/4", "1/2"],
+    "correct": "3/4",
+    "explanation": "Quy về cùng mẫu: 3/4 và 2/4, nên 3/4 lớn hơn.",
+    "difficulty": 2
+  },
+  {
+    "id": "g4.num.fractions.q022",
+    "skillId": "g4.num.fractions.compare",
+    "grade": 4,
+    "type": "fraction",
+    "prompt": "Rút gọn phân số 10/15.",
+    "correct": "2/3",
+    "explanation": "Chia cả tử và mẫu cho 5 được 2/3.",
+    "difficulty": 3
+  },
+  {
+    "id": "g4.num.fractions.q023",
+    "skillId": "g4.num.fractions.addsub",
+    "grade": 4,
+    "type": "fraction",
+    "prompt": "1/5 + 2/5 = ?",
+    "correct": "3/5",
+    "explanation": "Cùng mẫu, cộng tử số: 1 + 2 = 3, được 3/5.",
+    "difficulty": 1
+  },
+  {
+    "id": "g4.num.fractions.q024",
+    "skillId": "g4.num.fractions.addsub",
+    "grade": 4,
+    "type": "fraction",
+    "prompt": "3/7 + 2/7 = ?",
+    "correct": "5/7",
+    "explanation": "Cùng mẫu, cộng tử số: 3 + 2 = 5, được 5/7.",
+    "difficulty": 1
+  },
+  {
+    "id": "g4.num.fractions.q025",
+    "skillId": "g4.num.fractions.addsub",
+    "grade": 4,
+    "type": "fraction",
+    "prompt": "4/9 − 1/9 = ?",
+    "correct": "3/9",
+    "explanation": "Cùng mẫu, trừ tử số: 4 − 1 = 3, được 3/9 (rút gọn 1/3).",
+    "difficulty": 2
+  },
+  {
+    "id": "g4.num.fractions.q026",
+    "skillId": "g4.num.fractions.addsub",
+    "grade": 4,
+    "type": "fraction",
+    "prompt": "5/8 − 3/8 = ?",
+    "correct": "2/8",
+    "explanation": "Cùng mẫu, trừ tử số: 5 − 3 = 2, được 2/8 (rút gọn 1/4).",
+    "difficulty": 2
+  },
+  {
+    "id": "g4.num.fractions.q027",
+    "skillId": "g4.num.fractions.addsub",
+    "grade": 4,
+    "type": "fraction",
+    "prompt": "2/6 + 3/6 = ?",
+    "correct": "5/6",
+    "explanation": "Cùng mẫu, cộng tử số: 2 + 3 = 5, được 5/6.",
+    "difficulty": 1
+  },
+  {
+    "id": "g4.num.fractions.q028",
+    "skillId": "g4.num.fractions.addsub",
+    "grade": 4,
+    "type": "fraction",
+    "prompt": "7/10 − 4/10 = ?",
+    "correct": "3/10",
+    "explanation": "Cùng mẫu, trừ tử số: 7 − 4 = 3, được 3/10.",
+    "difficulty": 2
+  },
+  {
+    "id": "g4.num.fractions.q029",
+    "skillId": "g4.num.fractions.addsub",
+    "grade": 4,
+    "type": "mcq",
+    "prompt": "1/4 + 2/4 = ?",
+    "choices": ["3/4", "3/8", "1/2"],
+    "correct": "3/4",
+    "explanation": "Cùng mẫu, cộng tử số: 1 + 2 = 3, được 3/4.",
+    "difficulty": 1
+  },
+  {
+    "id": "g4.num.fractions.q030",
+    "skillId": "g4.num.fractions.addsub",
+    "grade": 4,
+    "type": "fill-blank",
+    "prompt": "Điền kết quả: 2/5 + 1/5 = __ ; 4/6 − 2/6 = __",
+    "correct": ["3/5", "2/6"],
+    "explanation": "2/5 + 1/5 = 3/5; 4/6 − 2/6 = 2/6.",
+    "difficulty": 2
   }
 ]

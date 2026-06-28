@@ -31,5 +31,177 @@
     "choices": ["16 cm²", "8 cm²", "12 cm²"],
     "correct": "16 cm²",
     "explanation": "Diện tích hình vuông = cạnh × cạnh = 4 × 4 = 16 (cm²)."
+  },
+  {
+    "id": "g4.geo.perimeter.q002",
+    "skillId": "g4.geo.rect.perimeter",
+    "grade": 4,
+    "type": "numeric",
+    "prompt": "Hình chữ nhật dài 8cm, rộng 5cm. Chu vi bằng bao nhiêu xăng-ti-mét?",
+    "correct": "26",
+    "explanation": "Chu vi = (8 + 5) × 2 = 26 (cm).",
+    "difficulty": 1
+  },
+  {
+    "id": "g4.geo.perimeter.q003",
+    "skillId": "g4.geo.rect.perimeter",
+    "grade": 4,
+    "type": "numeric",
+    "prompt": "Hình chữ nhật dài 12m, rộng 7m. Chu vi bằng bao nhiêu mét?",
+    "correct": "38",
+    "explanation": "Chu vi = (12 + 7) × 2 = 38 (m).",
+    "difficulty": 2
+  },
+  {
+    "id": "g4.geo.perimeter.q004",
+    "skillId": "g4.geo.rect.perimeter",
+    "grade": 4,
+    "type": "numeric",
+    "prompt": "Hình vuông cạnh 6cm. Chu vi bằng bao nhiêu xăng-ti-mét?",
+    "correct": "24",
+    "explanation": "Chu vi hình vuông = 6 × 4 = 24 (cm).",
+    "difficulty": 1
+  },
+  {
+    "id": "g4.geo.perimeter.q005",
+    "skillId": "g4.geo.rect.perimeter",
+    "grade": 4,
+    "type": "mcq",
+    "prompt": "Hình chữ nhật dài 10cm, rộng 4cm. Chu vi là?",
+    "choices": ["28", "40", "14"],
+    "correct": "28",
+    "explanation": "Chu vi = (10 + 4) × 2 = 28 (cm).",
+    "difficulty": 1
+  },
+  {
+    "id": "g4.geo.perimeter.q006",
+    "skillId": "g4.geo.rect.perimeter",
+    "grade": 4,
+    "type": "true-false",
+    "prompt": "Hình vuông cạnh 5cm có chu vi 20cm. Đúng hay sai?",
+    "correct": "true",
+    "explanation": "Chu vi = 5 × 4 = 20 (cm), nên đúng.",
+    "difficulty": 1
+  },
+  {
+    "id": "g4.geo.perimeter.q007",
+    "skillId": "g4.geo.rect.perimeter",
+    "grade": 4,
+    "type": "numeric",
+    "prompt": "Mảnh vườn hình chữ nhật dài 15m, rộng 9m. Cần rào quanh hết bao nhiêu mét?",
+    "correct": "48",
+    "explanation": "Độ dài rào = chu vi = (15 + 9) × 2 = 48 (m).",
+    "difficulty": 2
+  },
+  {
+    "id": "g4.geo.perimeter.q008",
+    "skillId": "g4.geo.rect.perimeter",
+    "grade": 4,
+    "type": "numeric",
+    "prompt": "Hình chữ nhật dài 20cm, rộng 13cm. Chu vi bằng bao nhiêu xăng-ti-mét?",
+    "correct": "66",
+    "explanation": "Chu vi = (20 + 13) × 2 = 66 (cm).",
+    "difficulty": 2
+  },
+  {
+    "id": "g4.geo.perimeter.q009",
+    "skillId": "g4.geo.rect.perimeter",
+    "grade": 4,
+    "type": "numeric",
+    "prompt": "Hình vuông cạnh 9m. Chu vi bằng bao nhiêu mét?",
+    "correct": "36",
+    "explanation": "Chu vi hình vuông = 9 × 4 = 36 (m).",
+    "difficulty": 1
+  },
+  {
+    "id": "g4.geo.perimeter.q010",
+    "skillId": "g4.geo.rect.perimeter",
+    "grade": 4,
+    "type": "numeric",
+    "prompt": "Hình chữ nhật dài 25m, rộng 15m. Chu vi bằng bao nhiêu mét?",
+    "correct": "80",
+    "explanation": "Chu vi = (25 + 15) × 2 = 80 (m).",
+    "difficulty": 2
+  },
+  {
+    "id": "g4.geo.area.q003",
+    "skillId": "g4.geo.rect.area",
+    "grade": 4,
+    "type": "numeric",
+    "prompt": "Hình chữ nhật dài 8cm, rộng 5cm. Diện tích bằng bao nhiêu xăng-ti-mét vuông?",
+    "correct": "40",
+    "explanation": "Diện tích = 8 × 5 = 40 (cm²).",
+    "difficulty": 1
+  },
+  {
+    "id": "g4.geo.area.q004",
+    "skillId": "g4.geo.rect.area",
+    "grade": 4,
+    "type": "numeric",
+    "prompt": "Hình chữ nhật dài 12cm, rộng 7cm. Diện tích bằng bao nhiêu xăng-ti-mét vuông?",
+    "correct": "84",
+    "explanation": "Diện tích = 12 × 7 = 84 (cm²).",
+    "difficulty": 2
+  },
+  {
+    "id": "g4.geo.area.q005",
+    "skillId": "g4.geo.rect.area",
+    "grade": 4,
+    "type": "numeric",
+    "prompt": "Hình vuông cạnh 6cm. Diện tích bằng bao nhiêu xăng-ti-mét vuông?",
+    "correct": "36",
+    "explanation": "Diện tích hình vuông = 6 × 6 = 36 (cm²).",
+    "difficulty": 1
+  },
+  {
+    "id": "g4.geo.area.q006",
+    "skillId": "g4.geo.rect.area",
+    "grade": 4,
+    "type": "mcq",
+    "prompt": "Hình chữ nhật dài 10cm, rộng 4cm. Diện tích là?",
+    "choices": ["40", "28", "14"],
+    "correct": "40",
+    "explanation": "Diện tích = 10 × 4 = 40 (cm²).",
+    "difficulty": 1
+  },
+  {
+    "id": "g4.geo.area.q007",
+    "skillId": "g4.geo.rect.area",
+    "grade": 4,
+    "type": "true-false",
+    "prompt": "Hình vuông cạnh 5cm có diện tích 25cm². Đúng hay sai?",
+    "correct": "true",
+    "explanation": "Diện tích = 5 × 5 = 25 (cm²), nên đúng.",
+    "difficulty": 1
+  },
+  {
+    "id": "g4.geo.area.q008",
+    "skillId": "g4.geo.rect.area",
+    "grade": 4,
+    "type": "numeric",
+    "prompt": "Nền nhà hình chữ nhật dài 9m, rộng 4m. Diện tích bằng bao nhiêu mét vuông?",
+    "correct": "36",
+    "explanation": "Diện tích = 9 × 4 = 36 (m²).",
+    "difficulty": 2
+  },
+  {
+    "id": "g4.geo.area.q009",
+    "skillId": "g4.geo.rect.area",
+    "grade": 4,
+    "type": "numeric",
+    "prompt": "Hình chữ nhật dài 15cm, rộng 6cm. Diện tích bằng bao nhiêu xăng-ti-mét vuông?",
+    "correct": "90",
+    "explanation": "Diện tích = 15 × 6 = 90 (cm²).",
+    "difficulty": 2
+  },
+  {
+    "id": "g4.geo.area.q010",
+    "skillId": "g4.geo.rect.area",
+    "grade": 4,
+    "type": "numeric",
+    "prompt": "Hình vuông cạnh 8cm. Diện tích bằng bao nhiêu xăng-ti-mét vuông?",
+    "correct": "64",
+    "explanation": "Diện tích hình vuông = 8 × 8 = 64 (cm²).",
+    "difficulty": 2
   }
 ]

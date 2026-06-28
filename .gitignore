@@ -27,3 +27,5 @@ web-build/
 
 # Ảnh chụp tạm (Playwright screenshot script)
 screenshots/
+.vercel
+.env*

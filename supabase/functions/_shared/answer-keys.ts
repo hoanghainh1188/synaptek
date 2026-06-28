@@ -54,6 +54,154 @@ export const ANSWER_KEYS: Record<string, AnswerKey> = {
     "type": "mcq",
     "correct": "16 cm²"
   },
+  "g4.geo.perimeter.q002": {
+    "type": "numeric",
+    "correct": "26"
+  },
+  "g4.geo.perimeter.q003": {
+    "type": "numeric",
+    "correct": "38"
+  },
+  "g4.geo.perimeter.q004": {
+    "type": "numeric",
+    "correct": "24"
+  },
+  "g4.geo.perimeter.q005": {
+    "type": "mcq",
+    "correct": "28"
+  },
+  "g4.geo.perimeter.q006": {
+    "type": "true-false",
+    "correct": "true"
+  },
+  "g4.geo.perimeter.q007": {
+    "type": "numeric",
+    "correct": "48"
+  },
+  "g4.geo.perimeter.q008": {
+    "type": "numeric",
+    "correct": "66"
+  },
+  "g4.geo.perimeter.q009": {
+    "type": "numeric",
+    "correct": "36"
+  },
+  "g4.geo.perimeter.q010": {
+    "type": "numeric",
+    "correct": "80"
+  },
+  "g4.geo.area.q003": {
+    "type": "numeric",
+    "correct": "40"
+  },
+  "g4.geo.area.q004": {
+    "type": "numeric",
+    "correct": "84"
+  },
+  "g4.geo.area.q005": {
+    "type": "numeric",
+    "correct": "36"
+  },
+  "g4.geo.area.q006": {
+    "type": "mcq",
+    "correct": "40"
+  },
+  "g4.geo.area.q007": {
+    "type": "true-false",
+    "correct": "true"
+  },
+  "g4.geo.area.q008": {
+    "type": "numeric",
+    "correct": "36"
+  },
+  "g4.geo.area.q009": {
+    "type": "numeric",
+    "correct": "90"
+  },
+  "g4.geo.area.q010": {
+    "type": "numeric",
+    "correct": "64"
+  },
+  "g4.num.arithmetic.q001": {
+    "type": "numeric",
+    "correct": "6245"
+  },
+  "g4.num.arithmetic.q002": {
+    "type": "numeric",
+    "correct": "4655"
+  },
+  "g4.num.arithmetic.q003": {
+    "type": "numeric",
+    "correct": "6550"
+  },
+  "g4.num.arithmetic.q004": {
+    "type": "numeric",
+    "correct": "7766"
+  },
+  "g4.num.arithmetic.q005": {
+    "type": "mcq",
+    "correct": "2500"
+  },
+  "g4.num.arithmetic.q006": {
+    "type": "true-false",
+    "correct": "true"
+  },
+  "g4.num.arithmetic.q007": {
+    "type": "numeric",
+    "correct": "470"
+  },
+  "g4.num.arithmetic.q008": {
+    "type": "numeric",
+    "correct": "61"
+  },
+  "g4.num.arithmetic.q009": {
+    "type": "numeric",
+    "correct": "19134"
+  },
+  "g4.num.arithmetic.q010": {
+    "type": "numeric",
+    "correct": "6433"
+  },
+  "g4.num.arithmetic.q011": {
+    "type": "numeric",
+    "correct": "1170"
+  },
+  "g4.num.arithmetic.q012": {
+    "type": "numeric",
+    "correct": "7404"
+  },
+  "g4.num.arithmetic.q013": {
+    "type": "numeric",
+    "correct": "965"
+  },
+  "g4.num.arithmetic.q014": {
+    "type": "numeric",
+    "correct": "234"
+  },
+  "g4.num.arithmetic.q015": {
+    "type": "mcq",
+    "correct": "1000"
+  },
+  "g4.num.arithmetic.q016": {
+    "type": "true-false",
+    "correct": "false"
+  },
+  "g4.num.arithmetic.q017": {
+    "type": "numeric",
+    "correct": "144"
+  },
+  "g4.num.arithmetic.q018": {
+    "type": "numeric",
+    "correct": "42"
+  },
+  "g4.num.arithmetic.q019": {
+    "type": "numeric",
+    "correct": "2856"
+  },
+  "g4.num.arithmetic.q020": {
+    "type": "numeric",
+    "correct": "750"
+  },
   "g4.num.fractions.q001": {
     "type": "mcq",
     "correct": "1/2"
@@ -88,5 +236,96 @@ export const ANSWER_KEYS: Record<string, AnswerKey> = {
   "g4.num.fractions.q008": {
     "type": "true-false",
     "correct": "false"
+  },
+  "g4.num.fractions.q009": {
+    "type": "mcq",
+    "correct": "3"
+  },
+  "g4.num.fractions.q010": {
+    "type": "mcq",
+    "correct": "8"
+  },
+  "g4.num.fractions.q011": {
+    "type": "true-false",
+    "correct": "true"
+  },
+  "g4.num.fractions.q012": {
+    "type": "mcq",
+    "correct": "1/4"
+  },
+  "g4.num.fractions.q013": {
+    "type": "fraction",
+    "correct": "3/5"
+  },
+  "g4.num.fractions.q014": {
+    "type": "mcq",
+    "correct": "2/6"
+  },
+  "g4.num.fractions.q015": {
+    "type": "true-false",
+    "correct": "true"
+  },
+  "g4.num.fractions.q016": {
+    "type": "numeric",
+    "correct": "7"
+  },
+  "g4.num.fractions.q017": {
+    "type": "fraction",
+    "correct": "1/2"
+  },
+  "g4.num.fractions.q018": {
+    "type": "fraction",
+    "correct": "2/3"
+  },
+  "g4.num.fractions.q019": {
+    "type": "mcq",
+    "correct": "3/5"
+  },
+  "g4.num.fractions.q020": {
+    "type": "true-false",
+    "correct": "true"
+  },
+  "g4.num.fractions.q021": {
+    "type": "mcq",
+    "correct": "3/4"
+  },
+  "g4.num.fractions.q022": {
+    "type": "fraction",
+    "correct": "2/3"
+  },
+  "g4.num.fractions.q023": {
+    "type": "fraction",
+    "correct": "3/5"
+  },
+  "g4.num.fractions.q024": {
+    "type": "fraction",
+    "correct": "5/7"
+  },
+  "g4.num.fractions.q025": {
+    "type": "fraction",
+    "correct": "3/9"
+  },
+  "g4.num.fractions.q026": {
+    "type": "fraction",
+    "correct": "2/8"
+  },
+  "g4.num.fractions.q027": {
+    "type": "fraction",
+    "correct": "5/6"
+  },
+  "g4.num.fractions.q028": {
+    "type": "fraction",
+    "correct": "3/10"
+  },
+  "g4.num.fractions.q029": {
+    "type": "mcq",
+    "correct": "3/4"
+  },
+  "g4.num.fractions.q030": {
+    "type": "fill-blank",
+    "correct": [
+      "3/5",
+      "2/6"
+    ]
   }
 };
