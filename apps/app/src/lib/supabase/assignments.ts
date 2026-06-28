@@ -119,3 +119,39 @@ export function useCreateAssignment() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["assignments"] }),
   });
 }
+
+/** GV sửa bài tập (RLS owns_class). */
+export function useUpdateAssignment() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (a: NewAssignment & { id: string }) => {
+      if (!supabase) return;
+      const { error } = await supabase
+        .from("assignments")
+        .update({
+          title: a.title,
+          question_ids: a.questionIds,
+          due_at: a.dueAt ?? null,
+          allow_late: a.allowLate ?? true,
+          max_attempts: a.maxAttempts ?? null,
+          time_limit_minutes: a.timeLimitMinutes ?? null,
+        })
+        .eq("id", a.id);
+      if (error) throw error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["assignments"] }),
+  });
+}
+
+/** GV xoá bài tập (RLS owns_class; cascade xoá submissions của bài). */
+export function useDeleteAssignment() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (assignmentId: string) => {
+      if (!supabase) return;
+      const { error } = await supabase.from("assignments").delete().eq("id", assignmentId);
+      if (error) throw error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["assignments"] }),
+  });
+}
