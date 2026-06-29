@@ -143,10 +143,18 @@ export async function handler(req: Request): Promise<Response> {
       .select("id, type, correct")
       .in("id", customIds);
     for (const c of customRows ?? []) {
-      mergedKeys[c.id as string] = {
-        type: c.type as AnswerKey["type"],
-        correct: c.correct as string,
-      };
+      const type = c.type as AnswerKey["type"];
+      // fill-blank: đáp án nhiều ô lưu JSON array trong cột text → parse về mảng cho engine.
+      let correct: string | string[] = c.correct as string;
+      if (type === "fill-blank") {
+        try {
+          const arr = JSON.parse(c.correct as string);
+          if (Array.isArray(arr)) correct = arr.map(String);
+        } catch {
+          /* giữ nguyên chuỗi nếu lỗi */
+        }
+      }
+      mergedKeys[c.id as string] = { type, correct };
     }
   }
 
