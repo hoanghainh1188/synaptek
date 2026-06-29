@@ -4,6 +4,8 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ UX & HS xem lớp ✅ vừa xong**: (A) đổi vai trò có xác nhận · nút Back dùng chung · avatar→Hồ sơ (PR #31). (B) "Lớp của tôi" cho HS — migration `0008` (`is_my_teacher` + `class_member_count`, RLS đọc tên GV + sĩ số) + màn `my-classes`/`my-class/[id]` (tên lớp/GV/sĩ số/bài/trạng thái nộp). RLS 0008 3 nhóm PASS; e2e `student-class-view` PASS.
+
 **+ Phản hồi lỗi thông minh ✅ vừa xong** trên `feature/error-diagnosis` (PR đang mở): engine thêm
 `diagnosis?` (sign/magnitude10/reciprocal/rounding) — **phụ trợ, KHÔNG đổi isCorrect/score** (không
 regression). Feedback hiện gợi ý "vì sao sai". Engine **26 test** (+7 chẩn đoán); session record mang
