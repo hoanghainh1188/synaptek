@@ -2,10 +2,13 @@
 import { ScrollView, Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
-import { useMyJoinedClasses } from "@/lib/supabase/classes";
+import { useMyJoinedClasses, useClassLeaderboard } from "@/lib/supabase/classes";
 import { useClassAssignments } from "@/lib/supabase/assignments";
 import { useMySubmissions } from "@/lib/supabase/submissions";
+import { useAuth } from "@/lib/supabase/auth";
 import { BackButton } from "@/components/BackButton";
+
+const MEDAL = ["🥇", "🥈", "🥉"];
 
 function dueLabel(dueAt: string | null): string {
   if (!dueAt) return "Không hạn";
@@ -17,9 +20,11 @@ export default function MyClassDetail() {
   const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams<{ id: string }>();
   const classId = String(id);
+  const { user } = useAuth();
   const classes = useMyJoinedClasses();
   const assignments = useClassAssignments(classId);
   const subs = useMySubmissions();
+  const leaderboard = useClassLeaderboard(classId);
   const cls = classes.data?.find((c) => c.id === classId);
 
   return (
@@ -38,6 +43,33 @@ export default function MyClassDetail() {
       <Text className="mt-1 text-sm text-muted">
         {cls?.teacherName ?? "Giáo viên"} · {cls?.memberCount ?? 0} thành viên
       </Text>
+
+      {/* Bảng xếp hạng lớp (XP) */}
+      <Text className="mt-6 font-display text-xl font-bold text-ink">🏆 Bảng xếp hạng</Text>
+      <View className="mt-3 gap-1.5">
+        {(leaderboard.data?.length ?? 0) === 0 ? (
+          <Text className="text-sm text-muted">Chưa có dữ liệu xếp hạng.</Text>
+        ) : (
+          leaderboard.data!.map((row, i) => {
+            const me = row.studentId === user?.id;
+            return (
+              <View
+                key={row.studentId}
+                className={`flex-row items-center gap-3 rounded-md p-2.5 ${me ? "bg-brand/10" : "bg-surface shadow-sm"}`}
+              >
+                <Text className="w-7 text-center text-base font-extrabold text-muted">
+                  {MEDAL[i] ?? i + 1}
+                </Text>
+                <Text className={`flex-1 font-semibold ${me ? "text-brand" : "text-ink"}`}>
+                  {row.fullName ?? "(chưa đặt tên)"} {me ? "(em)" : ""}
+                </Text>
+                <Text className="font-display font-extrabold text-ink">{row.totalXp}</Text>
+                <Text className="text-xs font-bold text-muted">XP</Text>
+              </View>
+            );
+          })
+        )}
+      </View>
 
       <Text className="mt-6 font-display text-xl font-bold text-ink">Bài được giao</Text>
       <View className="mt-3 gap-2">

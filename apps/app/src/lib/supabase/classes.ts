@@ -254,6 +254,33 @@ export function useClassReport(classId: string) {
   });
 }
 
+export interface LeaderRow {
+  studentId: string;
+  fullName: string | null;
+  totalXp: number;
+}
+
+/** Bảng xếp hạng lớp (HS; RPC gate is_member) — top XP bạn cùng lớp, đã xếp hạng. */
+export function useClassLeaderboard(classId: string) {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: ["class-leaderboard", classId, user?.id ?? "guest"],
+    enabled: Boolean(supabase && user && classId),
+    queryFn: async (): Promise<LeaderRow[]> => {
+      if (!supabase || !user) return [];
+      const { data, error } = await supabase.rpc("class_leaderboard", { cid: classId });
+      if (error) throw error;
+      return (data ?? []).map(
+        (r: { student_id: string; full_name: string | null; total_xp: number }) => ({
+          studentId: r.student_id,
+          fullName: r.full_name,
+          totalXp: Number(r.total_xp),
+        }),
+      );
+    },
+  });
+}
+
 /** Mastery của các HS trong lớp (GV; RLS teaches_student) — cho phân tích điểm yếu lớp (US3). */
 export function useClassMastery(classId: string) {
   const { user } = useAuth();
