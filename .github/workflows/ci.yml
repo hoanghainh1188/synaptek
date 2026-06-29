@@ -101,3 +101,65 @@ jobs:
       - name: Stop Supabase
         if: always()
         run: supabase stop
+
+  # E2E luồng CÓ ĐĂNG NHẬP (GV/HS/PH): chạy thật trên Supabase (DB + auth + Edge functions) trong CI.
+  e2e-auth:
+    name: E2E auth-gated (Supabase)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node (from .nvmrc)
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install
+        run: npm install --no-audit --no-fund
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start Supabase (DB + auth + Edge functions)
+        run: supabase start
+
+      - name: Export Supabase env cho app (EXPO_PUBLIC nhúng lúc build)
+        run: |
+          echo "EXPO_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321" >> "$GITHUB_ENV"
+          KEY=$(supabase status -o json | python3 -c 'import sys,json;print(json.load(sys.stdin)["ANON_KEY"])')
+          echo "EXPO_PUBLIC_SUPABASE_ANON_KEY=$KEY" >> "$GITHUB_ENV"
+
+      - name: Warm-up Edge (tránh cold-start timeout call chấm đầu tiên)
+        run: |
+          for i in $(seq 1 30); do
+            code=$(curl -s -o /dev/null -w "%{http_code}" -X POST http://127.0.0.1:54321/functions/v1/grade-assignment || true)
+            echo "edge: $code"; [ "$code" = "400" ] || [ "$code" = "401" ] || [ "$code" = "405" ] && break
+            sleep 2
+          done
+
+      - name: Install Playwright (chromium)
+        run: npx playwright install --with-deps chromium
+        working-directory: apps/app
+
+      - name: E2E auth-gated
+        run: |
+          npx playwright test --workers=1 \
+            tests/e2e/class-join.spec.ts \
+            tests/e2e/assignment-grade.spec.ts \
+            tests/e2e/assignment-limits.spec.ts \
+            tests/e2e/override-analytics.spec.ts \
+            tests/e2e/parent-monitor.spec.ts \
+            tests/e2e/home-assignment.spec.ts \
+            tests/e2e/custom-question.spec.ts \
+            tests/e2e/student-class-view.spec.ts \
+            tests/e2e/teacher-report.spec.ts \
+            tests/e2e/review-mistakes.spec.ts \
+            tests/e2e/polish-sprint.spec.ts
+        working-directory: apps/app
+
+      - name: Stop Supabase
+        if: always()
+        run: supabase stop
