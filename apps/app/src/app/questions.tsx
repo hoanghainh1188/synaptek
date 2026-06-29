@@ -1,0 +1,244 @@
+// Ngân hàng câu của tôi (authoring, D28) — GV/PH soạn câu tự tạo (mcq/numeric/fraction) để giao.
+// Đáp án lưu DB, ẩn với HS (chấm server-side, D4). Tái dùng trong composer.
+import { useState } from "react";
+import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { router } from "expo-router";
+import { useAuth } from "@/lib/supabase/auth";
+import { useMyRole } from "@/lib/supabase/role";
+import {
+  useCreateCustomQuestion,
+  useDeleteCustomQuestion,
+  useMyCustomQuestions,
+  type CustomType,
+} from "@/lib/supabase/custom-questions";
+import { MathText } from "@/components/math/MathText";
+
+const TYPES: { value: CustomType; label: string }[] = [
+  { value: "mcq", label: "Trắc nghiệm" },
+  { value: "numeric", label: "Số" },
+  { value: "fraction", label: "Phân số" },
+];
+
+export default function MyQuestions() {
+  const insets = useSafeAreaInsets();
+  const { user } = useAuth();
+  const role = useMyRole();
+  const list = useMyCustomQuestions();
+  const create = useCreateCustomQuestion();
+  const del = useDeleteCustomQuestion();
+
+  const [type, setType] = useState<CustomType>("mcq");
+  const [prompt, setPrompt] = useState("");
+  const [choices, setChoices] = useState(["", ""]);
+  const [correct, setCorrect] = useState("");
+  const [explanation, setExplanation] = useState("");
+  const [msg, setMsg] = useState<string | null>(null);
+
+  const reset = () => {
+    setPrompt("");
+    setChoices(["", ""]);
+    setCorrect("");
+    setExplanation("");
+  };
+
+  const valid = (() => {
+    if (prompt.trim().length === 0 || correct.trim().length === 0) return false;
+    if (type === "mcq") {
+      const opts = choices.map((c) => c.trim()).filter(Boolean);
+      return opts.length >= 2 && opts.includes(correct.trim());
+    }
+    return true;
+  })();
+
+  const submit = () => {
+    setMsg(null);
+    const opts = choices.map((c) => c.trim()).filter(Boolean);
+    create.mutate(
+      {
+        type,
+        prompt: prompt.trim(),
+        choices: type === "mcq" ? opts : null,
+        correct: correct.trim(),
+        explanation: explanation.trim() || null,
+      },
+      {
+        onSuccess: () => {
+          setMsg("Đã lưu câu hỏi ✓");
+          reset();
+        },
+        onError: () => setMsg("Lưu thất bại — kiểm tra lại."),
+      },
+    );
+  };
+
+  if (user && role.data === "student")
+    return (
+      <ScrollView contentContainerStyle={{ padding: 20, paddingTop: insets.top + 16 }}>
+        <Text className="font-display text-lg font-bold text-ink">Chỉ GV/PH soạn câu</Text>
+        <Pressable
+          onPress={() => router.replace("/")}
+          className="mt-4 min-h-[48px] items-center justify-center rounded-md bg-brand"
+        >
+          <Text className="font-display font-bold text-white">Về trang chủ</Text>
+        </Pressable>
+      </ScrollView>
+    );
+
+  return (
+    <ScrollView
+      contentContainerStyle={{
+        paddingTop: insets.top + 16,
+        paddingBottom: 48,
+        paddingHorizontal: 20,
+        maxWidth: 640,
+        width: "100%",
+        alignSelf: "center",
+      }}
+    >
+      <Pressable
+        onPress={() => router.back()}
+        accessibilityLabel="Quay lại"
+        className="mb-3 h-9 w-9 items-center justify-center rounded-full bg-surface shadow-sm"
+      >
+        <Text className="text-lg text-muted">←</Text>
+      </Pressable>
+      <Text className="font-display text-2xl font-extrabold text-ink">Ngân hàng câu của tôi</Text>
+
+      {/* Form soạn */}
+      <View className="mt-5 rounded-lg bg-surface p-4 shadow-sm">
+        <Text className="mb-1 text-sm font-bold text-muted">Loại câu</Text>
+        <View className="flex-row gap-2">
+          {TYPES.map((t) => {
+            const active = t.value === type;
+            return (
+              <Pressable
+                key={t.value}
+                accessibilityLabel={t.label}
+                onPress={() => setType(t.value)}
+                className={`min-h-[44px] flex-1 items-center justify-center rounded-md border-2 ${active ? "border-brand bg-brand/10" : "border-line bg-paper"}`}
+              >
+                <Text className={`font-bold ${active ? "text-brand" : "text-muted"}`}>
+                  {t.label}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+
+        <Text className="mt-4 mb-1 text-sm font-bold text-muted">Đề bài</Text>
+        <TextInput
+          value={prompt}
+          onChangeText={setPrompt}
+          placeholder="VD: 3/4 + 1/4 = ?"
+          placeholderTextColor="#a1a1aa"
+          multiline
+          accessibilityLabel="Đề bài"
+          className="min-h-[48px] rounded-md border-2 border-line bg-paper px-3 py-2 text-base text-ink"
+        />
+
+        {type === "mcq" && (
+          <View className="mt-4">
+            <Text className="mb-1 text-sm font-bold text-muted">
+              Lựa chọn (chạm để chọn đáp án đúng)
+            </Text>
+            {choices.map((c, i) => (
+              <View key={i} className="mt-2 flex-row items-center gap-2">
+                <Pressable
+                  accessibilityLabel={`Đáp án đúng ${i + 1}`}
+                  onPress={() => setCorrect(c.trim())}
+                  className={`h-6 w-6 items-center justify-center rounded-full border-2 ${correct && c.trim() === correct ? "border-brand bg-brand" : "border-line"}`}
+                >
+                  {correct && c.trim() === correct && (
+                    <Text className="text-xs font-extrabold text-white">✓</Text>
+                  )}
+                </Pressable>
+                <TextInput
+                  value={c}
+                  onChangeText={(v) => setChoices((prev) => prev.map((x, j) => (j === i ? v : x)))}
+                  placeholder={`Lựa chọn ${i + 1}`}
+                  placeholderTextColor="#a1a1aa"
+                  accessibilityLabel={`Lựa chọn ${i + 1}`}
+                  className="min-h-[44px] flex-1 rounded-md border-2 border-line bg-paper px-3 text-base text-ink"
+                />
+              </View>
+            ))}
+            <Pressable
+              accessibilityLabel="Thêm lựa chọn"
+              onPress={() => setChoices((prev) => [...prev, ""])}
+              className="mt-2 self-start"
+            >
+              <Text className="font-bold text-brand">+ Thêm lựa chọn</Text>
+            </Pressable>
+          </View>
+        )}
+
+        {type !== "mcq" && (
+          <>
+            <Text className="mt-4 mb-1 text-sm font-bold text-muted">
+              Đáp án đúng {type === "fraction" ? "(vd 1/2)" : "(số — phẩy là thập phân)"}
+            </Text>
+            <TextInput
+              value={correct}
+              onChangeText={setCorrect}
+              placeholder={type === "fraction" ? "1/2" : "0,5"}
+              placeholderTextColor="#a1a1aa"
+              accessibilityLabel="Đáp án đúng"
+              className="min-h-[48px] rounded-md border-2 border-line bg-paper px-3 text-base text-ink"
+            />
+          </>
+        )}
+
+        <Text className="mt-4 mb-1 text-sm font-bold text-muted">Giải thích (tuỳ chọn)</Text>
+        <TextInput
+          value={explanation}
+          onChangeText={setExplanation}
+          placeholder="Lời giải ngắn"
+          placeholderTextColor="#a1a1aa"
+          accessibilityLabel="Giải thích"
+          className="min-h-[44px] rounded-md border-2 border-line bg-paper px-3 text-base text-ink"
+        />
+
+        <Pressable
+          accessibilityLabel="Lưu câu hỏi"
+          disabled={!valid || create.isPending}
+          onPress={submit}
+          className={`mt-4 min-h-[48px] items-center justify-center rounded-md ${valid ? "bg-brand" : "bg-line"}`}
+        >
+          <Text className="font-display font-bold text-white">Lưu câu hỏi</Text>
+        </Pressable>
+        {msg && <Text className="mt-2 text-sm font-semibold text-brand">{msg}</Text>}
+      </View>
+
+      {/* Danh sách */}
+      <Text className="mt-7 font-display text-xl font-bold text-ink">
+        Đã soạn ({list.data?.length ?? 0})
+      </Text>
+      <View className="mt-3 gap-2">
+        {list.data?.length === 0 && (
+          <Text className="text-sm text-muted">Chưa có câu nào — soạn câu đầu tiên ở trên.</Text>
+        )}
+        {list.data?.map((q) => (
+          <View
+            key={q.id}
+            className="flex-row items-center gap-3 rounded-lg bg-surface p-3 shadow-sm"
+          >
+            <View className="flex-1">
+              <MathText value={q.prompt} size={15} weight="600" />
+              <Text className="mt-0.5 text-xs font-semibold text-muted">
+                {TYPES.find((t) => t.value === q.type)?.label} · đáp án: {q.correct}
+              </Text>
+            </View>
+            <Pressable
+              accessibilityLabel={`Xoá câu ${q.prompt}`}
+              onPress={() => del.mutate(q.id)}
+              className="min-h-[40px] items-center justify-center rounded-md px-2"
+            >
+              <Text className="font-bold text-no">Xoá</Text>
+            </Pressable>
+          </View>
+        ))}
+      </View>
+    </ScrollView>
+  );
+}

@@ -6,10 +6,12 @@
 
 **Mốc:** M0–M3 ✅ đóng + giới hạn nộp bài (D25) + **100 câu nội dung** (lớp 1–4, mỗi skill ≥10) + sprint
 hoàn thiện (GV sửa/xoá bài · đổi vai trò · jwt 1 tuần) + **deploy hosted AUTO** (web Vercel + backend Action).
-**M4 — Phụ huynh ✅ đóng** (PR #22): liên kết + theo dõi read-only. **+ Giao bài tại nhà (PH→con) ✅ vừa
-xong** trên `feature/home-assignments` (PR đang mở): migration `0006` (assignments LỚP XOR NHÀ + RLS PH
-chủ-bài + chấm server-side rẽ nhánh thành viên — **D27**); RLS 0006 4 nhóm PASS; e2e `home-assignment`
-(PH giao → HS làm → chấm 100%) PASS. → **đủ 3 vai trò + PH giao bài**. Decision Log **D26/D27**. Còn: nội dung lớp 5, M5 native.
+**M4 — Phụ huynh ✅ đóng** (PR #22) + **Giao bài tại nhà ✅** (PR #23, D27, migration `0006`).
+**+ Câu hỏi tự soạn (authoring) ✅ vừa xong** trên `feature/custom-questions` (PR đang mở): migration `0007`
+(`custom_questions` mcq/numeric/fraction; RLS tác giả-toàn-quyền + hàm `custom_questions_for_student` ẩn
+đáp án; chấm server-side lấy `correct` qua service_role — **D28**); **RLS 0007 5 nhóm PASS**; e2e
+`custom-question` (GV soạn → giao → HS làm → chấm 100%) PASS. Bug đã bắt: thiếu `grant select … to service_role`.
+→ **đủ 3 vai trò + PH giao bài + GV/PH tự soạn câu**. Decision Log **D26/D27/D28**. Còn: nội dung lớp 5, M5 native.
 
 **M4 chi tiết:** migration `0005` (`parent_links` + `profiles.parent_link_code` + helper `is_parent_of`/
 `is_linked_parent` + RPC `link_parent_by_code`); RLS đọc chéo PH→con **chỉ SELECT** (read-only) — **RLS test

@@ -130,6 +130,17 @@ export default function Profile() {
             </View>
           )}
 
+          {/* Ngân hàng câu tự soạn (GV/PH) */}
+          {(role.data === "teacher" || role.data === "parent") && (
+            <Pressable
+              accessibilityLabel="Ngân hàng câu của tôi"
+              onPress={() => router.push("/questions")}
+              className="mt-2 min-h-[48px] flex-row items-center justify-center gap-2 rounded-md bg-surface shadow-sm"
+            >
+              <Text className="font-display font-bold text-ink">📝 Ngân hàng câu của tôi ›</Text>
+            </Pressable>
+          )}
+
           {/* Đổi vai trò (polish) — lỡ chọn sai khi đăng ký vẫn đổi được */}
           <Text className="mt-4 mb-1 text-sm font-bold text-muted">Vai trò</Text>
           <View className="flex-row gap-2">

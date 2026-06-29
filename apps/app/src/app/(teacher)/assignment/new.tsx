@@ -11,6 +11,7 @@ import {
   useUpdateAssignment,
 } from "@/lib/supabase/assignments";
 import { useCreateHomeAssignment } from "@/lib/supabase/parent";
+import { useMyCustomQuestions } from "@/lib/supabase/custom-questions";
 import { MathText } from "@/components/math/MathText";
 
 export default function NewAssignment() {
@@ -22,6 +23,7 @@ export default function NewAssignment() {
   const createHome = useCreateHomeAssignment();
   const update = useUpdateAssignment();
   const existing = useAssignment(editId ?? "");
+  const customQs = useMyCustomQuestions();
 
   const [title, setTitle] = useState("");
   const [grade, setGrade] = useState(4);
@@ -237,6 +239,46 @@ export default function NewAssignment() {
             })}
             {topicId && questions.length === 0 && (
               <Text className="text-muted">Chủ đề này chưa có câu hỏi.</Text>
+            )}
+          </View>
+
+          {/* Câu tự soạn của tôi (authoring, D28) */}
+          <View className="mt-6">
+            <View className="mb-2 flex-row items-center justify-between">
+              <Text className="font-display text-base font-bold text-ink">Câu của tôi</Text>
+              <Pressable
+                accessibilityLabel="Soạn câu mới"
+                onPress={() => router.push("/questions")}
+              >
+                <Text className="font-bold text-brand">+ Soạn câu mới</Text>
+              </Pressable>
+            </View>
+            {(customQs.data?.length ?? 0) === 0 && (
+              <Text className="text-sm text-muted">Chưa có câu tự soạn nào.</Text>
+            )}
+            {(customQs.data?.length ?? 0) > 0 && (
+              <View className="gap-2">
+                {customQs.data?.map((q) => {
+                  const on = selected.has(q.id);
+                  return (
+                    <Pressable
+                      key={q.id}
+                      accessibilityLabel={`custom:${q.prompt}`}
+                      onPress={() => toggle(q.id)}
+                      className={`flex-row items-center gap-3 rounded-lg p-3 ${on ? "bg-brand/10" : "bg-surface shadow-sm"}`}
+                    >
+                      <View
+                        className={`h-6 w-6 items-center justify-center rounded-md border-2 ${on ? "border-brand bg-brand" : "border-line"}`}
+                      >
+                        {on && <Text className="text-xs font-extrabold text-white">✓</Text>}
+                      </View>
+                      <View className="flex-1">
+                        <MathText value={q.prompt} size={15} weight="600" />
+                      </View>
+                    </Pressable>
+                  );
+                })}
+              </View>
             )}
           </View>
 
