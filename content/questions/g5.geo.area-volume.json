@@ -1,0 +1,204 @@
+[
+  {
+    "id": "g5.geo.area.q001",
+    "skillId": "g5.geo.area",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "Tam giác có đáy 6cm, chiều cao 4cm. Diện tích bằng bao nhiêu xăng-ti-mét vuông?",
+    "correct": "12",
+    "explanation": "Diện tích tam giác = 6 × 4 ÷ 2 = 12 (cm²).",
+    "difficulty": 1
+  },
+  {
+    "id": "g5.geo.area.q002",
+    "skillId": "g5.geo.area",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "Tam giác có đáy 10cm, chiều cao 5cm. Diện tích bằng bao nhiêu xăng-ti-mét vuông?",
+    "correct": "25",
+    "explanation": "Diện tích = 10 × 5 ÷ 2 = 25 (cm²).",
+    "difficulty": 2
+  },
+  {
+    "id": "g5.geo.area.q003",
+    "skillId": "g5.geo.area",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "Hình thang có đáy lớn 8cm, đáy bé 4cm, chiều cao 5cm. Diện tích bằng bao nhiêu xăng-ti-mét vuông?",
+    "correct": "30",
+    "explanation": "Diện tích hình thang = (8 + 4) × 5 ÷ 2 = 30 (cm²).",
+    "difficulty": 2
+  },
+  {
+    "id": "g5.geo.area.q004",
+    "skillId": "g5.geo.area",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "Tam giác có đáy 8cm, chiều cao 3cm. Diện tích bằng bao nhiêu xăng-ti-mét vuông?",
+    "correct": "12",
+    "explanation": "Diện tích = 8 × 3 ÷ 2 = 12 (cm²).",
+    "difficulty": 1
+  },
+  {
+    "id": "g5.geo.area.q005",
+    "skillId": "g5.geo.area",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "Hình thang có hai đáy 10cm và 6cm, chiều cao 4cm. Diện tích bằng bao nhiêu xăng-ti-mét vuông?",
+    "correct": "32",
+    "explanation": "Diện tích = (10 + 6) × 4 ÷ 2 = 32 (cm²).",
+    "difficulty": 2
+  },
+  {
+    "id": "g5.geo.area.q006",
+    "skillId": "g5.geo.area",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "Tam giác có đáy 12cm, chiều cao 5cm. Diện tích bằng bao nhiêu xăng-ti-mét vuông?",
+    "correct": "30",
+    "explanation": "Diện tích = 12 × 5 ÷ 2 = 30 (cm²).",
+    "difficulty": 2
+  },
+  {
+    "id": "g5.geo.area.q007",
+    "skillId": "g5.geo.area",
+    "grade": 5,
+    "type": "mcq",
+    "prompt": "Tam giác có đáy 4cm, chiều cao 4cm. Diện tích là?",
+    "choices": ["8", "16", "4"],
+    "correct": "8",
+    "explanation": "Diện tích = 4 × 4 ÷ 2 = 8 (cm²).",
+    "difficulty": 1
+  },
+  {
+    "id": "g5.geo.area.q008",
+    "skillId": "g5.geo.area",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "Hình thang có hai đáy 7cm và 3cm, chiều cao 6cm. Diện tích bằng bao nhiêu xăng-ti-mét vuông?",
+    "correct": "30",
+    "explanation": "Diện tích = (7 + 3) × 6 ÷ 2 = 30 (cm²).",
+    "difficulty": 3
+  },
+  {
+    "id": "g5.geo.area.q009",
+    "skillId": "g5.geo.area",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "Tam giác có đáy 9cm, chiều cao 6cm. Diện tích bằng bao nhiêu xăng-ti-mét vuông?",
+    "correct": "27",
+    "explanation": "Diện tích = 9 × 6 ÷ 2 = 27 (cm²).",
+    "difficulty": 2
+  },
+  {
+    "id": "g5.geo.area.q010",
+    "skillId": "g5.geo.area",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "Tam giác có đáy 20cm, chiều cao 10cm. Diện tích bằng bao nhiêu xăng-ti-mét vuông?",
+    "correct": "100",
+    "explanation": "Diện tích = 20 × 10 ÷ 2 = 100 (cm²).",
+    "difficulty": 2
+  },
+  {
+    "id": "g5.geo.volume.q001",
+    "skillId": "g5.geo.volume",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "Hình hộp chữ nhật dài 2cm, rộng 3cm, cao 4cm. Thể tích bằng bao nhiêu xăng-ti-mét khối?",
+    "correct": "24",
+    "explanation": "Thể tích = 2 × 3 × 4 = 24 (cm³).",
+    "difficulty": 1
+  },
+  {
+    "id": "g5.geo.volume.q002",
+    "skillId": "g5.geo.volume",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "Hình hộp chữ nhật dài 5cm, rộng 2cm, cao 3cm. Thể tích bằng bao nhiêu xăng-ti-mét khối?",
+    "correct": "30",
+    "explanation": "Thể tích = 5 × 2 × 3 = 30 (cm³).",
+    "difficulty": 1
+  },
+  {
+    "id": "g5.geo.volume.q003",
+    "skillId": "g5.geo.volume",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "Hình lập phương cạnh 3cm. Thể tích bằng bao nhiêu xăng-ti-mét khối?",
+    "correct": "27",
+    "explanation": "Thể tích = 3 × 3 × 3 = 27 (cm³).",
+    "difficulty": 2
+  },
+  {
+    "id": "g5.geo.volume.q004",
+    "skillId": "g5.geo.volume",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "Hình hộp chữ nhật dài 4cm, rộng 4cm, cao 2cm. Thể tích bằng bao nhiêu xăng-ti-mét khối?",
+    "correct": "32",
+    "explanation": "Thể tích = 4 × 4 × 2 = 32 (cm³).",
+    "difficulty": 1
+  },
+  {
+    "id": "g5.geo.volume.q005",
+    "skillId": "g5.geo.volume",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "Hình hộp chữ nhật dài 6cm, rộng 5cm, cao 2cm. Thể tích bằng bao nhiêu xăng-ti-mét khối?",
+    "correct": "60",
+    "explanation": "Thể tích = 6 × 5 × 2 = 60 (cm³).",
+    "difficulty": 2
+  },
+  {
+    "id": "g5.geo.volume.q006",
+    "skillId": "g5.geo.volume",
+    "grade": 5,
+    "type": "mcq",
+    "prompt": "Hình lập phương cạnh 2cm. Thể tích là?",
+    "choices": ["8", "6", "4"],
+    "correct": "8",
+    "explanation": "Thể tích = 2 × 2 × 2 = 8 (cm³).",
+    "difficulty": 1
+  },
+  {
+    "id": "g5.geo.volume.q007",
+    "skillId": "g5.geo.volume",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "Hình hộp chữ nhật dài 10cm, rộng 2cm, cao 3cm. Thể tích bằng bao nhiêu xăng-ti-mét khối?",
+    "correct": "60",
+    "explanation": "Thể tích = 10 × 2 × 3 = 60 (cm³).",
+    "difficulty": 2
+  },
+  {
+    "id": "g5.geo.volume.q008",
+    "skillId": "g5.geo.volume",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "Hình lập phương cạnh 4cm. Thể tích bằng bao nhiêu xăng-ti-mét khối?",
+    "correct": "64",
+    "explanation": "Thể tích = 4 × 4 × 4 = 64 (cm³).",
+    "difficulty": 2
+  },
+  {
+    "id": "g5.geo.volume.q009",
+    "skillId": "g5.geo.volume",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "Hình lập phương cạnh 3cm. Thể tích bằng bao nhiêu xăng-ti-mét khối?",
+    "correct": "27",
+    "explanation": "Thể tích = 3 × 3 × 3 = 27 (cm³).",
+    "difficulty": 1
+  },
+  {
+    "id": "g5.geo.volume.q010",
+    "skillId": "g5.geo.volume",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "Hình hộp chữ nhật dài 5cm, rộng 5cm, cao 2cm. Thể tích bằng bao nhiêu xăng-ti-mét khối?",
+    "correct": "50",
+    "explanation": "Thể tích = 5 × 5 × 2 = 50 (cm³).",
+    "difficulty": 2
+  }
+]

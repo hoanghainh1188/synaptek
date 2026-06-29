@@ -5,7 +5,7 @@ import type { Badge } from "@synaptek/learning-path";
 import { BADGES, CURRICULA, IMAGES, QUESTIONS } from "./content.generated";
 
 /** Lớp hiển thị trên chip lọc (D15: lớp 4 + ôn 1–3). */
-export const GRADE_FILTERS = [1, 2, 3, 4] as const;
+export const GRADE_FILTERS = [1, 2, 3, 4, 5] as const;
 
 export function listTopics(grade: number): Topic[] {
   return topicsByGrade(CURRICULA, grade);

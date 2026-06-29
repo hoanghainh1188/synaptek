@@ -39,7 +39,7 @@ mindmap
       ✅ Pipeline JSON + validate
       ⏳ Khối lượng câu hỏi còn mỏng
       ✅ Authoring UI (GV/PH soạn câu)
-      🔮 Đủ nội dung lớp 1-5
+      ✅ Nội dung lớp 1-5 (160 câu)
     ⚙️ Hạ tầng
       ✅ Monorepo + CI + Spec Kit
       ✅ Supabase BaaS + Edge Functions
@@ -73,7 +73,7 @@ flowchart LR
   WIP --> B2["cron review-scheduler lên lịch"]
   WIP --> B3["GV sửa/xóa bài · đổi vai trò"]
   SHIPPED --> A8["Authoring: GV/PH soạn câu tự tạo (chấm server-side)"]
-  WIP --> B4["Mở rộng nội dung lớp 5"]
+  SHIPPED --> A9["Nội dung lớp 1-5 (160 câu, 16 skill)"]
   WIP --> B5["Verify iOS/Android"]
 
   SHIPPED --> A7["M4 Phụ huynh: liên kết PH-con + theo dõi read-only (đủ 3 vai trò) + giao bài tại nhà"]

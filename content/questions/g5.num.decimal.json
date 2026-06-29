@@ -1,0 +1,306 @@
+[
+  {
+    "id": "g5.num.decimal.q001",
+    "skillId": "g5.num.decimal.concept",
+    "grade": 5,
+    "type": "true-false",
+    "prompt": "Trong số 12,53 chữ số 5 ở hàng phần mười. Đúng hay sai?",
+    "correct": "true",
+    "explanation": "Sau dấu phẩy, 5 đứng đầu — hàng phần mười.",
+    "difficulty": 1
+  },
+  {
+    "id": "g5.num.decimal.q002",
+    "skillId": "g5.num.decimal.concept",
+    "grade": 5,
+    "type": "mcq",
+    "prompt": "Số nào lớn hơn: 3,7 hay 3,07?",
+    "choices": ["3,7", "3,07"],
+    "correct": "3,7",
+    "explanation": "3,7 = 3,70 > 3,07.",
+    "difficulty": 1
+  },
+  {
+    "id": "g5.num.decimal.q003",
+    "skillId": "g5.num.decimal.concept",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "Viết 7/10 dưới dạng số thập phân (dùng phẩy).",
+    "correct": "0,7",
+    "explanation": "7 phần mười viết là 0,7.",
+    "difficulty": 1
+  },
+  {
+    "id": "g5.num.decimal.q004",
+    "skillId": "g5.num.decimal.concept",
+    "grade": 5,
+    "type": "mcq",
+    "prompt": "0,5 bằng phân số nào?",
+    "choices": ["1/2", "1/5", "1/10"],
+    "correct": "1/2",
+    "explanation": "0,5 = 5/10 = 1/2.",
+    "difficulty": 1
+  },
+  {
+    "id": "g5.num.decimal.q005",
+    "skillId": "g5.num.decimal.concept",
+    "grade": 5,
+    "type": "true-false",
+    "prompt": "4,5 = 4,50. Đúng hay sai?",
+    "correct": "true",
+    "explanation": "Thêm 0 ở cuối phần thập phân không đổi giá trị.",
+    "difficulty": 1
+  },
+  {
+    "id": "g5.num.decimal.q006",
+    "skillId": "g5.num.decimal.concept",
+    "grade": 5,
+    "type": "mcq",
+    "prompt": "Số 2,3 có phần nguyên là?",
+    "choices": ["2", "3", "23"],
+    "correct": "2",
+    "explanation": "Phần nguyên là phần trước dấu phẩy: 2.",
+    "difficulty": 1
+  },
+  {
+    "id": "g5.num.decimal.q007",
+    "skillId": "g5.num.decimal.concept",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "Viết 3/100 dưới dạng số thập phân (dùng phẩy).",
+    "correct": "0,03",
+    "explanation": "3 phần trăm viết là 0,03.",
+    "difficulty": 2
+  },
+  {
+    "id": "g5.num.decimal.q008",
+    "skillId": "g5.num.decimal.concept",
+    "grade": 5,
+    "type": "mcq",
+    "prompt": "Số nào bé hơn: 6,08 hay 6,8?",
+    "choices": ["6,08", "6,8"],
+    "correct": "6,08",
+    "explanation": "6,8 = 6,80 > 6,08 nên 6,08 bé hơn.",
+    "difficulty": 2
+  },
+  {
+    "id": "g5.num.decimal.q009",
+    "skillId": "g5.num.decimal.concept",
+    "grade": 5,
+    "type": "true-false",
+    "prompt": "0,9 < 1. Đúng hay sai?",
+    "correct": "true",
+    "explanation": "0,9 nhỏ hơn 1.",
+    "difficulty": 1
+  },
+  {
+    "id": "g5.num.decimal.q010",
+    "skillId": "g5.num.decimal.concept",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "Viết 1/4 dưới dạng số thập phân (dùng phẩy).",
+    "correct": "0,25",
+    "explanation": "1/4 = 25/100 = 0,25.",
+    "difficulty": 2
+  },
+  {
+    "id": "g5.num.decimal.q011",
+    "skillId": "g5.num.decimal.addsub",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "3,5 + 2,7 = ?",
+    "correct": "6,2",
+    "explanation": "3,5 cộng 2,7 bằng 6,2.",
+    "difficulty": 1
+  },
+  {
+    "id": "g5.num.decimal.q012",
+    "skillId": "g5.num.decimal.addsub",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "8,6 − 4,9 = ?",
+    "correct": "3,7",
+    "explanation": "8,6 trừ 4,9 bằng 3,7.",
+    "difficulty": 1
+  },
+  {
+    "id": "g5.num.decimal.q013",
+    "skillId": "g5.num.decimal.addsub",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "12,35 + 7,65 = ?",
+    "correct": "20",
+    "explanation": "12,35 cộng 7,65 bằng 20.",
+    "difficulty": 2
+  },
+  {
+    "id": "g5.num.decimal.q014",
+    "skillId": "g5.num.decimal.addsub",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "10 − 3,4 = ?",
+    "correct": "6,6",
+    "explanation": "10 trừ 3,4 bằng 6,6.",
+    "difficulty": 1
+  },
+  {
+    "id": "g5.num.decimal.q015",
+    "skillId": "g5.num.decimal.addsub",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "5,25 + 4,75 = ?",
+    "correct": "10",
+    "explanation": "5,25 cộng 4,75 bằng 10.",
+    "difficulty": 2
+  },
+  {
+    "id": "g5.num.decimal.q016",
+    "skillId": "g5.num.decimal.addsub",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "7,8 − 2,35 = ?",
+    "correct": "5,45",
+    "explanation": "7,8 trừ 2,35 bằng 5,45.",
+    "difficulty": 2
+  },
+  {
+    "id": "g5.num.decimal.q017",
+    "skillId": "g5.num.decimal.addsub",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "Mua 2,5kg gạo và 1,75kg đường. Tổng bao nhiêu ki-lô-gam?",
+    "correct": "4,25",
+    "explanation": "2,5 cộng 1,75 bằng 4,25 (kg).",
+    "difficulty": 2
+  },
+  {
+    "id": "g5.num.decimal.q018",
+    "skillId": "g5.num.decimal.addsub",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "0,5 + 0,25 = ?",
+    "correct": "0,75",
+    "explanation": "0,5 cộng 0,25 bằng 0,75.",
+    "difficulty": 1
+  },
+  {
+    "id": "g5.num.decimal.q019",
+    "skillId": "g5.num.decimal.addsub",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "9,9 + 0,1 = ?",
+    "correct": "10",
+    "explanation": "9,9 cộng 0,1 bằng 10.",
+    "difficulty": 1
+  },
+  {
+    "id": "g5.num.decimal.q020",
+    "skillId": "g5.num.decimal.addsub",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "6,4 − 1,85 = ?",
+    "correct": "4,55",
+    "explanation": "6,4 trừ 1,85 bằng 4,55.",
+    "difficulty": 2
+  },
+  {
+    "id": "g5.num.decimal.q021",
+    "skillId": "g5.num.decimal.muldiv",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "2,5 × 4 = ?",
+    "correct": "10",
+    "explanation": "2,5 nhân 4 bằng 10.",
+    "difficulty": 1
+  },
+  {
+    "id": "g5.num.decimal.q022",
+    "skillId": "g5.num.decimal.muldiv",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "1,2 × 3 = ?",
+    "correct": "3,6",
+    "explanation": "1,2 nhân 3 bằng 3,6.",
+    "difficulty": 1
+  },
+  {
+    "id": "g5.num.decimal.q023",
+    "skillId": "g5.num.decimal.muldiv",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "7,5 ÷ 5 = ?",
+    "correct": "1,5",
+    "explanation": "7,5 chia 5 bằng 1,5.",
+    "difficulty": 1
+  },
+  {
+    "id": "g5.num.decimal.q024",
+    "skillId": "g5.num.decimal.muldiv",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "9,6 ÷ 4 = ?",
+    "correct": "2,4",
+    "explanation": "9,6 chia 4 bằng 2,4.",
+    "difficulty": 2
+  },
+  {
+    "id": "g5.num.decimal.q025",
+    "skillId": "g5.num.decimal.muldiv",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "0,5 × 6 = ?",
+    "correct": "3",
+    "explanation": "0,5 nhân 6 bằng 3.",
+    "difficulty": 1
+  },
+  {
+    "id": "g5.num.decimal.q026",
+    "skillId": "g5.num.decimal.muldiv",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "3,2 × 2,5 = ?",
+    "correct": "8",
+    "explanation": "3,2 nhân 2,5 bằng 8.",
+    "difficulty": 3
+  },
+  {
+    "id": "g5.num.decimal.q027",
+    "skillId": "g5.num.decimal.muldiv",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "12,5 ÷ 2 = ?",
+    "correct": "6,25",
+    "explanation": "12,5 chia 2 bằng 6,25.",
+    "difficulty": 2
+  },
+  {
+    "id": "g5.num.decimal.q028",
+    "skillId": "g5.num.decimal.muldiv",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "Có 5 hộp, mỗi hộp nặng 1,5kg. Tổng nặng bao nhiêu ki-lô-gam?",
+    "correct": "7,5",
+    "explanation": "1,5 nhân 5 bằng 7,5 (kg).",
+    "difficulty": 2
+  },
+  {
+    "id": "g5.num.decimal.q029",
+    "skillId": "g5.num.decimal.muldiv",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "4,8 ÷ 3 = ?",
+    "correct": "1,6",
+    "explanation": "4,8 chia 3 bằng 1,6.",
+    "difficulty": 2
+  },
+  {
+    "id": "g5.num.decimal.q030",
+    "skillId": "g5.num.decimal.muldiv",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "2,5 × 2,5 = ?",
+    "correct": "6,25",
+    "explanation": "2,5 nhân 2,5 bằng 6,25.",
+    "difficulty": 3
+  }
+]
