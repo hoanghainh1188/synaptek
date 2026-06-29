@@ -169,7 +169,8 @@ jobs:
             tests/e2e/class-leaderboard.spec.ts \
             tests/e2e/avatar.spec.ts \
             tests/e2e/parent-suggest.spec.ts \
-            tests/e2e/multi-select.spec.ts
+            tests/e2e/multi-select.spec.ts \
+            tests/e2e/custom-options.spec.ts
         working-directory: apps/app
 
       - name: Stop Supabase

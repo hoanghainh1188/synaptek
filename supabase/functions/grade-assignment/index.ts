@@ -151,7 +151,7 @@ export async function handler(req: Request): Promise<Response> {
   if (customIds.length > 0) {
     const { data: customRows } = await admin
       .from("custom_questions")
-      .select("id, type, correct")
+      .select("id, type, correct, options")
       .in("id", customIds);
     for (const c of customRows ?? []) {
       const type = c.type as AnswerKey["type"];
@@ -165,7 +165,15 @@ export async function handler(req: Request): Promise<Response> {
           /* giữ nguyên chuỗi nếu lỗi */
         }
       }
-      mergedKeys[c.id as string] = { type, correct };
+      // Tùy chọn chấm tự soạn (D28+): tolerance / unordered / roundTo.
+      const o = (c.options ?? {}) as { tolerance?: number; unordered?: boolean; roundTo?: number };
+      mergedKeys[c.id as string] = {
+        type,
+        correct,
+        ...(o.tolerance !== undefined ? { tolerance: o.tolerance } : {}),
+        ...(o.unordered ? { unordered: true } : {}),
+        ...(o.roundTo !== undefined ? { roundTo: o.roundTo } : {}),
+      };
     }
   }
 

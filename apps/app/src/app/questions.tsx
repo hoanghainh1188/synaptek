@@ -48,6 +48,9 @@ export default function MyQuestions() {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [subject, setSubject] = useState(DEFAULT_SUBJECT);
+  const [roundTo, setRoundTo] = useState(""); // numeric: làm tròn N chữ số
+  const [tolerance, setTolerance] = useState(""); // numeric: dung sai
+  const [unordered, setUnordered] = useState(false); // fill-blank: không theo thứ tự
 
   const reset = () => {
     setPrompt("");
@@ -56,7 +59,23 @@ export default function MyQuestions() {
     setExplanation("");
     setImageUrl(null);
     setSubject(DEFAULT_SUBJECT);
+    setRoundTo("");
+    setTolerance("");
+    setUnordered(false);
     setEditingId(null);
+  };
+
+  // options chấm theo loại (chỉ gắn key có giá trị).
+  const buildOptions = () => {
+    const o: { tolerance?: number; unordered?: boolean; roundTo?: number } = {};
+    if (type === "numeric") {
+      const r = parseInt(roundTo, 10);
+      if (Number.isFinite(r) && r >= 0) o.roundTo = r;
+      const t = Number(tolerance.replace(",", "."));
+      if (Number.isFinite(t) && t > 0) o.tolerance = t;
+    }
+    if (type === "fill-blank" && unordered) o.unordered = true;
+    return Object.keys(o).length > 0 ? o : null;
   };
 
   // Chọn + tải ảnh (web): mở file picker → upload Storage → giữ public URL.
@@ -92,6 +111,9 @@ export default function MyQuestions() {
     setExplanation(qq.explanation ?? "");
     setImageUrl(qq.imageUrl);
     setSubject(qq.subject ?? DEFAULT_SUBJECT);
+    setRoundTo(qq.options?.roundTo != null ? String(qq.options.roundTo) : "");
+    setTolerance(qq.options?.tolerance != null ? String(qq.options.tolerance) : "");
+    setUnordered(qq.options?.unordered === true);
     if (qq.type === "mcq" || qq.type === "multi") {
       setChoices(qq.choices ?? ["", ""]);
       setCorrect(qq.correct); // multi: correct là JSON mảng
@@ -156,6 +178,7 @@ export default function MyQuestions() {
       explanation: explanation.trim() || null,
       imageUrl,
       subject,
+      options: buildOptions(),
     };
     const onDone = {
       onSuccess: () => {
@@ -384,6 +407,20 @@ export default function MyQuestions() {
             >
               <Text className="font-bold text-brand">+ Thêm ô</Text>
             </Pressable>
+            <Pressable
+              accessibilityLabel="Không theo thứ tự"
+              onPress={() => setUnordered((v) => !v)}
+              className="mt-3 flex-row items-center gap-2"
+            >
+              <View
+                className={`h-6 w-6 items-center justify-center rounded-md border-2 ${unordered ? "border-brand bg-brand" : "border-line"}`}
+              >
+                {unordered && <Text className="text-xs font-extrabold text-white">✓</Text>}
+              </View>
+              <Text className="flex-1 text-sm text-ink">
+                Chấp nhận đáp án KHÔNG theo thứ tự (vd "2;4;6" = "6;2;4")
+              </Text>
+            </Pressable>
           </View>
         )}
 
@@ -405,6 +442,33 @@ export default function MyQuestions() {
               accessibilityLabel="Đáp án đúng"
               className="min-h-[48px] rounded-md border-2 border-line bg-paper px-3 text-base text-ink"
             />
+            {type === "numeric" && (
+              <View className="mt-3 flex-row gap-3">
+                <View className="flex-1">
+                  <Text className="mb-1 text-xs font-bold text-muted">Làm tròn (số chữ số)</Text>
+                  <TextInput
+                    value={roundTo}
+                    onChangeText={setRoundTo}
+                    keyboardType="number-pad"
+                    placeholder="—"
+                    placeholderTextColor="#a1a1aa"
+                    accessibilityLabel="Làm tròn số chữ số"
+                    className="min-h-[44px] rounded-md border-2 border-line bg-paper px-3 text-center text-base text-ink"
+                  />
+                </View>
+                <View className="flex-1">
+                  <Text className="mb-1 text-xs font-bold text-muted">Dung sai (±)</Text>
+                  <TextInput
+                    value={tolerance}
+                    onChangeText={setTolerance}
+                    placeholder="—"
+                    placeholderTextColor="#a1a1aa"
+                    accessibilityLabel="Dung sai"
+                    className="min-h-[44px] rounded-md border-2 border-line bg-paper px-3 text-center text-base text-ink"
+                  />
+                </View>
+              </View>
+            )}
           </>
         )}
 

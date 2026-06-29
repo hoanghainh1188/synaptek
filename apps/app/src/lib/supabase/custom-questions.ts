@@ -14,6 +14,12 @@ export type CustomType =
   | "fill-blank"
   | "multi";
 
+export interface GradeOpts {
+  tolerance?: number;
+  unordered?: boolean;
+  roundTo?: number;
+}
+
 export interface CustomQuestion {
   id: string;
   type: CustomType;
@@ -23,6 +29,7 @@ export interface CustomQuestion {
   explanation: string | null;
   imageUrl: string | null;
   subject: string | null; // null = Toán (mặc định)
+  options: GradeOpts | null; // tùy chọn chấm (numeric: roundTo/tolerance; fill-blank: unordered)
 }
 
 export interface NewCustomQuestion {
@@ -33,6 +40,7 @@ export interface NewCustomQuestion {
   explanation?: string | null;
   imageUrl?: string | null;
   subject?: string | null;
+  options?: GradeOpts | null;
 }
 
 /** Upload ảnh câu hỏi lên Storage (bucket public 'question-images', thư mục theo uid) → trả public URL. */
@@ -57,7 +65,7 @@ export function useMyCustomQuestions() {
       if (!supabase || !user) return [];
       const { data, error } = await supabase
         .from("custom_questions")
-        .select("id, type, prompt, choices, correct, explanation, image_url, subject")
+        .select("id, type, prompt, choices, correct, explanation, image_url, subject, options")
         .eq("author_id", user.id)
         .order("created_at", { ascending: false });
       if (error) throw error;
@@ -70,6 +78,7 @@ export function useMyCustomQuestions() {
         explanation: (r.explanation as string | null) ?? null,
         imageUrl: (r.image_url as string | null) ?? null,
         subject: (r.subject as string | null) ?? null,
+        options: (r.options as GradeOpts | null) ?? null,
       }));
     },
   });
@@ -91,6 +100,7 @@ export function useCreateCustomQuestion() {
         explanation: q.explanation ?? null,
         image_url: q.imageUrl ?? null,
         subject: q.subject ?? null,
+        options: q.options ?? null,
       });
       if (error) throw error;
     },
@@ -114,6 +124,7 @@ export function useUpdateCustomQuestion() {
           explanation: q.explanation ?? null,
           image_url: q.imageUrl ?? null,
           subject: q.subject ?? null,
+          options: q.options ?? null,
         })
         .eq("id", q.id);
       if (error) throw error;
