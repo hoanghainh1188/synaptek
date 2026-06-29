@@ -4,6 +4,8 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ Xem lời giải ở bài tập ✅ vừa xong** (`feature/assignment-explanation`, PR đang mở): sau khi nộp, mỗi câu hiện ✓/✗ + **đáp án + lời giải** (câu content — sẵn client; câu tự soạn vẫn ẩn lời giải, D4). e2e assignment-grade +assert "Lời giải" PASS. Không migration (chỉ UI).
+
 **+ Authoring đủ 6/6 loại ✅ vừa xong** (`feature/authoring-fillblank`, PR đang mở): migration `0010` thêm `fill-blank`; đáp án nhiều ô lưu JSON, Edge parse; AnswerInput đếm ô từ dấu `__` trong prompt (chạy cả content + custom). e2e custom-question (mcq+true-false+fill-blank) PASS. → câu tự soạn ĐỦ 6 loại engine hỗ trợ.
 
 **+ Authoring 5/6 loại ✅ vừa xong** (`feature/authoring-types`, PR đang mở): migration `0009` nới `custom_questions.type` thêm `true-false` + `expression` (engine/AnswerInput đã hỗ trợ; Edge chấm generic — không đổi). UI soạn: toggle Đúng/Sai + ô biểu thức. e2e custom-question (mcq + true-false) PASS. **fill-blank ĐỂ PR RIÊNG** (cần lưu đáp án mảng + đếm ô từ prompt + UI N đáp án).

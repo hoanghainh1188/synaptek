@@ -16,6 +16,7 @@ import {
 } from "@/lib/supabase/submissions";
 import { QuestionCard } from "@/components/practice/QuestionCard";
 import { AnswerInput } from "@/components/practice/AnswerInput";
+import { MathText } from "@/components/math/MathText";
 
 const BLOCK_MSG: Record<SubmitBlock, string> = {
   past_due: "Đã quá hạn nộp.",
@@ -190,11 +191,41 @@ export default function DoAssignment() {
                 />
               </View>
               {result?.perQuestion[q.id] && (
-                <Text
-                  className={`mt-2 text-sm font-bold ${result.perQuestion[q.id].isCorrect ? "text-ok" : "text-no"}`}
-                >
-                  {result.perQuestion[q.id].isCorrect ? "✓ Đúng" : "✗ Chưa đúng"}
-                </Text>
+                <View className="mt-2">
+                  <Text
+                    className={`text-sm font-bold ${result.perQuestion[q.id].isCorrect ? "text-ok" : "text-no"}`}
+                  >
+                    {result.perQuestion[q.id].isCorrect ? "✓ Đúng" : "✗ Chưa đúng"}
+                  </Text>
+                  {/* Lời giải sau khi nộp — chỉ câu có sẵn client (content); câu tự soạn ẩn lời giải (D4). */}
+                  {(() => {
+                    const correctText = Array.isArray(q.correct)
+                      ? q.correct.join(" ; ")
+                      : q.correct;
+                    const hasSolution = Boolean(correctText) || Boolean(q.explanation);
+                    if (!hasSolution) return null;
+                    return (
+                      <View className="mt-2 rounded-md bg-paper p-3">
+                        {correctText ? (
+                          <View className="flex-row items-center">
+                            <Text className="text-sm font-semibold text-muted">Đáp án: </Text>
+                            <MathText value={correctText} size={15} weight="700" color="#18181b" />
+                          </View>
+                        ) : null}
+                        {q.explanation ? (
+                          <View className="mt-1">
+                            <Text className="text-[12px] font-extrabold uppercase tracking-wide text-muted">
+                              Lời giải
+                            </Text>
+                            <View className="mt-0.5">
+                              <MathText value={q.explanation} size={15} weight="600" />
+                            </View>
+                          </View>
+                        ) : null}
+                      </View>
+                    );
+                  })()}
+                </View>
               )}
             </View>
           ) : null,

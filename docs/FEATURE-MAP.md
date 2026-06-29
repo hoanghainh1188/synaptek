@@ -80,6 +80,7 @@ flowchart LR
   SHIPPED --> A9["Nội dung lớp 1-5 (160 câu, 16 skill)"]
   SHIPPED --> A10["Ôn lại câu sai (đóng vòng khắc phục điểm yếu)"]
   SHIPPED --> A11["Phản hồi lỗi thông minh (vì sao sai)"]
+  SHIPPED --> A12["Xem lời giải sau khi nộp bài tập"]
   WIP --> B5["Verify iOS/Android"]
 
   SHIPPED --> A7["M4 Phụ huynh: liên kết PH-con + theo dõi read-only (đủ 3 vai trò) + giao bài tại nhà"]
