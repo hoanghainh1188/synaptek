@@ -133,7 +133,24 @@ export async function handler(req: Request): Promise<Response> {
   );
   if (!decision.allowed) return json({ error: decision.reason }, 403);
 
-  const { autoScore, perQuestion } = gradeSubmission(asg.question_ids as string[], answers);
+  // Câu tự soạn (D28): id không có trong ANSWER_KEYS → lấy đáp án từ custom_questions (service-role).
+  const qids = asg.question_ids as string[];
+  const customIds = qids.filter((q) => !ANSWER_KEYS[q]);
+  const mergedKeys: Record<string, AnswerKey> = { ...ANSWER_KEYS };
+  if (customIds.length > 0) {
+    const { data: customRows } = await admin
+      .from("custom_questions")
+      .select("id, type, correct")
+      .in("id", customIds);
+    for (const c of customRows ?? []) {
+      mergedKeys[c.id as string] = {
+        type: c.type as AnswerKey["type"],
+        correct: c.correct as string,
+      };
+    }
+  }
+
+  const { autoScore, perQuestion } = gradeSubmission(qids, answers, mergedKeys);
 
   const { error: upErr } = await admin.from("submissions").upsert(
     {

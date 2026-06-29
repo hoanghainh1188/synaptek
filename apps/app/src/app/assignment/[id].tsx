@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
 import { checkSubmitAllowed, type SubmitBlock } from "@synaptek/classroom";
 import { getQuestionById } from "@/lib/content";
+import { useStudentCustomQuestions } from "@/lib/supabase/custom-questions";
 import { useAssignment } from "@/lib/supabase/assignments";
 import {
   useMySubmission,
@@ -38,10 +39,18 @@ export default function DoAssignment() {
   const autoSubmitRef = useRef(false);
 
   const a = assignment.data;
-  const questions = useMemo(
-    () => (a?.questionIds ?? []).map((qid) => getQuestionById(qid)).filter(Boolean),
+  // Câu tự soạn (D28): id không có trong bank content/ → lấy từ DB (prompt+choices, ẩn đáp án).
+  const customIds = useMemo(
+    () => (a?.questionIds ?? []).filter((qid) => !getQuestionById(qid)),
     [a],
   );
+  const customQs = useStudentCustomQuestions(customIds);
+  const questions = useMemo(() => {
+    const customMap = new Map((customQs.data ?? []).map((q) => [q.id, q]));
+    return (a?.questionIds ?? [])
+      .map((qid) => getQuestionById(qid) ?? customMap.get(qid))
+      .filter(Boolean);
+  }, [a, customQs.data]);
 
   // Bắt đầu làm (đặt mốc cho đồng hồ) khi bài có giới hạn thời gian và chưa bắt đầu.
   useEffect(() => {
