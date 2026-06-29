@@ -20,6 +20,13 @@ export type QuestionType =
 
 export type FeedbackCode = "correct" | "incorrect" | "empty" | "partial" | "format-error";
 
+/**
+ * Chẩn đoán lỗi sai PHỔ BIẾN (chỉ khi sai; phụ trợ — KHÔNG đổi isCorrect/score). Giúp HS hiểu *vì sao* sai.
+ * `sign` = sai dấu (âm/dương) · `magnitude10` = lệch ×10/÷10 (sai vị trí dấu phẩy) ·
+ * `reciprocal` = đảo tử/mẫu (phân số) · `rounding` = gần đúng (chú ý làm tròn).
+ */
+export type Diagnosis = "sign" | "magnitude10" | "reciprocal" | "rounding";
+
 export interface GradeOptions {
   /** Dung sai tuyệt đối khi so sánh số/phân số/biểu thức. Mặc định EPS. */
   tolerance?: number;
@@ -41,6 +48,8 @@ export interface GradeResult {
   feedbackCode: FeedbackCode;
   /** Dạng đã chuẩn hóa, hữu ích cho debug/hiển thị. */
   normalized: { correct: string | string[]; answer: string | string[] };
+  /** Chẩn đoán lỗi (tùy chọn) — chỉ có khi sai & phát hiện được dạng lỗi phổ biến. */
+  diagnosis?: Diagnosis;
 }
 
 const EPS = 1e-9;
@@ -62,8 +71,30 @@ function result(
   feedbackCode: FeedbackCode,
   correct: string | string[],
   answer: string | string[],
+  diagnosis?: Diagnosis,
 ): GradeResult {
-  return { isCorrect, score, feedbackCode, normalized: { correct, answer } };
+  const r: GradeResult = { isCorrect, score, feedbackCode, normalized: { correct, answer } };
+  if (diagnosis) r.diagnosis = diagnosis; // chỉ gắn khi có (không thêm key undefined)
+  return r;
+}
+
+/** Chẩn đoán lỗi số (correct ≠ answer, đều là số). Ưu tiên dạng cụ thể trước "gần đúng". */
+function numericDiagnosis(cn: number, an: number): Diagnosis | undefined {
+  if (Math.abs(cn) > EPS && Math.abs(an + cn) < EPS) return "sign"; // an = -cn
+  for (const f of [10, 100, 0.1, 0.01]) {
+    if (Math.abs(an - cn * f) < EPS * Math.max(1, Math.abs(cn * f))) return "magnitude10";
+  }
+  // gần đúng: lệch ≤ 10% giá trị đúng (nhưng khác hẳn) → nhắc làm tròn
+  const denom = Math.max(Math.abs(cn), 1);
+  if (Math.abs(an - cn) / denom <= 0.1) return "rounding";
+  return undefined;
+}
+
+/** Chẩn đoán lỗi phân số: đảo tử/mẫu, sai dấu. */
+function fractionDiagnosis(cv: number, av: number): Diagnosis | undefined {
+  if (Math.abs(cv) > EPS && Math.abs(av * cv - 1) < EPS) return "reciprocal"; // av = 1/cv
+  if (Math.abs(cv) > EPS && Math.abs(av + cv) < EPS) return "sign";
+  return undefined;
 }
 
 // ── Số: chuẩn hóa kiểu VN + parse ─────────────────────────────────────────────
@@ -313,7 +344,8 @@ export function grade(input: GradeInput): GradeResult {
       const an = parseNumber(asString(answer));
       if (an === null) return result(false, 0, "format-error", correct, answer);
       const ok = cn !== null && numericEqual(cn, an, tol);
-      return result(ok, ok ? 1 : 0, ok ? "correct" : "incorrect", correct, answer);
+      const dx = ok || cn === null ? undefined : numericDiagnosis(cn, an);
+      return result(ok, ok ? 1 : 0, ok ? "correct" : "incorrect", correct, answer, dx);
     }
 
     case "fraction": {
@@ -321,7 +353,8 @@ export function grade(input: GradeInput): GradeResult {
       const av = fractionValue(asString(answer));
       if (av === null) return result(false, 0, "format-error", correct, answer);
       const ok = cv !== null && numericEqual(cv, av, tol);
-      return result(ok, ok ? 1 : 0, ok ? "correct" : "incorrect", correct, answer);
+      const dx = ok || cv === null ? undefined : fractionDiagnosis(cv, av);
+      return result(ok, ok ? 1 : 0, ok ? "correct" : "incorrect", correct, answer, dx);
     }
 
     case "expression": {

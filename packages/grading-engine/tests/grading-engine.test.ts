@@ -132,4 +132,47 @@ test("Bỏ trống → empty", () => {
   assert.equal(r.feedbackCode, "empty");
 });
 
+// ── Chẩn đoán lỗi (diagnosis) — phụ trợ, KHÔNG đổi isCorrect/score ──────────────
+test("numeric đúng → không có diagnosis", () => {
+  const r = grade({ type: "numeric", correct: "5", answer: "5" });
+  assert.equal(r.isCorrect, true);
+  assert.equal(r.diagnosis, undefined);
+});
+
+test("numeric sai dấu → diagnosis 'sign'", () => {
+  const r = grade({ type: "numeric", correct: "5", answer: "-5" });
+  assert.equal(r.isCorrect, false);
+  assert.equal(r.diagnosis, "sign");
+});
+
+test("numeric lệch ×10 → diagnosis 'magnitude10'", () => {
+  const r = grade({ type: "numeric", correct: "2,5", answer: "25" });
+  assert.equal(r.isCorrect, false);
+  assert.equal(r.diagnosis, "magnitude10");
+});
+
+test("numeric gần đúng (làm tròn) → diagnosis 'rounding'", () => {
+  const r = grade({ type: "numeric", correct: "10", answer: "10,5" });
+  assert.equal(r.isCorrect, false);
+  assert.equal(r.diagnosis, "rounding");
+});
+
+test("numeric sai hẳn → không có diagnosis", () => {
+  const r = grade({ type: "numeric", correct: "5", answer: "100" });
+  assert.equal(r.isCorrect, false);
+  assert.equal(r.diagnosis, undefined);
+});
+
+test("fraction đảo tử/mẫu → diagnosis 'reciprocal'", () => {
+  const r = grade({ type: "fraction", correct: "2/3", answer: "3/2" });
+  assert.equal(r.isCorrect, false);
+  assert.equal(r.diagnosis, "reciprocal");
+});
+
+test("fraction tương đương vẫn đúng → không có diagnosis", () => {
+  const r = grade({ type: "fraction", correct: "1/2", answer: "2/4" });
+  assert.equal(r.isCorrect, true);
+  assert.equal(r.diagnosis, undefined);
+});
+
 console.log(`\n${passed} test(s) passed.`);
