@@ -123,11 +123,18 @@ export default function Profile() {
           ) : (
             <View className="mt-3 gap-2">
               <Pressable
-                accessibilityLabel="Bài được giao"
-                onPress={() => router.push("/assignments")}
+                accessibilityLabel="Lớp của tôi"
+                onPress={() => router.push("/my-classes")}
                 className="min-h-[48px] flex-row items-center justify-center gap-2 rounded-md bg-brand"
               >
-                <Text className="font-display font-bold text-white">Bài được giao ›</Text>
+                <Text className="font-display font-bold text-white">Lớp của tôi ›</Text>
+              </Pressable>
+              <Pressable
+                accessibilityLabel="Bài được giao"
+                onPress={() => router.push("/assignments")}
+                className="min-h-[48px] flex-row items-center justify-center gap-2 rounded-md bg-surface shadow-sm"
+              >
+                <Text className="font-display font-bold text-ink">Bài được giao ›</Text>
               </Pressable>
               <Pressable
                 accessibilityLabel="Vào lớp bằng mã"

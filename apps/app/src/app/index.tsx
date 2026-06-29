@@ -194,9 +194,17 @@ export default function Home() {
         </Pressable>
       )}
 
-      {/* Lớp học (HS đăng nhập) — bài được giao + vào lớp bằng mã */}
+      {/* Lớp học (HS đăng nhập) — lớp của tôi + bài được giao + vào lớp bằng mã */}
       {isStudent && user && (
         <View className="mt-4 flex-row gap-2">
+          <Pressable
+            accessibilityLabel="Lớp của tôi"
+            onPress={() => router.push("/my-classes")}
+            className="flex-1 items-center justify-center rounded-lg bg-surface py-3 shadow-sm"
+          >
+            <Text className="text-lg">🏫</Text>
+            <Text className="mt-0.5 font-display text-sm font-bold text-ink">Lớp của tôi</Text>
+          </Pressable>
           <Pressable
             accessibilityLabel="Bài được giao"
             onPress={() => router.push("/assignments")}
@@ -211,7 +219,7 @@ export default function Home() {
             className="flex-1 items-center justify-center rounded-lg bg-surface py-3 shadow-sm"
           >
             <Text className="text-lg">🔑</Text>
-            <Text className="mt-0.5 font-display text-sm font-bold text-ink">Vào lớp bằng mã</Text>
+            <Text className="mt-0.5 font-display text-sm font-bold text-ink">Vào lớp</Text>
           </Pressable>
         </View>
       )}

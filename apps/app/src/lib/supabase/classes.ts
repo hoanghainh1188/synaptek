@@ -19,6 +19,57 @@ export interface RosterEntry {
   joinedAt: string;
 }
 
+export interface JoinedClass {
+  id: string;
+  name: string;
+  teacherName: string | null;
+  memberCount: number;
+}
+
+/** HS: danh sách lớp đang tham gia + tên GV + sĩ số (RLS is_member; 0008 cho đọc tên GV/đếm). */
+export function useMyJoinedClasses() {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: ["joined-classes", user?.id ?? "guest"],
+    enabled: Boolean(supabase && user),
+    queryFn: async (): Promise<JoinedClass[]> => {
+      if (!supabase || !user) return [];
+      const { data, error } = await supabase
+        .from("class_members")
+        .select("class_id, classes(id, name, owner_teacher_id)")
+        .eq("student_id", user.id);
+      if (error) throw error;
+      type ClassObj = { id: string; name: string; owner_teacher_id: string };
+      const rows = (data ?? [])
+        .map((r) => {
+          const c = r.classes as unknown; // Supabase suy quan hệ là object|array tuỳ ngữ cảnh
+          return (Array.isArray(c) ? c[0] : c) as ClassObj | null;
+        })
+        .filter(Boolean) as ClassObj[];
+
+      const teacherIds = [...new Set(rows.map((c) => c.owner_teacher_id))];
+      const names = new Map<string, string | null>();
+      if (teacherIds.length > 0) {
+        const { data: profs } = await supabase
+          .from("profiles")
+          .select("id, full_name")
+          .in("id", teacherIds);
+        for (const p of profs ?? [])
+          names.set(p.id as string, (p.full_name as string | null) ?? null);
+      }
+      const counts = await Promise.all(
+        rows.map((c) => supabase!.rpc("class_member_count", { cid: c.id })),
+      );
+      return rows.map((c, i) => ({
+        id: c.id,
+        name: c.name,
+        teacherName: names.get(c.owner_teacher_id) ?? null,
+        memberCount: (counts[i]?.data as number) ?? 0,
+      }));
+    },
+  });
+}
+
 /** Số ngẫu nhiên an toàn cho mã mời (crypto nếu có, fallback Math.random). */
 function randomInts(n: number): number[] {
   const out: number[] = [];

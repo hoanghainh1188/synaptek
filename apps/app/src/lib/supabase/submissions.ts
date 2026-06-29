@@ -119,6 +119,30 @@ export function useOverrideGrade(assignmentId: string) {
 }
 
 /** Bài nộp của HS hiện tại cho một assignment (xem điểm cuối + nhận xét). */
+/** HS: map assignmentId → điểm hiển thị (cho màn "Lớp của tôi"). RLS: chỉ bài nộp của em. */
+export function useMySubmissions() {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: ["my-submissions", user?.id ?? "guest"],
+    enabled: Boolean(supabase && user),
+    queryFn: async (): Promise<Record<string, number | null>> => {
+      if (!supabase || !user) return {};
+      const { data, error } = await supabase
+        .from("submissions")
+        .select("assignment_id, auto_score, final_score")
+        .eq("student_id", user.id);
+      if (error) throw error;
+      const map: Record<string, number | null> = {};
+      for (const r of data ?? []) {
+        const auto = r.auto_score === null ? null : Number(r.auto_score);
+        const final = r.final_score === null ? null : Number(r.final_score);
+        map[r.assignment_id as string] = displayScore(auto, final);
+      }
+      return map;
+    },
+  });
+}
+
 export function useMySubmission(assignmentId: string) {
   const { user } = useAuth();
   return useQuery({

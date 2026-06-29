@@ -19,6 +19,7 @@ mindmap
         ✅ Chấm tức thì + giải thích
         ✅ Auth tối thiểu + lưu tiến độ
       M2 Mastery & Lộ trình ✅
+        ✅ HS xem lớp đang tham gia
         ✅ Chẩn đoán + mastery BKT
         ✅ Lộ trình học gì tiếp
         ✅ Heatmap điểm yếu
