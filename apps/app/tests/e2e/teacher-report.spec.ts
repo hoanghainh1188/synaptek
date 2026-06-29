@@ -50,6 +50,8 @@ test("GV xem báo cáo lớp (HS × bài + điểm)", async ({ browser }) => {
   await gvPage.getByLabel("Báo cáo lớp").click();
   await expect(gvPage.getByText("Trò BC")).toBeVisible({ timeout: 15_000 });
   await expect(gvPage.getByText("100%").first()).toBeVisible({ timeout: 15_000 });
+  // Insight: mục "Cần chú ý" hiện (HS 100% → 0 cảnh báo)
+  await expect(gvPage.getByText(/Cần chú ý/)).toBeVisible({ timeout: 15_000 });
 
   await gv.close();
   await hs.close();
