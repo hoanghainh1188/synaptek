@@ -51,6 +51,7 @@ export function useAttempts() {
         questionId: r.question_id as string,
         skillId: (r.skill_id as string | null) ?? null,
         isCorrect: r.is_correct as boolean,
+        createdAt: r.created_at as string,
       }));
     },
   });

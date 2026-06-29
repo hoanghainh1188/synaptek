@@ -6,6 +6,8 @@ export interface AttemptLike {
   isCorrect: boolean;
   /** Kỹ năng (M2 — cho mastery/heatmap). Tùy chọn: gộp tiến độ M1 không dùng. */
   skillId?: string | null;
+  /** Thời điểm trả lời (ISO). Tùy chọn — cho mục tiêu hằng ngày. */
+  createdAt?: string;
 }
 
 export interface TopicProgress {
