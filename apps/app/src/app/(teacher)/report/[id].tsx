@@ -1,0 +1,111 @@
+// Route GV — báo cáo lớp: bảng HS × bài (điểm %) + trung bình + xuất CSV (web tải file).
+import { Platform, Pressable, ScrollView, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useLocalSearchParams } from "expo-router";
+import { useClassReport, useMyClasses } from "@/lib/supabase/classes";
+import { reportToCsv } from "@/lib/report-csv";
+import { BackButton } from "@/components/BackButton";
+
+function pct(v: number | null): string {
+  return v === null ? "—" : `${Math.round(v * 100)}%`;
+}
+
+function downloadCsv(filename: string, csv: string) {
+  if (Platform.OS !== "web" || typeof document === "undefined") return;
+  const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8;" }); // BOM cho Excel tiếng Việt
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+const COL = 64; // bề rộng cột điểm
+
+export default function ClassReportScreen() {
+  const insets = useSafeAreaInsets();
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const classId = String(id);
+  const classes = useMyClasses();
+  const report = useClassReport(classId);
+  const cls = classes.data?.find((c) => c.id === classId);
+  const data = report.data;
+
+  return (
+    <ScrollView
+      contentContainerStyle={{
+        paddingTop: insets.top + 16,
+        paddingBottom: 48,
+        paddingHorizontal: 20,
+      }}
+    >
+      <BackButton />
+      <View className="flex-row items-center justify-between">
+        <Text className="font-display text-2xl font-extrabold text-ink">Báo cáo lớp</Text>
+        {Platform.OS === "web" && (data?.rows.length ?? 0) > 0 && (
+          <Pressable
+            accessibilityLabel="Xuất CSV"
+            onPress={() => downloadCsv(`bao-cao-${cls?.name ?? "lop"}.csv`, reportToCsv(data!))}
+            className="min-h-[40px] items-center justify-center rounded-md bg-brand px-3"
+          >
+            <Text className="font-display font-bold text-white">Xuất CSV</Text>
+          </Pressable>
+        )}
+      </View>
+      <Text className="mt-1 text-sm text-muted">{cls?.name ?? ""}</Text>
+
+      {(data?.rows.length ?? 0) === 0 ? (
+        <Text className="mt-6 text-muted">Lớp chưa có học sinh hoặc bài tập.</Text>
+      ) : (
+        <ScrollView horizontal showsHorizontalScrollIndicator className="mt-5">
+          <View>
+            {/* Header */}
+            <View className="flex-row border-b-2 border-line pb-2">
+              <Text className="w-32 font-display text-xs font-extrabold text-muted">Học sinh</Text>
+              {data!.assignments.map((a) => (
+                <Text
+                  key={a.id}
+                  numberOfLines={1}
+                  style={{ width: COL }}
+                  className="text-center text-xs font-bold text-muted"
+                >
+                  {a.title}
+                </Text>
+              ))}
+              <Text
+                style={{ width: COL }}
+                className="text-center text-xs font-extrabold text-brand"
+              >
+                TB
+              </Text>
+            </View>
+            {/* Rows */}
+            {data!.rows.map((r) => (
+              <View key={r.studentId} className="flex-row items-center border-b border-line py-2">
+                <Text numberOfLines={1} className="w-32 font-semibold text-ink">
+                  {r.name ?? "(chưa đặt tên)"}
+                </Text>
+                {data!.assignments.map((a) => (
+                  <Text
+                    key={a.id}
+                    style={{ width: COL }}
+                    className={`text-center text-sm ${r.scores[a.id] === null ? "text-muted" : "font-semibold text-ink"}`}
+                  >
+                    {pct(r.scores[a.id] ?? null)}
+                  </Text>
+                ))}
+                <Text
+                  style={{ width: COL }}
+                  className="text-center text-sm font-extrabold text-brand"
+                >
+                  {pct(r.average)}
+                </Text>
+              </View>
+            ))}
+          </View>
+        </ScrollView>
+      )}
+    </ScrollView>
+  );
+}

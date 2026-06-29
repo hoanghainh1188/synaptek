@@ -28,6 +28,7 @@ mindmap
         ✅ Ôn lại câu sai (sổ tay lỗi)
         ⏳ Push nhắc chờ M5
     🧑‍🏫 Giáo viên M3 ✅
+      ✅ Báo cáo lớp + xuất CSV
       ✅ Lớp + mã mời + roster
       ✅ Giao bài + giới hạn nộp
       ✅ Chấm chính thức ẩn đáp án

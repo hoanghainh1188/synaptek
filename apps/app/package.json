@@ -44,7 +44,7 @@
     "typescript": "~6.0.3"
   },
   "scripts": {
-    "test": "node --experimental-strip-types --no-warnings src/lib/session.test.ts && node --experimental-strip-types --no-warnings src/lib/math-markup.test.ts && node --experimental-strip-types --no-warnings src/lib/progress.test.ts && node --experimental-strip-types --no-warnings src/lib/mastery.test.ts && node --experimental-strip-types --no-warnings src/lib/path.test.ts && node --experimental-strip-types --no-warnings src/lib/gamification.test.ts && node --experimental-strip-types --no-warnings src/lib/mistakes.test.ts",
+    "test": "node --experimental-strip-types --no-warnings src/lib/session.test.ts && node --experimental-strip-types --no-warnings src/lib/math-markup.test.ts && node --experimental-strip-types --no-warnings src/lib/progress.test.ts && node --experimental-strip-types --no-warnings src/lib/mastery.test.ts && node --experimental-strip-types --no-warnings src/lib/path.test.ts && node --experimental-strip-types --no-warnings src/lib/gamification.test.ts && node --experimental-strip-types --no-warnings src/lib/mistakes.test.ts && node --experimental-strip-types --no-warnings src/lib/report-csv.test.ts",
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo start --android",
