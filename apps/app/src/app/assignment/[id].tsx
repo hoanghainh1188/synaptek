@@ -190,7 +190,7 @@ export default function DoAssignment() {
           q ? (
             <View
               key={q.id}
-              accessibilityLabel={`assignment-q-${q.id}`}
+              testID={`assignment-q-${q.id}`}
               className="rounded-lg bg-surface p-4 shadow-sm"
             >
               <QuestionCard question={q} topicName="" />

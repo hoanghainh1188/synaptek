@@ -46,8 +46,8 @@ test("ngẫu nhiên hoá pool: HS chỉ nhận N câu từ pool", async ({ brows
   await expect(hsPage.getByText(/Đã vào lớp/)).toBeVisible({ timeout: 15_000 });
   await hsPage.goto("/assignments");
   await hsPage.getByText(title).click();
-  await expect(hsPage.getByLabel(/^assignment-q-/).first()).toBeVisible({ timeout: 15_000 });
-  await expect(hsPage.getByLabel(/^assignment-q-/)).toHaveCount(2);
+  await expect(hsPage.getByTestId(/^assignment-q-/).first()).toBeVisible({ timeout: 15_000 });
+  await expect(hsPage.getByTestId(/^assignment-q-/)).toHaveCount(2);
 
   await gv.close();
   await hs.close();
