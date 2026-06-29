@@ -15,3 +15,4 @@ export {
   type SubmitDecision,
   checkSubmitAllowed,
 } from "./submit-rules.ts";
+export { pickForStudent } from "./pool.ts";

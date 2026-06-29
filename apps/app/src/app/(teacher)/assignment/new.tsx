@@ -42,6 +42,7 @@ export default function NewAssignment() {
   const [allowLate, setAllowLate] = useState(true);
   const [maxAttempts, setMaxAttempts] = useState(""); // "" = không giới hạn
   const [timeLimit, setTimeLimit] = useState(""); // phút; "" = không có đồng hồ
+  const [poolPick, setPoolPick] = useState(""); // số câu ngẫu nhiên mỗi HS; "" = giao cả pool
   const [prefilled, setPrefilled] = useState(false);
   const [query, setQuery] = useState(""); // tìm/lọc câu theo nội dung
   const [preview, setPreview] = useState(false); // xem trước như HS
@@ -57,6 +58,7 @@ export default function NewAssignment() {
       setSelected(new Set(a.questionIds));
       setMaxAttempts(a.maxAttempts != null ? String(a.maxAttempts) : "");
       setTimeLimit(a.timeLimitMinutes != null ? String(a.timeLimitMinutes) : "");
+      setPoolPick(a.poolPickCount != null ? String(a.poolPickCount) : "");
       setAllowLate(a.allowLate);
       setPrefilled(true);
     }
@@ -146,16 +148,19 @@ export default function NewAssignment() {
     };
     // Bài lớp: "some" → danh sách HS; "all" → [] (xoá target = cả lớp). Bài nhà: không áp dụng.
     const targetStudentIds = targetMode === "some" ? [...targetIds] : [];
+    // Ngẫu nhiên hoá: chỉ áp dụng khi số chọn < số câu trong pool (selected); ngược lại = cả pool.
+    const pp = toNum(poolPick);
+    const poolPickCount = pp && pp < selected.size ? pp : null;
     if (editId) {
       update.mutate(
-        { ...limits, classId: String(classId), id: editId, targetStudentIds },
+        { ...limits, classId: String(classId), id: editId, targetStudentIds, poolPickCount },
         { onSuccess: () => router.back() },
       );
     } else if (childId) {
       createHome.mutate({ ...limits, childId }, { onSuccess: () => router.back() });
     } else {
       create.mutate(
-        { ...limits, classId: String(classId), targetStudentIds },
+        { ...limits, classId: String(classId), targetStudentIds, poolPickCount },
         { onSuccess: () => router.back() },
       );
     }
@@ -325,6 +330,23 @@ export default function NewAssignment() {
                 </Text>
               </Pressable>
             </View>
+            {/* Ngẫu nhiên hoá: mỗi HS nhận N câu khác nhau từ pool đã chọn */}
+            {!isHome && selected.size >= 2 && (
+              <View className="mt-3 flex-row items-center gap-2">
+                <Text className="flex-1 text-sm font-semibold text-ink">
+                  Số câu ngẫu nhiên mỗi HS
+                </Text>
+                <TextInput
+                  value={poolPick}
+                  onChangeText={setPoolPick}
+                  keyboardType="number-pad"
+                  placeholder={`cả ${selected.size}`}
+                  placeholderTextColor="#a1a1aa"
+                  accessibilityLabel="Số câu ngẫu nhiên mỗi HS"
+                  className="min-h-[40px] w-24 rounded-md border-2 border-line bg-paper px-3 text-center text-base text-ink"
+                />
+              </View>
+            )}
           </View>
 
           {/* Xem trước như HS (read-only) */}

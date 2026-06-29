@@ -4,6 +4,8 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ Ngẫu nhiên hoá pool ✅ vừa xong** (`feature/assignment-pool`, PR đang mở): migration 0013 (pool_pick_count). Hàm thuần pickForStudent trong /classroom (sync \_shared) dùng chung client+Edge, seed=assignmentId|studentId → cùng bộ con → chấm đúng. Composer: ô "số câu ngẫu nhiên/HS". pool.test (4) + e2e assignment-pool PASS; deno+grade regression PASS. Decision Log D31.
+
 **+ Giao cho HS cụ thể ✅ vừa xong** (`feature/assignment-targets`, PR đang mở): migration 0012 (bảng assignment_targets + is_targeted + RLS assignments_select). Không target=cả lớp; có target=chỉ HS đó thấy+nộp (Edge enforce). Composer: Cả lớp/Một số HS + toggle roster. rls-0012 + e2e assignment-targets PASS. Decision Log D30.
 
 **+ Ảnh trong câu tự soạn ✅ vừa xong** (`feature/question-images`, PR đang mở): migration 0011 (cột image_url + bucket public question-images + RLS ghi theo uid + RPC trả ảnh). Upload web (DOM input)→Storage→public URL; map vào Question.image (QuestionCard render sẵn). LƯU Ý: dùng insert KHÔNG upsert (upsert→ON CONFLICT cần UPDATE policy→42501). e2e question-image PASS (+CI). Decision Log D29.

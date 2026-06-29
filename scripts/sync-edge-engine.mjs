@@ -38,10 +38,12 @@ console.log(`generated ${LP_DEST}/index.ts`);
 // 2b) classroom — luật giới hạn nộp (submit-rules) cho Edge enforce (D4/D13/D25).
 const CR_DEST = "supabase/functions/_shared/classroom";
 syncFile("packages/classroom/src/submit-rules.ts", `${CR_DEST}/submit-rules.ts`);
+syncFile("packages/classroom/src/pool.ts", `${CR_DEST}/pool.ts`);
 writeFileSync(
   `${CR_DEST}/index.ts`,
   `// ⚠️ AUTO-GENERATED (npm run sync:edge) — re-export tối thiểu cho Edge Function. Lý do: D13.\n` +
-    `export { checkSubmitAllowed } from "./submit-rules.ts";\n`,
+    `export { checkSubmitAllowed } from "./submit-rules.ts";\n` +
+    `export { pickForStudent } from "./pool.ts";\n`,
 );
 console.log(`generated ${CR_DEST}/index.ts`);
 

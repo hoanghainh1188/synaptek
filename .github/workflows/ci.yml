@@ -162,7 +162,8 @@ jobs:
             tests/e2e/logout.spec.ts \
             tests/e2e/authoring-advanced.spec.ts \
             tests/e2e/question-image.spec.ts \
-            tests/e2e/assignment-targets.spec.ts
+            tests/e2e/assignment-targets.spec.ts \
+            tests/e2e/assignment-pool.spec.ts
         working-directory: apps/app
 
       - name: Stop Supabase

@@ -4,8 +4,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
-import { checkSubmitAllowed, type SubmitBlock } from "@synaptek/classroom";
+import { checkSubmitAllowed, pickForStudent, type SubmitBlock } from "@synaptek/classroom";
 import { getQuestionById } from "@/lib/content";
+import { useAuth } from "@/lib/supabase/auth";
 import { useStudentCustomQuestions } from "@/lib/supabase/custom-questions";
 import { useAssignment } from "@/lib/supabase/assignments";
 import {
@@ -39,19 +40,25 @@ export default function DoAssignment() {
   const startedRef = useRef(false);
   const autoSubmitRef = useRef(false);
 
+  const { user } = useAuth();
   const a = assignment.data;
+  // Ngẫu nhiên hoá pool (D31): mỗi HS nhận bộ con tất định (cùng pickForStudent với Edge khi chấm).
+  const effectiveIds = useMemo(() => {
+    if (!a) return [];
+    return a.poolPickCount && user
+      ? pickForStudent(a.questionIds, a.poolPickCount, `${a.id}|${user.id}`)
+      : a.questionIds;
+  }, [a, user]);
   // Câu tự soạn (D28): id không có trong bank content/ → lấy từ DB (prompt+choices, ẩn đáp án).
   const customIds = useMemo(
-    () => (a?.questionIds ?? []).filter((qid) => !getQuestionById(qid)),
-    [a],
+    () => effectiveIds.filter((qid) => !getQuestionById(qid)),
+    [effectiveIds],
   );
   const customQs = useStudentCustomQuestions(customIds);
   const questions = useMemo(() => {
     const customMap = new Map((customQs.data ?? []).map((q) => [q.id, q]));
-    return (a?.questionIds ?? [])
-      .map((qid) => getQuestionById(qid) ?? customMap.get(qid))
-      .filter(Boolean);
-  }, [a, customQs.data]);
+    return effectiveIds.map((qid) => getQuestionById(qid) ?? customMap.get(qid)).filter(Boolean);
+  }, [effectiveIds, customQs.data]);
 
   // Bắt đầu làm (đặt mốc cho đồng hồ) khi bài có giới hạn thời gian và chưa bắt đầu.
   useEffect(() => {
@@ -181,7 +188,11 @@ export default function DoAssignment() {
       <View className="mt-4 gap-4">
         {questions.map((q) =>
           q ? (
-            <View key={q.id} className="rounded-lg bg-surface p-4 shadow-sm">
+            <View
+              key={q.id}
+              testID={`assignment-q-${q.id}`}
+              className="rounded-lg bg-surface p-4 shadow-sm"
+            >
               <QuestionCard question={q} topicName="" />
               <View className="mt-3">
                 <AnswerInput
