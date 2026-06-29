@@ -51,8 +51,10 @@ test("đổi vai trò trong Hồ sơ (HS → GV)", async ({ page }) => {
   await page.goto("/profile");
   // HS: thấy "Bài được giao"
   await expect(page.getByLabel("Bài được giao")).toBeVisible({ timeout: 15_000 });
-  // đổi sang Giáo viên
-  await page.getByLabel("Đặt vai trò Giáo viên").click();
+  // đổi sang Giáo viên — flow xác nhận: Đổi vai trò… → chọn Giáo viên → Xác nhận
+  await page.getByLabel("Đổi vai trò").click();
+  await page.getByLabel("Chọn Giáo viên").click();
+  await page.getByLabel("Xác nhận đổi vai trò").click();
   // sau đổi: hiện "Lớp của tôi"
   await expect(page.getByLabel("Lớp của tôi")).toBeVisible({ timeout: 15_000 });
 });

@@ -7,6 +7,7 @@ import { useAuth } from "@/lib/supabase/auth";
 import { useMyRole } from "@/lib/supabase/role";
 import { useCreateClass, useMyClasses } from "@/lib/supabase/classes";
 import { Mascot } from "@/components/Mascot";
+import { BackButton } from "@/components/BackButton";
 
 export default function TeacherClasses() {
   const insets = useSafeAreaInsets();
@@ -67,6 +68,7 @@ export default function TeacherClasses() {
 
   return wrap(
     <>
+      <BackButton />
       <Text className="font-display text-3xl font-extrabold text-ink">Lớp của tôi</Text>
 
       <View className="mt-5 rounded-lg bg-surface p-4 shadow-sm">

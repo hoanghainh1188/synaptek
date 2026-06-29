@@ -8,6 +8,7 @@ import { useAuth } from "@/lib/supabase/auth";
 import { useMyRole } from "@/lib/supabase/role";
 import { useLinkChild, useMyChildren, useUnlink } from "@/lib/supabase/parent";
 import { Mascot } from "@/components/Mascot";
+import { BackButton } from "@/components/BackButton";
 
 export default function Children() {
   const insets = useSafeAreaInsets();
@@ -75,6 +76,7 @@ export default function Children() {
 
   return wrap(
     <>
+      <BackButton />
       <Text className="font-display text-3xl font-extrabold text-ink">Con của tôi</Text>
 
       {/* Nhập mã liên kết */}
