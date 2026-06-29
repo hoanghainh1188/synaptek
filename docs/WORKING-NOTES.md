@@ -4,6 +4,8 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ Màn kết quả thống nhất ✅ vừa xong** (`feature/session-result-unify`, PR đang mở): SessionRunner (luyện nhanh + ôn lại câu sai) dùng chung component SessionResult (donut % đúng + thống kê + câu cần ôn + nút Luyện lại/Về trang chủ) thay màn kết thúc đơn sơ. e2e review-mistakes chạm màn kết quả mới PASS. Không migration.
+
 **+ Bảng xếp hạng lớp ✅ vừa xong** (`feature/class-leaderboard`, PR đang mở): RPC class_leaderboard (SECURITY DEFINER + gate is_member) — HS xem top XP bạn cùng lớp ở màn lớp tham gia, đánh dấu "(em)". gamification_state vẫn riêng tư. rls-0014 + e2e PASS. Decision Log D32.
 
 **+ Luyện nhanh 1 chạm ✅ vừa xong** (`feature/quick-practice`, PR đang mở): nút home → phiên trộn câu từ ĐIỂM YẾU + ĐẾN HẠN (buildPath như home → buildQuickSet round-robin). Tách `SessionRunner` dùng chung review-mistakes + quick-practice (DRY). quick-set.ts thuần (+4 test CI). e2e quick-practice + review-mistakes(refactor) PASS. Không migration.
