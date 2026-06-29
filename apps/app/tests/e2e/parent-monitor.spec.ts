@@ -41,6 +41,8 @@ test("PH liên kết con bằng mã + mở bảng theo dõi", async ({ browser }
   // mở bảng theo dõi con
   await phPage.getByLabel("Theo dõi Bé Bin").click();
   await expect(phPage.getByText("Theo dõi tiến độ (chỉ xem)")).toBeVisible({ timeout: 15_000 });
+  // Tóm tắt tuần (digest)
+  await expect(phPage.getByText("Tuần này (7 ngày qua)")).toBeVisible({ timeout: 15_000 });
 
   // HS thấy PH đang theo dõi
   await hsPage.reload();

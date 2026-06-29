@@ -61,6 +61,22 @@ export default function ChildMonitor() {
         Đã luyện {d?.attemptsCount ?? 0} câu · đúng {d?.correctCount ?? 0}
       </Text>
 
+      {/* Tóm tắt 7 ngày qua */}
+      <View className="mt-5 rounded-lg bg-brand/5 p-4">
+        <Text className="font-display text-base font-bold text-ink">Tuần này (7 ngày qua)</Text>
+        {(d?.weekly.practiced ?? 0) === 0 && (d?.weekly.submitted ?? 0) === 0 ? (
+          <Text className="mt-1 text-sm text-muted">Tuần này con chưa luyện tập.</Text>
+        ) : (
+          <Text className="mt-1 text-sm text-ink">
+            Luyện <Text className="font-bold">{d?.weekly.practiced ?? 0}</Text> câu
+            {d?.weekly.accuracy !== null && d?.weekly.accuracy !== undefined
+              ? ` · đúng ${Math.round(d.weekly.accuracy * 100)}%`
+              : ""}
+            {(d?.weekly.submitted ?? 0) > 0 ? ` · nộp ${d?.weekly.submitted} bài` : ""}.
+          </Text>
+        )}
+      </View>
+
       {/* Điểm yếu */}
       <Text className="mt-7 font-display text-xl font-bold text-ink">Điểm yếu cần ôn</Text>
       <View className="mt-3 gap-2">

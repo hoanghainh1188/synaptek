@@ -3,6 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { makeInviteCode } from "@synaptek/classroom";
 import { skillWeakness, type HeatCell } from "@synaptek/learning-path";
+import { weeklyStats, type WeeklyStats } from "@/lib/weekly";
 import { displayScore } from "@synaptek/classroom";
 import { supabase } from "./client";
 import { useAuth } from "./auth";
@@ -234,6 +235,7 @@ export interface ChildProgress {
   correctCount: number;
   weakSkills: HeatCell[];
   submissions: { assignmentId: string; displayScore: number | null }[];
+  weekly: WeeklyStats;
 }
 
 export function useChildProgress(childId: string) {
@@ -245,7 +247,10 @@ export function useChildProgress(childId: string) {
       if (!supabase || !user) return null;
       const [prof, attempts, mastery, gami, subs] = await Promise.all([
         supabase.from("profiles").select("full_name").eq("id", childId).maybeSingle(),
-        supabase.from("attempts").select("skill_id, is_correct").eq("student_id", childId),
+        supabase
+          .from("attempts")
+          .select("skill_id, is_correct, created_at")
+          .eq("student_id", childId),
         supabase.from("skill_mastery").select("skill_id, mastery").eq("student_id", childId),
         supabase
           .from("gamification_state")
@@ -254,7 +259,7 @@ export function useChildProgress(childId: string) {
           .maybeSingle(),
         supabase
           .from("submissions")
-          .select("assignment_id, auto_score, final_score")
+          .select("assignment_id, auto_score, final_score, submitted_at")
           .eq("student_id", childId),
       ]);
       const masteryMap = new Map<string, number>(
@@ -281,6 +286,16 @@ export function useChildProgress(childId: string) {
             s.final_score === null ? null : Number(s.final_score),
           ),
         })),
+        weekly: weeklyStats(
+          (attempts.data ?? []).map((a) => ({
+            createdAt: a.created_at as string,
+            isCorrect: a.is_correct as boolean,
+          })),
+          (subs.data ?? []).map((s) => ({
+            submittedAt: (s.submitted_at as string | null) ?? null,
+          })),
+          Date.now(),
+        ),
       };
     },
   });
