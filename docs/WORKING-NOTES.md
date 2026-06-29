@@ -4,6 +4,8 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ PH gợi ý hành động ✅ vừa xong** (`feature/parent-suggest`, PR đang mở): màn theo dõi con thêm card "💡 Gợi ý tuần này" (3 điểm yếu nên ôn) + nút "Giao bài ôn điểm yếu" → composer mở SẴN câu (?skills= → buildQuickSet từ questionsForSkill). e2e parent-suggest PASS. Không migration.
+
 **+ Tóm tắt tuần cho GV ✅ vừa xong** (`feature/gv-weekly`, PR đang mở): màn lớp GV thêm card "📅 Tuần này" (lượt nộp · đúng TB · HS làm bài, 7 ngày). useClassWeekly (RLS owns_class) + class-weekly.ts thuần (+2 test CI). e2e class-join +assert PASS. Không migration.
 
 **+ Insight GV (báo cáo) ✅ vừa xong** (`feature/gv-report-insights`, PR đang mở): màn Báo cáo lớp thêm "⚠️ Cần chú ý" (HS điểm thấp/bỏ nhiều bài) + "📈 Xu hướng điểm TB lớp" (sparkline) — tái dùng useClassReport, KHÔNG truy vấn/migration mới. report-insights.ts thuần (atRiskStudents + classTrend, +4 test CI). e2e teacher-report +assert PASS.
