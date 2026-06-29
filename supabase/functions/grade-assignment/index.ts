@@ -49,8 +49,8 @@ export function gradeSubmission(
       correct: key.correct,
       answer: answers[qid] ?? "",
       options:
-        key.tolerance !== undefined || key.unordered
-          ? { tolerance: key.tolerance, unordered: key.unordered }
+        key.tolerance !== undefined || key.unordered || key.roundTo !== undefined
+          ? { tolerance: key.tolerance, unordered: key.unordered, roundTo: key.roundTo }
           : undefined,
     };
     const r = grade(input);

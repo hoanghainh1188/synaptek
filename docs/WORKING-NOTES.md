@@ -4,6 +4,8 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ Engine moat đợt 2 ✅ vừa xong** (`feature/engine-moat2`, PR đang mở): ĐƠN VỊ ĐO ("5 cm"="5cm", "1 m"="100 cm", "1 kg"="1000 g" cùng đại lượng), SỐ LA MÃ ("IV"=4 chuẩn), chẩn đoán TRANSPOSED (đảo chữ số 12↔21), options.roundTo (làm tròn N chữ số). +9 unit test (44 tổng). Wiring: Question.options.roundTo + answer-keys sync + Edge + Feedback hint. Không migration.
+
 **+ Mở rộng engine chấm (moat) ✅ vừa xong** (`feature/engine-moat`, PR đang mở): HỖN SỐ ("1 1/2"=3/2), PHẦN TRĂM ("50%"=0,5), chẩn đoán OFFBYONE (lệch 1 đơn vị), TẬP KHÔNG THỨ TỰ cho fill-blank (options.unordered, khớp đa tập). +12 unit test engine. Wiring: Question.options.unordered + answer-keys sync + Edge truyền options + Feedback hint. Không migration.
 
 **+ Avatar mở khoá theo XP ✅ vừa xong** (`feature/avatar-unlock`, PR đang mở): migration 0015 (profiles.avatar). avatars.ts thuần (catalog emoji + ngưỡng XP, +3 test CI). Picker ở Hồ sơ (khoá nếu thiếu XP) + hiện ở badge home. Dùng lại profiles_update_own. e2e avatar PASS. Decision Log D33.

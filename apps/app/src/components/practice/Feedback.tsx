@@ -19,6 +19,7 @@ const DIAGNOSIS_HINT: Record<NonNullable<AnswerRecord["diagnosis"]>, string> = {
   reciprocal: "Có thể em đảo tử số và mẫu số rồi đó.",
   rounding: "Gần lắm rồi — chú ý làm tròn nhé.",
   offByOne: "Suýt đúng — lệch đúng 1 đơn vị thôi, đếm/tính lại nhé!",
+  transposed: "Hình như em viết đảo thứ tự chữ số (vd 12 ↔ 21) — xem lại nhé!",
 };
 
 export function Feedback({ record, question, onNext, isLast }: FeedbackProps) {
