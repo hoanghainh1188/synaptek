@@ -77,6 +77,28 @@ export function useCreateCustomQuestion() {
   });
 }
 
+/** Sửa câu tự soạn (RLS author-owns). */
+export function useUpdateCustomQuestion() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (q: NewCustomQuestion & { id: string }) => {
+      if (!supabase) return;
+      const { error } = await supabase
+        .from("custom_questions")
+        .update({
+          type: q.type,
+          prompt: q.prompt,
+          choices: q.type === "mcq" ? (q.choices ?? []) : null,
+          correct: q.correct,
+          explanation: q.explanation ?? null,
+        })
+        .eq("id", q.id);
+      if (error) throw error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["custom-questions"] }),
+  });
+}
+
 /** Xoá câu tự soạn (RLS author-owns). */
 export function useDeleteCustomQuestion() {
   const qc = useQueryClient();

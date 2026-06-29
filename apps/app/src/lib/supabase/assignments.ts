@@ -143,6 +143,27 @@ export function useUpdateAssignment() {
   });
 }
 
+/** GV nhân bản bài tập (RLS owns_class) — tạo bản sao cùng lớp để tái dùng nhanh. */
+export function useCloneAssignment() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (a: AssignmentRow) => {
+      if (!supabase || !a.classId) return;
+      const { error } = await supabase.from("assignments").insert({
+        class_id: a.classId,
+        title: `${a.title} (sao chép)`,
+        question_ids: a.questionIds,
+        due_at: a.dueAt,
+        allow_late: a.allowLate,
+        max_attempts: a.maxAttempts,
+        time_limit_minutes: a.timeLimitMinutes,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["assignments"] }),
+  });
+}
+
 /** GV xoá bài tập (RLS owns_class; cascade xoá submissions của bài). */
 export function useDeleteAssignment() {
   const qc = useQueryClient();

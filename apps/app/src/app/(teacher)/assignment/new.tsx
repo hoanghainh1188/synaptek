@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
-import { GRADE_FILTERS, getQuestions, listTopics } from "@/lib/content";
+import { GRADE_FILTERS, getQuestionById, getQuestions, listTopics } from "@/lib/content";
 import {
   useAssignment,
   useCreateAssignment,
@@ -33,6 +33,8 @@ export default function NewAssignment() {
   const [maxAttempts, setMaxAttempts] = useState(""); // "" = không giới hạn
   const [timeLimit, setTimeLimit] = useState(""); // phút; "" = không có đồng hồ
   const [prefilled, setPrefilled] = useState(false);
+  const [query, setQuery] = useState(""); // tìm/lọc câu theo nội dung
+  const [preview, setPreview] = useState(false); // xem trước như HS
 
   // Prefill khi sửa (một lần, sau khi tải xong bài).
   useEffect(() => {
@@ -53,7 +55,31 @@ export default function NewAssignment() {
       ? String(params.classId)
       : undefined;
   const topics = listTopics(grade).filter((t) => getQuestions(t.id).length > 0);
-  const questions = useMemo(() => (topicId ? getQuestions(topicId) : []), [topicId]);
+  const q = query.trim().toLowerCase();
+  const questions = useMemo(() => {
+    const base = topicId ? getQuestions(topicId) : [];
+    return q ? base.filter((x) => x.prompt.toLowerCase().includes(q)) : base;
+  }, [topicId, q]);
+  const myCustom = useMemo(() => {
+    const base = customQs.data ?? [];
+    return q ? base.filter((x) => x.prompt.toLowerCase().includes(q)) : base;
+  }, [customQs.data, q]);
+
+  // Câu đã chọn (content + tự soạn) — cho xem trước như HS.
+  const selectedQuestions = useMemo(() => {
+    const out: { id: string; type: string; prompt: string; choices?: string[] }[] = [];
+    for (const id of selected) {
+      const c = getQuestionById(id);
+      if (c) {
+        out.push({ id: c.id, type: c.type, prompt: c.prompt, choices: c.choices });
+        continue;
+      }
+      const cu = (customQs.data ?? []).find((x) => x.id === id);
+      if (cu)
+        out.push({ id: cu.id, type: cu.type, prompt: cu.prompt, choices: cu.choices ?? undefined });
+    }
+    return out;
+  }, [selected, customQs.data]);
 
   const toggle = (id: string) =>
     setSelected((prev) => {
@@ -175,6 +201,54 @@ export default function NewAssignment() {
             <Text className="mt-2 text-[11px] text-muted">Để trống = không giới hạn.</Text>
           </View>
 
+          {/* Tìm câu + đếm đã chọn + xem trước */}
+          <View className="mt-5">
+            <TextInput
+              value={query}
+              onChangeText={setQuery}
+              placeholder="🔍 Tìm câu theo nội dung…"
+              placeholderTextColor="#a1a1aa"
+              accessibilityLabel="Tìm câu hỏi"
+              className="min-h-[44px] rounded-md border-2 border-line bg-paper px-3 text-base text-ink"
+            />
+            <View className="mt-2 flex-row items-center justify-between">
+              <Text className="text-sm font-bold text-brand">Đã chọn {selected.size} câu</Text>
+              <Pressable
+                accessibilityLabel="Xem trước"
+                disabled={selected.size === 0}
+                onPress={() => setPreview((v) => !v)}
+              >
+                <Text className={`font-bold ${selected.size > 0 ? "text-brand" : "text-muted"}`}>
+                  {preview ? "Đóng xem trước" : "Xem trước như HS"}
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+
+          {/* Xem trước như HS (read-only) */}
+          {preview && (
+            <View className="mt-3 gap-3 rounded-lg bg-paper p-3">
+              <Text className="text-xs font-extrabold uppercase tracking-wide text-muted">
+                Xem trước ({selectedQuestions.length} câu)
+              </Text>
+              {selectedQuestions.map((sq, i) => (
+                <View key={sq.id} className="rounded-lg bg-surface p-3 shadow-sm">
+                  <Text className="mb-1 text-xs font-bold text-muted">Câu {i + 1}</Text>
+                  <MathText value={sq.prompt} size={15} weight="600" />
+                  {sq.choices && sq.choices.length > 0 && (
+                    <View className="mt-2 gap-1">
+                      {sq.choices.map((c) => (
+                        <Text key={c} className="text-sm text-ink">
+                          ○ {c}
+                        </Text>
+                      ))}
+                    </View>
+                  )}
+                </View>
+              ))}
+            </View>
+          )}
+
           {/* Lớp nội dung */}
           <View className="mt-5 flex-row items-center gap-2">
             <Text className="mr-1 text-sm font-bold text-muted">Lớp</Text>
@@ -256,15 +330,15 @@ export default function NewAssignment() {
             {(customQs.data?.length ?? 0) === 0 && (
               <Text className="text-sm text-muted">Chưa có câu tự soạn nào.</Text>
             )}
-            {(customQs.data?.length ?? 0) > 0 && (
+            {(myCustom?.length ?? 0) > 0 && (
               <View className="gap-2">
-                {customQs.data?.map((q) => {
-                  const on = selected.has(q.id);
+                {myCustom.map((cq) => {
+                  const on = selected.has(cq.id);
                   return (
                     <Pressable
-                      key={q.id}
-                      accessibilityLabel={`custom:${q.prompt}`}
-                      onPress={() => toggle(q.id)}
+                      key={cq.id}
+                      accessibilityLabel={`custom:${cq.prompt}`}
+                      onPress={() => toggle(cq.id)}
                       className={`flex-row items-center gap-3 rounded-lg p-3 ${on ? "bg-brand/10" : "bg-surface shadow-sm"}`}
                     >
                       <View
@@ -273,7 +347,7 @@ export default function NewAssignment() {
                         {on && <Text className="text-xs font-extrabold text-white">✓</Text>}
                       </View>
                       <View className="flex-1">
-                        <MathText value={q.prompt} size={15} weight="600" />
+                        <MathText value={cq.prompt} size={15} weight="600" />
                       </View>
                     </Pressable>
                   );
