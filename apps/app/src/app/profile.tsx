@@ -17,6 +17,8 @@ import {
 import { registerForPush } from "@/lib/notifications";
 import { useSavePushToken, useSetPushEnabled } from "@/lib/supabase/push";
 import { BadgeGrid } from "@/components/gamification/BadgeGrid";
+import { AVATARS, avatarEmoji, isAvatarUnlocked } from "@/lib/avatars";
+import { useMyAvatar, useSetAvatar } from "@/lib/supabase/avatar";
 import { Mascot } from "@/components/Mascot";
 import { BackButton } from "@/components/BackButton";
 
@@ -30,6 +32,8 @@ export default function Profile() {
   const insets = useSafeAreaInsets();
   const { user, signOut } = useAuth();
   const gami = useGamification();
+  const myAvatar = useMyAvatar();
+  const setAvatar = useSetAvatar();
   const catalog = getBadges();
 
   const role = useMyRole();
@@ -99,6 +103,38 @@ export default function Profile() {
           <StatCard value={String(state?.totalXp ?? 0)} label="XP" accent="#4f46e5" />
           <StatCard value={`${state?.currentStreak ?? 0}🔥`} label="Streak" accent="#ea580c" />
           <StatCard value={String(state?.longestStreak ?? 0)} label="Kỷ lục" accent="#16a34a" />
+        </View>
+      )}
+
+      {/* Avatar mở khoá theo XP */}
+      {user && (
+        <View className="mt-6">
+          <View className="flex-row items-center gap-2">
+            <Text className="text-3xl">{avatarEmoji(myAvatar.data)}</Text>
+            <Text className="font-display text-xl font-bold text-ink">Avatar của em</Text>
+          </View>
+          <View className="mt-3 flex-row flex-wrap gap-2">
+            {AVATARS.map((a) => {
+              const unlocked = isAvatarUnlocked(a, state?.totalXp ?? 0);
+              const selected = (myAvatar.data ?? "fox") === a.key;
+              return (
+                <Pressable
+                  key={a.key}
+                  accessibilityLabel={
+                    unlocked ? `Chọn avatar ${a.label}` : `Avatar ${a.label} đã khoá`
+                  }
+                  disabled={!unlocked || setAvatar.isPending}
+                  onPress={() => setAvatar.mutate(a.key)}
+                  className={`h-16 w-16 items-center justify-center rounded-xl border-2 ${
+                    selected ? "border-brand bg-brand/10" : "border-line bg-surface"
+                  } ${unlocked ? "" : "opacity-50"}`}
+                >
+                  <Text className="text-2xl">{unlocked ? a.emoji : "🔒"}</Text>
+                  {!unlocked && <Text className="text-[10px] font-bold text-muted">{a.xp} XP</Text>}
+                </Pressable>
+              );
+            })}
+          </View>
         </View>
       )}
 
