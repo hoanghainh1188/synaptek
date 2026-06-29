@@ -21,10 +21,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Node (from .nvmrc)
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version-file: .nvmrc
 
@@ -65,7 +65,7 @@ jobs:
       - name: Build web (Expo export)
         run: npm run build:web --workspace @synaptek/app
 
-      # E2E web — chỉ luồng KHÁCH (không cần Supabase). auth-progress cần Supabase → bỏ.
+      # E2E web — chỉ luồng KHÁCH (không cần Supabase). Luồng đăng nhập ở job e2e-auth.
       - name: Install Playwright (chromium)
         run: npx playwright install --with-deps chromium
         working-directory: apps/app
@@ -80,7 +80,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@v1
@@ -108,10 +108,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Node (from .nvmrc)
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version-file: .nvmrc
 
@@ -157,7 +157,8 @@ jobs:
             tests/e2e/student-class-view.spec.ts \
             tests/e2e/teacher-report.spec.ts \
             tests/e2e/review-mistakes.spec.ts \
-            tests/e2e/polish-sprint.spec.ts
+            tests/e2e/polish-sprint.spec.ts \
+            tests/e2e/auth-progress.spec.ts
         working-directory: apps/app
 
       - name: Stop Supabase
