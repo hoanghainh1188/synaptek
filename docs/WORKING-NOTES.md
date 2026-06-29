@@ -4,6 +4,8 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ Tùy chọn chấm câu tự soạn ✅ vừa xong** (`feature/custom-options`, PR 3/5): câu tự soạn lưu options (jsonb, migration 0018) → numeric: làm tròn N chữ số + dung sai; fill-blank: KHÔNG theo thứ tự. Authoring UI + Edge truyền options vào engine (engine đã hỗ trợ sẵn). e2e custom-options (fill-blank unordered→100%) PASS.
+
 **+ Multi-select MCQ ✅ vừa xong** (`feature/multi-select`, PR 2/5): loại câu "Chọn nhiều" (chọn nhiều đáp án đúng). Engine type "multi" (so TẬP, +4 test); curriculum QUESTION_TYPES + CustomType + migration 0017 (CHECK). Authoring (đánh dấu nhiều đúng, correct=JSON) + AnswerInput (checkbox) + Edge (parse JSON multi). e2e multi-select (chấm 100%) PASS.
 
 **+ Nhãn MÔN cho câu tự soạn ✅ vừa xong** (`feature/subject-tag`, PR đang mở — PR 1/5 nhóm authoring+môn): migration 0016 (custom_questions.subject). subjects.ts thuần (Toán/Tiếng Việt/Tiếng Anh/Khoa học, +2 test CI). questions.tsx: picker môn + nhãn ở list. Mức nhẹ — KHÔNG đụng content Toán (D6). e2e authoring-advanced +assert PASS.
