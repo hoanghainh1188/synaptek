@@ -1,6 +1,6 @@
 // Reducer phiên luyện tập — THUẦN (không React/DOM), test bằng node strip-types.
 // Dùng lại grade() của @synaptek/grading-engine (chấm client, low-stakes — D4).
-import { grade, type FeedbackCode } from "@synaptek/grading-engine";
+import { grade, type Diagnosis, type FeedbackCode } from "@synaptek/grading-engine";
 import type { Question } from "@synaptek/curriculum";
 
 export type SessionStatus = "answering" | "feedback" | "finished";
@@ -11,6 +11,7 @@ export interface AnswerRecord {
   isCorrect: boolean;
   score: number;
   feedbackCode: FeedbackCode;
+  diagnosis?: Diagnosis;
 }
 
 export interface SessionState {
@@ -84,6 +85,7 @@ export function sessionReducer(state: SessionState, action: SessionAction): Sess
         isCorrect: r.isCorrect,
         score: r.score,
         feedbackCode: r.feedbackCode,
+        ...(r.diagnosis ? { diagnosis: r.diagnosis } : {}),
       };
       return { ...state, hint: undefined, records: [...state.records, record], status: "feedback" };
     }

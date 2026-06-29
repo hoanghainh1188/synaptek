@@ -4,6 +4,11 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ Phản hồi lỗi thông minh ✅ vừa xong** trên `feature/error-diagnosis` (PR đang mở): engine thêm
+`diagnosis?` (sign/magnitude10/reciprocal/rounding) — **phụ trợ, KHÔNG đổi isCorrect/score** (không
+regression). Feedback hiện gợi ý "vì sao sai". Engine **26 test** (+7 chẩn đoán); session record mang
+diagnosis; `_shared` đồng bộ; deno 5/5. Logic moat unit-test đủ; UI mapping typed.
+
 **+ Ôn lại câu sai ✅ vừa xong** trên `feature/review-mistakes` (PR đang mở): HS làm lại câu mà lần gần nhất
 còn sai → làm đúng thì tự loại (đóng vòng "khắc phục điểm yếu"). Pure `lib/mistakes.ts` (`wrongQuestionIds`,
 +6 unit test vào CI) · màn `app/review-mistakes.tsx` (tái dùng session reducer + components + lưu attempt) ·

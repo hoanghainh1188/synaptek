@@ -12,6 +12,7 @@ mindmap
       ✅ mcq · true-false · numeric VN
       ✅ fraction · expression · fill-blank
       ✅ Client tức thì + Server ẩn đáp án
+      ✅ Chẩn đoán lỗi (sai dấu / lệch 10 / làm tròn / đảo phân số)
     🎒 Học sinh
       M1 Luyện tập ✅
         ✅ Chủ đề lớp 4 + ôn lớp 1-3
@@ -76,6 +77,7 @@ flowchart LR
   SHIPPED --> A8["Authoring: GV/PH soạn câu tự tạo (chấm server-side)"]
   SHIPPED --> A9["Nội dung lớp 1-5 (160 câu, 16 skill)"]
   SHIPPED --> A10["Ôn lại câu sai (đóng vòng khắc phục điểm yếu)"]
+  SHIPPED --> A11["Phản hồi lỗi thông minh (vì sao sai)"]
   WIP --> B5["Verify iOS/Android"]
 
   SHIPPED --> A7["M4 Phụ huynh: liên kết PH-con + theo dõi read-only (đủ 3 vai trò) + giao bài tại nhà"]

@@ -12,6 +12,14 @@ interface FeedbackProps {
   isLast: boolean;
 }
 
+// Gợi ý theo chẩn đoán lỗi (engine) — giúp HS hiểu *vì sao* sai, không phán xét.
+const DIAGNOSIS_HINT: Record<NonNullable<AnswerRecord["diagnosis"]>, string> = {
+  sign: "Hình như em nhầm dấu (âm/dương) — kiểm tra lại nhé!",
+  magnitude10: "Suýt đúng! Chú ý vị trí dấu phẩy (nhân/chia nhầm 10).",
+  reciprocal: "Có thể em đảo tử số và mẫu số rồi đó.",
+  rounding: "Gần lắm rồi — chú ý làm tròn nhé.",
+};
+
 export function Feedback({ record, question, onNext, isLast }: FeedbackProps) {
   const ok = record.isCorrect;
   const correctText = Array.isArray(question.correct)
@@ -37,7 +45,11 @@ export function Feedback({ record, question, onNext, isLast }: FeedbackProps) {
               <MathText value={correctText} size={15} weight="700" color="#18181b" />
             </View>
           ) : (
-            <Text className="text-sm font-semibold text-muted">Thử lại nhé — em làm được mà.</Text>
+            <Text className="text-sm font-semibold text-muted">
+              {record.diagnosis
+                ? DIAGNOSIS_HINT[record.diagnosis]
+                : "Thử lại nhé — em làm được mà."}
+            </Text>
           )}
         </View>
       </View>
