@@ -17,7 +17,14 @@ hoàn thiện (GV sửa/xoá bài · đổi vai trò · jwt 1 tuần) + **deploy
 thập phân concept/addsub/muldiv · tỉ số phần trăm · diện tích tam giác-hình thang · thể tích HHCN) + 60 câu
 (mỗi skill 10). Tổng **160 câu, 16 skill, lớp 1–5** — phủ trọn Tiểu học. Số thập phân dùng phẩy VN (D8),
 smoke-test 160/160 tự-chấm-đúng. GRADE_FILTERS thêm 5. → **M4 ĐÓNG** (đủ 3 vai trò + phủ nội dung).
-Tiếp theo: **M5 — Native** (EAS + push thật + cron + offline).
+
+**M5.0 — chuẩn bị native ✅** (PR #26, `chore/m5-prep`): `app.json` (bundleId/package `com.synaptek.app`
+
+- plugin `expo-notifications` + supportsTablet) · `eas.json` (dev/preview/production) · `docs/M5-NATIVE.md`
+  (hướng dẫn EAS). **ĐIỂM TIẾP TỤC M5.1**: cần **bạn** tạo EAS account → `eas login` → `eas init` (ghi
+  `extra.eas.projectId` vào app.json) → `eas build -p android --profile preview` (APK test). Tôi headless
+  KHÔNG đăng nhập EAS được. Sau đó: push thật (cron review-scheduler đã có ở `supabase/README.md` + projectId),
+  offline (TanStack persist — làm khi có device kiểm), iOS (Apple $99/năm), nộp store. Chi tiết: `docs/M5-NATIVE.md`.
 
 **M4 chi tiết:** migration `0005` (`parent_links` + `profiles.parent_link_code` + helper `is_parent_of`/
 `is_linked_parent` + RPC `link_parent_by_code`); RLS đọc chéo PH→con **chỉ SELECT** (read-only) — **RLS test
