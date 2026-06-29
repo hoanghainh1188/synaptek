@@ -96,6 +96,37 @@ export interface NewAssignment {
   allowLate?: boolean;
   maxAttempts?: number | null;
   timeLimitMinutes?: number | null;
+  /** Giao cho HS cụ thể (subset của lớp). undefined/[] = cả lớp. */
+  targetStudentIds?: string[];
+}
+
+/** Ghi lại danh sách HS được nhắm cho một bài (xoá cũ → chèn mới). [] = cả lớp. */
+async function replaceTargets(assignmentId: string, studentIds: string[] | undefined) {
+  if (!supabase || studentIds === undefined) return;
+  await supabase.from("assignment_targets").delete().eq("assignment_id", assignmentId);
+  if (studentIds.length > 0) {
+    const rows = studentIds.map((sid) => ({ assignment_id: assignmentId, student_id: sid }));
+    const { error } = await supabase.from("assignment_targets").insert(rows);
+    if (error) throw error;
+  }
+}
+
+/** HS được nhắm của một bài (cho composer prefill + hiển thị "giao riêng"). */
+export function useAssignmentTargets(assignmentId: string) {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: ["assignment-targets", assignmentId, user?.id ?? "guest"],
+    enabled: Boolean(supabase && user && assignmentId),
+    queryFn: async (): Promise<string[]> => {
+      if (!supabase || !user) return [];
+      const { data, error } = await supabase
+        .from("assignment_targets")
+        .select("student_id")
+        .eq("assignment_id", assignmentId);
+      if (error) throw error;
+      return (data ?? []).map((r) => r.student_id as string);
+    },
+  });
 }
 
 /** GV tạo bài tập (RLS owns_class) + cấu hình giới hạn nộp (D25). */
@@ -105,16 +136,21 @@ export function useCreateAssignment() {
   return useMutation({
     mutationFn: async (a: NewAssignment) => {
       if (!supabase || !user) return;
-      const { error } = await supabase.from("assignments").insert({
-        class_id: a.classId,
-        title: a.title,
-        question_ids: a.questionIds,
-        due_at: a.dueAt ?? null,
-        allow_late: a.allowLate ?? true,
-        max_attempts: a.maxAttempts ?? null,
-        time_limit_minutes: a.timeLimitMinutes ?? null,
-      });
+      const { data, error } = await supabase
+        .from("assignments")
+        .insert({
+          class_id: a.classId,
+          title: a.title,
+          question_ids: a.questionIds,
+          due_at: a.dueAt ?? null,
+          allow_late: a.allowLate ?? true,
+          max_attempts: a.maxAttempts ?? null,
+          time_limit_minutes: a.timeLimitMinutes ?? null,
+        })
+        .select("id")
+        .single();
       if (error) throw error;
+      await replaceTargets(data.id as string, a.targetStudentIds);
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["assignments"] }),
   });
@@ -138,6 +174,7 @@ export function useUpdateAssignment() {
         })
         .eq("id", a.id);
       if (error) throw error;
+      await replaceTargets(a.id, a.targetStudentIds);
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["assignments"] }),
   });

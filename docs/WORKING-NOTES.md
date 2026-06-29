@@ -4,6 +4,8 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ Giao cho HS cụ thể ✅ vừa xong** (`feature/assignment-targets`, PR đang mở): migration 0012 (bảng assignment_targets + is_targeted + RLS assignments_select). Không target=cả lớp; có target=chỉ HS đó thấy+nộp (Edge enforce). Composer: Cả lớp/Một số HS + toggle roster. rls-0012 + e2e assignment-targets PASS. Decision Log D30.
+
 **+ Ảnh trong câu tự soạn ✅ vừa xong** (`feature/question-images`, PR đang mở): migration 0011 (cột image_url + bucket public question-images + RLS ghi theo uid + RPC trả ảnh). Upload web (DOM input)→Storage→public URL; map vào Question.image (QuestionCard render sẵn). LƯU Ý: dùng insert KHÔNG upsert (upsert→ON CONFLICT cần UPDATE policy→42501). e2e question-image PASS (+CI). Decision Log D29.
 
 **+ Đăng xuất ✅ + Soạn thảo nâng cao ✅ vừa xong** (`feature/authoring-advanced`, PR đang mở): composer thêm TÌM/lọc câu + đếm "đã chọn N" + XEM TRƯỚC như HS; ngân hàng câu thêm SỬA câu tự soạn (useUpdateCustomQuestion); màn lớp thêm NHÂN BẢN bài (useCloneAssignment). e2e authoring-advanced + logout PASS (vào CI e2e-auth). Không migration.
