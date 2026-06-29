@@ -4,6 +4,8 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ Avatar mở khoá theo XP ✅ vừa xong** (`feature/avatar-unlock`, PR đang mở): migration 0015 (profiles.avatar). avatars.ts thuần (catalog emoji + ngưỡng XP, +3 test CI). Picker ở Hồ sơ (khoá nếu thiếu XP) + hiện ở badge home. Dùng lại profiles_update_own. e2e avatar PASS. Decision Log D33.
+
 **+ Màn kết quả thống nhất ✅ vừa xong** (`feature/session-result-unify`, PR đang mở): SessionRunner (luyện nhanh + ôn lại câu sai) dùng chung component SessionResult (donut % đúng + thống kê + câu cần ôn + nút Luyện lại/Về trang chủ) thay màn kết thúc đơn sơ. e2e review-mistakes chạm màn kết quả mới PASS. Không migration.
 
 **+ Bảng xếp hạng lớp ✅ vừa xong** (`feature/class-leaderboard`, PR đang mở): RPC class_leaderboard (SECURITY DEFINER + gate is_member) — HS xem top XP bạn cùng lớp ở màn lớp tham gia, đánh dấu "(em)". gamification_state vẫn riêng tư. rls-0014 + e2e PASS. Decision Log D32.

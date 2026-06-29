@@ -18,6 +18,8 @@ import {
 import { buildMasteryMap, toSkillAttempts } from "@/lib/mastery";
 import { wrongQuestionIds } from "@/lib/mistakes";
 import { dailyProgress } from "@/lib/daily-goal";
+import { avatarEmoji } from "@/lib/avatars";
+import { useMyAvatar } from "@/lib/supabase/avatar";
 import { buildPath, buildSkillNodes } from "@/lib/path";
 import { strandColorFromId, strandColors, type StrandKey } from "@/theme/tokens";
 import { Mascot } from "@/components/Mascot";
@@ -49,6 +51,7 @@ export default function Home() {
   const attemptsQ = useAttempts();
   const masteryQ = useSkillMastery();
   const gamiQ = useGamification();
+  const avatarQ = useMyAvatar();
   const role = useMyRole();
   const isTeacher = role.data === "teacher";
   const isParent = role.data === "parent";
@@ -107,9 +110,7 @@ export default function Home() {
             accessibilityLabel="Hồ sơ"
             className="h-12 w-12 items-center justify-center rounded-full bg-brand"
           >
-            <Text className="font-display text-lg font-extrabold text-white">
-              {(user.email ?? "?").charAt(0).toUpperCase()}
-            </Text>
+            <Text className="text-2xl">{avatarEmoji(avatarQ.data)}</Text>
           </Pressable>
         ) : (
           <Pressable
