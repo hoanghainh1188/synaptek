@@ -58,7 +58,7 @@ export interface Question {
   image?: QuestionImage;
   choices?: string[];
   correct: string | string[];
-  options?: { tolerance?: number };
+  options?: { tolerance?: number; unordered?: boolean };
   explanation: string;
 }
 

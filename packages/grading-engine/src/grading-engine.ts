@@ -25,11 +25,13 @@ export type FeedbackCode = "correct" | "incorrect" | "empty" | "partial" | "form
  * `sign` = sai dấu (âm/dương) · `magnitude10` = lệch ×10/÷10 (sai vị trí dấu phẩy) ·
  * `reciprocal` = đảo tử/mẫu (phân số) · `rounding` = gần đúng (chú ý làm tròn).
  */
-export type Diagnosis = "sign" | "magnitude10" | "reciprocal" | "rounding";
+export type Diagnosis = "sign" | "magnitude10" | "reciprocal" | "rounding" | "offByOne";
 
 export interface GradeOptions {
   /** Dung sai tuyệt đối khi so sánh số/phân số/biểu thức. Mặc định EPS. */
   tolerance?: number;
+  /** fill-blank: chấm như TẬP không quan tâm thứ tự (khớp đa tập). Mặc định false (theo vị trí). */
+  unordered?: boolean;
 }
 
 export interface GradeInput {
@@ -84,6 +86,7 @@ function numericDiagnosis(cn: number, an: number): Diagnosis | undefined {
   for (const f of [10, 100, 0.1, 0.01]) {
     if (Math.abs(an - cn * f) < EPS * Math.max(1, Math.abs(cn * f))) return "magnitude10";
   }
+  if (Math.abs(Math.abs(an - cn) - 1) < EPS) return "offByOne"; // lệch đúng 1 đơn vị
   // gần đúng: lệch ≤ 10% giá trị đúng (nhưng khác hẳn) → nhắc làm tròn
   const denom = Math.max(Math.abs(cn), 1);
   if (Math.abs(an - cn) / denom <= 0.1) return "rounding";
@@ -111,23 +114,38 @@ export function normalizeNumberString(raw: string): string {
 }
 
 export function parseNumber(raw: string): number | null {
-  const s = normalizeNumberString(raw);
+  let s = normalizeNumberString(raw);
   if (s === "") return null;
+  let pct = false;
+  if (s.endsWith("%")) {
+    pct = true;
+    s = s.slice(0, -1); // phần trăm: "50%" → 50/100
+  }
   const n = Number(s);
-  return Number.isFinite(n) ? n : null;
+  if (!Number.isFinite(n)) return null;
+  return pct ? n / 100 : n;
 }
 
-/** Giá trị số của một phân số "a/b", hoặc số thập phân. null nếu sai định dạng / chia 0. */
+/** Giá trị số của phân số "a/b", HỖN SỐ "a b/c", phần trăm, hoặc số thập phân. null nếu sai/chia 0. */
 export function fractionValue(raw: string): number | null {
-  const s = raw.trim().replace(/\s+/g, "");
+  const s = raw.trim().replace(/\s+/g, " ").trim();
   if (s === "") return null;
-  const m = s.match(/^(-?\d+)\s*\/\s*(-?\d+)$/);
+  // Hỗn số "a b/c" (vd "1 1/2" = 1 + 1/2; "-2 3/4" = -(2 + 3/4)).
+  const mm = s.match(/^(-?)(\d+)\s+(\d+)\s*\/\s*(\d+)$/);
+  if (mm) {
+    const den = Number(mm[4]);
+    if (den === 0) return null;
+    const val = Number(mm[2]) + Number(mm[3]) / den;
+    return mm[1] === "-" ? -val : val;
+  }
+  const noSpace = s.replace(/\s+/g, "");
+  const m = noSpace.match(/^(-?\d+)\/(-?\d+)$/);
   if (m) {
     const d = Number(m[2]);
     if (d === 0) return null;
     return Number(m[1]) / d;
   }
-  return parseNumber(s);
+  return parseNumber(noSpace);
 }
 
 // ── Biểu thức: tokenize → RPN (shunting-yard) → eval, so tương đương qua lấy mẫu ──
@@ -315,6 +333,14 @@ function numericEqual(a: number, b: number, tol: number): boolean {
   return Math.abs(a - b) <= tol;
 }
 
+/** Khớp một chỗ trống: tương đương số (kể cả phân số/hỗn số/%) trước, fallback so chuỗi hoa/thường. */
+function blankMatch(correct: string, answer: string, tol: number): boolean {
+  const cn = fractionValue(correct);
+  const an = fractionValue(answer);
+  if (cn !== null && an !== null) return numericEqual(cn, an, tol);
+  return correct.trim().toLowerCase() === answer.trim().toLowerCase();
+}
+
 // ── API chính ─────────────────────────────────────────────────────────────────
 
 export function grade(input: GradeInput): GradeResult {
@@ -370,16 +396,24 @@ export function grade(input: GradeInput): GradeResult {
       const aArr = Array.isArray(answer) ? answer : [answer];
       const n = cArr.length;
       let right = 0;
-      for (let i = 0; i < n; i++) {
-        const a = (aArr[i] ?? "").trim();
-        if (a === "") continue;
-        // Mỗi chỗ trống chấm như numeric tương đương, fallback so chuỗi không phân biệt hoa/thường.
-        const cn = parseNumber(cArr[i]);
-        const an = parseNumber(a);
-        if (cn !== null && an !== null) {
-          if (numericEqual(cn, an, tol)) right++;
-        } else if (cArr[i].trim().toLowerCase() === a.toLowerCase()) {
-          right++;
+      if (input.options?.unordered) {
+        // Tập không thứ tự: mỗi đáp án HS khớp 1 đáp án đúng CHƯA dùng (khớp đa tập).
+        const used = new Array(n).fill(false);
+        for (const aRaw of aArr) {
+          const a = (aRaw ?? "").trim();
+          if (a === "") continue;
+          for (let i = 0; i < n; i++) {
+            if (!used[i] && blankMatch(cArr[i], a, tol)) {
+              used[i] = true;
+              right++;
+              break;
+            }
+          }
+        }
+      } else {
+        for (let i = 0; i < n; i++) {
+          const a = (aArr[i] ?? "").trim();
+          if (a !== "" && blankMatch(cArr[i], a, tol)) right++;
         }
       }
       const score = n === 0 ? 0 : right / n;

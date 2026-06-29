@@ -48,7 +48,10 @@ export function gradeSubmission(
       type: key.type,
       correct: key.correct,
       answer: answers[qid] ?? "",
-      options: key.tolerance !== undefined ? { tolerance: key.tolerance } : undefined,
+      options:
+        key.tolerance !== undefined || key.unordered
+          ? { tolerance: key.tolerance, unordered: key.unordered }
+          : undefined,
     };
     const r = grade(input);
     perQuestion[qid] = { isCorrect: r.isCorrect, feedbackCode: r.feedbackCode };

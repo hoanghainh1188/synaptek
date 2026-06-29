@@ -175,4 +175,63 @@ test("fraction tương đương vẫn đúng → không có diagnosis", () => {
   assert.equal(r.diagnosis, undefined);
 });
 
+// ── Hỗn số (mixed numbers) ───────────────────────────────────────────────────
+test("Hỗn số: '1 1/2' = 3/2", () => {
+  const r = grade({ type: "fraction", correct: "3/2", answer: "1 1/2" });
+  assert.equal(r.isCorrect, true);
+});
+
+test("Hỗn số: '2 3/4' = 11/4 (và = 2,75)", () => {
+  assert.equal(grade({ type: "fraction", correct: "11/4", answer: "2 3/4" }).isCorrect, true);
+  assert.equal(grade({ type: "fraction", correct: "2,75", answer: "2 3/4" }).isCorrect, true);
+});
+
+test("Hỗn số âm: '-1 1/2' = -3/2", () => {
+  assert.equal(grade({ type: "fraction", correct: "-3/2", answer: "-1 1/2" }).isCorrect, true);
+});
+
+// ── Phần trăm ────────────────────────────────────────────────────────────────
+test("Phần trăm: numeric '50%' = 0,5", () => {
+  assert.equal(grade({ type: "numeric", correct: "0,5", answer: "50%" }).isCorrect, true);
+});
+
+test("Phần trăm: fraction '25%' = 1/4", () => {
+  assert.equal(grade({ type: "fraction", correct: "1/4", answer: "25%" }).isCorrect, true);
+});
+
+// ── Chẩn đoán lỗi: lệch 1 đơn vị ─────────────────────────────────────────────
+test("offByOne: đúng 10, làm 11 → diagnosis offByOne", () => {
+  const r = grade({ type: "numeric", correct: "10", answer: "11" });
+  assert.equal(r.isCorrect, false);
+  assert.equal(r.diagnosis, "offByOne");
+});
+
+// ── Tập đáp án không thứ tự (fill-blank unordered) ───────────────────────────
+test("Unordered: ['2','4','6'] khớp ['6','2','4'] khi unordered", () => {
+  const r = grade({
+    type: "fill-blank",
+    correct: ["2", "4", "6"],
+    answer: ["6", "2", "4"],
+    options: { unordered: true },
+  });
+  assert.equal(r.isCorrect, true);
+  assert.equal(r.score, 1);
+});
+
+test("Unordered tắt (mặc định): sai vị trí → KHÔNG trọn", () => {
+  const r = grade({ type: "fill-blank", correct: ["2", "4", "6"], answer: ["6", "2", "4"] });
+  assert.equal(r.isCorrect, false); // chấm theo vị trí
+});
+
+test("Unordered: thiếu 1 phần tử → điểm theo tỉ lệ", () => {
+  const r = grade({
+    type: "fill-blank",
+    correct: ["2", "4", "6"],
+    answer: ["6", "2", "9"],
+    options: { unordered: true },
+  });
+  assert.equal(r.isCorrect, false);
+  assert.ok(Math.abs(r.score - 2 / 3) < 1e-9); // khớp 2/3
+});
+
 console.log(`\n${passed} test(s) passed.`);
