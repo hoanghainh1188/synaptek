@@ -23,6 +23,7 @@ mindmap
         ✅ Heatmap điểm yếu
         ✅ Gamification XP streak huy hiệu
         ✅ Ôn ngắt quãng + nhắc in-app
+        ✅ Ôn lại câu sai (sổ tay lỗi)
         ⏳ Push nhắc chờ M5
     🧑‍🏫 Giáo viên M3 ✅
       ✅ Lớp + mã mời + roster
@@ -74,6 +75,7 @@ flowchart LR
   WIP --> B3["GV sửa/xóa bài · đổi vai trò"]
   SHIPPED --> A8["Authoring: GV/PH soạn câu tự tạo (chấm server-side)"]
   SHIPPED --> A9["Nội dung lớp 1-5 (160 câu, 16 skill)"]
+  SHIPPED --> A10["Ôn lại câu sai (đóng vòng khắc phục điểm yếu)"]
   WIP --> B5["Verify iOS/Android"]
 
   SHIPPED --> A7["M4 Phụ huynh: liên kết PH-con + theo dõi read-only (đủ 3 vai trò) + giao bài tại nhà"]

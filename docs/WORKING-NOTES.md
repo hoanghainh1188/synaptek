@@ -4,6 +4,11 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ Ôn lại câu sai ✅ vừa xong** trên `feature/review-mistakes` (PR đang mở): HS làm lại câu mà lần gần nhất
+còn sai → làm đúng thì tự loại (đóng vòng "khắc phục điểm yếu"). Pure `lib/mistakes.ts` (`wrongQuestionIds`,
++6 unit test vào CI) · màn `app/review-mistakes.tsx` (tái dùng session reducer + components + lưu attempt) ·
+lối vào trang chủ HS (hiện khi `wrongCount>0`). e2e `review-mistakes` (sai→ôn→đúng→tự loại) PASS. npm test 153.
+
 **Mốc:** M0–M3 ✅ đóng + giới hạn nộp bài (D25) + **100 câu nội dung** (lớp 1–4, mỗi skill ≥10) + sprint
 hoàn thiện (GV sửa/xoá bài · đổi vai trò · jwt 1 tuần) + **deploy hosted AUTO** (web Vercel + backend Action).
 **M4 — Phụ huynh ✅ đóng** (PR #22) + **Giao bài tại nhà ✅** (PR #23, D27, migration `0006`).

@@ -16,6 +16,7 @@ import {
   topicOfSkill,
 } from "@/lib/content";
 import { buildMasteryMap, toSkillAttempts } from "@/lib/mastery";
+import { wrongQuestionIds } from "@/lib/mistakes";
 import { buildPath, buildSkillNodes } from "@/lib/path";
 import { strandColorFromId, strandColors, type StrandKey } from "@/theme/tokens";
 import { Mascot } from "@/components/Mascot";
@@ -68,6 +69,7 @@ export default function Home() {
   }, [mastery, dueAt]);
 
   const hasData = (attemptsQ.data?.length ?? 0) > 0;
+  const wrongCount = useMemo(() => wrongQuestionIds(attemptsQ.data ?? []).length, [attemptsQ.data]);
   const recos = [...path.due, ...path.next];
 
   const openSkill = (skillId: string) => {
@@ -212,6 +214,24 @@ export default function Home() {
             <Text className="mt-0.5 font-display text-sm font-bold text-ink">Vào lớp bằng mã</Text>
           </Pressable>
         </View>
+      )}
+
+      {/* Ôn lại câu sai (HS đăng nhập, khi còn câu sai) — đóng vòng "khắc phục điểm yếu" */}
+      {isStudent && user && wrongCount > 0 && (
+        <Pressable
+          accessibilityLabel={`Ôn lại câu sai: ${wrongCount} câu`}
+          onPress={() => router.push("/review-mistakes")}
+          className="mt-4 flex-row items-center gap-3 rounded-lg bg-no/10 px-4 py-3"
+        >
+          <Text className="text-2xl">🔁</Text>
+          <View className="flex-1">
+            <Text className="font-display font-bold text-ink">Ôn lại câu sai</Text>
+            <Text className="text-xs font-semibold text-muted">
+              {wrongCount} câu cần ôn — làm lại để khắc phục điểm yếu
+            </Text>
+          </View>
+          <Text className="text-2xl text-no">›</Text>
+        </Pressable>
       )}
 
       {/* Banner động viên — HS (bỏ qua cho GV) */}
