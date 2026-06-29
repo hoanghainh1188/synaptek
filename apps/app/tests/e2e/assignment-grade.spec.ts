@@ -51,6 +51,8 @@ test("GV giao bài → HS nộp → chấm chính thức hiện điểm", async 
   await hsPage.getByLabel("1/2").click(); // đáp án đúng
   await hsPage.getByLabel("Nộp bài").click();
   await expect(hsPage.getByText(/Điểm: 100%/)).toBeVisible({ timeout: 20_000 });
+  // Sau khi nộp: hiện lời giải câu content (đáp án + giải thích)
+  await expect(hsPage.getByText("Lời giải").first()).toBeVisible({ timeout: 15_000 });
 
   await gv.close();
   await hs.close();
