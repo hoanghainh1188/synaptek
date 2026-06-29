@@ -12,11 +12,12 @@ export interface AssignmentRow {
   allowLate: boolean;
   maxAttempts: number | null;
   timeLimitMinutes: number | null;
+  poolPickCount: number | null; // null = giao cả pool; n = mỗi HS nhận n câu ngẫu nhiên
   createdAt: string;
 }
 
 const SELECT_COLS =
-  "id, class_id, title, question_ids, due_at, allow_late, max_attempts, time_limit_minutes, created_at";
+  "id, class_id, title, question_ids, due_at, allow_late, max_attempts, time_limit_minutes, pool_pick_count, created_at";
 
 function mapRow(r: Record<string, unknown>): AssignmentRow {
   return {
@@ -28,6 +29,7 @@ function mapRow(r: Record<string, unknown>): AssignmentRow {
     allowLate: (r.allow_late as boolean) ?? true,
     maxAttempts: (r.max_attempts as number | null) ?? null,
     timeLimitMinutes: (r.time_limit_minutes as number | null) ?? null,
+    poolPickCount: (r.pool_pick_count as number | null) ?? null,
     createdAt: r.created_at as string,
   };
 }
@@ -98,6 +100,8 @@ export interface NewAssignment {
   timeLimitMinutes?: number | null;
   /** Giao cho HS cụ thể (subset của lớp). undefined/[] = cả lớp. */
   targetStudentIds?: string[];
+  /** Ngẫu nhiên hoá: số câu mỗi HS nhận từ pool. null = giao cả pool. */
+  poolPickCount?: number | null;
 }
 
 /** Ghi lại danh sách HS được nhắm cho một bài (xoá cũ → chèn mới). [] = cả lớp. */
@@ -146,6 +150,7 @@ export function useCreateAssignment() {
           allow_late: a.allowLate ?? true,
           max_attempts: a.maxAttempts ?? null,
           time_limit_minutes: a.timeLimitMinutes ?? null,
+          pool_pick_count: a.poolPickCount ?? null,
         })
         .select("id")
         .single();
@@ -171,6 +176,7 @@ export function useUpdateAssignment() {
           allow_late: a.allowLate ?? true,
           max_attempts: a.maxAttempts ?? null,
           time_limit_minutes: a.timeLimitMinutes ?? null,
+          pool_pick_count: a.poolPickCount ?? null,
         })
         .eq("id", a.id);
       if (error) throw error;

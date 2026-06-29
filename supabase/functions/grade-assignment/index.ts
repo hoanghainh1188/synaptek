@@ -3,7 +3,7 @@
 // rời server: phản hồi chỉ gồm isCorrect/feedbackCode/score, KHÔNG kèm `correct`. auto_score do server ghi.
 import { grade, type GradeInput } from "@synaptek/grading-engine";
 import { createClient } from "@supabase/supabase-js";
-import { checkSubmitAllowed } from "@synaptek/classroom";
+import { checkSubmitAllowed, pickForStudent } from "@synaptek/classroom";
 import { ANSWER_KEYS, type AnswerKey } from "../_shared/answer-keys.ts";
 
 const CORS = {
@@ -90,7 +90,7 @@ export async function handler(req: Request): Promise<Response> {
   const { data: asg, error: asgErr } = await admin
     .from("assignments")
     .select(
-      "class_id, assignee_student_id, question_ids, due_at, allow_late, max_attempts, time_limit_minutes",
+      "class_id, assignee_student_id, question_ids, due_at, allow_late, max_attempts, time_limit_minutes, pool_pick_count",
     )
     .eq("id", assignmentId)
     .maybeSingle();
@@ -166,7 +166,10 @@ export async function handler(req: Request): Promise<Response> {
     }
   }
 
-  const { autoScore, perQuestion } = gradeSubmission(qids, answers, mergedKeys);
+  // Ngẫu nhiên hoá pool (D31): chấm ĐÚNG bộ con HS nhận (cùng pickForStudent với client).
+  const poolPick = asg.pool_pick_count as number | null;
+  const gradeIds = poolPick ? pickForStudent(qids, poolPick, `${assignmentId}|${studentId}`) : qids;
+  const { autoScore, perQuestion } = gradeSubmission(gradeIds, answers, mergedKeys);
 
   const { error: upErr } = await admin.from("submissions").upsert(
     {
