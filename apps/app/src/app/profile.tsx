@@ -28,7 +28,7 @@ const ROLE_LABEL: Record<Role, string> = {
 
 export default function Profile() {
   const insets = useSafeAreaInsets();
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const gami = useGamification();
   const catalog = getBadges();
 
@@ -43,6 +43,7 @@ export default function Profile() {
   const setPushEnabled = useSetPushEnabled();
   const [pushMsg, setPushMsg] = useState<string | null>(null);
   const [pendingRole, setPendingRole] = useState<Role | null>(null);
+  const [confirmLogout, setConfirmLogout] = useState(false);
 
   const state = gami.data?.state;
   const earned = new Set(gami.data?.earnedBadgeIds ?? []);
@@ -312,6 +313,45 @@ export default function Profile() {
       <View className="mt-3">
         <BadgeGrid catalog={catalog} earned={earned} />
       </View>
+
+      {/* Đăng xuất (có xác nhận) */}
+      {user && (
+        <View className="mt-8">
+          {!confirmLogout ? (
+            <Pressable
+              accessibilityLabel="Đăng xuất"
+              onPress={() => setConfirmLogout(true)}
+              className="min-h-[48px] items-center justify-center rounded-md border-2 border-no/40"
+            >
+              <Text className="font-display font-bold text-no">Đăng xuất</Text>
+            </Pressable>
+          ) : (
+            <View className="rounded-md border-2 border-no/30 p-3">
+              <Text className="text-sm text-ink">Đăng xuất khỏi tài khoản này?</Text>
+              <View className="mt-2 flex-row gap-2">
+                <Pressable
+                  accessibilityLabel="Xác nhận đăng xuất"
+                  onPress={() => {
+                    signOut();
+                    setConfirmLogout(false);
+                    router.replace("/");
+                  }}
+                  className="min-h-[44px] flex-1 items-center justify-center rounded-md bg-no"
+                >
+                  <Text className="font-display font-bold text-white">Đăng xuất</Text>
+                </Pressable>
+                <Pressable
+                  accessibilityLabel="Huỷ đăng xuất"
+                  onPress={() => setConfirmLogout(false)}
+                  className="min-h-[44px] flex-1 items-center justify-center rounded-md bg-paper"
+                >
+                  <Text className="font-display font-bold text-ink">Huỷ</Text>
+                </Pressable>
+              </View>
+            </View>
+          )}
+        </View>
+      )}
     </ScrollView>
   );
 }
