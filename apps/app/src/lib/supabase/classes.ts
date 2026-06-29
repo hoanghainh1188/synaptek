@@ -2,6 +2,7 @@
 // RLS bảo đảm GV chỉ thấy lớp mình; HS join qua RPC join_class_by_code. Guest → no-op/[].
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { makeInviteCode, displayScore } from "@synaptek/classroom";
+import { classWeekly, type ClassWeekly } from "@/lib/class-weekly";
 import { supabase } from "./client";
 import { useAuth } from "./auth";
 
@@ -250,6 +251,35 @@ export function useClassReport(classId: string) {
         };
       });
       return { assignments, rows };
+    },
+  });
+}
+
+/** Tóm tắt tuần lớp (GV; RLS owns_class): lượt nộp + độ chính xác + HS hoạt động (7 ngày). */
+export function useClassWeekly(classId: string) {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: ["class-weekly", classId, user?.id ?? "guest"],
+    enabled: Boolean(supabase && user && classId),
+    queryFn: async (): Promise<ClassWeekly> => {
+      const empty = classWeekly([], Date.now());
+      if (!supabase || !user) return empty;
+      const asg = await supabase.from("assignments").select("id").eq("class_id", classId);
+      const ids = (asg.data ?? []).map((a) => a.id as string);
+      if (ids.length === 0) return empty;
+      const subs = await supabase
+        .from("submissions")
+        .select("student_id, submitted_at, auto_score, final_score")
+        .in("assignment_id", ids);
+      const rows = (subs.data ?? []).map((s) => ({
+        studentId: s.student_id as string,
+        submittedAt: (s.submitted_at as string | null) ?? null,
+        displayScore: displayScore(
+          s.auto_score === null ? null : Number(s.auto_score),
+          s.final_score === null ? null : Number(s.final_score),
+        ),
+      }));
+      return classWeekly(rows, Date.now());
     },
   });
 }
