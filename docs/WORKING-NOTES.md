@@ -6,8 +6,10 @@
 
 **Mốc:** M0–M3 ✅ đóng + giới hạn nộp bài (D25) + **100 câu nội dung** (lớp 1–4, mỗi skill ≥10) + sprint
 hoàn thiện (GV sửa/xoá bài · đổi vai trò · jwt 1 tuần) + **deploy hosted AUTO** (web Vercel + backend Action).
-**M4 — Phụ huynh: US1 (liên kết) + US2 (theo dõi read-only) ✅ vừa xong** trên nhánh `005-parent-monitoring`
-(PR đang mở) → **đủ 3 vai trò**. Decision Log **D26**. Còn: giao-bài-tại-nhà (đợt sau), nội dung lớp 5, M5 native.
+**M4 — Phụ huynh ✅ đóng** (PR #22): liên kết + theo dõi read-only. **+ Giao bài tại nhà (PH→con) ✅ vừa
+xong** trên `feature/home-assignments` (PR đang mở): migration `0006` (assignments LỚP XOR NHÀ + RLS PH
+chủ-bài + chấm server-side rẽ nhánh thành viên — **D27**); RLS 0006 4 nhóm PASS; e2e `home-assignment`
+(PH giao → HS làm → chấm 100%) PASS. → **đủ 3 vai trò + PH giao bài**. Decision Log **D26/D27**. Còn: nội dung lớp 5, M5 native.
 
 **M4 chi tiết:** migration `0005` (`parent_links` + `profiles.parent_link_code` + helper `is_parent_of`/
 `is_linked_parent` + RPC `link_parent_by_code`); RLS đọc chéo PH→con **chỉ SELECT** (read-only) — **RLS test

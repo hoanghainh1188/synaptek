@@ -166,6 +166,65 @@ export function useUnlink() {
   });
 }
 
+// ── PH: giao bài tại nhà cho con (chấm server-side, D4) ─────────────────────
+export interface NewHomeAssignment {
+  childId: string;
+  title: string;
+  questionIds: string[];
+  dueAt?: string | null;
+  allowLate?: boolean;
+  maxAttempts?: number | null;
+  timeLimitMinutes?: number | null;
+}
+
+/** PH giao bài cho con đã liên kết (RLS check is_parent_of). */
+export function useCreateHomeAssignment() {
+  const { user } = useAuth();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (a: NewHomeAssignment) => {
+      if (!supabase || !user) return;
+      const { error } = await supabase.from("assignments").insert({
+        class_id: null,
+        owner_parent_id: user.id,
+        assignee_student_id: a.childId,
+        title: a.title,
+        question_ids: a.questionIds,
+        due_at: a.dueAt ?? null,
+        allow_late: a.allowLate ?? true,
+        max_attempts: a.maxAttempts ?? null,
+        time_limit_minutes: a.timeLimitMinutes ?? null,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["home-assignments"] }),
+  });
+}
+
+/** PH: bài đã giao cho 1 con (để hiển thị/xoá). */
+export function useHomeAssignments(childId: string) {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: ["home-assignments", childId, user?.id ?? "guest"],
+    enabled: Boolean(supabase && user && childId),
+    queryFn: async () => {
+      if (!supabase || !user) return [];
+      const { data, error } = await supabase
+        .from("assignments")
+        .select("id, title, question_ids, due_at")
+        .eq("owner_parent_id", user.id)
+        .eq("assignee_student_id", childId)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return (data ?? []).map((r) => ({
+        id: r.id as string,
+        title: r.title as string,
+        questionCount: ((r.question_ids as string[]) ?? []).length,
+      }));
+    },
+  });
+}
+
 // ── PH: theo dõi tiến độ 1 con (read-only, RLS-gated) ───────────────────────
 export interface ChildProgress {
   fullName: string | null;
