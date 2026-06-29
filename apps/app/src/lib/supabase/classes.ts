@@ -1,7 +1,7 @@
 // Lớp học GV (M3 US1): tạo/liệt kê lớp + mã mời (qua @synaptek/classroom), tham gia (RPC), roster, xóa HS.
 // RLS bảo đảm GV chỉ thấy lớp mình; HS join qua RPC join_class_by_code. Guest → no-op/[].
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { makeInviteCode } from "@synaptek/classroom";
+import { makeInviteCode, displayScore } from "@synaptek/classroom";
 import { supabase } from "./client";
 import { useAuth } from "./auth";
 
@@ -179,6 +179,77 @@ export function useRoster(classId: string) {
           null,
         joinedAt: r.joined_at as string,
       }));
+    },
+  });
+}
+
+export interface ClassReport {
+  assignments: { id: string; title: string }[];
+  rows: {
+    studentId: string;
+    name: string | null;
+    scores: Record<string, number | null>; // assignmentId → điểm hiển thị 0..1 (null = chưa nộp)
+    average: number | null; // TB các bài ĐÃ nộp
+  }[];
+}
+
+/** Báo cáo lớp (GV; RLS owns_class): ma trận HS × bài + điểm hiển thị + TB. */
+export function useClassReport(classId: string) {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: ["class-report", classId, user?.id ?? "guest"],
+    enabled: Boolean(supabase && user && classId),
+    queryFn: async (): Promise<ClassReport> => {
+      if (!supabase || !user) return { assignments: [], rows: [] };
+      const [asg, mem] = await Promise.all([
+        supabase
+          .from("assignments")
+          .select("id, title")
+          .eq("class_id", classId)
+          .order("created_at", { ascending: true }),
+        supabase
+          .from("class_members")
+          .select("student_id, profiles(full_name)")
+          .eq("class_id", classId)
+          .order("joined_at", { ascending: true }),
+      ]);
+      const assignments = (asg.data ?? []).map((a) => ({
+        id: a.id as string,
+        title: a.title as string,
+      }));
+      const ids = assignments.map((a) => a.id);
+      const subs =
+        ids.length > 0
+          ? await supabase
+              .from("submissions")
+              .select("student_id, assignment_id, auto_score, final_score")
+              .in("assignment_id", ids)
+          : { data: [] };
+      const scoreOf = new Map<string, number | null>(); // key `${student}|${asg}`
+      for (const r of subs.data ?? []) {
+        const auto = r.auto_score === null ? null : Number(r.auto_score);
+        const final = r.final_score === null ? null : Number(r.final_score);
+        scoreOf.set(`${r.student_id}|${r.assignment_id}`, displayScore(auto, final));
+      }
+      const rows = (mem.data ?? []).map((m) => {
+        const studentId = m.student_id as string;
+        const scores: Record<string, number | null> = {};
+        const done: number[] = [];
+        for (const a of assignments) {
+          const sc = scoreOf.get(`${studentId}|${a.id}`) ?? null;
+          scores[a.id] = sc;
+          if (sc !== null) done.push(sc);
+        }
+        return {
+          studentId,
+          name:
+            ((m.profiles as { full_name?: string | null } | null)?.full_name as string | null) ??
+            null,
+          scores,
+          average: done.length > 0 ? done.reduce((s, x) => s + x, 0) / done.length : null,
+        };
+      });
+      return { assignments, rows };
     },
   });
 }

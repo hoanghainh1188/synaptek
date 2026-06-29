@@ -4,6 +4,8 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ Báo cáo lớp GV ✅ vừa xong** (`feature/teacher-report`, PR đang mở): bảng HS × bài (điểm %) + trung bình + **xuất CSV** (web). `useClassReport` (RLS owns_class) + `report-csv.ts` thuần (+2 unit test CI). Màn `(teacher)/report/[id]`; lối vào ở màn lớp. e2e teacher-report PASS. Không migration.
+
 **+ Xem lời giải ở bài tập ✅ vừa xong** (`feature/assignment-explanation`, PR đang mở): sau khi nộp, mỗi câu hiện ✓/✗ + **đáp án + lời giải** (câu content — sẵn client; câu tự soạn vẫn ẩn lời giải, D4). e2e assignment-grade +assert "Lời giải" PASS. Không migration (chỉ UI).
 
 **+ Authoring đủ 6/6 loại ✅ vừa xong** (`feature/authoring-fillblank`, PR đang mở): migration `0010` thêm `fill-blank`; đáp án nhiều ô lưu JSON, Edge parse; AnswerInput đếm ô từ dấu `__` trong prompt (chạy cả content + custom). e2e custom-question (mcq+true-false+fill-blank) PASS. → câu tự soạn ĐỦ 6 loại engine hỗ trợ.

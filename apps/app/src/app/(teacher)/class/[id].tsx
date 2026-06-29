@@ -67,6 +67,15 @@ export default function ClassDetail() {
         </Pressable>
       </View>
 
+      {/* Báo cáo lớp */}
+      <Pressable
+        accessibilityLabel="Báo cáo lớp"
+        onPress={() => router.push(`/report/${classId}`)}
+        className="mt-6 min-h-[48px] flex-row items-center justify-center gap-2 rounded-md bg-surface shadow-sm"
+      >
+        <Text className="font-display font-bold text-ink">📊 Báo cáo lớp (xuất CSV) ›</Text>
+      </Pressable>
+
       {/* Bài tập */}
       <View className="mt-7 flex-row items-center justify-between">
         <Text className="font-display text-xl font-bold text-ink">
