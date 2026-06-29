@@ -234,4 +234,53 @@ test("Unordered: thiếu 1 phần tử → điểm theo tỉ lệ", () => {
   assert.ok(Math.abs(r.score - 2 / 3) < 1e-9); // khớp 2/3
 });
 
+// ── Đơn vị đo lường ──────────────────────────────────────────────────────────
+test("Đơn vị: '5 cm' = '5cm' (khoảng trắng)", () => {
+  assert.equal(grade({ type: "numeric", correct: "5cm", answer: "5 cm" }).isCorrect, true);
+});
+
+test("Đơn vị: quy đổi '1 m' = '100 cm'", () => {
+  assert.equal(grade({ type: "numeric", correct: "100 cm", answer: "1 m" }).isCorrect, true);
+});
+
+test("Đơn vị: quy đổi '1 kg' = '1000 g'", () => {
+  assert.equal(grade({ type: "numeric", correct: "1000 g", answer: "1 kg" }).isCorrect, true);
+});
+
+test("Đơn vị: khác đại lượng KHÔNG khớp ('1 m' ≠ '1 kg')", () => {
+  assert.equal(grade({ type: "numeric", correct: "1 m", answer: "1 kg" }).isCorrect, false);
+});
+
+// ── Số La Mã ─────────────────────────────────────────────────────────────────
+test("La Mã: 'IV' = 4; 'XII' = 12", () => {
+  assert.equal(grade({ type: "numeric", correct: "4", answer: "IV" }).isCorrect, true);
+  assert.equal(grade({ type: "numeric", correct: "12", answer: "xii" }).isCorrect, true);
+});
+
+test("La Mã sai → không đúng", () => {
+  assert.equal(grade({ type: "numeric", correct: "4", answer: "VI" }).isCorrect, false);
+});
+
+// ── Chẩn đoán: đảo chữ số ─────────────────────────────────────────────────────
+test("transposed: đúng 12, làm 21 → diagnosis transposed", () => {
+  const r = grade({ type: "numeric", correct: "12", answer: "21" });
+  assert.equal(r.isCorrect, false);
+  assert.equal(r.diagnosis, "transposed");
+});
+
+// ── Làm tròn có kiểm soát ─────────────────────────────────────────────────────
+test("roundTo: 3,14159 ≈ 3,14 khi roundTo=2", () => {
+  const r = grade({
+    type: "numeric",
+    correct: "3,14159",
+    answer: "3,14",
+    options: { roundTo: 2 },
+  });
+  assert.equal(r.isCorrect, true);
+});
+
+test("roundTo: không bật → 3,14 ≠ 3,14159", () => {
+  assert.equal(grade({ type: "numeric", correct: "3,14159", answer: "3,14" }).isCorrect, false);
+});
+
 console.log(`\n${passed} test(s) passed.`);

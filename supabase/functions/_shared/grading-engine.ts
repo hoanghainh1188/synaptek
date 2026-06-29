@@ -28,13 +28,21 @@ export type FeedbackCode = "correct" | "incorrect" | "empty" | "partial" | "form
  * `sign` = sai dấu (âm/dương) · `magnitude10` = lệch ×10/÷10 (sai vị trí dấu phẩy) ·
  * `reciprocal` = đảo tử/mẫu (phân số) · `rounding` = gần đúng (chú ý làm tròn).
  */
-export type Diagnosis = "sign" | "magnitude10" | "reciprocal" | "rounding" | "offByOne";
+export type Diagnosis =
+  | "sign"
+  | "magnitude10"
+  | "reciprocal"
+  | "rounding"
+  | "offByOne"
+  | "transposed";
 
 export interface GradeOptions {
   /** Dung sai tuyệt đối khi so sánh số/phân số/biểu thức. Mặc định EPS. */
   tolerance?: number;
   /** fill-blank: chấm như TẬP không quan tâm thứ tự (khớp đa tập). Mặc định false (theo vị trí). */
   unordered?: boolean;
+  /** numeric: làm tròn cả hai về N chữ số thập phân trước khi so (vd câu cần lấy 2 chữ số). */
+  roundTo?: number;
 }
 
 export interface GradeInput {
@@ -88,6 +96,17 @@ function numericDiagnosis(cn: number, an: number): Diagnosis | undefined {
   if (Math.abs(cn) > EPS && Math.abs(an + cn) < EPS) return "sign"; // an = -cn
   for (const f of [10, 100, 0.1, 0.01]) {
     if (Math.abs(an - cn * f) < EPS * Math.max(1, Math.abs(cn * f))) return "magnitude10";
+  }
+  // đảo chữ số (vd 12 ↔ 21): cùng tập chữ số nhưng khác giá trị (chỉ với số nguyên).
+  const ci = Math.round(cn);
+  const ai = Math.round(an);
+  if (
+    Math.abs(cn - ci) < EPS &&
+    Math.abs(an - ai) < EPS &&
+    ci !== ai &&
+    digitsSorted(ci) === digitsSorted(ai)
+  ) {
+    return "transposed";
   }
   if (Math.abs(Math.abs(an - cn) - 1) < EPS) return "offByOne"; // lệch đúng 1 đơn vị
   // gần đúng: lệch ≤ 10% giá trị đúng (nhưng khác hẳn) → nhắc làm tròn
@@ -149,6 +168,90 @@ export function fractionValue(raw: string): number | null {
     return Number(m[1]) / d;
   }
   return parseNumber(noSpace);
+}
+
+/** Chuỗi chữ số đã sắp xếp (cho chẩn đoán "đảo chữ số"). */
+function digitsSorted(n: number): string {
+  return String(Math.abs(n)).split("").sort().join("");
+}
+
+// ── Số La Mã ─────────────────────────────────────────────────────────────────
+const ROMAN1: Record<string, number> = { I: 1, V: 5, X: 10, L: 50, C: 100, D: 500, M: 1000 };
+
+function toRoman(n: number): string {
+  if (n <= 0 || n >= 4000) return "";
+  const map: [number, string][] = [
+    [1000, "M"],
+    [900, "CM"],
+    [500, "D"],
+    [400, "CD"],
+    [100, "C"],
+    [90, "XC"],
+    [50, "L"],
+    [40, "XL"],
+    [10, "X"],
+    [9, "IX"],
+    [5, "V"],
+    [4, "IV"],
+    [1, "I"],
+  ];
+  let s = "";
+  let r = n;
+  for (const [v, sym] of map) while (r >= v) ((s += sym), (r -= v));
+  return s;
+}
+
+/** Giá trị số La Mã CHUẨN ("IV"→4, "XII"→12); null nếu sai/không chuẩn (chống "IIII"). */
+export function romanValue(raw: string): number | null {
+  const s = raw.trim().toUpperCase();
+  if (s === "" || !/^[IVXLCDM]+$/.test(s)) return null;
+  let total = 0;
+  let prev = 0;
+  for (let i = s.length - 1; i >= 0; i--) {
+    const v = ROMAN1[s[i]];
+    if (v < prev) total -= v;
+    else {
+      total += v;
+      prev = v;
+    }
+  }
+  return toRoman(total) === s ? total : null; // chỉ nhận dạng chuẩn
+}
+
+// ── Đơn vị đo lường ───────────────────────────────────────────────────────────
+// Quy về đơn vị cơ sở theo từng đại lượng (length=mm, mass=g, volume=ml).
+const UNITS: Record<string, { group: string; factor: number }> = {
+  mm: { group: "length", factor: 1 },
+  cm: { group: "length", factor: 10 },
+  dm: { group: "length", factor: 100 },
+  m: { group: "length", factor: 1000 },
+  km: { group: "length", factor: 1_000_000 },
+  g: { group: "mass", factor: 1 },
+  kg: { group: "mass", factor: 1000 },
+  ml: { group: "volume", factor: 1 },
+  l: { group: "volume", factor: 1000 },
+};
+
+/** "<số> <đơn vị>" → {base, group} (đơn vị cơ sở). null nếu không phải đại lượng đo. */
+export function measureValue(raw: string): { base: number; group: string } | null {
+  const m = raw.trim().match(/^([\d.,\s]+?)\s*([a-zA-Z]+)$/);
+  if (!m) return null;
+  const num = parseNumber(m[1].trim());
+  if (num === null) return null;
+  const u = UNITS[m[2].toLowerCase()];
+  if (!u) return null;
+  return { base: num * u.factor, group: u.group };
+}
+
+/** Giá trị "số học" của một chuỗi: số (VN/%) hoặc số La Mã. */
+function numericScalar(raw: string): number | null {
+  return parseNumber(raw) ?? romanValue(raw);
+}
+
+/** Làm tròn về n chữ số thập phân (tránh sai số nhị phân của toFixed). */
+function roundN(x: number, n: number): number {
+  const p = Math.pow(10, n);
+  return Math.round(x * p) / p;
 }
 
 // ── Biểu thức: tokenize → RPN (shunting-yard) → eval, so tương đương qua lấy mẫu ──
@@ -369,12 +472,26 @@ export function grade(input: GradeInput): GradeResult {
     }
 
     case "numeric": {
-      const cn = parseNumber(asString(correct));
-      const an = parseNumber(asString(answer));
-      if (an === null) return result(false, 0, "format-error", correct, answer);
-      const ok = cn !== null && numericEqual(cn, an, tol);
-      const dx = ok || cn === null ? undefined : numericDiagnosis(cn, an);
-      return result(ok, ok ? 1 : 0, ok ? "correct" : "incorrect", correct, answer, dx);
+      const cs = asString(correct);
+      const as = asString(answer);
+      // 1) Số thường / VN-% / La Mã.
+      const cn = numericScalar(cs);
+      const an = numericScalar(as);
+      if (cn !== null && an !== null) {
+        const roundTo = input.options?.roundTo;
+        const ok =
+          roundTo != null ? roundN(cn, roundTo) === roundN(an, roundTo) : numericEqual(cn, an, tol);
+        const dx = ok ? undefined : numericDiagnosis(cn, an);
+        return result(ok, ok ? 1 : 0, ok ? "correct" : "incorrect", correct, answer, dx);
+      }
+      // 2) Đơn vị đo lường (quy đổi cùng đại lượng).
+      const cm = measureValue(cs);
+      const am = measureValue(as);
+      if (cm && am) {
+        const ok = cm.group === am.group && numericEqual(cm.base, am.base, tol);
+        return result(ok, ok ? 1 : 0, ok ? "correct" : "incorrect", correct, answer);
+      }
+      return result(false, 0, "format-error", correct, answer);
     }
 
     case "fraction": {

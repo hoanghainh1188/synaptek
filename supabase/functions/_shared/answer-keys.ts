@@ -1,6 +1,6 @@
 // ⚠️ AUTO-GENERATED từ content/questions/*.json — KHÔNG sửa tay (npm run sync:edge). Đáp án chấm server (D4/D6/D13).
 import type { QuestionType } from "./grading-engine.ts";
-export interface AnswerKey { type: QuestionType; correct: string | string[]; tolerance?: number; unordered?: boolean }
+export interface AnswerKey { type: QuestionType; correct: string | string[]; tolerance?: number; unordered?: boolean; roundTo?: number }
 export const ANSWER_KEYS: Record<string, AnswerKey> = {
   "g1.num.addsub.q001": {
     "type": "numeric",

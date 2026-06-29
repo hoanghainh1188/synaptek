@@ -60,6 +60,7 @@ for (const f of readdirSync(QDIR)
     const k = { type: q.type, correct: q.correct };
     if (q.options?.tolerance !== undefined) k.tolerance = q.options.tolerance;
     if (q.options?.unordered === true) k.unordered = true;
+    if (q.options?.roundTo !== undefined) k.roundTo = q.options.roundTo;
     keys[q.id] = k;
   }
 }
@@ -68,7 +69,7 @@ writeFileSync(
   AK_DEST,
   `// ⚠️ AUTO-GENERATED từ ${QDIR}/*.json — KHÔNG sửa tay (npm run sync:edge). Đáp án chấm server (D4/D6/D13).\n` +
     `import type { QuestionType } from "./grading-engine.ts";\n` +
-    `export interface AnswerKey { type: QuestionType; correct: string | string[]; tolerance?: number; unordered?: boolean }\n` +
+    `export interface AnswerKey { type: QuestionType; correct: string | string[]; tolerance?: number; unordered?: boolean; roundTo?: number }\n` +
     `export const ANSWER_KEYS: Record<string, AnswerKey> = ${JSON.stringify(keys, null, 2)};\n`,
 );
 console.log(`generated ${AK_DEST}: ${Object.keys(keys).length} đáp án`);
