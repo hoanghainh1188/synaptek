@@ -4,6 +4,8 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ Tóm tắt tuần cho PH ✅ vừa xong** (`feature/parent-weekly`, PR đang mở): card "Tuần này (7 ngày qua)" ở màn theo dõi con — luyện N câu · đúng X% · nộp Z bài. `weekly.ts` thuần (`weeklyStats`, +4 unit test CI); `useChildProgress` thêm created_at/submitted_at. e2e parent-monitor +assert card PASS. Không migration.
+
 **+ Báo cáo lớp GV ✅ vừa xong** (`feature/teacher-report`, PR đang mở): bảng HS × bài (điểm %) + trung bình + **xuất CSV** (web). `useClassReport` (RLS owns_class) + `report-csv.ts` thuần (+2 unit test CI). Màn `(teacher)/report/[id]`; lối vào ở màn lớp. e2e teacher-report PASS. Không migration.
 
 **+ Xem lời giải ở bài tập ✅ vừa xong** (`feature/assignment-explanation`, PR đang mở): sau khi nộp, mỗi câu hiện ✓/✗ + **đáp án + lời giải** (câu content — sẵn client; câu tự soạn vẫn ẩn lời giải, D4). e2e assignment-grade +assert "Lời giải" PASS. Không migration (chỉ UI).
