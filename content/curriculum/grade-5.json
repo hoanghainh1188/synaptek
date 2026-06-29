@@ -1,0 +1,67 @@
+{
+  "grade": 5,
+  "strands": [
+    {
+      "id": "g5.num",
+      "name": "Số và phép tính",
+      "topics": [
+        {
+          "id": "g5.num.decimal",
+          "name": "Số thập phân",
+          "grade": 5,
+          "skillIds": ["g5.num.decimal.concept", "g5.num.decimal.addsub", "g5.num.decimal.muldiv"]
+        },
+        {
+          "id": "g5.num.percent",
+          "name": "Tỉ số phần trăm",
+          "grade": 5,
+          "skillIds": ["g5.num.percent.basic"]
+        }
+      ]
+    },
+    {
+      "id": "g5.geo",
+      "name": "Hình học và đo lường",
+      "topics": [
+        {
+          "id": "g5.geo.area-volume",
+          "name": "Diện tích – Thể tích",
+          "grade": 5,
+          "skillIds": ["g5.geo.area", "g5.geo.volume"]
+        }
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "g5.num.decimal.concept",
+      "name": "Khái niệm số thập phân",
+      "prerequisites": []
+    },
+    {
+      "id": "g5.num.decimal.addsub",
+      "name": "Cộng, trừ số thập phân",
+      "prerequisites": ["g5.num.decimal.concept"]
+    },
+    {
+      "id": "g5.num.decimal.muldiv",
+      "name": "Nhân, chia số thập phân",
+      "prerequisites": ["g5.num.decimal.addsub"]
+    },
+    {
+      "id": "g5.num.percent.basic",
+      "name": "Tỉ số phần trăm",
+      "prerequisites": ["g5.num.decimal.concept"]
+    },
+    {
+      "id": "g5.geo.area",
+      "name": "Diện tích tam giác, hình thang",
+      "prerequisites": []
+    },
+    {
+      "id": "g5.geo.volume",
+      "name": "Thể tích hình hộp chữ nhật",
+      "prerequisites": ["g5.geo.area"]
+    }
+  ]
+}

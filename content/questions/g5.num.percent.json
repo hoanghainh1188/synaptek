@@ -1,0 +1,104 @@
+[
+  {
+    "id": "g5.num.percent.q001",
+    "skillId": "g5.num.percent.basic",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "25% của 200 bằng bao nhiêu?",
+    "correct": "50",
+    "explanation": "200 × 25 ÷ 100 = 50.",
+    "difficulty": 1
+  },
+  {
+    "id": "g5.num.percent.q002",
+    "skillId": "g5.num.percent.basic",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "10% của 80 bằng bao nhiêu?",
+    "correct": "8",
+    "explanation": "80 × 10 ÷ 100 = 8.",
+    "difficulty": 1
+  },
+  {
+    "id": "g5.num.percent.q003",
+    "skillId": "g5.num.percent.basic",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "50% của một số là 30. Số đó là bao nhiêu?",
+    "correct": "60",
+    "explanation": "30 ÷ 50 × 100 = 60.",
+    "difficulty": 2
+  },
+  {
+    "id": "g5.num.percent.q004",
+    "skillId": "g5.num.percent.basic",
+    "grade": 5,
+    "type": "mcq",
+    "prompt": "1/2 bằng bao nhiêu phần trăm?",
+    "choices": ["50%", "25%", "20%"],
+    "correct": "50%",
+    "explanation": "1/2 = 50/100 = 50%.",
+    "difficulty": 1
+  },
+  {
+    "id": "g5.num.percent.q005",
+    "skillId": "g5.num.percent.basic",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "20% của 50 bằng bao nhiêu?",
+    "correct": "10",
+    "explanation": "50 × 20 ÷ 100 = 10.",
+    "difficulty": 1
+  },
+  {
+    "id": "g5.num.percent.q006",
+    "skillId": "g5.num.percent.basic",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "Lớp có 40 học sinh, 25% đạt loại giỏi. Có bao nhiêu học sinh giỏi?",
+    "correct": "10",
+    "explanation": "40 × 25 ÷ 100 = 10 (học sinh).",
+    "difficulty": 2
+  },
+  {
+    "id": "g5.num.percent.q007",
+    "skillId": "g5.num.percent.basic",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "Viết 0,75 dưới dạng phần trăm (chỉ ghi số).",
+    "correct": "75",
+    "explanation": "0,75 = 75/100 = 75%.",
+    "difficulty": 2
+  },
+  {
+    "id": "g5.num.percent.q008",
+    "skillId": "g5.num.percent.basic",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "100% của 45 bằng bao nhiêu?",
+    "correct": "45",
+    "explanation": "100% của một số là chính nó: 45.",
+    "difficulty": 1
+  },
+  {
+    "id": "g5.num.percent.q009",
+    "skillId": "g5.num.percent.basic",
+    "grade": 5,
+    "type": "mcq",
+    "prompt": "3/4 bằng bao nhiêu phần trăm?",
+    "choices": ["75%", "34%", "43%"],
+    "correct": "75%",
+    "explanation": "3/4 = 75/100 = 75%.",
+    "difficulty": 2
+  },
+  {
+    "id": "g5.num.percent.q010",
+    "skillId": "g5.num.percent.basic",
+    "grade": 5,
+    "type": "numeric",
+    "prompt": "5% của 200 bằng bao nhiêu?",
+    "correct": "10",
+    "explanation": "200 × 5 ÷ 100 = 10.",
+    "difficulty": 2
+  }
+]

@@ -11,7 +11,13 @@ hoàn thiện (GV sửa/xoá bài · đổi vai trò · jwt 1 tuần) + **deploy
 (`custom_questions` mcq/numeric/fraction; RLS tác giả-toàn-quyền + hàm `custom_questions_for_student` ẩn
 đáp án; chấm server-side lấy `correct` qua service_role — **D28**); **RLS 0007 5 nhóm PASS**; e2e
 `custom-question` (GV soạn → giao → HS làm → chấm 100%) PASS. Bug đã bắt: thiếu `grant select … to service_role`.
-→ **đủ 3 vai trò + PH giao bài + GV/PH tự soạn câu**. Decision Log **D26/D27/D28**. Còn: nội dung lớp 5, M5 native.
+→ **đủ 3 vai trò + PH giao bài + GV/PH tự soạn câu**. Decision Log **D26/D27/D28**.
+
+**+ Nội dung lớp 5 ✅ vừa xong** trên `content/grade5` (PR đang mở): curriculum `grade-5.json` (6 skill: số
+thập phân concept/addsub/muldiv · tỉ số phần trăm · diện tích tam giác-hình thang · thể tích HHCN) + 60 câu
+(mỗi skill 10). Tổng **160 câu, 16 skill, lớp 1–5** — phủ trọn Tiểu học. Số thập phân dùng phẩy VN (D8),
+smoke-test 160/160 tự-chấm-đúng. GRADE_FILTERS thêm 5. → **M4 ĐÓNG** (đủ 3 vai trò + phủ nội dung).
+Tiếp theo: **M5 — Native** (EAS + push thật + cron + offline).
 
 **M4 chi tiết:** migration `0005` (`parent_links` + `profiles.parent_link_code` + helper `is_parent_of`/
 `is_linked_parent` + RPC `link_parent_by_code`); RLS đọc chéo PH→con **chỉ SELECT** (read-only) — **RLS test
