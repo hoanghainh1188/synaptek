@@ -12,7 +12,9 @@ import {
   getQuestions,
   imageSource,
   listTopics,
+  questionsForSkill,
 } from "@/lib/content";
+import { buildQuickSet } from "@/lib/quick-set";
 import {
   useAssignment,
   useAssignmentTargets,
@@ -26,9 +28,15 @@ import { MathText } from "@/components/math/MathText";
 
 export default function NewAssignment() {
   const insets = useSafeAreaInsets();
-  const params = useLocalSearchParams<{ classId?: string; childId?: string; editId?: string }>();
+  const params = useLocalSearchParams<{
+    classId?: string;
+    childId?: string;
+    editId?: string;
+    skills?: string;
+  }>();
   const editId = params.editId ? String(params.editId) : null;
   const childId = params.childId ? String(params.childId) : null; // PH giao bài tại nhà
+  const skillsParam = params.skills ? String(params.skills) : null; // gợi ý ôn điểm yếu
   const create = useCreateAssignment();
   const createHome = useCreateHomeAssignment();
   const update = useUpdateAssignment();
@@ -44,6 +52,24 @@ export default function NewAssignment() {
   const [timeLimit, setTimeLimit] = useState(""); // phút; "" = không có đồng hồ
   const [poolPick, setPoolPick] = useState(""); // số câu ngẫu nhiên mỗi HS; "" = giao cả pool
   const [prefilled, setPrefilled] = useState(false);
+  const [skillsPrefilled, setSkillsPrefilled] = useState(false);
+
+  // Gợi ý ôn điểm yếu (PH): chọn sẵn câu từ các kỹ năng truyền qua ?skills= (một lần, khi tạo mới).
+  useEffect(() => {
+    if (editId || !skillsParam || skillsPrefilled) return;
+    const ids = buildQuickSet(
+      skillsParam
+        .split(",")
+        .filter(Boolean)
+        .map((s) => questionsForSkill(s).map((q) => q.id)),
+      8,
+    );
+    if (ids.length > 0) {
+      setSelected(new Set(ids));
+      if (!title.trim()) setTitle("Ôn điểm yếu");
+    }
+    setSkillsPrefilled(true);
+  }, [editId, skillsParam, skillsPrefilled, title]);
   const [query, setQuery] = useState(""); // tìm/lọc câu theo nội dung
   const [preview, setPreview] = useState(false); // xem trước như HS
   const [targetMode, setTargetMode] = useState<"all" | "some">("all"); // giao cả lớp / một số HS

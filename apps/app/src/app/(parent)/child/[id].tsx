@@ -77,6 +77,36 @@ export default function ChildMonitor() {
         )}
       </View>
 
+      {/* Gợi ý hành động: ôn các điểm yếu */}
+      {(d?.weakSkills.length ?? 0) > 0 && (
+        <View className="mt-6 rounded-lg bg-brand/5 p-4">
+          <Text className="font-display text-base font-bold text-ink">💡 Gợi ý tuần này</Text>
+          <Text className="mt-1 text-sm text-ink">
+            Nên cho con ôn:{" "}
+            <Text className="font-bold">
+              {d!.weakSkills
+                .slice(0, 3)
+                .map((w) => skillName(w.skillId))
+                .join(" · ")}
+            </Text>
+          </Text>
+          <Pressable
+            accessibilityLabel="Giao bài ôn điểm yếu"
+            onPress={() =>
+              router.push(
+                `/assignment/new?childId=${childId}&skills=${d!.weakSkills
+                  .slice(0, 3)
+                  .map((w) => w.skillId)
+                  .join(",")}`,
+              )
+            }
+            className="mt-3 min-h-[44px] items-center justify-center rounded-md bg-brand"
+          >
+            <Text className="font-display font-bold text-white">Giao bài ôn điểm yếu →</Text>
+          </Pressable>
+        </View>
+      )}
+
       {/* Điểm yếu */}
       <Text className="mt-7 font-display text-xl font-bold text-ink">Điểm yếu cần ôn</Text>
       <View className="mt-3 gap-2">
