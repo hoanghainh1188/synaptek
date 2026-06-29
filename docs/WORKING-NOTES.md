@@ -4,6 +4,8 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ Ảnh trong câu tự soạn ✅ vừa xong** (`feature/question-images`, PR đang mở): migration 0011 (cột image_url + bucket public question-images + RLS ghi theo uid + RPC trả ảnh). Upload web (DOM input)→Storage→public URL; map vào Question.image (QuestionCard render sẵn). LƯU Ý: dùng insert KHÔNG upsert (upsert→ON CONFLICT cần UPDATE policy→42501). e2e question-image PASS (+CI). Decision Log D29.
+
 **+ Đăng xuất ✅ + Soạn thảo nâng cao ✅ vừa xong** (`feature/authoring-advanced`, PR đang mở): composer thêm TÌM/lọc câu + đếm "đã chọn N" + XEM TRƯỚC như HS; ngân hàng câu thêm SỬA câu tự soạn (useUpdateCustomQuestion); màn lớp thêm NHÂN BẢN bài (useCloneAssignment). e2e authoring-advanced + logout PASS (vào CI e2e-auth). Không migration.
 
 **+ Tóm tắt tuần cho PH ✅ vừa xong** (`feature/parent-weekly`, PR đang mở): card "Tuần này (7 ngày qua)" ở màn theo dõi con — luyện N câu · đúng X% · nộp Z bài. `weekly.ts` thuần (`weeklyStats`, +4 unit test CI); `useChildProgress` thêm created_at/submitted_at. e2e parent-monitor +assert card PASS. Không migration.

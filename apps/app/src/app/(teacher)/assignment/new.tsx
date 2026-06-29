@@ -4,7 +4,15 @@ import { useEffect, useMemo, useState } from "react";
 import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
-import { GRADE_FILTERS, getQuestionById, getQuestions, listTopics } from "@/lib/content";
+import { Image } from "expo-image";
+import type { QuestionImage } from "@synaptek/curriculum";
+import {
+  GRADE_FILTERS,
+  getQuestionById,
+  getQuestions,
+  imageSource,
+  listTopics,
+} from "@/lib/content";
 import {
   useAssignment,
   useCreateAssignment,
@@ -67,16 +75,28 @@ export default function NewAssignment() {
 
   // Câu đã chọn (content + tự soạn) — cho xem trước như HS.
   const selectedQuestions = useMemo(() => {
-    const out: { id: string; type: string; prompt: string; choices?: string[] }[] = [];
+    const out: {
+      id: string;
+      type: string;
+      prompt: string;
+      choices?: string[];
+      image?: QuestionImage;
+    }[] = [];
     for (const id of selected) {
       const c = getQuestionById(id);
       if (c) {
-        out.push({ id: c.id, type: c.type, prompt: c.prompt, choices: c.choices });
+        out.push({ id: c.id, type: c.type, prompt: c.prompt, choices: c.choices, image: c.image });
         continue;
       }
       const cu = (customQs.data ?? []).find((x) => x.id === id);
       if (cu)
-        out.push({ id: cu.id, type: cu.type, prompt: cu.prompt, choices: cu.choices ?? undefined });
+        out.push({
+          id: cu.id,
+          type: cu.type,
+          prompt: cu.prompt,
+          choices: cu.choices ?? undefined,
+          image: cu.imageUrl ? { src: cu.imageUrl, alt: "Ảnh câu hỏi" } : undefined,
+        });
     }
     return out;
   }, [selected, customQs.data]);
@@ -234,6 +254,19 @@ export default function NewAssignment() {
               {selectedQuestions.map((sq, i) => (
                 <View key={sq.id} className="rounded-lg bg-surface p-3 shadow-sm">
                   <Text className="mb-1 text-xs font-bold text-muted">Câu {i + 1}</Text>
+                  {sq.image && (
+                    <Image
+                      source={imageSource(sq.image) as never}
+                      accessibilityLabel={sq.image.alt}
+                      contentFit="contain"
+                      style={{
+                        width: "100%",
+                        aspectRatio: sq.image.aspectRatio ?? 1.6,
+                        marginBottom: 8,
+                        borderRadius: 8,
+                      }}
+                    />
+                  )}
                   <MathText value={sq.prompt} size={15} weight="600" />
                   {sq.choices && sq.choices.length > 0 && (
                     <View className="mt-2 gap-1">

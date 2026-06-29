@@ -20,6 +20,7 @@ export interface CustomQuestion {
   choices: string[] | null;
   correct: string;
   explanation: string | null;
+  imageUrl: string | null;
 }
 
 export interface NewCustomQuestion {
@@ -28,6 +29,19 @@ export interface NewCustomQuestion {
   choices?: string[] | null;
   correct: string;
   explanation?: string | null;
+  imageUrl?: string | null;
+}
+
+/** Upload ảnh câu hỏi lên Storage (bucket public 'question-images', thư mục theo uid) → trả public URL. */
+export async function uploadQuestionImage(file: File, userId: string): Promise<string> {
+  if (!supabase) throw new Error("Chưa cấu hình Supabase.");
+  const ext = (file.name.split(".").pop() || "png").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const path = `${userId}/${Date.now()}-${Math.round(file.size)}.${ext}`;
+  const { error } = await supabase.storage
+    .from("question-images")
+    .upload(path, file, { contentType: file.type || "image/png" });
+  if (error) throw error;
+  return supabase.storage.from("question-images").getPublicUrl(path).data.publicUrl;
 }
 
 /** Danh sách câu tự soạn của người dùng hiện tại (tác giả — gồm đáp án để sửa). */
@@ -40,7 +54,7 @@ export function useMyCustomQuestions() {
       if (!supabase || !user) return [];
       const { data, error } = await supabase
         .from("custom_questions")
-        .select("id, type, prompt, choices, correct, explanation")
+        .select("id, type, prompt, choices, correct, explanation, image_url")
         .eq("author_id", user.id)
         .order("created_at", { ascending: false });
       if (error) throw error;
@@ -51,6 +65,7 @@ export function useMyCustomQuestions() {
         choices: (r.choices as string[] | null) ?? null,
         correct: r.correct as string,
         explanation: (r.explanation as string | null) ?? null,
+        imageUrl: (r.image_url as string | null) ?? null,
       }));
     },
   });
@@ -70,6 +85,7 @@ export function useCreateCustomQuestion() {
         choices: q.type === "mcq" ? (q.choices ?? []) : null,
         correct: q.correct,
         explanation: q.explanation ?? null,
+        image_url: q.imageUrl ?? null,
       });
       if (error) throw error;
     },
@@ -91,6 +107,7 @@ export function useUpdateCustomQuestion() {
           choices: q.type === "mcq" ? (q.choices ?? []) : null,
           correct: q.correct,
           explanation: q.explanation ?? null,
+          image_url: q.imageUrl ?? null,
         })
         .eq("id", q.id);
       if (error) throw error;
@@ -129,6 +146,7 @@ export function useStudentCustomQuestions(ids: string[]) {
           type: CustomType;
           prompt: string;
           choices: string[] | null;
+          image_url: string | null;
         }): Question => ({
           id: r.id,
           skillId: "custom",
@@ -138,6 +156,7 @@ export function useStudentCustomQuestions(ids: string[]) {
           choices: r.choices ?? undefined,
           correct: "", // đáp án ẩn — không gửi cho HS (chấm ở Edge)
           explanation: "", // giải thích ẩn với HS khi làm bài
+          image: r.image_url ? { src: r.image_url, alt: "Ảnh câu hỏi" } : undefined,
         }),
       );
     },
