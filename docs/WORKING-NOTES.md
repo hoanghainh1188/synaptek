@@ -4,6 +4,8 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ Tóm tắt tuần cho GV ✅ vừa xong** (`feature/gv-weekly`, PR đang mở): màn lớp GV thêm card "📅 Tuần này" (lượt nộp · đúng TB · HS làm bài, 7 ngày). useClassWeekly (RLS owns_class) + class-weekly.ts thuần (+2 test CI). e2e class-join +assert PASS. Không migration.
+
 **+ Insight GV (báo cáo) ✅ vừa xong** (`feature/gv-report-insights`, PR đang mở): màn Báo cáo lớp thêm "⚠️ Cần chú ý" (HS điểm thấp/bỏ nhiều bài) + "📈 Xu hướng điểm TB lớp" (sparkline) — tái dùng useClassReport, KHÔNG truy vấn/migration mới. report-insights.ts thuần (atRiskStudents + classTrend, +4 test CI). e2e teacher-report +assert PASS.
 
 **+ Engine moat đợt 2 ✅ vừa xong** (`feature/engine-moat2`, PR đang mở): ĐƠN VỊ ĐO ("5 cm"="5cm", "1 m"="100 cm", "1 kg"="1000 g" cùng đại lượng), SỐ LA MÃ ("IV"=4 chuẩn), chẩn đoán TRANSPOSED (đảo chữ số 12↔21), options.roundTo (làm tròn N chữ số). +9 unit test (44 tổng). Wiring: Question.options.roundTo + answer-keys sync + Edge + Feedback hint. Không migration.

@@ -6,6 +6,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { classWeakSkills } from "@synaptek/classroom";
 import {
   useClassMastery,
+  useClassWeekly,
   useMyClasses,
   useRegenerateInvite,
   useRemoveMember,
@@ -30,6 +31,7 @@ export default function ClassDetail() {
   const removeMember = useRemoveMember(classId);
   const deleteAssignment = useDeleteAssignment();
   const cloneAssignment = useCloneAssignment();
+  const weekly = useClassWeekly(classId);
   const [pendingDelete, setPendingDelete] = useState<string | null>(null);
 
   const cls = classes.data?.find((c) => c.id === classId);
@@ -70,6 +72,25 @@ export default function ClassDetail() {
         >
           <Text className="font-display font-bold text-ink">Tạo lại mã (thu hồi mã cũ)</Text>
         </Pressable>
+      </View>
+
+      {/* Tóm tắt tuần này */}
+      <View className="mt-4 rounded-lg bg-surface p-4 shadow-sm">
+        <Text className="font-display text-base font-bold text-ink">📅 Tuần này (7 ngày qua)</Text>
+        {(weekly.data?.submitted ?? 0) === 0 ? (
+          <Text className="mt-1 text-sm text-muted">Tuần này chưa có lượt nộp nào.</Text>
+        ) : (
+          <View className="mt-2 flex-row gap-2">
+            <Stat value={String(weekly.data!.submitted)} label="lượt nộp" />
+            <Stat
+              value={
+                weekly.data!.accuracy == null ? "—" : `${Math.round(weekly.data!.accuracy * 100)}%`
+              }
+              label="đúng TB"
+            />
+            <Stat value={String(weekly.data!.activeStudents)} label="HS làm bài" />
+          </View>
+        )}
       </View>
 
       {/* Báo cáo lớp */}
@@ -226,5 +247,14 @@ export default function ClassDetail() {
         ))}
       </View>
     </ScrollView>
+  );
+}
+
+function Stat({ value, label }: { value: string; label: string }) {
+  return (
+    <View className="flex-1 items-center rounded-md bg-paper py-2.5">
+      <Text className="font-display text-xl font-extrabold text-ink">{value}</Text>
+      <Text className="text-xs font-bold text-muted">{label}</Text>
+    </View>
   );
 }

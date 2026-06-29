@@ -25,6 +25,7 @@ test("GV tạo lớp + HS vào bằng mã → GV thấy roster", async ({ browse
   await gvPage.getByLabel("Tạo lớp").click();
   await gvPage.getByLabel("Toán 4A").click();
   await expect(gvPage.getByText("Mã mời", { exact: true })).toBeVisible({ timeout: 15_000 });
+  await expect(gvPage.getByText(/📅 Tuần này/)).toBeVisible({ timeout: 15_000 }); // tóm tắt tuần GV
   // Đọc mã mời (chuỗi in hoa/số ngay dưới nhãn "Mã mời")
   const code = (await gvPage.locator("text=/^[0-9A-Z]{6}$/").first().textContent())?.trim() ?? "";
   expect(code).toMatch(/^[0-9A-Z]{6}$/);
