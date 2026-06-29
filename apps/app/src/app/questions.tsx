@@ -18,6 +18,8 @@ const TYPES: { value: CustomType; label: string }[] = [
   { value: "mcq", label: "Trắc nghiệm" },
   { value: "numeric", label: "Số" },
   { value: "fraction", label: "Phân số" },
+  { value: "true-false", label: "Đúng/Sai" },
+  { value: "expression", label: "Biểu thức" },
 ];
 
 export default function MyQuestions() {
@@ -48,6 +50,7 @@ export default function MyQuestions() {
       const opts = choices.map((c) => c.trim()).filter(Boolean);
       return opts.length >= 2 && opts.includes(correct.trim());
     }
+    if (type === "true-false") return correct === "true" || correct === "false";
     return true;
   })();
 
@@ -108,14 +111,17 @@ export default function MyQuestions() {
       {/* Form soạn */}
       <View className="mt-5 rounded-lg bg-surface p-4 shadow-sm">
         <Text className="mb-1 text-sm font-bold text-muted">Loại câu</Text>
-        <View className="flex-row gap-2">
+        <View className="flex-row flex-wrap gap-2">
           {TYPES.map((t) => {
             const active = t.value === type;
             return (
               <Pressable
                 key={t.value}
                 accessibilityLabel={t.label}
-                onPress={() => setType(t.value)}
+                onPress={() => {
+                  setType(t.value);
+                  setCorrect(""); // đổi loại → xoá đáp án cũ (tránh không hợp lệ)
+                }}
                 className={`min-h-[44px] flex-1 items-center justify-center rounded-md border-2 ${active ? "border-brand bg-brand/10" : "border-line bg-paper"}`}
               >
                 <Text className={`font-bold ${active ? "text-brand" : "text-muted"}`}>
@@ -173,15 +179,46 @@ export default function MyQuestions() {
           </View>
         )}
 
-        {type !== "mcq" && (
+        {type === "true-false" && (
+          <View className="mt-4">
+            <Text className="mb-1 text-sm font-bold text-muted">Đáp án đúng</Text>
+            <View className="flex-row gap-2">
+              {(
+                [
+                  ["true", "Đúng"],
+                  ["false", "Sai"],
+                ] as const
+              ).map(([v, label]) => {
+                const on = correct === v;
+                return (
+                  <Pressable
+                    key={v}
+                    accessibilityLabel={`Đáp án ${label}`}
+                    onPress={() => setCorrect(v)}
+                    className={`min-h-[44px] flex-1 items-center justify-center rounded-md border-2 ${on ? "border-brand bg-brand/10" : "border-line bg-paper"}`}
+                  >
+                    <Text className={`font-bold ${on ? "text-brand" : "text-muted"}`}>{label}</Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+          </View>
+        )}
+
+        {(type === "numeric" || type === "fraction" || type === "expression") && (
           <>
             <Text className="mt-4 mb-1 text-sm font-bold text-muted">
-              Đáp án đúng {type === "fraction" ? "(vd 1/2)" : "(số — phẩy là thập phân)"}
+              Đáp án đúng{" "}
+              {type === "fraction"
+                ? "(vd 1/2)"
+                : type === "expression"
+                  ? "(vd 2(x+1) — tương đương được chấp nhận)"
+                  : "(số — phẩy là thập phân)"}
             </Text>
             <TextInput
               value={correct}
               onChangeText={setCorrect}
-              placeholder={type === "fraction" ? "1/2" : "0,5"}
+              placeholder={type === "fraction" ? "1/2" : type === "expression" ? "2x + 2" : "0,5"}
               placeholderTextColor="#a1a1aa"
               accessibilityLabel="Đáp án đúng"
               className="min-h-[48px] rounded-md border-2 border-line bg-paper px-3 text-base text-ink"
