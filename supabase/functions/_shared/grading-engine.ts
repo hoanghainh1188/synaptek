@@ -19,7 +19,8 @@ export type QuestionType =
   | "numeric"
   | "fraction"
   | "expression"
-  | "fill-blank";
+  | "fill-blank"
+  | "multi";
 
 export type FeedbackCode = "correct" | "incorrect" | "empty" | "partial" | "format-error";
 
@@ -508,6 +509,18 @@ export function grade(input: GradeInput): GradeResult {
       const as = asString(answer);
       if (compileExpr(as) === null) return result(false, 0, "format-error", correct, answer);
       const ok = expressionsEquivalent(cs, as, tol);
+      return result(ok, ok ? 1 : 0, ok ? "correct" : "incorrect", correct, answer);
+    }
+
+    case "multi": {
+      // Chọn nhiều đáp án: ĐÚNG khi tập chọn == tập đáp án (chuẩn hóa hoa/thường + bỏ khoảng trắng).
+      const norm = (v: string | string[]) =>
+        new Set(
+          (Array.isArray(v) ? v : [v]).map((s) => s.trim().toLowerCase()).filter((s) => s !== ""),
+        );
+      const cSet = norm(correct);
+      const aSet = norm(answer);
+      const ok = cSet.size === aSet.size && [...cSet].every((x) => aSet.has(x));
       return result(ok, ok ? 1 : 0, ok ? "correct" : "incorrect", correct, answer);
     }
 

@@ -11,6 +11,7 @@ export const QUESTION_TYPES = [
   "fraction",
   "expression",
   "fill-blank",
+  "multi",
 ] as const;
 
 /** Kỹ năng / "yêu cầu cần đạt" — đơn vị mastery nguyên tử (M2 dùng). */

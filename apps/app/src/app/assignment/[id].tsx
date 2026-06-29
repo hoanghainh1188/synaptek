@@ -197,7 +197,7 @@ export default function DoAssignment() {
               <View className="mt-3">
                 <AnswerInput
                   question={q}
-                  value={answers[q.id] ?? (q.type === "fill-blank" ? [] : "")}
+                  value={answers[q.id] ?? (q.type === "fill-blank" || q.type === "multi" ? [] : "")}
                   onChange={(v) => setAnswers((prev) => ({ ...prev, [q.id]: v }))}
                 />
               </View>
