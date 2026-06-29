@@ -4,6 +4,8 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ Mở rộng engine chấm (moat) ✅ vừa xong** (`feature/engine-moat`, PR đang mở): HỖN SỐ ("1 1/2"=3/2), PHẦN TRĂM ("50%"=0,5), chẩn đoán OFFBYONE (lệch 1 đơn vị), TẬP KHÔNG THỨ TỰ cho fill-blank (options.unordered, khớp đa tập). +12 unit test engine. Wiring: Question.options.unordered + answer-keys sync + Edge truyền options + Feedback hint. Không migration.
+
 **+ Avatar mở khoá theo XP ✅ vừa xong** (`feature/avatar-unlock`, PR đang mở): migration 0015 (profiles.avatar). avatars.ts thuần (catalog emoji + ngưỡng XP, +3 test CI). Picker ở Hồ sơ (khoá nếu thiếu XP) + hiện ở badge home. Dùng lại profiles_update_own. e2e avatar PASS. Decision Log D33.
 
 **+ Màn kết quả thống nhất ✅ vừa xong** (`feature/session-result-unify`, PR đang mở): SessionRunner (luyện nhanh + ôn lại câu sai) dùng chung component SessionResult (donut % đúng + thống kê + câu cần ôn + nút Luyện lại/Về trang chủ) thay màn kết thúc đơn sơ. e2e review-mistakes chạm màn kết quả mới PASS. Không migration.

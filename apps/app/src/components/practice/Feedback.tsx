@@ -18,6 +18,7 @@ const DIAGNOSIS_HINT: Record<NonNullable<AnswerRecord["diagnosis"]>, string> = {
   magnitude10: "Suýt đúng! Chú ý vị trí dấu phẩy (nhân/chia nhầm 10).",
   reciprocal: "Có thể em đảo tử số và mẫu số rồi đó.",
   rounding: "Gần lắm rồi — chú ý làm tròn nhé.",
+  offByOne: "Suýt đúng — lệch đúng 1 đơn vị thôi, đếm/tính lại nhé!",
 };
 
 export function Feedback({ record, question, onNext, isLast }: FeedbackProps) {
