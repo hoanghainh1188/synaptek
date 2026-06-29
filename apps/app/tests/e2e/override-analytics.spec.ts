@@ -27,7 +27,7 @@ test("GV ghi đè điểm + nhận xét → HS thấy điểm cuối", async ({ 
   await gvPage.getByLabel("Phân số").first().click();
   await gvPage.getByLabel("g4.num.fractions.q001").click();
   await gvPage.getByLabel("Giao bài").click();
-  await expect(gvPage.getByText("1 câu")).toBeVisible({ timeout: 15_000 });
+  await expect(gvPage.getByText("1 câu · chạm để chấm")).toBeVisible({ timeout: 15_000 });
 
   // HS vào + nộp đúng (100%)
   const hs = await browser.newContext();

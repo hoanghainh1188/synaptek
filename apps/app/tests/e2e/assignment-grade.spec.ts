@@ -29,7 +29,7 @@ test("GV giao bài → HS nộp → chấm chính thức hiện điểm", async 
   // chọn câu đầu tiên hiện ra (checkbox row)
   await gvPage.getByLabel("g4.num.fractions.q001").click();
   await gvPage.getByLabel("Giao bài").click(); // nút giao (đáy composer)
-  await expect(gvPage.getByText("1 câu")).toBeVisible({ timeout: 15_000 });
+  await expect(gvPage.getByText("1 câu · chạm để chấm")).toBeVisible({ timeout: 15_000 });
 
   // ── HS: vào lớp + làm + nộp ────────────────────────────────────────────────────
   const hs = await browser.newContext();
