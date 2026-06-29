@@ -17,6 +17,7 @@ import {
 } from "@/lib/content";
 import { buildMasteryMap, toSkillAttempts } from "@/lib/mastery";
 import { wrongQuestionIds } from "@/lib/mistakes";
+import { dailyProgress } from "@/lib/daily-goal";
 import { buildPath, buildSkillNodes } from "@/lib/path";
 import { strandColorFromId, strandColors, type StrandKey } from "@/theme/tokens";
 import { Mascot } from "@/components/Mascot";
@@ -70,6 +71,7 @@ export default function Home() {
 
   const hasData = (attemptsQ.data?.length ?? 0) > 0;
   const wrongCount = useMemo(() => wrongQuestionIds(attemptsQ.data ?? []).length, [attemptsQ.data]);
+  const goal = useMemo(() => dailyProgress(attemptsQ.data ?? [], Date.now()), [attemptsQ.data]);
   const recos = [...path.due, ...path.next];
 
   const openSkill = (skillId: string) => {
@@ -192,6 +194,32 @@ export default function Home() {
             <Text className="text-xs font-bold text-muted">ngày</Text>
           </View>
         </Pressable>
+      )}
+
+      {/* Mục tiêu hằng ngày (HS đăng nhập) — vòng tiến độ X/N câu hôm nay */}
+      {isStudent && user && (
+        <View className="mt-4 rounded-lg bg-surface p-4 shadow-sm">
+          <View className="flex-row items-center justify-between">
+            <Text className="font-display text-base font-bold text-ink">
+              {goal.met ? "🎉 Đã đạt mục tiêu hôm nay!" : "🎯 Mục tiêu hôm nay"}
+            </Text>
+            <Text className="font-display text-sm font-extrabold text-brand">
+              {goal.done}/{goal.goal} câu
+            </Text>
+          </View>
+          <View className="mt-2 h-3 overflow-hidden rounded-full bg-paper">
+            <View
+              accessibilityLabel={`Tiến độ hôm nay ${goal.done} trên ${goal.goal} câu`}
+              style={{ width: `${Math.round(goal.ratio * 100)}%` }}
+              className={`h-3 rounded-full ${goal.met ? "bg-ok" : "bg-brand"}`}
+            />
+          </View>
+          {!goal.met && (
+            <Text className="mt-1.5 text-xs text-muted">
+              Cố thêm {goal.goal - goal.done} câu nữa để giữ phong độ 🔥
+            </Text>
+          )}
+        </View>
       )}
 
       {/* Lớp học (HS đăng nhập) — lớp của tôi + bài được giao + vào lớp bằng mã */}

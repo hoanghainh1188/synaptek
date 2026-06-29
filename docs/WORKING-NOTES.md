@@ -4,6 +4,8 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ Mục tiêu hằng ngày ✅ vừa xong** (`feature/daily-goal`, PR đang mở): HS home thêm vòng tiến độ "X/10 câu hôm nay" (đếm attempts theo ngày VN qua dayKeyVN) + mừng khi đạt. daily-goal.ts thuần (+4 test CI); useAttempts/AttemptLike thêm createdAt. e2e daily-goal PASS. Không migration.
+
 **+ Ngẫu nhiên hoá pool ✅ vừa xong** (`feature/assignment-pool`, PR đang mở): migration 0013 (pool_pick_count). Hàm thuần pickForStudent trong /classroom (sync \_shared) dùng chung client+Edge, seed=assignmentId|studentId → cùng bộ con → chấm đúng. Composer: ô "số câu ngẫu nhiên/HS". pool.test (4) + e2e assignment-pool PASS; deno+grade regression PASS. Decision Log D31.
 
 **+ Giao cho HS cụ thể ✅ vừa xong** (`feature/assignment-targets`, PR đang mở): migration 0012 (bảng assignment_targets + is_targeted + RLS assignments_select). Không target=cả lớp; có target=chỉ HS đó thấy+nộp (Edge enforce). Composer: Cả lớp/Một số HS + toggle roster. rls-0012 + e2e assignment-targets PASS. Decision Log D30.
