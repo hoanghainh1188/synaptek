@@ -17,6 +17,7 @@ import {
 import { QuestionCard } from "@/components/practice/QuestionCard";
 import { AnswerInput } from "@/components/practice/AnswerInput";
 import { Feedback } from "@/components/practice/Feedback";
+import { SessionResult } from "@/components/practice/SessionResult";
 import { useAuth } from "@/lib/supabase/auth";
 import { useSaveAttempt } from "@/lib/supabase/attempts";
 import { Mascot } from "@/components/Mascot";
@@ -134,24 +135,21 @@ export function SessionRunner({
 
   if (session.status === "finished") {
     const r = sessionResult(session);
+    const retry = () => {
+      savedRef.current = 0;
+      setValue("");
+      setSession(startSession(sessionId, questions));
+    };
     return wrap(
-      <View>
-        <Text className="font-display text-2xl font-extrabold text-ink">Xong rồi! 🎯</Text>
-        <Text className="mt-2 text-ink">
-          Em làm đúng <Text className="font-bold text-ok">{r.correct}</Text>/{r.total} câu.
-        </Text>
-        {r.wrong.length > 0 && (
-          <Text className="mt-1 text-sm text-muted">
-            Còn {r.wrong.length} câu chưa đúng — sẽ giữ lại để ôn tiếp lần sau.
-          </Text>
-        )}
-        <Pressable
-          onPress={() => router.replace("/")}
-          className="mt-5 min-h-[48px] items-center justify-center rounded-md bg-brand"
-        >
-          <Text className="font-display font-bold text-white">Về trang chủ</Text>
-        </Pressable>
-      </View>,
+      <SessionResult
+        total={r.total}
+        correct={r.correct}
+        score={r.score}
+        wrong={r.wrong.map((q) => ({ id: q.id, prompt: q.prompt }))}
+        topicName={label}
+        onRetry={retry}
+        onHome={() => router.replace("/")}
+      />,
     );
   }
 

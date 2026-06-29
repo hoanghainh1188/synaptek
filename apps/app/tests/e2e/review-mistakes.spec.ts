@@ -29,6 +29,11 @@ test("ôn lại câu sai: sai → ôn → đúng → tự loại", async ({ page
   await page.getByLabel("Kiểm tra").click();
   await expect(page.getByText(/Tuyệt vời/).first()).toBeVisible({ timeout: 15_000 });
 
+  // Màn kết quả (SessionResult dùng chung): có % đúng + nút Luyện lại
+  await page.getByText("Xem kết quả →").click();
+  await expect(page.getByText(/% đúng/)).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByText("Luyện lại")).toBeVisible();
+
   // Về trang chủ: không còn lối "Ôn lại câu sai" (đã giải quyết)
   await page.goto("/");
   await expect(page.getByLabel(/Ôn lại câu sai/)).toHaveCount(0, { timeout: 15_000 });
