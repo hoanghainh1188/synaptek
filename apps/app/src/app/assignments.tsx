@@ -5,6 +5,7 @@ import { router } from "expo-router";
 import { useAuth } from "@/lib/supabase/auth";
 import { useMyAssignments } from "@/lib/supabase/assignments";
 import { Mascot } from "@/components/Mascot";
+import { BackButton } from "@/components/BackButton";
 
 export default function Assignments() {
   const insets = useSafeAreaInsets();
@@ -22,6 +23,7 @@ export default function Assignments() {
         alignSelf: "center",
       }}
     >
+      <BackButton />
       <Text className="font-display text-3xl font-extrabold text-ink">Bài được giao</Text>
 
       {!user ? (

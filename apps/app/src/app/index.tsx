@@ -101,8 +101,8 @@ export default function Home() {
         </View>
         {user ? (
           <Pressable
-            onPress={() => router.push(isStudent ? "/progress" : "/profile")}
-            accessibilityLabel={isStudent ? "Tiến độ" : "Hồ sơ"}
+            onPress={() => router.push("/profile")}
+            accessibilityLabel="Hồ sơ"
             className="h-12 w-12 items-center justify-center rounded-full bg-brand"
           >
             <Text className="font-display text-lg font-extrabold text-white">
