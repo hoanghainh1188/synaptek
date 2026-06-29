@@ -4,6 +4,8 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ Nhãn MÔN cho câu tự soạn ✅ vừa xong** (`feature/subject-tag`, PR đang mở — PR 1/5 nhóm authoring+môn): migration 0016 (custom_questions.subject). subjects.ts thuần (Toán/Tiếng Việt/Tiếng Anh/Khoa học, +2 test CI). questions.tsx: picker môn + nhãn ở list. Mức nhẹ — KHÔNG đụng content Toán (D6). e2e authoring-advanced +assert PASS.
+
 **+ PH gợi ý hành động ✅ vừa xong** (`feature/parent-suggest`, PR đang mở): màn theo dõi con thêm card "💡 Gợi ý tuần này" (3 điểm yếu nên ôn) + nút "Giao bài ôn điểm yếu" → composer mở SẴN câu (?skills= → buildQuickSet từ questionsForSkill). e2e parent-suggest PASS. Không migration.
 
 **+ Tóm tắt tuần cho GV ✅ vừa xong** (`feature/gv-weekly`, PR đang mở): màn lớp GV thêm card "📅 Tuần này" (lượt nộp · đúng TB · HS làm bài, 7 ngày). useClassWeekly (RLS owns_class) + class-weekly.ts thuần (+2 test CI). e2e class-join +assert PASS. Không migration.
