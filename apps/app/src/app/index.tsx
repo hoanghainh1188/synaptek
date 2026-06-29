@@ -222,6 +222,20 @@ export default function Home() {
         </View>
       )}
 
+      {/* Luyện nhanh 1 chạm — trộn câu điểm yếu + đến hạn (HS đăng nhập) */}
+      {isStudent && user && (
+        <Pressable
+          accessibilityLabel="Luyện nhanh"
+          onPress={() => router.push("/quick-practice")}
+          className="mt-4 min-h-[52px] flex-row items-center justify-center gap-2 rounded-lg bg-brand shadow-sm"
+        >
+          <Text className="text-lg">⚡</Text>
+          <Text className="font-display text-base font-extrabold text-white">
+            Luyện nhanh — ôn đúng chỗ yếu
+          </Text>
+        </Pressable>
+      )}
+
       {/* Lớp học (HS đăng nhập) — lớp của tôi + bài được giao + vào lớp bằng mã */}
       {isStudent && user && (
         <View className="mt-4 flex-row gap-2">
