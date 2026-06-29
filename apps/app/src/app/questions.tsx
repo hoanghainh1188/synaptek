@@ -26,6 +26,7 @@ const TYPES: { value: CustomType; label: string }[] = [
   { value: "true-false", label: "Đúng/Sai" },
   { value: "expression", label: "Biểu thức" },
   { value: "fill-blank", label: "Điền chỗ trống" },
+  { value: "multi", label: "Chọn nhiều" },
 ];
 
 export default function MyQuestions() {
@@ -91,9 +92,9 @@ export default function MyQuestions() {
     setExplanation(qq.explanation ?? "");
     setImageUrl(qq.imageUrl);
     setSubject(qq.subject ?? DEFAULT_SUBJECT);
-    if (qq.type === "mcq") {
+    if (qq.type === "mcq" || qq.type === "multi") {
       setChoices(qq.choices ?? ["", ""]);
-      setCorrect(qq.correct);
+      setCorrect(qq.correct); // multi: correct là JSON mảng
     } else if (qq.type === "fill-blank") {
       try {
         const arr = JSON.parse(qq.correct);
@@ -109,11 +110,30 @@ export default function MyQuestions() {
   };
 
   const blankCount = (prompt.match(/_{2,}/g) ?? []).length;
+  // multi: tập đáp án đúng (lưu trong `correct` dạng JSON mảng).
+  const multiSet: string[] = (() => {
+    try {
+      const a = JSON.parse(correct);
+      return Array.isArray(a) ? a.map(String) : [];
+    } catch {
+      return [];
+    }
+  })();
+  const toggleMulti = (raw: string) => {
+    const v = raw.trim();
+    if (!v) return;
+    const next = multiSet.includes(v) ? multiSet.filter((x) => x !== v) : [...multiSet, v];
+    setCorrect(JSON.stringify(next));
+  };
   const valid = (() => {
     if (prompt.trim().length === 0) return false;
     if (type === "mcq") {
       const opts = choices.map((c) => c.trim()).filter(Boolean);
       return opts.length >= 2 && opts.includes(correct.trim());
+    }
+    if (type === "multi") {
+      const opts = choices.map((c) => c.trim()).filter(Boolean);
+      return opts.length >= 2 && multiSet.length >= 1 && multiSet.every((x) => opts.includes(x));
     }
     if (type === "fill-blank") {
       const ans = choices.map((c) => c.trim()).filter(Boolean);
@@ -131,7 +151,7 @@ export default function MyQuestions() {
     const payload = {
       type,
       prompt: prompt.trim(),
-      choices: type === "mcq" ? opts : null,
+      choices: type === "mcq" || type === "multi" ? opts : null,
       correct: correctValue,
       explanation: explanation.trim() || null,
       imageUrl,
@@ -262,6 +282,45 @@ export default function MyQuestions() {
                 />
               </View>
             ))}
+            <Pressable
+              accessibilityLabel="Thêm lựa chọn"
+              onPress={() => setChoices((prev) => [...prev, ""])}
+              className="mt-2 self-start"
+            >
+              <Text className="font-bold text-brand">+ Thêm lựa chọn</Text>
+            </Pressable>
+          </View>
+        )}
+
+        {type === "multi" && (
+          <View className="mt-4">
+            <Text className="mb-1 text-sm font-bold text-muted">
+              Lựa chọn (✓ tất cả đáp án đúng)
+            </Text>
+            {choices.map((c, i) => {
+              const on = multiSet.includes(c.trim());
+              return (
+                <View key={i} className="mt-2 flex-row items-center gap-2">
+                  <Pressable
+                    accessibilityLabel={`Đáp án đúng ${i + 1}`}
+                    onPress={() => toggleMulti(c)}
+                    className={`h-6 w-6 items-center justify-center rounded-md border-2 ${on ? "border-brand bg-brand" : "border-line"}`}
+                  >
+                    {on && <Text className="text-xs font-extrabold text-white">✓</Text>}
+                  </Pressable>
+                  <TextInput
+                    value={c}
+                    onChangeText={(v) =>
+                      setChoices((prev) => prev.map((x, j) => (j === i ? v : x)))
+                    }
+                    placeholder={`Lựa chọn ${i + 1}`}
+                    placeholderTextColor="#a1a1aa"
+                    accessibilityLabel={`Lựa chọn ${i + 1}`}
+                    className="min-h-[44px] flex-1 rounded-md border-2 border-line bg-paper px-3 text-base text-ink"
+                  />
+                </View>
+              );
+            })}
             <Pressable
               accessibilityLabel="Thêm lựa chọn"
               onPress={() => setChoices((prev) => [...prev, ""])}

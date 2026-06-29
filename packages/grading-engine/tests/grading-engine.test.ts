@@ -283,4 +283,26 @@ test("roundTo: không bật → 3,14 ≠ 3,14159", () => {
   assert.equal(grade({ type: "numeric", correct: "3,14159", answer: "3,14" }).isCorrect, false);
 });
 
+// ── Multi-select (chọn nhiều đáp án) ─────────────────────────────────────────
+test("multi: chọn đúng TẬP → đúng (không phân biệt thứ tự/hoa-thường)", () => {
+  const r = grade({ type: "multi", correct: ["A", "C"], answer: ["c", "a"] });
+  assert.equal(r.isCorrect, true);
+  assert.equal(r.score, 1);
+});
+
+test("multi: thiếu 1 đáp án → sai", () => {
+  assert.equal(grade({ type: "multi", correct: ["A", "C"], answer: ["A"] }).isCorrect, false);
+});
+
+test("multi: chọn dư đáp án sai → sai", () => {
+  assert.equal(
+    grade({ type: "multi", correct: ["A", "C"], answer: ["A", "C", "B"] }).isCorrect,
+    false,
+  );
+});
+
+test("multi: bỏ trống → empty", () => {
+  assert.equal(grade({ type: "multi", correct: ["A"], answer: [] }).feedbackCode, "empty");
+});
+
 console.log(`\n${passed} test(s) passed.`);

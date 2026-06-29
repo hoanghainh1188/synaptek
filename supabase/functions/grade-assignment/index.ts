@@ -155,9 +155,9 @@ export async function handler(req: Request): Promise<Response> {
       .in("id", customIds);
     for (const c of customRows ?? []) {
       const type = c.type as AnswerKey["type"];
-      // fill-blank: đáp án nhiều ô lưu JSON array trong cột text → parse về mảng cho engine.
+      // fill-blank & multi: đáp án nhiều phần lưu JSON array trong cột text → parse về mảng cho engine.
       let correct: string | string[] = c.correct as string;
-      if (type === "fill-blank") {
+      if (type === "fill-blank" || type === "multi") {
         try {
           const arr = JSON.parse(c.correct as string);
           if (Array.isArray(arr)) correct = arr.map(String);

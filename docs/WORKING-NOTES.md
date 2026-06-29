@@ -4,6 +4,8 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ Multi-select MCQ ✅ vừa xong** (`feature/multi-select`, PR 2/5): loại câu "Chọn nhiều" (chọn nhiều đáp án đúng). Engine type "multi" (so TẬP, +4 test); curriculum QUESTION_TYPES + CustomType + migration 0017 (CHECK). Authoring (đánh dấu nhiều đúng, correct=JSON) + AnswerInput (checkbox) + Edge (parse JSON multi). e2e multi-select (chấm 100%) PASS.
+
 **+ Nhãn MÔN cho câu tự soạn ✅ vừa xong** (`feature/subject-tag`, PR đang mở — PR 1/5 nhóm authoring+môn): migration 0016 (custom_questions.subject). subjects.ts thuần (Toán/Tiếng Việt/Tiếng Anh/Khoa học, +2 test CI). questions.tsx: picker môn + nhãn ở list. Mức nhẹ — KHÔNG đụng content Toán (D6). e2e authoring-advanced +assert PASS.
 
 **+ PH gợi ý hành động ✅ vừa xong** (`feature/parent-suggest`, PR đang mở): màn theo dõi con thêm card "💡 Gợi ý tuần này" (3 điểm yếu nên ôn) + nút "Giao bài ôn điểm yếu" → composer mở SẴN câu (?skills= → buildQuickSet từ questionsForSkill). e2e parent-suggest PASS. Không migration.

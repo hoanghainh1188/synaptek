@@ -37,6 +37,39 @@ export function AnswerInput({ question, value, onChange }: AnswerInputProps) {
         </View>
       );
 
+    case "multi": {
+      const selectedArr = Array.isArray(value) ? value : [];
+      return (
+        <View className="gap-3">
+          <Text className="text-sm font-semibold text-muted">Chọn tất cả đáp án đúng:</Text>
+          {(question.choices ?? []).map((c) => {
+            const on = selectedArr.includes(c);
+            return (
+              <Pressable
+                key={c}
+                accessibilityLabel={c}
+                onPress={() =>
+                  onChange(on ? selectedArr.filter((x) => x !== c) : [...selectedArr, c])
+                }
+                className={`min-h-[56px] flex-row items-center gap-3 rounded-md border-2 px-4 ${
+                  on ? "border-num bg-num/10" : "border-line bg-surface"
+                }`}
+              >
+                <View
+                  className={`h-6 w-6 items-center justify-center rounded-md border-2 ${on ? "border-num bg-num" : "border-line"}`}
+                >
+                  {on && <Text className="text-xs font-extrabold text-white">✓</Text>}
+                </View>
+                <View className="flex-1">
+                  <MathText value={c} size={20} weight="700" color={on ? "#2563eb" : "#18181b"} />
+                </View>
+              </Pressable>
+            );
+          })}
+        </View>
+      );
+    }
+
     case "true-false":
       return (
         <View className="flex-row gap-3">

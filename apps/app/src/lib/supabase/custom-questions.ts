@@ -11,7 +11,8 @@ export type CustomType =
   | "fraction"
   | "true-false"
   | "expression"
-  | "fill-blank";
+  | "fill-blank"
+  | "multi";
 
 export interface CustomQuestion {
   id: string;
@@ -85,7 +86,7 @@ export function useCreateCustomQuestion() {
         author_id: user.id,
         type: q.type,
         prompt: q.prompt,
-        choices: q.type === "mcq" ? (q.choices ?? []) : null,
+        choices: q.type === "mcq" || q.type === "multi" ? (q.choices ?? []) : null,
         correct: q.correct,
         explanation: q.explanation ?? null,
         image_url: q.imageUrl ?? null,
@@ -108,7 +109,7 @@ export function useUpdateCustomQuestion() {
         .update({
           type: q.type,
           prompt: q.prompt,
-          choices: q.type === "mcq" ? (q.choices ?? []) : null,
+          choices: q.type === "mcq" || q.type === "multi" ? (q.choices ?? []) : null,
           correct: q.correct,
           explanation: q.explanation ?? null,
           image_url: q.imageUrl ?? null,
