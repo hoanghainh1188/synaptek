@@ -15,9 +15,11 @@ import {
 } from "@/lib/content";
 import {
   useAssignment,
+  useAssignmentTargets,
   useCreateAssignment,
   useUpdateAssignment,
 } from "@/lib/supabase/assignments";
+import { useRoster } from "@/lib/supabase/classes";
 import { useCreateHomeAssignment } from "@/lib/supabase/parent";
 import { useMyCustomQuestions } from "@/lib/supabase/custom-questions";
 import { MathText } from "@/components/math/MathText";
@@ -43,6 +45,9 @@ export default function NewAssignment() {
   const [prefilled, setPrefilled] = useState(false);
   const [query, setQuery] = useState(""); // tìm/lọc câu theo nội dung
   const [preview, setPreview] = useState(false); // xem trước như HS
+  const [targetMode, setTargetMode] = useState<"all" | "some">("all"); // giao cả lớp / một số HS
+  const [targetIds, setTargetIds] = useState<Set<string>>(new Set());
+  const [targetsPrefilled, setTargetsPrefilled] = useState(false);
 
   // Prefill khi sửa (một lần, sau khi tải xong bài).
   useEffect(() => {
@@ -62,6 +67,21 @@ export default function NewAssignment() {
     : params.classId
       ? String(params.classId)
       : undefined;
+  const isHome = Boolean(childId); // bài tại nhà (PH) → không có "giao cho HS cụ thể"
+  const roster = useRoster(classId ?? "");
+  const existingTargets = useAssignmentTargets(editId ?? "");
+
+  // Prefill targets khi sửa: có target rows → chế độ "một số HS".
+  useEffect(() => {
+    if (editId && existingTargets.data && !targetsPrefilled) {
+      if (existingTargets.data.length > 0) {
+        setTargetMode("some");
+        setTargetIds(new Set(existingTargets.data));
+      }
+      setTargetsPrefilled(true);
+    }
+  }, [editId, existingTargets.data, targetsPrefilled]);
+
   const topics = listTopics(grade).filter((t) => getQuestions(t.id).length > 0);
   const q = query.trim().toLowerCase();
   const questions = useMemo(() => {
@@ -124,15 +144,20 @@ export default function NewAssignment() {
       maxAttempts: toNum(maxAttempts),
       timeLimitMinutes: toNum(timeLimit),
     };
+    // Bài lớp: "some" → danh sách HS; "all" → [] (xoá target = cả lớp). Bài nhà: không áp dụng.
+    const targetStudentIds = targetMode === "some" ? [...targetIds] : [];
     if (editId) {
       update.mutate(
-        { ...limits, classId: String(classId), id: editId },
+        { ...limits, classId: String(classId), id: editId, targetStudentIds },
         { onSuccess: () => router.back() },
       );
     } else if (childId) {
       createHome.mutate({ ...limits, childId }, { onSuccess: () => router.back() });
     } else {
-      create.mutate({ ...limits, classId: String(classId) }, { onSuccess: () => router.back() });
+      create.mutate(
+        { ...limits, classId: String(classId), targetStudentIds },
+        { onSuccess: () => router.back() },
+      );
     }
   };
 
@@ -220,6 +245,63 @@ export default function NewAssignment() {
             </View>
             <Text className="mt-2 text-[11px] text-muted">Để trống = không giới hạn.</Text>
           </View>
+
+          {/* Giao cho — cả lớp / một số HS (chỉ bài lớp) */}
+          {!isHome && (
+            <View className="mt-5 rounded-lg bg-surface p-4 shadow-sm">
+              <Text className="font-display text-base font-bold text-ink">Giao cho</Text>
+              <View className="mt-3 flex-row gap-2">
+                {(["all", "some"] as const).map((m) => (
+                  <Pressable
+                    key={m}
+                    accessibilityLabel={m === "all" ? "Giao cả lớp" : "Giao một số HS"}
+                    onPress={() => setTargetMode(m)}
+                    className={`min-h-[40px] flex-1 items-center justify-center rounded-md ${targetMode === m ? "bg-brand" : "bg-paper"}`}
+                  >
+                    <Text className={`font-bold ${targetMode === m ? "text-white" : "text-ink"}`}>
+                      {m === "all" ? "Cả lớp" : "Một số HS"}
+                    </Text>
+                  </Pressable>
+                ))}
+              </View>
+              {targetMode === "some" && (
+                <View className="mt-3 gap-2">
+                  {(roster.data ?? []).length === 0 && (
+                    <Text className="text-sm text-muted">Lớp chưa có học sinh.</Text>
+                  )}
+                  {(roster.data ?? []).map((r) => {
+                    const on = targetIds.has(r.studentId);
+                    return (
+                      <Pressable
+                        key={r.studentId}
+                        accessibilityLabel={`Chọn ${r.fullName ?? "HS"}`}
+                        onPress={() =>
+                          setTargetIds((prev) => {
+                            const next = new Set(prev);
+                            next.has(r.studentId)
+                              ? next.delete(r.studentId)
+                              : next.add(r.studentId);
+                            return next;
+                          })
+                        }
+                        className={`flex-row items-center gap-3 rounded-md p-2 ${on ? "bg-brand/10" : "bg-paper"}`}
+                      >
+                        <View
+                          className={`h-5 w-5 items-center justify-center rounded border-2 ${on ? "border-brand bg-brand" : "border-line"}`}
+                        >
+                          {on && <Text className="text-[10px] font-extrabold text-white">✓</Text>}
+                        </View>
+                        <Text className="flex-1 font-semibold text-ink">
+                          {r.fullName ?? "(chưa đặt tên)"}
+                        </Text>
+                      </Pressable>
+                    );
+                  })}
+                  <Text className="text-xs text-muted">Đã chọn {targetIds.size} HS</Text>
+                </View>
+              )}
+            </View>
+          )}
 
           {/* Tìm câu + đếm đã chọn + xem trước */}
           <View className="mt-5">

@@ -105,6 +105,14 @@ export async function handler(req: Request): Promise<Response> {
       .eq("student_id", studentId)
       .maybeSingle();
     if (!member) return json({ error: "not_member" }, 403);
+    // Giao cho HS cụ thể (D30): nếu bài có target mà HS không thuộc → từ chối.
+    const { data: targets } = await admin
+      .from("assignment_targets")
+      .select("student_id")
+      .eq("assignment_id", assignmentId);
+    if (targets && targets.length > 0 && !targets.some((t) => t.student_id === studentId)) {
+      return json({ error: "not_targeted" }, 403);
+    }
   } else if (asg.assignee_student_id !== studentId) {
     return json({ error: "not_member" }, 403);
   }
