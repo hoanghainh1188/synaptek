@@ -5,7 +5,7 @@ import { useAuth } from "./auth";
 
 export interface AssignmentRow {
   id: string;
-  classId: string;
+  classId: string | null; // null = bài tại nhà (PH→con)
   title: string;
   questionIds: string[];
   dueAt: string | null;
@@ -21,7 +21,7 @@ const SELECT_COLS =
 function mapRow(r: Record<string, unknown>): AssignmentRow {
   return {
     id: r.id as string,
-    classId: r.class_id as string,
+    classId: (r.class_id as string | null) ?? null,
     title: r.title as string,
     questionIds: (r.question_ids as string[]) ?? [],
     dueAt: (r.due_at as string | null) ?? null,

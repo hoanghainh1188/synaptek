@@ -2,13 +2,17 @@
 import { ScrollView, Text, View, Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
-import { useChildProgress } from "@/lib/supabase/parent";
+import { useChildProgress, useHomeAssignments } from "@/lib/supabase/parent";
+import { useDeleteAssignment } from "@/lib/supabase/assignments";
 import { skillName } from "@/lib/content";
 
 export default function ChildMonitor() {
   const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const p = useChildProgress(String(id));
+  const childId = String(id);
+  const p = useChildProgress(childId);
+  const homework = useHomeAssignments(childId);
+  const deleteAssignment = useDeleteAssignment();
   const d = p.data;
 
   const accuracy =
@@ -34,6 +38,14 @@ export default function ChildMonitor() {
       </Pressable>
       <Text className="font-display text-2xl font-extrabold text-ink">{d?.fullName ?? "Con"}</Text>
       <Text className="mt-1 text-sm text-muted">Theo dõi tiến độ (chỉ xem)</Text>
+
+      <Pressable
+        accessibilityLabel="Giao bài cho con"
+        onPress={() => router.push(`/assignment/new?childId=${childId}`)}
+        className="mt-4 min-h-[48px] flex-row items-center justify-center gap-2 rounded-md bg-brand"
+      >
+        <Text className="font-display font-bold text-white">+ Giao bài cho con</Text>
+      </Pressable>
 
       {/* Tổng quan */}
       <View className="mt-5 flex-row gap-3">
@@ -72,6 +84,35 @@ export default function ChildMonitor() {
           </View>
         ))}
       </View>
+
+      {/* Bài PH đã giao tại nhà */}
+      {(homework.data?.length ?? 0) > 0 && (
+        <View className="mt-7">
+          <Text className="font-display text-xl font-bold text-ink">Bài đã giao</Text>
+          <View className="mt-3 gap-2">
+            {homework.data?.map((h) => (
+              <View
+                key={h.id}
+                className="flex-row items-center gap-3 rounded-lg bg-surface p-3 shadow-sm"
+              >
+                <View className="flex-1">
+                  <Text className="font-display font-bold text-ink">{h.title}</Text>
+                  <Text className="text-xs font-semibold text-muted">{h.questionCount} câu</Text>
+                </View>
+                <Pressable
+                  accessibilityLabel={`Xoá ${h.title}`}
+                  onPress={() =>
+                    deleteAssignment.mutate(h.id, { onSuccess: () => homework.refetch() })
+                  }
+                  className="min-h-[40px] items-center justify-center rounded-md px-2"
+                >
+                  <Text className="font-bold text-no">Xoá</Text>
+                </Pressable>
+              </View>
+            ))}
+          </View>
+        </View>
+      )}
 
       {/* Kết quả bài được giao */}
       {(d?.submissions.length ?? 0) > 0 && (

@@ -1,5 +1,5 @@
-// Route GV — soạn/sửa bài tập: chọn câu từ content/ + hạn nộp + giới hạn → tạo (hoặc cập nhật).
-// Tham số: classId (tạo mới) HOẶC editId (sửa bài đã có — prefill từ assignment).
+// Route — soạn/sửa bài tập: chọn câu từ content/ + hạn nộp + giới hạn → tạo (hoặc cập nhật).
+// Tham số: classId (GV tạo bài lớp) · childId (PH giao bài tại nhà) · editId (sửa bài đã có — prefill).
 import { useEffect, useMemo, useState } from "react";
 import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -10,13 +10,16 @@ import {
   useCreateAssignment,
   useUpdateAssignment,
 } from "@/lib/supabase/assignments";
+import { useCreateHomeAssignment } from "@/lib/supabase/parent";
 import { MathText } from "@/components/math/MathText";
 
 export default function NewAssignment() {
   const insets = useSafeAreaInsets();
-  const params = useLocalSearchParams<{ classId?: string; editId?: string }>();
+  const params = useLocalSearchParams<{ classId?: string; childId?: string; editId?: string }>();
   const editId = params.editId ? String(params.editId) : null;
+  const childId = params.childId ? String(params.childId) : null; // PH giao bài tại nhà
   const create = useCreateAssignment();
+  const createHome = useCreateHomeAssignment();
   const update = useUpdateAssignment();
   const existing = useAssignment(editId ?? "");
 
@@ -57,24 +60,32 @@ export default function NewAssignment() {
       return next;
     });
 
-  const busy = create.isPending || update.isPending;
-  const canCreate = title.trim().length > 0 && selected.size > 0 && !busy && Boolean(classId);
+  const busy = create.isPending || createHome.isPending || update.isPending;
+  const canCreate =
+    title.trim().length > 0 && selected.size > 0 && !busy && Boolean(classId || childId);
 
   const submit = () => {
     const toNum = (s: string) => {
       const n = parseInt(s, 10);
       return Number.isFinite(n) && n >= 1 ? n : null;
     };
-    const payload = {
-      classId: String(classId),
+    const limits = {
       title: title.trim(),
       questionIds: [...selected],
       allowLate,
       maxAttempts: toNum(maxAttempts),
       timeLimitMinutes: toNum(timeLimit),
     };
-    if (editId) update.mutate({ ...payload, id: editId }, { onSuccess: () => router.back() });
-    else create.mutate(payload, { onSuccess: () => router.back() });
+    if (editId) {
+      update.mutate(
+        { ...limits, classId: String(classId), id: editId },
+        { onSuccess: () => router.back() },
+      );
+    } else if (childId) {
+      createHome.mutate({ ...limits, childId }, { onSuccess: () => router.back() });
+    } else {
+      create.mutate({ ...limits, classId: String(classId) }, { onSuccess: () => router.back() });
+    }
   };
 
   // Chế độ sửa: chờ prefill xong mới hiện form (tránh ghi đè dữ liệu nhập khi data tải chậm).
@@ -99,7 +110,7 @@ export default function NewAssignment() {
         <Text className="text-lg text-muted">←</Text>
       </Pressable>
       <Text className="font-display text-2xl font-extrabold text-ink">
-        {editId ? "Sửa bài tập" : "Soạn bài tập"}
+        {editId ? "Sửa bài tập" : childId ? "Giao bài cho con" : "Soạn bài tập"}
       </Text>
 
       {loadingEdit && <Text className="mt-4 text-muted">Đang tải bài tập…</Text>}

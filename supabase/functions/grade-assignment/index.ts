@@ -89,18 +89,25 @@ export async function handler(req: Request): Promise<Response> {
   const admin = createClient(url, serviceRole, { auth: { persistSession: false } });
   const { data: asg, error: asgErr } = await admin
     .from("assignments")
-    .select("class_id, question_ids, due_at, allow_late, max_attempts, time_limit_minutes")
+    .select(
+      "class_id, assignee_student_id, question_ids, due_at, allow_late, max_attempts, time_limit_minutes",
+    )
     .eq("id", assignmentId)
     .maybeSingle();
   if (asgErr || !asg) return json({ error: "unknown_assignment" }, 404);
 
-  const { data: member } = await admin
-    .from("class_members")
-    .select("student_id")
-    .eq("class_id", asg.class_id)
-    .eq("student_id", studentId)
-    .maybeSingle();
-  if (!member) return json({ error: "not_member" }, 403);
+  // Thành viên: bài LỚP → là member của lớp; bài TẠI NHÀ → đúng con được giao.
+  if (asg.class_id) {
+    const { data: member } = await admin
+      .from("class_members")
+      .select("student_id")
+      .eq("class_id", asg.class_id)
+      .eq("student_id", studentId)
+      .maybeSingle();
+    if (!member) return json({ error: "not_member" }, 403);
+  } else if (asg.assignee_student_id !== studentId) {
+    return json({ error: "not_member" }, 403);
+  }
 
   // Trạng thái bài nộp hiện có (số lần đã nộp + mốc bắt đầu cho timer).
   const { data: existing } = await admin
