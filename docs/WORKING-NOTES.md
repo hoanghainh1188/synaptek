@@ -4,6 +4,8 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ Bảng xếp hạng lớp ✅ vừa xong** (`feature/class-leaderboard`, PR đang mở): RPC class_leaderboard (SECURITY DEFINER + gate is_member) — HS xem top XP bạn cùng lớp ở màn lớp tham gia, đánh dấu "(em)". gamification_state vẫn riêng tư. rls-0014 + e2e PASS. Decision Log D32.
+
 **+ Luyện nhanh 1 chạm ✅ vừa xong** (`feature/quick-practice`, PR đang mở): nút home → phiên trộn câu từ ĐIỂM YẾU + ĐẾN HẠN (buildPath như home → buildQuickSet round-robin). Tách `SessionRunner` dùng chung review-mistakes + quick-practice (DRY). quick-set.ts thuần (+4 test CI). e2e quick-practice + review-mistakes(refactor) PASS. Không migration.
 
 **+ Mục tiêu hằng ngày ✅ vừa xong** (`feature/daily-goal`, PR đang mở): HS home thêm vòng tiến độ "X/10 câu hôm nay" (đếm attempts theo ngày VN qua dayKeyVN) + mừng khi đạt. daily-goal.ts thuần (+4 test CI); useAttempts/AttemptLike thêm createdAt. e2e daily-goal PASS. Không migration.
