@@ -20,6 +20,7 @@ const TYPES: { value: CustomType; label: string }[] = [
   { value: "fraction", label: "Phân số" },
   { value: "true-false", label: "Đúng/Sai" },
   { value: "expression", label: "Biểu thức" },
+  { value: "fill-blank", label: "Điền chỗ trống" },
 ];
 
 export default function MyQuestions() {
@@ -44,25 +45,32 @@ export default function MyQuestions() {
     setExplanation("");
   };
 
+  const blankCount = (prompt.match(/_{2,}/g) ?? []).length;
   const valid = (() => {
-    if (prompt.trim().length === 0 || correct.trim().length === 0) return false;
+    if (prompt.trim().length === 0) return false;
     if (type === "mcq") {
       const opts = choices.map((c) => c.trim()).filter(Boolean);
       return opts.length >= 2 && opts.includes(correct.trim());
     }
+    if (type === "fill-blank") {
+      const ans = choices.map((c) => c.trim()).filter(Boolean);
+      return blankCount >= 1 && ans.length === blankCount;
+    }
     if (type === "true-false") return correct === "true" || correct === "false";
-    return true;
+    return correct.trim().length > 0; // numeric/fraction/expression
   })();
 
   const submit = () => {
     setMsg(null);
     const opts = choices.map((c) => c.trim()).filter(Boolean);
+    // fill-blank: đáp án từng ô lưu JSON array; còn lại là chuỗi đơn.
+    const correctValue = type === "fill-blank" ? JSON.stringify(opts) : correct.trim();
     create.mutate(
       {
         type,
         prompt: prompt.trim(),
         choices: type === "mcq" ? opts : null,
-        correct: correct.trim(),
+        correct: correctValue,
         explanation: explanation.trim() || null,
       },
       {
@@ -121,6 +129,7 @@ export default function MyQuestions() {
                 onPress={() => {
                   setType(t.value);
                   setCorrect(""); // đổi loại → xoá đáp án cũ (tránh không hợp lệ)
+                  setChoices(["", ""]);
                 }}
                 className={`min-h-[44px] flex-1 items-center justify-center rounded-md border-2 ${active ? "border-brand bg-brand/10" : "border-line bg-paper"}`}
               >
@@ -202,6 +211,36 @@ export default function MyQuestions() {
                 );
               })}
             </View>
+          </View>
+        )}
+
+        {type === "fill-blank" && (
+          <View className="mt-4">
+            <Text className="mb-1 text-sm font-bold text-muted">
+              Đáp án từng ô (đặt {"`__`"} cho mỗi ô trong đề)
+            </Text>
+            <Text className="mb-2 text-xs text-muted">
+              Đề có {blankCount} ô — nhập {blankCount > 0 ? blankCount : "tương ứng"} đáp án theo
+              thứ tự.
+            </Text>
+            {choices.map((c, i) => (
+              <TextInput
+                key={i}
+                value={c}
+                onChangeText={(v) => setChoices((prev) => prev.map((x, j) => (j === i ? v : x)))}
+                placeholder={`Đáp án ô ${i + 1}`}
+                placeholderTextColor="#a1a1aa"
+                accessibilityLabel={`Đáp án ô ${i + 1}`}
+                className="mt-2 min-h-[44px] rounded-md border-2 border-line bg-paper px-3 text-base text-ink"
+              />
+            ))}
+            <Pressable
+              accessibilityLabel="Thêm ô đáp án"
+              onPress={() => setChoices((prev) => [...prev, ""])}
+              className="mt-2 self-start"
+            >
+              <Text className="font-bold text-brand">+ Thêm ô</Text>
+            </Pressable>
           </View>
         )}
 

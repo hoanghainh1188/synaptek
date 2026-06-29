@@ -4,6 +4,8 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ Authoring đủ 6/6 loại ✅ vừa xong** (`feature/authoring-fillblank`, PR đang mở): migration `0010` thêm `fill-blank`; đáp án nhiều ô lưu JSON, Edge parse; AnswerInput đếm ô từ dấu `__` trong prompt (chạy cả content + custom). e2e custom-question (mcq+true-false+fill-blank) PASS. → câu tự soạn ĐỦ 6 loại engine hỗ trợ.
+
 **+ Authoring 5/6 loại ✅ vừa xong** (`feature/authoring-types`, PR đang mở): migration `0009` nới `custom_questions.type` thêm `true-false` + `expression` (engine/AnswerInput đã hỗ trợ; Edge chấm generic — không đổi). UI soạn: toggle Đúng/Sai + ô biểu thức. e2e custom-question (mcq + true-false) PASS. **fill-blank ĐỂ PR RIÊNG** (cần lưu đáp án mảng + đếm ô từ prompt + UI N đáp án).
 
 **+ UX & HS xem lớp ✅ vừa xong**: (A) đổi vai trò có xác nhận · nút Back dùng chung · avatar→Hồ sơ (PR #31). (B) "Lớp của tôi" cho HS — migration `0008` (`is_my_teacher` + `class_member_count`, RLS đọc tên GV + sĩ số) + màn `my-classes`/`my-class/[id]` (tên lớp/GV/sĩ số/bài/trạng thái nộp). RLS 0008 3 nhóm PASS; e2e `student-class-view` PASS.

@@ -67,7 +67,10 @@ export function AnswerInput({ question, value, onChange }: AnswerInputProps) {
 
     case "fill-blank": {
       const arr = Array.isArray(value) ? value : [];
-      const n = Array.isArray(question.correct) ? question.correct.length : 1;
+      // Số ô = số dấu "__" trong đề (chạy cho cả content + câu tự soạn ẩn đáp án); fallback theo correct.
+      const fromPrompt = (question.prompt.match(/_{2,}/g) ?? []).length;
+      const n =
+        fromPrompt > 0 ? fromPrompt : Array.isArray(question.correct) ? question.correct.length : 1;
       return (
         <View className="flex-row flex-wrap gap-2">
           {Array.from({ length: n }).map((_, i) => (

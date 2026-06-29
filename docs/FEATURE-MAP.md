@@ -42,7 +42,7 @@ mindmap
       ✅ Pipeline JSON + validate
       ⏳ Khối lượng câu hỏi còn mỏng
       ✅ Authoring UI (GV/PH soạn câu)
-      ✅ 5 loại câu tự soạn (mcq/số/phân số/đúng-sai/biểu thức)
+      ✅ 6 loại câu tự soạn (đủ: mcq/số/phân số/đúng-sai/biểu thức/điền chỗ trống)
       ✅ Nội dung lớp 1-5 (160 câu)
     ⚙️ Hạ tầng
       ✅ Monorepo + CI + Spec Kit

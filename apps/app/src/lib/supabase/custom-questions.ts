@@ -5,7 +5,13 @@ import type { Question } from "@synaptek/curriculum";
 import { supabase } from "./client";
 import { useAuth } from "./auth";
 
-export type CustomType = "mcq" | "numeric" | "fraction" | "true-false" | "expression";
+export type CustomType =
+  | "mcq"
+  | "numeric"
+  | "fraction"
+  | "true-false"
+  | "expression"
+  | "fill-blank";
 
 export interface CustomQuestion {
   id: string;
