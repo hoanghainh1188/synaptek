@@ -17,6 +17,7 @@ import {
   type CustomType,
 } from "@/lib/supabase/custom-questions";
 import { MathText } from "@/components/math/MathText";
+import { SUBJECTS, subjectLabel, DEFAULT_SUBJECT } from "@/lib/subjects";
 
 const TYPES: { value: CustomType; label: string }[] = [
   { value: "mcq", label: "Trắc nghiệm" },
@@ -45,6 +46,7 @@ export default function MyQuestions() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [subject, setSubject] = useState(DEFAULT_SUBJECT);
 
   const reset = () => {
     setPrompt("");
@@ -52,6 +54,7 @@ export default function MyQuestions() {
     setCorrect("");
     setExplanation("");
     setImageUrl(null);
+    setSubject(DEFAULT_SUBJECT);
     setEditingId(null);
   };
 
@@ -87,6 +90,7 @@ export default function MyQuestions() {
     setPrompt(qq.prompt);
     setExplanation(qq.explanation ?? "");
     setImageUrl(qq.imageUrl);
+    setSubject(qq.subject ?? DEFAULT_SUBJECT);
     if (qq.type === "mcq") {
       setChoices(qq.choices ?? ["", ""]);
       setCorrect(qq.correct);
@@ -131,6 +135,7 @@ export default function MyQuestions() {
       correct: correctValue,
       explanation: explanation.trim() || null,
       imageUrl,
+      subject,
     };
     const onDone = {
       onSuccess: () => {
@@ -178,6 +183,25 @@ export default function MyQuestions() {
 
       {/* Form soạn */}
       <View className="mt-5 rounded-lg bg-surface p-4 shadow-sm">
+        <Text className="mb-1 text-sm font-bold text-muted">Môn</Text>
+        <View className="mb-3 flex-row flex-wrap gap-2">
+          {SUBJECTS.map((sub) => {
+            const active = subject === sub.key;
+            return (
+              <Pressable
+                key={sub.key}
+                accessibilityLabel={`Môn ${sub.label}`}
+                onPress={() => setSubject(sub.key)}
+                className={`min-h-[36px] flex-row items-center gap-1 rounded-full px-3 ${active ? "bg-brand" : "bg-paper"}`}
+              >
+                <Text>{sub.emoji}</Text>
+                <Text className={`font-bold ${active ? "text-white" : "text-ink"}`}>
+                  {sub.label}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
         <Text className="mb-1 text-sm font-bold text-muted">Loại câu</Text>
         <View className="flex-row flex-wrap gap-2">
           {TYPES.map((t) => {
@@ -404,7 +428,8 @@ export default function MyQuestions() {
             <View className="flex-1">
               <MathText value={q.prompt} size={15} weight="600" />
               <Text className="mt-0.5 text-xs font-semibold text-muted">
-                {TYPES.find((t) => t.value === q.type)?.label} · đáp án: {q.correct}
+                {subjectLabel(q.subject)} · {TYPES.find((t) => t.value === q.type)?.label} · đáp án:{" "}
+                {q.correct}
               </Text>
             </View>
             <Pressable

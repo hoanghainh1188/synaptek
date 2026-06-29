@@ -21,6 +21,7 @@ export interface CustomQuestion {
   correct: string;
   explanation: string | null;
   imageUrl: string | null;
+  subject: string | null; // null = Toán (mặc định)
 }
 
 export interface NewCustomQuestion {
@@ -30,6 +31,7 @@ export interface NewCustomQuestion {
   correct: string;
   explanation?: string | null;
   imageUrl?: string | null;
+  subject?: string | null;
 }
 
 /** Upload ảnh câu hỏi lên Storage (bucket public 'question-images', thư mục theo uid) → trả public URL. */
@@ -54,7 +56,7 @@ export function useMyCustomQuestions() {
       if (!supabase || !user) return [];
       const { data, error } = await supabase
         .from("custom_questions")
-        .select("id, type, prompt, choices, correct, explanation, image_url")
+        .select("id, type, prompt, choices, correct, explanation, image_url, subject")
         .eq("author_id", user.id)
         .order("created_at", { ascending: false });
       if (error) throw error;
@@ -66,6 +68,7 @@ export function useMyCustomQuestions() {
         correct: r.correct as string,
         explanation: (r.explanation as string | null) ?? null,
         imageUrl: (r.image_url as string | null) ?? null,
+        subject: (r.subject as string | null) ?? null,
       }));
     },
   });
@@ -86,6 +89,7 @@ export function useCreateCustomQuestion() {
         correct: q.correct,
         explanation: q.explanation ?? null,
         image_url: q.imageUrl ?? null,
+        subject: q.subject ?? null,
       });
       if (error) throw error;
     },
@@ -108,6 +112,7 @@ export function useUpdateCustomQuestion() {
           correct: q.correct,
           explanation: q.explanation ?? null,
           image_url: q.imageUrl ?? null,
+          subject: q.subject ?? null,
         })
         .eq("id", q.id);
       if (error) throw error;

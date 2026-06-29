@@ -11,13 +11,16 @@ test("authoring nâng cao: sửa câu · tìm/đếm/preview · nhân bản bài
   await page.getByPlaceholder("••••••").fill("matkhau123");
   await page.getByText("Đăng ký", { exact: true }).click();
 
-  // (1) Sửa câu tự soạn
+  // (1) Sửa câu tự soạn + chọn MÔN
   await page.goto("/questions");
+  await page.getByLabel("Môn Tiếng Anh").click();
   await page.getByLabel("Số", { exact: true }).click();
   await page.getByLabel("Đề bài").fill("Câu gốc 2+2");
   await page.getByLabel("Đáp án đúng").fill("4");
   await page.getByLabel("Lưu câu hỏi").click();
   await expect(page.getByText("Đã lưu câu hỏi ✓")).toBeVisible({ timeout: 15_000 });
+  // List hiện nhãn môn
+  await expect(page.getByText(/Tiếng Anh ·/)).toBeVisible({ timeout: 15_000 });
   await page.getByLabel("Sửa câu Câu gốc 2+2").click();
   await page.getByLabel("Đề bài").fill("Câu đã sửa 2+2 = ?");
   await page.getByLabel("Cập nhật câu hỏi").click();
