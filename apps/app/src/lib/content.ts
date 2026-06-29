@@ -47,6 +47,15 @@ export function skillOfQuestion(questionId: string): string | undefined {
   return undefined;
 }
 
+/** Các câu hỏi thuộc một kỹ năng (cho "Luyện nhanh" trộn theo điểm yếu/đến hạn). */
+export function questionsForSkill(skillId: string) {
+  const out = [];
+  for (const qs of Object.values(QUESTIONS)) {
+    for (const q of qs) if (q.skillId === skillId) out.push(q);
+  }
+  return out;
+}
+
 /** Tập kỹ năng có ≥1 câu hỏi (gate lộ trình — M2). */
 export function skillsWithQuestions(): Set<string> {
   const set = new Set<string>();

@@ -12,7 +12,7 @@ test("đăng ký → làm bài → tiến độ được lưu", async ({ page })
   await page.getByText("Đăng ký", { exact: true }).click();
 
   // Đã đăng nhập → trang chủ hiện avatar "Hồ sơ"
-  await expect(page.getByLabel("Hồ sơ")).toBeVisible({ timeout: 25_000 });
+  await expect(page.getByLabel("Hồ sơ", { exact: true })).toBeVisible({ timeout: 25_000 });
 
   // Luyện tập Phân số, trả lời đúng câu đầu (q001 mcq, đáp án 1/2)
   await page.goto("/practice/g4.num.fractions");

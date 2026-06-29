@@ -9,7 +9,7 @@ test("mục tiêu hằng ngày tăng sau khi luyện", async ({ page }) => {
   await page.getByPlaceholder("email@vidu.com").fill(`goal${s}@test.local`);
   await page.getByPlaceholder("••••••").fill("matkhau123");
   await page.getByText("Đăng ký", { exact: true }).click();
-  await expect(page.getByLabel("Hồ sơ")).toBeVisible({ timeout: 25_000 });
+  await expect(page.getByLabel("Hồ sơ", { exact: true })).toBeVisible({ timeout: 25_000 });
 
   // Luyện 1 câu (q001 mcq, đáp án 1/2)
   await page.goto("/practice/g4.num.fractions");

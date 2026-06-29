@@ -164,7 +164,8 @@ jobs:
             tests/e2e/question-image.spec.ts \
             tests/e2e/assignment-targets.spec.ts \
             tests/e2e/assignment-pool.spec.ts \
-            tests/e2e/daily-goal.spec.ts
+            tests/e2e/daily-goal.spec.ts \
+            tests/e2e/quick-practice.spec.ts
         working-directory: apps/app
 
       - name: Stop Supabase
