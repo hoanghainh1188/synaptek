@@ -17,7 +17,8 @@ export type QuestionType =
   | "fraction"
   | "expression"
   | "fill-blank"
-  | "multi";
+  | "multi"
+  | "ordering";
 
 export type FeedbackCode = "correct" | "incorrect" | "empty" | "partial" | "format-error";
 
@@ -518,6 +519,14 @@ export function grade(input: GradeInput): GradeResult {
       const cSet = norm(correct);
       const aSet = norm(answer);
       const ok = cSet.size === aSet.size && [...cSet].every((x) => aSet.has(x));
+      return result(ok, ok ? 1 : 0, ok ? "correct" : "incorrect", correct, answer);
+    }
+
+    case "ordering": {
+      // Sắp thứ tự: ĐÚNG khi dãy trả lời khớp dãy đáp án THEO VỊ TRÍ (chuẩn hóa hoa/thường).
+      const c = (Array.isArray(correct) ? correct : [correct]).map((s) => s.trim().toLowerCase());
+      const a = (Array.isArray(answer) ? answer : [answer]).map((s) => s.trim().toLowerCase());
+      const ok = c.length === a.length && c.every((x, i) => x === a[i]);
       return result(ok, ok ? 1 : 0, ok ? "correct" : "incorrect", correct, answer);
     }
 

@@ -305,4 +305,25 @@ test("multi: bỏ trống → empty", () => {
   assert.equal(grade({ type: "multi", correct: ["A"], answer: [] }).feedbackCode, "empty");
 });
 
+// ── Ordering (sắp thứ tự) ────────────────────────────────────────────────────
+test("ordering: đúng thứ tự → đúng (chuẩn hóa hoa/thường)", () => {
+  const r = grade({ type: "ordering", correct: ["1", "2", "3"], answer: ["1", "2", "3"] });
+  assert.equal(r.isCorrect, true);
+  assert.equal(r.score, 1);
+});
+
+test("ordering: sai thứ tự → sai", () => {
+  assert.equal(
+    grade({ type: "ordering", correct: ["1", "2", "3"], answer: ["1", "3", "2"] }).isCorrect,
+    false,
+  );
+});
+
+test("ordering: thiếu phần tử → sai", () => {
+  assert.equal(
+    grade({ type: "ordering", correct: ["a", "b", "c"], answer: ["a", "b"] }).isCorrect,
+    false,
+  );
+});
+
 console.log(`\n${passed} test(s) passed.`);

@@ -12,6 +12,7 @@ export const QUESTION_TYPES = [
   "expression",
   "fill-blank",
   "multi",
+  "ordering",
 ] as const;
 
 /** Kỹ năng / "yêu cầu cần đạt" — đơn vị mastery nguyên tử (M2 dùng). */
