@@ -15,3 +15,5 @@ test-results/
 apps/app/expo-env.d.ts
 # Edge `_shared` = artifact TỰ SINH (npm run sync:edge); gate là `git diff` sync, KHÔNG phải prettier.
 supabase/functions/_shared/
+# Manifest nội dung = artifact TỰ SINH (npm run gen:content); gate là `git diff` sync, KHÔNG phải prettier.
+apps/app/src/lib/content.generated.ts

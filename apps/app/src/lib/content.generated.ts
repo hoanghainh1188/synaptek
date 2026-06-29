@@ -17,13 +17,7 @@ import q_7 from "../../../../content/questions/g5.num.decimal.json";
 import q_8 from "../../../../content/questions/g5.num.percent.json";
 import badges_0 from "../../../../content/gamification/badges.json";
 
-export const CURRICULA: Grade[] = [
-  cur_0 as Grade,
-  cur_1 as Grade,
-  cur_2 as Grade,
-  cur_3 as Grade,
-  cur_4 as Grade,
-];
+export const CURRICULA: Grade[] = [cur_0 as Grade, cur_1 as Grade, cur_2 as Grade, cur_3 as Grade, cur_4 as Grade];
 export const QUESTIONS: Record<string, Question[]> = {
   "g1.num.addsub10": q_0 as Question[],
   "g2.num.multiplication": q_1 as Question[],
