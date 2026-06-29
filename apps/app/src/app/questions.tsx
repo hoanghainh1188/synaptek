@@ -1,7 +1,8 @@
 // Ngân hàng câu của tôi (authoring, D28) — GV/PH soạn câu tự tạo (mcq/numeric/fraction) để giao.
 // Đáp án lưu DB, ẩn với HS (chấm server-side, D4). Tái dùng trong composer.
 import { useState } from "react";
-import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { Platform, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { Image } from "expo-image";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { useAuth } from "@/lib/supabase/auth";
@@ -11,6 +12,7 @@ import {
   useDeleteCustomQuestion,
   useUpdateCustomQuestion,
   useMyCustomQuestions,
+  uploadQuestionImage,
   type CustomQuestion,
   type CustomType,
 } from "@/lib/supabase/custom-questions";
@@ -41,13 +43,41 @@ export default function MyQuestions() {
   const [explanation, setExplanation] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   const reset = () => {
     setPrompt("");
     setChoices(["", ""]);
     setCorrect("");
     setExplanation("");
+    setImageUrl(null);
     setEditingId(null);
+  };
+
+  // Chọn + tải ảnh (web): mở file picker → upload Storage → giữ public URL.
+  const pickImage = () => {
+    if (Platform.OS !== "web" || typeof document === "undefined" || !user) {
+      setMsg("Tải ảnh hiện hỗ trợ trên web.");
+      return;
+    }
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.onchange = async () => {
+      const file = input.files?.[0];
+      if (!file) return;
+      setUploading(true);
+      setMsg(null);
+      try {
+        setImageUrl(await uploadQuestionImage(file, user.id));
+      } catch {
+        setMsg("Tải ảnh thất bại.");
+      } finally {
+        setUploading(false);
+      }
+    };
+    input.click();
   };
 
   // Nạp một câu vào form để sửa.
@@ -56,6 +86,7 @@ export default function MyQuestions() {
     setType(qq.type);
     setPrompt(qq.prompt);
     setExplanation(qq.explanation ?? "");
+    setImageUrl(qq.imageUrl);
     if (qq.type === "mcq") {
       setChoices(qq.choices ?? ["", ""]);
       setCorrect(qq.correct);
@@ -99,6 +130,7 @@ export default function MyQuestions() {
       choices: type === "mcq" ? opts : null,
       correct: correctValue,
       explanation: explanation.trim() || null,
+      imageUrl,
     };
     const onDone = {
       onSuccess: () => {
@@ -302,6 +334,35 @@ export default function MyQuestions() {
           accessibilityLabel="Giải thích"
           className="min-h-[44px] rounded-md border-2 border-line bg-paper px-3 text-base text-ink"
         />
+
+        {/* Ảnh minh hoạ (tuỳ chọn) — Storage public, hữu ích cho Hình học */}
+        <Text className="mt-4 mb-1 text-sm font-bold text-muted">Ảnh minh hoạ (tuỳ chọn)</Text>
+        {imageUrl ? (
+          <View className="rounded-md border-2 border-line bg-paper p-2">
+            <Image
+              source={{ uri: imageUrl }}
+              accessibilityLabel="Ảnh câu hỏi"
+              contentFit="contain"
+              style={{ width: "100%", aspectRatio: 1.6, borderRadius: 8 }}
+            />
+            <Pressable
+              accessibilityLabel="Xoá ảnh"
+              onPress={() => setImageUrl(null)}
+              className="mt-2 min-h-[40px] items-center justify-center rounded-md bg-surface"
+            >
+              <Text className="font-bold text-no">Xoá ảnh</Text>
+            </Pressable>
+          </View>
+        ) : (
+          <Pressable
+            accessibilityLabel="Thêm ảnh"
+            disabled={uploading}
+            onPress={pickImage}
+            className="min-h-[44px] items-center justify-center rounded-md border-2 border-dashed border-line bg-paper"
+          >
+            <Text className="font-bold text-brand">{uploading ? "Đang tải…" : "+ Thêm ảnh"}</Text>
+          </Pressable>
+        )}
 
         <View className="mt-4 flex-row gap-2">
           <Pressable
