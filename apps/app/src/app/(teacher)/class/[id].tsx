@@ -11,7 +11,11 @@ import {
   useRemoveMember,
   useRoster,
 } from "@/lib/supabase/classes";
-import { useClassAssignments, useDeleteAssignment } from "@/lib/supabase/assignments";
+import {
+  useClassAssignments,
+  useCloneAssignment,
+  useDeleteAssignment,
+} from "@/lib/supabase/assignments";
 import { skillName } from "@/lib/content";
 
 export default function ClassDetail() {
@@ -25,6 +29,7 @@ export default function ClassDetail() {
   const regenerate = useRegenerateInvite();
   const removeMember = useRemoveMember(classId);
   const deleteAssignment = useDeleteAssignment();
+  const cloneAssignment = useCloneAssignment();
   const [pendingDelete, setPendingDelete] = useState<string | null>(null);
 
   const cls = classes.data?.find((c) => c.id === classId);
@@ -116,6 +121,13 @@ export default function ClassDetail() {
                 className="min-h-[36px] flex-1 items-center justify-center rounded-md bg-paper"
               >
                 <Text className="font-bold text-ink">Sửa</Text>
+              </Pressable>
+              <Pressable
+                accessibilityLabel={`Nhân bản ${a.title}`}
+                onPress={() => cloneAssignment.mutate(a)}
+                className="min-h-[36px] flex-1 items-center justify-center rounded-md bg-paper"
+              >
+                <Text className="font-bold text-ink">Nhân bản</Text>
               </Pressable>
               <Pressable
                 accessibilityLabel={`Xoá ${a.title}`}

@@ -85,7 +85,7 @@ jobs:
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@v1
         with:
-          version: latest
+          version: 2.108.0
 
       - name: Start Supabase (áp migrations)
         run: supabase start
@@ -121,7 +121,7 @@ jobs:
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@v1
         with:
-          version: latest
+          version: 2.108.0
 
       - name: Start Supabase (DB + auth + Edge functions)
         run: supabase start
@@ -159,7 +159,8 @@ jobs:
             tests/e2e/review-mistakes.spec.ts \
             tests/e2e/polish-sprint.spec.ts \
             tests/e2e/auth-progress.spec.ts \
-            tests/e2e/logout.spec.ts
+            tests/e2e/logout.spec.ts \
+            tests/e2e/authoring-advanced.spec.ts
         working-directory: apps/app
 
       - name: Stop Supabase

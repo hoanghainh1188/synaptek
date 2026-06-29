@@ -9,7 +9,9 @@ import { useMyRole } from "@/lib/supabase/role";
 import {
   useCreateCustomQuestion,
   useDeleteCustomQuestion,
+  useUpdateCustomQuestion,
   useMyCustomQuestions,
+  type CustomQuestion,
   type CustomType,
 } from "@/lib/supabase/custom-questions";
 import { MathText } from "@/components/math/MathText";
@@ -29,6 +31,7 @@ export default function MyQuestions() {
   const role = useMyRole();
   const list = useMyCustomQuestions();
   const create = useCreateCustomQuestion();
+  const update = useUpdateCustomQuestion();
   const del = useDeleteCustomQuestion();
 
   const [type, setType] = useState<CustomType>("mcq");
@@ -37,12 +40,37 @@ export default function MyQuestions() {
   const [correct, setCorrect] = useState("");
   const [explanation, setExplanation] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   const reset = () => {
     setPrompt("");
     setChoices(["", ""]);
     setCorrect("");
     setExplanation("");
+    setEditingId(null);
+  };
+
+  // Nạp một câu vào form để sửa.
+  const startEdit = (qq: CustomQuestion) => {
+    setEditingId(qq.id);
+    setType(qq.type);
+    setPrompt(qq.prompt);
+    setExplanation(qq.explanation ?? "");
+    if (qq.type === "mcq") {
+      setChoices(qq.choices ?? ["", ""]);
+      setCorrect(qq.correct);
+    } else if (qq.type === "fill-blank") {
+      try {
+        const arr = JSON.parse(qq.correct);
+        setChoices(Array.isArray(arr) && arr.length ? arr.map(String) : ["", ""]);
+      } catch {
+        setChoices(["", ""]);
+      }
+      setCorrect("");
+    } else {
+      setChoices(["", ""]);
+      setCorrect(qq.correct);
+    }
   };
 
   const blankCount = (prompt.match(/_{2,}/g) ?? []).length;
@@ -65,22 +93,22 @@ export default function MyQuestions() {
     const opts = choices.map((c) => c.trim()).filter(Boolean);
     // fill-blank: đáp án từng ô lưu JSON array; còn lại là chuỗi đơn.
     const correctValue = type === "fill-blank" ? JSON.stringify(opts) : correct.trim();
-    create.mutate(
-      {
-        type,
-        prompt: prompt.trim(),
-        choices: type === "mcq" ? opts : null,
-        correct: correctValue,
-        explanation: explanation.trim() || null,
+    const payload = {
+      type,
+      prompt: prompt.trim(),
+      choices: type === "mcq" ? opts : null,
+      correct: correctValue,
+      explanation: explanation.trim() || null,
+    };
+    const onDone = {
+      onSuccess: () => {
+        setMsg(editingId ? "Đã cập nhật ✓" : "Đã lưu câu hỏi ✓");
+        reset();
       },
-      {
-        onSuccess: () => {
-          setMsg("Đã lưu câu hỏi ✓");
-          reset();
-        },
-        onError: () => setMsg("Lưu thất bại — kiểm tra lại."),
-      },
-    );
+      onError: () => setMsg("Lưu thất bại — kiểm tra lại."),
+    };
+    if (editingId) update.mutate({ ...payload, id: editingId }, onDone);
+    else create.mutate(payload, onDone);
   };
 
   if (user && role.data === "student")
@@ -275,14 +303,27 @@ export default function MyQuestions() {
           className="min-h-[44px] rounded-md border-2 border-line bg-paper px-3 text-base text-ink"
         />
 
-        <Pressable
-          accessibilityLabel="Lưu câu hỏi"
-          disabled={!valid || create.isPending}
-          onPress={submit}
-          className={`mt-4 min-h-[48px] items-center justify-center rounded-md ${valid ? "bg-brand" : "bg-line"}`}
-        >
-          <Text className="font-display font-bold text-white">Lưu câu hỏi</Text>
-        </Pressable>
+        <View className="mt-4 flex-row gap-2">
+          <Pressable
+            accessibilityLabel={editingId ? "Cập nhật câu hỏi" : "Lưu câu hỏi"}
+            disabled={!valid || create.isPending || update.isPending}
+            onPress={submit}
+            className={`min-h-[48px] flex-1 items-center justify-center rounded-md ${valid ? "bg-brand" : "bg-line"}`}
+          >
+            <Text className="font-display font-bold text-white">
+              {editingId ? "Cập nhật" : "Lưu câu hỏi"}
+            </Text>
+          </Pressable>
+          {editingId && (
+            <Pressable
+              accessibilityLabel="Huỷ sửa"
+              onPress={reset}
+              className="min-h-[48px] items-center justify-center rounded-md bg-paper px-4"
+            >
+              <Text className="font-display font-bold text-ink">Huỷ</Text>
+            </Pressable>
+          )}
+        </View>
         {msg && <Text className="mt-2 text-sm font-semibold text-brand">{msg}</Text>}
       </View>
 
@@ -305,6 +346,13 @@ export default function MyQuestions() {
                 {TYPES.find((t) => t.value === q.type)?.label} · đáp án: {q.correct}
               </Text>
             </View>
+            <Pressable
+              accessibilityLabel={`Sửa câu ${q.prompt}`}
+              onPress={() => startEdit(q)}
+              className="min-h-[40px] items-center justify-center rounded-md px-2"
+            >
+              <Text className="font-bold text-brand">Sửa</Text>
+            </Pressable>
             <Pressable
               accessibilityLabel={`Xoá câu ${q.prompt}`}
               onPress={() => del.mutate(q.id)}

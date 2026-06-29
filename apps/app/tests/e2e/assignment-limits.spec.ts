@@ -28,7 +28,7 @@ test("giới hạn số lần nộp: 1 lần → hết lượt sau khi nộp", a
   await gvPage.getByLabel("Phân số").first().click();
   await gvPage.getByLabel("g4.num.fractions.q001").click();
   await gvPage.getByLabel("Giao bài").click();
-  await expect(gvPage.getByText("1 câu")).toBeVisible({ timeout: 15_000 });
+  await expect(gvPage.getByText("1 câu · chạm để chấm")).toBeVisible({ timeout: 15_000 });
 
   const hs = await browser.newContext();
   const hsPage = await hs.newPage();
