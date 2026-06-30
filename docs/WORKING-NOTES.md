@@ -4,6 +4,8 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ Chấm từng bước — NỀN ✅ vừa xong** (`feature/step-grading`, PR đang mở): package thuần /step-grading (gradeDerivation) chấm lời giải nhiều dòng bằng lấy mẫu — expression (≡ giá trị) + equation (cùng tập nghiệm qua chân-trị); evalExpr mới ở grading-engine. firstErrorIndex + validSteps + reachedGoal + score. 7 unit test. Decision Log D38. CHƯA tích hợp UI/loại câu (PR sau — cần bàn phím nhập có cấu trúc).
+
 **+ Đồng bộ tài liệu ✅ vừa xong** (`docs/sync-status`): Decision Log thêm D32–D37 (BXH·avatar·nhãn môn·loại câu multi/ordering/matching·tùy chọn chấm·gợi ý — migrations 0014–0021); CLAUDE.md Active/Recent + 02-roadmap.md "Sau M4" cập nhật đúng trạng thái (M0–M4 đóng; còn M5 + Tương lai).
 
 **+ Câu Nối cặp (matching) ✅ vừa xong** (`feature/matching`, PR đang mở): hoàn tất bộ loại câu. Engine type "matching" (chấm theo vị trí — chung logic ordering, +3 test); migration 0021 (CHECK). matching.ts thuần (pack/unpack qua sentinel, +3 test) — choices gói trái+phải-xáo-trộn, correct=JSON phải-theo-trái (ẩn). MatchingInput (chạm xoay vòng) + authoring cặp trái–phải + Edge parse. e2e matching PASS.

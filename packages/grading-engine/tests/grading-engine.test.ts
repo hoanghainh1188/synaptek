@@ -344,4 +344,13 @@ test("matching: thiếu một cặp → sai", () => {
   assert.equal(grade({ type: "matching", correct: ["4", "6"], answer: ["4"] }).isCorrect, false);
 });
 
+// ── evalExpr (cho step-grading) ──────────────────────────────────────────────
+import { evalExpr } from "../src/grading-engine.ts";
+test("evalExpr: tính giá trị tại x; sai định dạng → null", () => {
+  assert.equal(evalExpr("2*x+3", 2), 7);
+  assert.equal(evalExpr("x^2", 3), 9);
+  assert.equal(evalExpr("2(x+1)", 4), 10); // nhân ngầm
+  assert.equal(evalExpr(")(", 1), null);
+});
+
 console.log(`\n${passed} test(s) passed.`);
