@@ -1,7 +1,64 @@
 // Ô nhập đáp án theo loại câu hỏi (controlled). Vùng chạm ≥48px (trẻ em).
+import { useEffect } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
 import type { Question } from "@synaptek/curriculum";
 import { MathText } from "@/components/math/MathText";
+
+/** Sắp thứ tự: hiện danh sách + nút ↑/↓; value = thứ tự hiện tại (khởi tạo theo items hiển thị). */
+function OrderingInput({
+  items,
+  value,
+  onChange,
+}: {
+  items: string[];
+  value: string | string[];
+  onChange: (v: string[]) => void;
+}) {
+  const order = Array.isArray(value) && value.length === items.length ? value : items;
+  useEffect(() => {
+    if (!Array.isArray(value) || value.length !== items.length) onChange(items);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items.length]);
+  const move = (i: number, dir: -1 | 1) => {
+    const j = i + dir;
+    if (j < 0 || j >= order.length) return;
+    const next = [...order];
+    [next[i], next[j]] = [next[j], next[i]];
+    onChange(next);
+  };
+  return (
+    <View className="gap-2">
+      <Text className="text-sm font-semibold text-muted">Sắp đúng thứ tự (dùng ↑ ↓):</Text>
+      {order.map((it, i) => (
+        <View
+          key={`${it}-${i}`}
+          className="flex-row items-center gap-2 rounded-md border-2 border-line bg-surface px-3 py-2"
+        >
+          <Text className="w-6 text-center font-display font-extrabold text-brand">{i + 1}</Text>
+          <View className="flex-1">
+            <MathText value={it} size={18} weight="600" />
+          </View>
+          <Pressable
+            accessibilityLabel={`Lên ${it}`}
+            disabled={i === 0}
+            onPress={() => move(i, -1)}
+            className={`h-9 w-9 items-center justify-center rounded-md ${i === 0 ? "bg-paper" : "bg-brand/10"}`}
+          >
+            <Text className="text-lg text-brand">↑</Text>
+          </Pressable>
+          <Pressable
+            accessibilityLabel={`Xuống ${it}`}
+            disabled={i === order.length - 1}
+            onPress={() => move(i, 1)}
+            className={`h-9 w-9 items-center justify-center rounded-md ${i === order.length - 1 ? "bg-paper" : "bg-brand/10"}`}
+          >
+            <Text className="text-lg text-brand">↓</Text>
+          </Pressable>
+        </View>
+      ))}
+    </View>
+  );
+}
 
 interface AnswerInputProps {
   question: Question;
@@ -123,6 +180,9 @@ export function AnswerInput({ question, value, onChange }: AnswerInputProps) {
         </View>
       );
     }
+
+    case "ordering":
+      return <OrderingInput items={question.choices ?? []} value={value} onChange={onChange} />;
 
     default:
       // numeric | fraction | expression → bàn phím số tùy biến

@@ -27,6 +27,7 @@ const TYPES: { value: CustomType; label: string }[] = [
   { value: "expression", label: "Biểu thức" },
   { value: "fill-blank", label: "Điền chỗ trống" },
   { value: "multi", label: "Chọn nhiều" },
+  { value: "ordering", label: "Sắp thứ tự" },
 ];
 
 export default function MyQuestions() {
@@ -117,6 +118,15 @@ export default function MyQuestions() {
     if (qq.type === "mcq" || qq.type === "multi") {
       setChoices(qq.choices ?? ["", ""]);
       setCorrect(qq.correct); // multi: correct là JSON mảng
+    } else if (qq.type === "ordering") {
+      // hiện theo ĐÚNG thứ tự (correct) để tác giả sửa; lưu sẽ xáo lại cho hiển thị.
+      try {
+        const arr = JSON.parse(qq.correct);
+        setChoices(Array.isArray(arr) && arr.length ? arr.map(String) : ["", ""]);
+      } catch {
+        setChoices(["", ""]);
+      }
+      setCorrect("");
     } else if (qq.type === "fill-blank") {
       try {
         const arr = JSON.parse(qq.correct);
@@ -157,6 +167,9 @@ export default function MyQuestions() {
       const opts = choices.map((c) => c.trim()).filter(Boolean);
       return opts.length >= 2 && multiSet.length >= 1 && multiSet.every((x) => opts.includes(x));
     }
+    if (type === "ordering") {
+      return choices.map((c) => c.trim()).filter(Boolean).length >= 2;
+    }
     if (type === "fill-blank") {
       const ans = choices.map((c) => c.trim()).filter(Boolean);
       return blankCount >= 1 && ans.length === blankCount;
@@ -168,12 +181,26 @@ export default function MyQuestions() {
   const submit = () => {
     setMsg(null);
     const opts = choices.map((c) => c.trim()).filter(Boolean);
-    // fill-blank: đáp án từng ô lưu JSON array; còn lại là chuỗi đơn.
-    const correctValue = type === "fill-blank" ? JSON.stringify(opts) : correct.trim();
+    // ordering: lưu correct = thứ tự ĐÚNG (JSON); choices = bản XÁO TRỘN để hiển thị (chống lộ).
+    const shuffled = (() => {
+      if (opts.length < 2) return opts;
+      for (let tries = 0; tries < 5; tries++) {
+        const a = [...opts];
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+        if (a.some((x, i) => x !== opts[i])) return a; // khác thứ tự gốc
+      }
+      return [...opts].reverse();
+    })();
+    // fill-blank/ordering: đáp án lưu JSON array; còn lại là chuỗi đơn.
+    const correctValue =
+      type === "fill-blank" || type === "ordering" ? JSON.stringify(opts) : correct.trim();
     const payload = {
       type,
       prompt: prompt.trim(),
-      choices: type === "mcq" || type === "multi" ? opts : null,
+      choices: type === "mcq" || type === "multi" ? opts : type === "ordering" ? shuffled : null,
       correct: correctValue,
       explanation: explanation.trim() || null,
       imageUrl,
@@ -350,6 +377,36 @@ export default function MyQuestions() {
               className="mt-2 self-start"
             >
               <Text className="font-bold text-brand">+ Thêm lựa chọn</Text>
+            </Pressable>
+          </View>
+        )}
+
+        {type === "ordering" && (
+          <View className="mt-4">
+            <Text className="mb-1 text-sm font-bold text-muted">
+              Các mục theo ĐÚNG thứ tự (HS sẽ thấy bị xáo trộn)
+            </Text>
+            {choices.map((c, i) => (
+              <View key={i} className="mt-2 flex-row items-center gap-2">
+                <Text className="w-6 text-center font-display font-extrabold text-brand">
+                  {i + 1}
+                </Text>
+                <TextInput
+                  value={c}
+                  onChangeText={(v) => setChoices((prev) => prev.map((x, j) => (j === i ? v : x)))}
+                  placeholder={`Mục ${i + 1}`}
+                  placeholderTextColor="#a1a1aa"
+                  accessibilityLabel={`Mục ${i + 1}`}
+                  className="min-h-[44px] flex-1 rounded-md border-2 border-line bg-paper px-3 text-base text-ink"
+                />
+              </View>
+            ))}
+            <Pressable
+              accessibilityLabel="Thêm mục"
+              onPress={() => setChoices((prev) => [...prev, ""])}
+              className="mt-2 self-start"
+            >
+              <Text className="font-bold text-brand">+ Thêm mục</Text>
             </Pressable>
           </View>
         )}

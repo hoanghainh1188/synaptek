@@ -4,6 +4,8 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ Câu Sắp thứ tự (ordering) ✅ vừa xong** (`feature/ordering`, PR 4/5): engine type "ordering" (so dãy theo vị trí, +3 test); migration 0019 (CHECK). Authoring nhập mục theo đúng thứ tự → lưu correct=JSON, choices=XÁO TRỘN (chống lộ). AnswerInput OrderingInput (↑↓). Edge parse JSON. e2e ordering PASS. (Nối cặp/matching để PR sau nếu cần.)
+
 **+ Tùy chọn chấm câu tự soạn ✅ vừa xong** (`feature/custom-options`, PR 3/5): câu tự soạn lưu options (jsonb, migration 0018) → numeric: làm tròn N chữ số + dung sai; fill-blank: KHÔNG theo thứ tự. Authoring UI + Edge truyền options vào engine (engine đã hỗ trợ sẵn). e2e custom-options (fill-blank unordered→100%) PASS.
 
 **+ Multi-select MCQ ✅ vừa xong** (`feature/multi-select`, PR 2/5): loại câu "Chọn nhiều" (chọn nhiều đáp án đúng). Engine type "multi" (so TẬP, +4 test); curriculum QUESTION_TYPES + CustomType + migration 0017 (CHECK). Authoring (đánh dấu nhiều đúng, correct=JSON) + AnswerInput (checkbox) + Edge (parse JSON multi). e2e multi-select (chấm 100%) PASS.
