@@ -17,7 +17,7 @@ Docs & comment viết **tiếng Việt** — giữ đúng ngôn ngữ khi sửa 
 ## Lệnh
 
 ```bash
-npm test            # test toàn bộ packages (hiện tại: grading-engine, 19/19). Không cần mạng/thiết bị.
+npm test            # test toàn bộ packages + apps/app lib thuần (grading-engine 54, learning-path, classroom…). Không cần mạng/thiết bị.
 npm run format      # prettier --write .
 npm run format:check
 ```
@@ -46,9 +46,10 @@ Toàn bộ rationale ở `docs/00-architecture.md` §0 (Decision Log D1–D13). 
 ## Bộ chấm bài (lõi)
 
 File đơn: `packages/grading-engine/src/grading-engine.ts`. Hàm `grade(input) → { isCorrect, score,
-feedbackCode, normalized }`. Hỗ trợ: `mcq` · `true-false` · `numeric` · `fraction` · `expression` ·
-`fill-blank`. Điểm thiết kế: chuẩn hóa số kiểu VN (phẩy = thập phân — D8); tương đương biểu thức qua
-**lấy mẫu giá trị x** (D9, không phải CAS). Sửa engine → chạy lại `npm test` và cập nhật test trước (TDD).
+feedbackCode, normalized, diagnosis? }`. Hỗ trợ **9 loại**: `mcq` · `true-false` · `numeric` · `fraction` ·
+`expression` · `fill-blank` · `multi` · `ordering` · `matching`. Số kiểu VN (phẩy=thập phân — D8) + hỗn số/%/
+đơn vị đo/La Mã; tương đương biểu thức qua **lấy mẫu giá trị x** (D9, không CAS); 6 chẩn đoán lỗi (D-mở rộng).
+Sửa engine → chạy lại `npm test` và cập nhật test trước (TDD).
 
 ## Quy trình làm việc (mặc định)
 
@@ -69,20 +70,33 @@ nhật `docs/WORKING-NOTES.md` (điểm tiếp tục) + Decision Log/spec/file l
 
 ## Active Technologies (managed by Spec Kit)
 
-- **Đang làm**: M4 — Phụ huynh (`specs/005-parent-monitoring/`). Plan: `specs/005-parent-monitoring/plan.md`.
-  (M0–M3 ✅ đóng + giới hạn nộp bài (D25) + 100 câu nội dung + deploy hosted AUTO web/backend.)
-- **Stack**: TypeScript · Expo SDK 56 / Expo Router / React 19 / RN 0.85. Tái dùng `@synaptek/grading-engine`
-  - `@synaptek/curriculum` + `@synaptek/learning-path` (heatmap/mastery) + `@synaptek/classroom` (mã mời +
-    giới hạn nộp + điểm + tổng hợp). M4 **không thêm package/Edge** — tái dùng. NativeWind v4, `@supabase/supabase-js`, TanStack Query.
-- **Storage**: Supabase — **migration `0005`** mới (M4): `profiles.parent_link_code` + `parent_links`
-  (nhiều–nhiều) + **RLS đọc chéo PH→con read-only** qua helper `SECURITY DEFINER` `is_parent_of` + RPC
-  `link_parent_by_code` (chống tự-liên-kết). M1–M4limits (`0001`–`0004`) giữ nguyên. Deploy: web Vercel
-  auto + backend GitHub Action auto (db push + functions deploy + ensure auth config) từ `develop`.
+- **Đang làm**: **M0–M4 ✅ đóng hết** (luyện tập · mastery/lộ trình · giáo viên · phụ huynh + nội dung lớp 1–5).
+  Sau M4 đã làm thêm nhiều ngoài roadmap (xem Decision Log D26–D37): authoring **9 loại câu** + nhãn môn +
+  tùy chọn chấm + ảnh + gợi ý; engine moat mở rộng (hỗn số/%/đơn vị/La Mã/6 chẩn đoán); TN học sinh (mục tiêu
+  ngày · luyện nhanh · BXH · avatar); insight GV–PH. **Còn lại**: M5 native/store (chờ tài khoản, `docs/M5-NATIVE.md`)
+  - nhóm "Tương lai" (THCS/THPT · môn đầy đủ · chấm từng bước+LaTeX · gia sư AI).
+- **Stack**: TypeScript · Expo SDK 56 / Expo Router / React 19 / RN 0.85. Packages: `@synaptek/grading-engine`
+  (moat) + `@synaptek/curriculum` + `@synaptek/learning-path` (heatmap/mastery) + `@synaptek/classroom` (mã mời +
+  giới hạn nộp + điểm + tổng hợp + `pickForStudent`). NativeWind v4, `@supabase/supabase-js`, TanStack Query.
+- **Storage**: Supabase — migrations **`0001`–`0021`** (mới nhất: 0014 BXH · 0015 avatar · 0016 môn ·
+  0017/0019/0021 loại câu multi/ordering/matching · 0018 options · 0020 hint). RLS chéo vai trò qua helper
+  `SECURITY DEFINER` (D24/D26/D30/D32). Deploy: web Vercel auto + backend GitHub Action auto (db push +
+  functions deploy + ensure auth config) từ `develop`.
+- **CI** (`.github/workflows/ci.yml`): 3 gate — **verify** (format · npm test · engine↔_shared sync · content ·
+  deno · web build · 4 guest e2e) · **RLS isolation** (rls-\*.sql trên Supabase thật) · **e2e-auth** (28 luồng
+  đăng nhập trên Supabase+Edge). Supabase CLI pin `2.108.0`.
 
 ## Recent Changes
 
-- **005-parent-monitoring**: spec + clarify + plan (liên kết PH–con qua mã, theo dõi read-only, RLS đọc
-  chéo). Decision Log **D26** (PH read-only qua `parent_links` + `is_parent_of`).
+- **Authoring + môn (sau M4)**: 9 loại câu (mcq · số · phân số · đúng/sai · biểu thức · điền chỗ trống ·
+  **chọn nhiều** · **sắp thứ tự** · **nối cặp**) + nhãn môn + tùy chọn chấm (làm tròn/dung sai/không-thứ-tự) +
+  ảnh (Storage) + gợi ý. Decision Log **D28–D37**; migrations `0007`–`0021`.
+- **TN học sinh / Insight (sau M4)**: mục tiêu hằng ngày · luyện nhanh · bảng xếp hạng lớp · avatar XP;
+  cảnh báo HS · xu hướng lớp · tóm tắt tuần GV · PH gợi ý hành động. Decision Log **D29–D33**.
+- **Engine moat mở rộng**: hỗn số · phần trăm · đơn vị đo · số La Mã · 6 chẩn đoán lỗi (sign/magnitude10/
+  reciprocal/rounding/offByOne/transposed) · options unordered/roundTo. 54 unit test.
+- **005-parent-monitoring**: ✅ đóng (M4) — liên kết PH–con qua mã, theo dõi read-only, RLS đọc chéo,
+  giao bài tại nhà. Decision Log **D26/D27**.
 - **003-teacher-classroom**: ✅ đóng — lớp + mã mời, chấm chính thức server-side (ẩn đáp án), ghi đè/nhận
   xét, phân tích lớp, RLS chéo vai trò. **D22/D23/D24**; + giới hạn nộp bài **D25**.
 - **002-mastery-path**: ✅ đóng — BKT mastery + lộ trình + gamification + spaced repetition/cron/push.

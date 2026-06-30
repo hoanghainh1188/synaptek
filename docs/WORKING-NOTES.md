@@ -4,6 +4,8 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ Đồng bộ tài liệu ✅ vừa xong** (`docs/sync-status`): Decision Log thêm D32–D37 (BXH·avatar·nhãn môn·loại câu multi/ordering/matching·tùy chọn chấm·gợi ý — migrations 0014–0021); CLAUDE.md Active/Recent + 02-roadmap.md "Sau M4" cập nhật đúng trạng thái (M0–M4 đóng; còn M5 + Tương lai).
+
 **+ Câu Nối cặp (matching) ✅ vừa xong** (`feature/matching`, PR đang mở): hoàn tất bộ loại câu. Engine type "matching" (chấm theo vị trí — chung logic ordering, +3 test); migration 0021 (CHECK). matching.ts thuần (pack/unpack qua sentinel, +3 test) — choices gói trái+phải-xáo-trộn, correct=JSON phải-theo-trái (ẩn). MatchingInput (chạm xoay vòng) + authoring cặp trái–phải + Edge parse. e2e matching PASS.
 
 **+ Gợi ý/hướng dẫn kèm câu ✅ vừa xong** (`feature/question-hint`, PR 5/5 — TRỌN nhóm soạn câu+môn): cột hint + RPC trả hint (CỐ Ý hiện khi HS làm, khác explanation ẩn — D4). curriculum Question.hint; QuestionCard render "💡 gợi ý"; authoring thêm ô Gợi ý. migration 0020. e2e question-hint PASS.
