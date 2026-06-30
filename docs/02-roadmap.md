@@ -12,6 +12,22 @@ Mỗi mốc giữ repo ở trạng thái chạy được. Mỗi mốc ≈ một 
 | **M5 — Native & App store**           | EAS Build iOS/Android; offline cơ bản; push nhắc luyện tập; đánh bóng native                                                                                                                                                                       | App lên store, rework tối thiểu                                                                  | ⬜                                                                                                                                                                                                                                             |
 | **Tương lai**                         | THCS/THPT; môn khác (Lý/Hóa/Anh); chấm trình bày từng bước + LaTeX; gia sư AI                                                                                                                                                                      | —                                                                                                | ⬜                                                                                                                                                                                                                                             |
 
+## Sau M4 — Đào sâu sản phẩm (ngoài mốc, đã làm)
+
+M0–M4 đóng xong, làm thêm nhiều ngoài bảng mốc (mỗi mục 1 PR + e2e + Decision Log):
+
+- **Soạn câu nâng cao**: **9 loại câu** (mcq · số · phân số · đúng/sai · biểu thức · điền chỗ trống · chọn
+  nhiều · sắp thứ tự · nối cặp) + **nhãn môn** (Toán/Tiếng Việt/Tiếng Anh/Khoa học) + **tùy chọn chấm**
+  (làm tròn/dung sai/không-thứ-tự) + **ảnh** (Storage) + **gợi ý**. (D28·D34–D37, migrations 0007–0021)
+- **Engine moat mở rộng**: hỗn số · phần trăm · đơn vị đo · số La Mã · 6 chẩn đoán lỗi · options. (54 unit test)
+- **Trải nghiệm học sinh**: mục tiêu hằng ngày · luyện nhanh 1 chạm · bảng xếp hạng lớp · avatar mở khoá theo XP.
+  (D32·D33)
+- **Insight GV–PH**: cảnh báo HS cần chú ý · xu hướng điểm lớp · tóm tắt tuần GV · PH gợi ý hành động.
+- **Nền tảng**: đăng xuất · CI 3 gate (verify · RLS thật · 28 e2e đăng nhập) · pin Supabase CLI.
+
+**Còn lại theo roadmap**: M5 (native/store — chờ tài khoản, `docs/M5-NATIVE.md`) · "Tương lai" (THCS/THPT ·
+môn đầy đủ Lý/Hóa/Anh · chấm từng bước+LaTeX `docs/future/step-grading.md` · gia sư AI).
+
 ## Luồng song song — Content pipeline (D14)
 
 Không phải một mốc tuần tự mà là **luồng công việc riêng, xuyên suốt M1→M4**: biên soạn câu hỏi **thủ
