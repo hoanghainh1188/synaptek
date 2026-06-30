@@ -13,7 +13,8 @@ export type CustomType =
   | "expression"
   | "fill-blank"
   | "multi"
-  | "ordering";
+  | "ordering"
+  | "matching";
 
 export interface GradeOpts {
   tolerance?: number;
@@ -102,7 +103,7 @@ export function useCreateCustomQuestion() {
         type: q.type,
         prompt: q.prompt,
         choices:
-          q.type === "mcq" || q.type === "multi" || q.type === "ordering"
+          q.type === "mcq" || q.type === "multi" || q.type === "ordering" || q.type === "matching"
             ? (q.choices ?? [])
             : null,
         correct: q.correct,
@@ -130,7 +131,7 @@ export function useUpdateCustomQuestion() {
           type: q.type,
           prompt: q.prompt,
           choices:
-            q.type === "mcq" || q.type === "multi" || q.type === "ordering"
+            q.type === "mcq" || q.type === "multi" || q.type === "ordering" || q.type === "matching"
               ? (q.choices ?? [])
               : null,
           correct: q.correct,

@@ -326,4 +326,22 @@ test("ordering: thiếu phần tử → sai", () => {
   );
 });
 
+// ── Matching (nối cặp) — chấm theo vị trí: phải[i] khớp vế trái[i] ───────────
+test("matching: ghép đúng → đúng", () => {
+  const r = grade({ type: "matching", correct: ["4", "6"], answer: ["4", "6"] });
+  assert.equal(r.isCorrect, true);
+  assert.equal(r.score, 1);
+});
+
+test("matching: ghép sai cặp → sai", () => {
+  assert.equal(
+    grade({ type: "matching", correct: ["4", "6"], answer: ["6", "4"] }).isCorrect,
+    false,
+  );
+});
+
+test("matching: thiếu một cặp → sai", () => {
+  assert.equal(grade({ type: "matching", correct: ["4", "6"], answer: ["4"] }).isCorrect, false);
+});
+
 console.log(`\n${passed} test(s) passed.`);

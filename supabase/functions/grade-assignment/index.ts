@@ -157,7 +157,7 @@ export async function handler(req: Request): Promise<Response> {
       const type = c.type as AnswerKey["type"];
       // fill-blank & multi: đáp án nhiều phần lưu JSON array trong cột text → parse về mảng cho engine.
       let correct: string | string[] = c.correct as string;
-      if (type === "fill-blank" || type === "multi" || type === "ordering") {
+      if (type === "fill-blank" || type === "multi" || type === "ordering" || type === "matching") {
         try {
           const arr = JSON.parse(c.correct as string);
           if (Array.isArray(arr)) correct = arr.map(String);

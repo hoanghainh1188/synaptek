@@ -3,6 +3,56 @@ import { useEffect } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
 import type { Question } from "@synaptek/curriculum";
 import { MathText } from "@/components/math/MathText";
+import { unpackMatching } from "@/lib/matching";
+
+/** Nối cặp: mỗi vế TRÁI có nút chọn vế PHẢI (chạm để xoay vòng qua pool). value = phải đã chọn theo thứ tự trái. */
+function MatchingInput({
+  choices,
+  value,
+  onChange,
+}: {
+  choices: string[] | undefined;
+  value: string | string[];
+  onChange: (v: string[]) => void;
+}) {
+  const { lefts, pool } = unpackMatching(choices);
+  const order = Array.isArray(value) && value.length === lefts.length ? value : lefts.map(() => "");
+  useEffect(() => {
+    if (!Array.isArray(value) || value.length !== lefts.length) onChange(lefts.map(() => ""));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lefts.length]);
+  const cycle = (i: number) => {
+    if (pool.length === 0) return;
+    const idx = pool.indexOf(order[i]);
+    const next = pool[(idx + 1) % pool.length];
+    onChange(order.map((x, j) => (j === i ? next : x)));
+  };
+  return (
+    <View className="gap-2">
+      <Text className="text-sm font-semibold text-muted">
+        Chạm để chọn vế phải cho mỗi vế trái:
+      </Text>
+      {lefts.map((l, i) => (
+        <View
+          key={`${l}-${i}`}
+          className="flex-row items-center gap-2 rounded-md border-2 border-line bg-surface px-3 py-2"
+        >
+          <View className="flex-1">
+            <MathText value={l} size={18} weight="600" />
+          </View>
+          <Text className="text-lg text-muted">→</Text>
+          <Pressable
+            accessibilityLabel={`Ghép ${l}`}
+            onPress={() => cycle(i)}
+            className="min-h-[44px] min-w-[96px] items-center justify-center rounded-md border-2 border-num/40 bg-num/5 px-3"
+          >
+            <MathText value={order[i] || "(chọn)"} size={18} weight="700" color="#2563eb" />
+          </Pressable>
+        </View>
+      ))}
+    </View>
+  );
+}
 
 /** Sắp thứ tự: hiện danh sách + nút ↑/↓; value = thứ tự hiện tại (khởi tạo theo items hiển thị). */
 function OrderingInput({
@@ -183,6 +233,9 @@ export function AnswerInput({ question, value, onChange }: AnswerInputProps) {
 
     case "ordering":
       return <OrderingInput items={question.choices ?? []} value={value} onChange={onChange} />;
+
+    case "matching":
+      return <MatchingInput choices={question.choices} value={value} onChange={onChange} />;
 
     default:
       // numeric | fraction | expression → bàn phím số tùy biến
