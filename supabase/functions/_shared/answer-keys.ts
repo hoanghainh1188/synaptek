@@ -647,5 +647,67 @@ export const ANSWER_KEYS: Record<string, AnswerKey> = {
   "g5.num.percent.q010": {
     "type": "numeric",
     "correct": "10"
+  },
+  "tv.g1.chinhta.q001": {
+    "type": "mcq",
+    "correct": "kẻ"
+  },
+  "tv.g1.chinhta.q002": {
+    "type": "mcq",
+    "correct": "con cá"
+  },
+  "tv.g1.chinhta.q003": {
+    "type": "mcq",
+    "correct": "ghế"
+  },
+  "tv.g1.chinhta.q004": {
+    "type": "mcq",
+    "correct": "cái gối"
+  },
+  "tv.g1.chinhta.q005": {
+    "type": "mcq",
+    "correct": "nghe"
+  },
+  "tv.g1.chinhta.q006": {
+    "type": "mcq",
+    "correct": "ngôi nhà"
+  },
+  "tv.g1.chinhta.q007": {
+    "type": "true-false",
+    "correct": "true"
+  },
+  "tv.g1.tuloai.q001": {
+    "type": "mcq",
+    "correct": "cái bàn"
+  },
+  "tv.g1.tuloai.q002": {
+    "type": "mcq",
+    "correct": "đọc"
+  },
+  "tv.g1.tuloai.q003": {
+    "type": "mcq",
+    "correct": "bông hoa"
+  },
+  "tv.g1.tuloai.q004": {
+    "type": "mcq",
+    "correct": "bơi"
+  },
+  "tv.g1.tuloai.q005": {
+    "type": "true-false",
+    "correct": "true"
+  },
+  "tv.g1.tuloai.q006": {
+    "type": "true-false",
+    "correct": "false"
+  },
+  "tv.g1.tuloai.q007": {
+    "type": "true-false",
+    "correct": "true"
+  },
+  "tv.g1.tuloai.q008": {
+    "type": "fill-blank",
+    "correct": [
+      "đọc"
+    ]
   }
 };
