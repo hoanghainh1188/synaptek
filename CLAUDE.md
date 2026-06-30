@@ -17,7 +17,7 @@ Docs & comment viết **tiếng Việt** — giữ đúng ngôn ngữ khi sửa 
 ## Lệnh
 
 ```bash
-npm test            # test toàn bộ packages (hiện tại: grading-engine, 19/19). Không cần mạng/thiết bị.
+npm test            # test toàn bộ packages + apps/app lib thuần (grading-engine 54, learning-path, classroom…). Không cần mạng/thiết bị.
 npm run format      # prettier --write .
 npm run format:check
 ```
@@ -46,9 +46,10 @@ Toàn bộ rationale ở `docs/00-architecture.md` §0 (Decision Log D1–D13). 
 ## Bộ chấm bài (lõi)
 
 File đơn: `packages/grading-engine/src/grading-engine.ts`. Hàm `grade(input) → { isCorrect, score,
-feedbackCode, normalized }`. Hỗ trợ: `mcq` · `true-false` · `numeric` · `fraction` · `expression` ·
-`fill-blank`. Điểm thiết kế: chuẩn hóa số kiểu VN (phẩy = thập phân — D8); tương đương biểu thức qua
-**lấy mẫu giá trị x** (D9, không phải CAS). Sửa engine → chạy lại `npm test` và cập nhật test trước (TDD).
+feedbackCode, normalized, diagnosis? }`. Hỗ trợ **9 loại**: `mcq` · `true-false` · `numeric` · `fraction` ·
+`expression` · `fill-blank` · `multi` · `ordering` · `matching`. Số kiểu VN (phẩy=thập phân — D8) + hỗn số/%/
+đơn vị đo/La Mã; tương đương biểu thức qua **lấy mẫu giá trị x** (D9, không CAS); 6 chẩn đoán lỗi (D-mở rộng).
+Sửa engine → chạy lại `npm test` và cập nhật test trước (TDD).
 
 ## Quy trình làm việc (mặc định)
 
