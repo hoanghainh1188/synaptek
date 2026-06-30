@@ -4,6 +4,8 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ Bàn phím toán có cấu trúc ✅ (feature/math-keypad, PR đang mở):** ô đáp án expression thêm nút ^ ( ) x + - \* (numeric/fraction giữ gọn); biểu thức hiển thị qua MathText (mũ đẹp). math-keypad.ts thuần (mathKeypadKeys/isOperatorKey, +4 test). KHÔNG đổi engine. e2e auth math-keypad (HS bấm 2(x+2) → chấm tương đương 100%) PASS. Decision Log D41.
+
 **+ Câu "trình bày từng bước" GIAO ĐƯỢC ✅ (feature/derivation-question, PR đang mở):** loại derivation soạn/giao được, chấm CHÍNH THỨC server-side qua step-grading (Edge). migration 0022; spec ẩn trong correct (JSON), choices=[start,mode,variable] cho HS; engine QuestionType +derivation (grade() default); authoring (mode/đề/đích/biến) + AnswerInput nhập nhiều dòng (preview per-line). Decision Log D40. Deno +3 test, e2e derivation (GV soạn PT → HS nộp lời giải → 100%) PASS.
 
 **+ Mở rộng nội dung Tiếng Việt (feature/tv-expand, PR đang mở):** thêm lớp 1 (dấu câu), LỚP 2 (từ chỉ đặc điểm · mẫu câu "Ai thế nào?"), LỚP 3 (đồng nghĩa/trái nghĩa). Tổng nội dung 205 câu (TV ~45 câu, 3 lớp). e2e subject-browse mở rộng kiểm lớp 2. Vẫn gốc bám CT, không chép SGK.
