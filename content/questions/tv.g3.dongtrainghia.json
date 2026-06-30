@@ -1,0 +1,79 @@
+[
+  {
+    "id": "tv.g3.dongtrainghia.q001",
+    "skillId": "tv.g3.dongtrainghia",
+    "grade": 3,
+    "type": "mcq",
+    "prompt": "Từ nào ĐỒNG NGHĨA với 'chăm chỉ'?",
+    "choices": ["siêng năng", "lười biếng", "vui vẻ"],
+    "correct": "siêng năng",
+    "explanation": "'Siêng năng' cùng nghĩa với 'chăm chỉ'."
+  },
+  {
+    "id": "tv.g3.dongtrainghia.q002",
+    "skillId": "tv.g3.dongtrainghia",
+    "grade": 3,
+    "type": "mcq",
+    "prompt": "Từ nào TRÁI NGHĨA với 'cao'?",
+    "choices": ["thấp", "lớn", "rộng"],
+    "correct": "thấp",
+    "explanation": "'Thấp' trái nghĩa với 'cao'."
+  },
+  {
+    "id": "tv.g3.dongtrainghia.q003",
+    "skillId": "tv.g3.dongtrainghia",
+    "grade": 3,
+    "type": "mcq",
+    "prompt": "Từ nào trái nghĩa với 'vui'?",
+    "choices": ["buồn", "cười", "thích"],
+    "correct": "buồn",
+    "explanation": "'Buồn' trái nghĩa với 'vui'."
+  },
+  {
+    "id": "tv.g3.dongtrainghia.q004",
+    "skillId": "tv.g3.dongtrainghia",
+    "grade": 3,
+    "type": "mcq",
+    "prompt": "Từ nào đồng nghĩa với 'to'?",
+    "choices": ["lớn", "nhỏ", "bé"],
+    "correct": "lớn",
+    "explanation": "'Lớn' cùng nghĩa với 'to'."
+  },
+  {
+    "id": "tv.g3.dongtrainghia.q005",
+    "skillId": "tv.g3.dongtrainghia",
+    "grade": 3,
+    "type": "true-false",
+    "prompt": "'Nhanh' và 'chậm' là hai từ trái nghĩa. Đúng hay sai?",
+    "correct": "true",
+    "explanation": "Đúng — 'nhanh' trái nghĩa với 'chậm'."
+  },
+  {
+    "id": "tv.g3.dongtrainghia.q006",
+    "skillId": "tv.g3.dongtrainghia",
+    "grade": 3,
+    "type": "true-false",
+    "prompt": "'Hiền lành' và 'độc ác' là hai từ đồng nghĩa. Đúng hay sai?",
+    "correct": "false",
+    "explanation": "Sai — chúng TRÁI nghĩa với nhau."
+  },
+  {
+    "id": "tv.g3.dongtrainghia.q007",
+    "skillId": "tv.g3.dongtrainghia",
+    "grade": 3,
+    "type": "fill-blank",
+    "prompt": "Điền từ trái nghĩa với 'sáng': Ban ngày trời sáng, ban đêm trời ___.",
+    "correct": ["tối"],
+    "explanation": "Trái nghĩa với 'sáng' là 'tối'."
+  },
+  {
+    "id": "tv.g3.dongtrainghia.q008",
+    "skillId": "tv.g3.dongtrainghia",
+    "grade": 3,
+    "type": "mcq",
+    "prompt": "Từ nào đồng nghĩa với 'đẹp'?",
+    "choices": ["xinh", "xấu", "bẩn"],
+    "correct": "xinh",
+    "explanation": "'Xinh' cùng nghĩa với 'đẹp'."
+  }
+]

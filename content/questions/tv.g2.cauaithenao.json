@@ -1,0 +1,69 @@
+[
+  {
+    "id": "tv.g2.cauaithenao.q001",
+    "skillId": "tv.g2.cauaithenao",
+    "grade": 2,
+    "type": "mcq",
+    "prompt": "Câu nào theo mẫu 'Ai thế nào?'",
+    "choices": ["Bạn Lan rất chăm chỉ.", "Lan đá bóng.", "Lan là học sinh."],
+    "correct": "Bạn Lan rất chăm chỉ.",
+    "explanation": "'Ai thế nào?' nói về ĐẶC ĐIỂM: Lan (ai) — chăm chỉ (thế nào)."
+  },
+  {
+    "id": "tv.g2.cauaithenao.q002",
+    "skillId": "tv.g2.cauaithenao",
+    "grade": 2,
+    "type": "mcq",
+    "prompt": "Bộ phận trả lời câu hỏi 'thế nào?' trong câu 'Bầu trời rất trong xanh.' là gì?",
+    "choices": ["rất trong xanh", "Bầu trời"],
+    "correct": "rất trong xanh",
+    "explanation": "'Rất trong xanh' nêu đặc điểm của bầu trời → trả lời 'thế nào?'."
+  },
+  {
+    "id": "tv.g2.cauaithenao.q003",
+    "skillId": "tv.g2.cauaithenao",
+    "grade": 2,
+    "type": "mcq",
+    "prompt": "Câu nào KHÔNG theo mẫu 'Ai thế nào?'",
+    "choices": ["Mèo con bắt chuột.", "Mèo con rất tinh nghịch."],
+    "correct": "Mèo con bắt chuột.",
+    "explanation": "'Bắt chuột' chỉ hoạt động → đó là mẫu 'Ai làm gì?'."
+  },
+  {
+    "id": "tv.g2.cauaithenao.q004",
+    "skillId": "tv.g2.cauaithenao",
+    "grade": 2,
+    "type": "true-false",
+    "prompt": "Câu 'Hoa hồng thơm ngát.' theo mẫu 'Ai thế nào?'. Đúng hay sai?",
+    "correct": "true",
+    "explanation": "Đúng: Hoa hồng (ai) — thơm ngát (thế nào)."
+  },
+  {
+    "id": "tv.g2.cauaithenao.q005",
+    "skillId": "tv.g2.cauaithenao",
+    "grade": 2,
+    "type": "mcq",
+    "prompt": "Bộ phận trả lời 'Ai?' trong câu 'Em bé rất đáng yêu.' là gì?",
+    "choices": ["Em bé", "rất đáng yêu"],
+    "correct": "Em bé",
+    "explanation": "'Em bé' là đối tượng → trả lời câu hỏi 'Ai?'."
+  },
+  {
+    "id": "tv.g2.cauaithenao.q006",
+    "skillId": "tv.g2.cauaithenao",
+    "grade": 2,
+    "type": "fill-blank",
+    "prompt": "Điền từ chỉ đặc điểm: 'Dòng sông ___.' (cho hợp mẫu Ai thế nào?, gợi ý: rộng lớn)",
+    "correct": ["mênh mông"],
+    "explanation": "Ví dụ: 'Dòng sông mênh mông.' — nêu đặc điểm của sông."
+  },
+  {
+    "id": "tv.g2.cauaithenao.q007",
+    "skillId": "tv.g2.cauaithenao",
+    "grade": 2,
+    "type": "true-false",
+    "prompt": "Câu 'Bố em là bác sĩ.' theo mẫu 'Ai thế nào?'. Đúng hay sai?",
+    "correct": "false",
+    "explanation": "Sai — 'là bác sĩ' giới thiệu nghề → mẫu 'Ai là gì?'."
+  }
+]

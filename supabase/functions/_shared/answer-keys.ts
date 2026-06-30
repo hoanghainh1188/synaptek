@@ -676,6 +676,34 @@ export const ANSWER_KEYS: Record<string, AnswerKey> = {
     "type": "true-false",
     "correct": "true"
   },
+  "tv.g1.daucau.q001": {
+    "type": "mcq",
+    "correct": "dấu chấm (.)"
+  },
+  "tv.g1.daucau.q002": {
+    "type": "mcq",
+    "correct": "dấu hỏi (?)"
+  },
+  "tv.g1.daucau.q003": {
+    "type": "true-false",
+    "correct": "false"
+  },
+  "tv.g1.daucau.q004": {
+    "type": "mcq",
+    "correct": "!"
+  },
+  "tv.g1.daucau.q005": {
+    "type": "mcq",
+    "correct": "?"
+  },
+  "tv.g1.daucau.q006": {
+    "type": "true-false",
+    "correct": "true"
+  },
+  "tv.g1.daucau.q007": {
+    "type": "mcq",
+    "correct": "câu kể"
+  },
   "tv.g1.tuloai.q001": {
     "type": "mcq",
     "correct": "cái bàn"
@@ -709,5 +737,103 @@ export const ANSWER_KEYS: Record<string, AnswerKey> = {
     "correct": [
       "đọc"
     ]
+  },
+  "tv.g2.cauaithenao.q001": {
+    "type": "mcq",
+    "correct": "Bạn Lan rất chăm chỉ."
+  },
+  "tv.g2.cauaithenao.q002": {
+    "type": "mcq",
+    "correct": "rất trong xanh"
+  },
+  "tv.g2.cauaithenao.q003": {
+    "type": "mcq",
+    "correct": "Mèo con bắt chuột."
+  },
+  "tv.g2.cauaithenao.q004": {
+    "type": "true-false",
+    "correct": "true"
+  },
+  "tv.g2.cauaithenao.q005": {
+    "type": "mcq",
+    "correct": "Em bé"
+  },
+  "tv.g2.cauaithenao.q006": {
+    "type": "fill-blank",
+    "correct": [
+      "mênh mông"
+    ]
+  },
+  "tv.g2.cauaithenao.q007": {
+    "type": "true-false",
+    "correct": "false"
+  },
+  "tv.g2.tudacdiem.q001": {
+    "type": "mcq",
+    "correct": "xanh"
+  },
+  "tv.g2.tudacdiem.q002": {
+    "type": "mcq",
+    "correct": "cao"
+  },
+  "tv.g2.tudacdiem.q003": {
+    "type": "mcq",
+    "correct": "nhảy"
+  },
+  "tv.g2.tudacdiem.q004": {
+    "type": "true-false",
+    "correct": "true"
+  },
+  "tv.g2.tudacdiem.q005": {
+    "type": "mcq",
+    "correct": "cay"
+  },
+  "tv.g2.tudacdiem.q006": {
+    "type": "mcq",
+    "correct": "nhanh"
+  },
+  "tv.g2.tudacdiem.q007": {
+    "type": "fill-blank",
+    "correct": [
+      "cao"
+    ]
+  },
+  "tv.g2.tudacdiem.q008": {
+    "type": "true-false",
+    "correct": "false"
+  },
+  "tv.g3.dongtrainghia.q001": {
+    "type": "mcq",
+    "correct": "siêng năng"
+  },
+  "tv.g3.dongtrainghia.q002": {
+    "type": "mcq",
+    "correct": "thấp"
+  },
+  "tv.g3.dongtrainghia.q003": {
+    "type": "mcq",
+    "correct": "buồn"
+  },
+  "tv.g3.dongtrainghia.q004": {
+    "type": "mcq",
+    "correct": "lớn"
+  },
+  "tv.g3.dongtrainghia.q005": {
+    "type": "true-false",
+    "correct": "true"
+  },
+  "tv.g3.dongtrainghia.q006": {
+    "type": "true-false",
+    "correct": "false"
+  },
+  "tv.g3.dongtrainghia.q007": {
+    "type": "fill-blank",
+    "correct": [
+      "tối"
+    ]
+  },
+  "tv.g3.dongtrainghia.q008": {
+    "type": "mcq",
+    "correct": "xinh"
   }
 };

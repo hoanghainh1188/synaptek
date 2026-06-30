@@ -1,0 +1,70 @@
+[
+  {
+    "id": "tv.g1.daucau.q001",
+    "skillId": "tv.g1.daucau",
+    "grade": 1,
+    "type": "mcq",
+    "prompt": "Câu 'Em đi học' kết thúc bằng dấu gì?",
+    "choices": ["dấu chấm (.)", "dấu hỏi (?)"],
+    "correct": "dấu chấm (.)",
+    "explanation": "Câu kể (thông báo việc) kết thúc bằng dấu chấm."
+  },
+  {
+    "id": "tv.g1.daucau.q002",
+    "skillId": "tv.g1.daucau",
+    "grade": 1,
+    "type": "mcq",
+    "prompt": "Câu 'Bạn tên là gì' kết thúc bằng dấu gì?",
+    "choices": ["dấu hỏi (?)", "dấu chấm (.)"],
+    "correct": "dấu hỏi (?)",
+    "explanation": "Câu hỏi (để hỏi) kết thúc bằng dấu hỏi."
+  },
+  {
+    "id": "tv.g1.daucau.q003",
+    "skillId": "tv.g1.daucau",
+    "grade": 1,
+    "type": "true-false",
+    "prompt": "Câu hỏi kết thúc bằng dấu chấm. Đúng hay sai?",
+    "correct": "false",
+    "explanation": "Sai — câu hỏi kết thúc bằng dấu hỏi (?)."
+  },
+  {
+    "id": "tv.g1.daucau.q004",
+    "skillId": "tv.g1.daucau",
+    "grade": 1,
+    "type": "mcq",
+    "prompt": "Chọn dấu phù hợp: 'Hôm nay trời đẹp quá___'",
+    "choices": ["!", "?"],
+    "correct": "!",
+    "explanation": "Câu bộc lộ cảm xúc dùng dấu chấm than (!)."
+  },
+  {
+    "id": "tv.g1.daucau.q005",
+    "skillId": "tv.g1.daucau",
+    "grade": 1,
+    "type": "mcq",
+    "prompt": "Chọn dấu phù hợp: 'Mẹ ơi, mấy giờ rồi___'",
+    "choices": ["?", "."],
+    "correct": "?",
+    "explanation": "Đây là câu hỏi → dùng dấu hỏi (?)."
+  },
+  {
+    "id": "tv.g1.daucau.q006",
+    "skillId": "tv.g1.daucau",
+    "grade": 1,
+    "type": "true-false",
+    "prompt": "Đầu câu phải viết hoa chữ cái đầu tiên. Đúng hay sai?",
+    "correct": "true",
+    "explanation": "Đúng — chữ cái đầu câu luôn viết hoa."
+  },
+  {
+    "id": "tv.g1.daucau.q007",
+    "skillId": "tv.g1.daucau",
+    "grade": 1,
+    "type": "mcq",
+    "prompt": "Câu 'Con mèo đang ngủ' là loại câu gì?",
+    "choices": ["câu kể", "câu hỏi"],
+    "correct": "câu kể",
+    "explanation": "Câu kể dùng để thuật lại sự việc → kết thúc bằng dấu chấm."
+  }
+]

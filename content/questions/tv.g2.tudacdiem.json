@@ -1,0 +1,79 @@
+[
+  {
+    "id": "tv.g2.tudacdiem.q001",
+    "skillId": "tv.g2.tudacdiem",
+    "grade": 2,
+    "type": "mcq",
+    "prompt": "Từ nào chỉ ĐẶC ĐIỂM (hình dáng, màu sắc, tính nết)?",
+    "choices": ["xanh", "chạy", "quyển vở"],
+    "correct": "xanh",
+    "explanation": "'Xanh' chỉ màu sắc → từ chỉ đặc điểm."
+  },
+  {
+    "id": "tv.g2.tudacdiem.q002",
+    "skillId": "tv.g2.tudacdiem",
+    "grade": 2,
+    "type": "mcq",
+    "prompt": "Từ nào chỉ đặc điểm?",
+    "choices": ["cao", "đi", "cái cây"],
+    "correct": "cao",
+    "explanation": "'Cao' chỉ hình dáng → từ chỉ đặc điểm."
+  },
+  {
+    "id": "tv.g2.tudacdiem.q003",
+    "skillId": "tv.g2.tudacdiem",
+    "grade": 2,
+    "type": "mcq",
+    "prompt": "Từ nào KHÔNG phải từ chỉ đặc điểm?",
+    "choices": ["nhảy", "tròn", "ngọt"],
+    "correct": "nhảy",
+    "explanation": "'Nhảy' chỉ hoạt động, không phải đặc điểm."
+  },
+  {
+    "id": "tv.g2.tudacdiem.q004",
+    "skillId": "tv.g2.tudacdiem",
+    "grade": 2,
+    "type": "true-false",
+    "prompt": "'Chăm chỉ' là từ chỉ đặc điểm (tính nết). Đúng hay sai?",
+    "correct": "true",
+    "explanation": "'Chăm chỉ' chỉ tính nết → là từ chỉ đặc điểm."
+  },
+  {
+    "id": "tv.g2.tudacdiem.q005",
+    "skillId": "tv.g2.tudacdiem",
+    "grade": 2,
+    "type": "mcq",
+    "prompt": "Chọn từ chỉ đặc điểm để hoàn thành: 'Quả ớt có vị ___.'",
+    "choices": ["cay", "ăn", "quả"],
+    "correct": "cay",
+    "explanation": "'Cay' chỉ vị → từ chỉ đặc điểm."
+  },
+  {
+    "id": "tv.g2.tudacdiem.q006",
+    "skillId": "tv.g2.tudacdiem",
+    "grade": 2,
+    "type": "mcq",
+    "prompt": "Từ nào chỉ đặc điểm?",
+    "choices": ["nhanh", "con chó", "viết"],
+    "correct": "nhanh",
+    "explanation": "'Nhanh' chỉ đặc điểm về tốc độ."
+  },
+  {
+    "id": "tv.g2.tudacdiem.q007",
+    "skillId": "tv.g2.tudacdiem",
+    "grade": 2,
+    "type": "fill-blank",
+    "prompt": "Điền từ chỉ đặc điểm trái nghĩa với 'cao': Cây này thấp, cây kia ___.",
+    "correct": ["cao"],
+    "explanation": "Trái nghĩa với 'thấp' là 'cao' — đều là từ chỉ đặc điểm."
+  },
+  {
+    "id": "tv.g2.tudacdiem.q008",
+    "skillId": "tv.g2.tudacdiem",
+    "grade": 2,
+    "type": "true-false",
+    "prompt": "'Quả bóng' là từ chỉ đặc điểm. Đúng hay sai?",
+    "correct": "false",
+    "explanation": "'Quả bóng' chỉ sự vật, không phải đặc điểm."
+  }
+]
