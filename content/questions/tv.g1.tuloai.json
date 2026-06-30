@@ -1,0 +1,78 @@
+[
+  {
+    "id": "tv.g1.tuloai.q001",
+    "skillId": "tv.g1.tuloai",
+    "grade": 1,
+    "type": "mcq",
+    "prompt": "Từ nào chỉ SỰ VẬT?",
+    "choices": ["cái bàn", "chạy", "nhảy"],
+    "correct": "cái bàn",
+    "explanation": "Từ chỉ sự vật gọi tên người, vật, con vật — ví dụ 'cái bàn'."
+  },
+  {
+    "id": "tv.g1.tuloai.q002",
+    "skillId": "tv.g1.tuloai",
+    "grade": 1,
+    "type": "mcq",
+    "prompt": "Từ nào chỉ HOẠT ĐỘNG?",
+    "choices": ["đọc", "quyển sách", "con mèo"],
+    "correct": "đọc",
+    "explanation": "Từ chỉ hoạt động nói về việc làm — ví dụ 'đọc'."
+  },
+  {
+    "id": "tv.g1.tuloai.q003",
+    "skillId": "tv.g1.tuloai",
+    "grade": 1,
+    "type": "mcq",
+    "prompt": "Từ nào chỉ sự vật?",
+    "choices": ["bông hoa", "viết", "hát"],
+    "correct": "bông hoa",
+    "explanation": "'Bông hoa' là tên một vật → từ chỉ sự vật."
+  },
+  {
+    "id": "tv.g1.tuloai.q004",
+    "skillId": "tv.g1.tuloai",
+    "grade": 1,
+    "type": "mcq",
+    "prompt": "Từ nào chỉ hoạt động?",
+    "choices": ["bơi", "cái ghế", "quả táo"],
+    "correct": "bơi",
+    "explanation": "'Bơi' là việc làm → từ chỉ hoạt động."
+  },
+  {
+    "id": "tv.g1.tuloai.q005",
+    "skillId": "tv.g1.tuloai",
+    "grade": 1,
+    "type": "true-false",
+    "prompt": "'Con mèo' là từ chỉ sự vật. Đúng hay sai?",
+    "correct": "true",
+    "explanation": "'Con mèo' gọi tên con vật → là từ chỉ sự vật."
+  },
+  {
+    "id": "tv.g1.tuloai.q006",
+    "skillId": "tv.g1.tuloai",
+    "grade": 1,
+    "type": "true-false",
+    "prompt": "'Hát' là từ chỉ sự vật. Đúng hay sai?",
+    "correct": "false",
+    "explanation": "'Hát' là việc làm → từ chỉ hoạt động, không phải sự vật."
+  },
+  {
+    "id": "tv.g1.tuloai.q007",
+    "skillId": "tv.g1.tuloai",
+    "grade": 1,
+    "type": "true-false",
+    "prompt": "'Chạy' là từ chỉ hoạt động. Đúng hay sai?",
+    "correct": "true",
+    "explanation": "'Chạy' nói về việc làm → từ chỉ hoạt động."
+  },
+  {
+    "id": "tv.g1.tuloai.q008",
+    "skillId": "tv.g1.tuloai",
+    "grade": 1,
+    "type": "fill-blank",
+    "prompt": "Điền từ chỉ hoạt động cho phù hợp: Em ___ sách. (gợi ý: việc dùng mắt để hiểu chữ)",
+    "correct": ["đọc"],
+    "explanation": "Em ĐỌC sách — 'đọc' là từ chỉ hoạt động."
+  }
+]

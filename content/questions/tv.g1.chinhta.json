@@ -1,0 +1,71 @@
+[
+  {
+    "id": "tv.g1.chinhta.q001",
+    "skillId": "tv.g1.chinhta",
+    "grade": 1,
+    "type": "mcq",
+    "prompt": "Chọn cách viết ĐÚNG:",
+    "choices": ["kẻ", "cẻ"],
+    "correct": "kẻ",
+    "explanation": "Trước e, ê, i ta viết 'k' (kẻ, kê, ki)."
+  },
+  {
+    "id": "tv.g1.chinhta.q002",
+    "skillId": "tv.g1.chinhta",
+    "grade": 1,
+    "type": "mcq",
+    "prompt": "Chọn cách viết đúng:",
+    "choices": ["con cá", "con ká"],
+    "correct": "con cá",
+    "explanation": "Trước a, o, ô, u ta viết 'c' (cá, cô, cua)."
+  },
+  {
+    "id": "tv.g1.chinhta.q003",
+    "skillId": "tv.g1.chinhta",
+    "grade": 1,
+    "type": "mcq",
+    "prompt": "Chọn cách viết đúng:",
+    "choices": ["ghế", "gế"],
+    "correct": "ghế",
+    "explanation": "Trước e, ê, i ta viết 'gh' (ghế, ghi, ghê)."
+  },
+  {
+    "id": "tv.g1.chinhta.q004",
+    "skillId": "tv.g1.chinhta",
+    "grade": 1,
+    "type": "mcq",
+    "prompt": "Chọn cách viết đúng:",
+    "choices": ["cái gối", "cái ghối"],
+    "correct": "cái gối",
+    "explanation": "Trước o, ô, a, u ta viết 'g' (gối, gà, gô)."
+  },
+  {
+    "id": "tv.g1.chinhta.q005",
+    "skillId": "tv.g1.chinhta",
+    "grade": 1,
+    "type": "mcq",
+    "prompt": "Chọn cách viết đúng:",
+    "choices": ["nghe", "nge"],
+    "correct": "nghe",
+    "explanation": "Trước e, ê, i ta viết 'ngh' (nghe, nghĩ, nghỉ)."
+  },
+  {
+    "id": "tv.g1.chinhta.q006",
+    "skillId": "tv.g1.chinhta",
+    "grade": 1,
+    "type": "mcq",
+    "prompt": "Chọn cách viết đúng:",
+    "choices": ["ngôi nhà", "nghôi nhà"],
+    "correct": "ngôi nhà",
+    "explanation": "Trước o, ô, a, u ta viết 'ng' (ngôi, ngà, ngó)."
+  },
+  {
+    "id": "tv.g1.chinhta.q007",
+    "skillId": "tv.g1.chinhta",
+    "grade": 1,
+    "type": "true-false",
+    "prompt": "Trước e, ê, i ta viết 'k' (không viết 'c'). Đúng hay sai?",
+    "correct": "true",
+    "explanation": "Đúng: kẻ, kê, kim — trước e, ê, i luôn viết 'k'."
+  }
+]

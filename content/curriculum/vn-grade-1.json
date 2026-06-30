@@ -1,0 +1,34 @@
+{
+  "grade": 1,
+  "subject": "vietnamese",
+  "strands": [
+    {
+      "id": "tv.g1.tucau",
+      "name": "Từ và câu",
+      "topics": [
+        {
+          "id": "tv.g1.tuloai",
+          "name": "Từ chỉ sự vật, hoạt động",
+          "grade": 1,
+          "skillIds": ["tv.g1.tuloai"]
+        }
+      ]
+    },
+    {
+      "id": "tv.g1.viet",
+      "name": "Chính tả",
+      "topics": [
+        {
+          "id": "tv.g1.chinhta",
+          "name": "Chính tả: c/k, g/gh, ng/ngh",
+          "grade": 1,
+          "skillIds": ["tv.g1.chinhta"]
+        }
+      ]
+    }
+  ],
+  "skills": [
+    { "id": "tv.g1.tuloai", "name": "Phân biệt từ chỉ sự vật / hoạt động", "prerequisites": [] },
+    { "id": "tv.g1.chinhta", "name": "Quy tắc c/k, g/gh, ng/ngh", "prerequisites": [] }
+  ]
+}

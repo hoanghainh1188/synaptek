@@ -8,6 +8,7 @@ import {
   GRADE_FILTERS,
   allGrades,
   getQuestions,
+  listSubjects,
   listTopics,
   skillName,
   skillOfQuestion,
@@ -15,6 +16,7 @@ import {
   strandOf,
   topicOfSkill,
 } from "@/lib/content";
+import { subjectLabel } from "@/lib/subjects";
 import { buildMasteryMap, toSkillAttempts } from "@/lib/mastery";
 import { wrongQuestionIds } from "@/lib/mistakes";
 import { dailyProgress } from "@/lib/daily-goal";
@@ -45,7 +47,18 @@ const REASON_LABEL: Record<Recommendation["reason"], string> = {
 export default function Home() {
   const insets = useSafeAreaInsets();
   const [grade, setGrade] = useState(4);
-  const topics = listTopics(grade);
+  const [subject, setSubject] = useState("math");
+  const subjects = listSubjects();
+  const topics = listTopics(grade, subject);
+
+  // Đổi môn: nếu lớp hiện tại không có chủ đề của môn → nhảy tới lớp đầu tiên có nội dung.
+  const selectSubject = (s: string) => {
+    setSubject(s);
+    if (listTopics(grade, s).length === 0) {
+      const g = GRADE_FILTERS.find((gr) => listTopics(gr, s).length > 0);
+      if (g) setGrade(g);
+    }
+  };
   const { user } = useAuth();
 
   const attemptsQ = useAttempts();
@@ -382,8 +395,30 @@ export default function Home() {
         </View>
       )}
 
+      {/* Chọn môn (chỉ hiện khi có >1 môn) */}
+      {subjects.length > 1 && (
+        <View className="mt-7 flex-row flex-wrap items-center gap-2">
+          <Text className="mr-1 text-sm font-bold text-muted">Môn</Text>
+          {subjects.map((s) => {
+            const active = s === subject;
+            return (
+              <Pressable
+                key={s}
+                accessibilityLabel={`Môn ${subjectLabel(s)}`}
+                onPress={() => selectSubject(s)}
+                className={`min-h-[40px] items-center justify-center rounded-full px-3 ${active ? "bg-brand" : "bg-surface shadow-sm"}`}
+              >
+                <Text className={`font-bold ${active ? "text-white" : "text-ink"}`}>
+                  {subjectLabel(s)}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+      )}
+
       {/* Duyệt chủ đề theo lớp */}
-      <View className="mt-7 flex-row items-center gap-2">
+      <View className={`${subjects.length > 1 ? "mt-4" : "mt-7"} flex-row items-center gap-2`}>
         <Text className="mr-1 text-sm font-bold text-muted">Lớp</Text>
         {GRADE_FILTERS.map((g) => {
           const active = g === grade;
@@ -425,7 +460,9 @@ export default function Home() {
                     className="text-[11px] font-extrabold uppercase tracking-wide"
                     style={{ color }}
                   >
-                    {STRAND_LABELS[strandOf(topic.id)] ?? "Toán"}
+                    {subject === "math"
+                      ? (STRAND_LABELS[strandOf(topic.id)] ?? "Toán")
+                      : subjectLabel(subject)}
                   </Text>
                   <Text className="font-display text-xl font-bold text-ink">{topic.name}</Text>
                   {empty ? (

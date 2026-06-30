@@ -4,6 +4,8 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ Đa môn — NỀN ✅ (feature/full-subject, PR đang mở):** Grade.subject (mặc định math) + subjectsOf/topicsByGrade(subject) + bộ chọn MÔN ở home. Seed Tiếng Việt lớp 1 (2 chủ đề: từ loại, chính tả; 15 câu). Decision Log D39. Nội dung gốc bám CT GDPT, KHÔNG chép SGK — seed nhỏ, content thật cần review (D14). e2e khách subject-browse (2 ca) + curriculum +2 test. Tương thích ngược (Toán nguyên vẹn).
+
 **+ Chấm từng bước — UI luyện tập (feature/step-practice-ui, PR đang mở):** màn /step-practice (client-only, low-stakes) — chọn bài số học nhiều bước/PT, nhập từng dòng → chấm qua @synaptek/step-grading, tô xanh/đỏ + định vị dòng sai + điểm. step-problems.ts (5 bài seed, +2 test; lời giải mẫu validate qua engine). Lối vào "Luyện trình bày từng bước" ở home. e2e GUEST step-practice (2 ca).
 
 **+ Chấm từng bước — NỀN ✅ vừa xong** (`feature/step-grading`, PR đang mở): package thuần /step-grading (gradeDerivation) chấm lời giải nhiều dòng bằng lấy mẫu — expression (≡ giá trị) + equation (cùng tập nghiệm qua chân-trị); evalExpr mới ở grading-engine. firstErrorIndex + validSteps + reachedGoal + score. 7 unit test. Decision Log D38. CHƯA tích hợp UI/loại câu (PR sau — cần bàn phím nhập có cấu trúc).
