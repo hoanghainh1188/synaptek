@@ -17,6 +17,7 @@ import {
   type CustomType,
 } from "@/lib/supabase/custom-questions";
 import { MathText } from "@/components/math/MathText";
+import { MathInsertBar } from "@/components/practice/MathInsertBar";
 import { SUBJECTS, subjectLabel, DEFAULT_SUBJECT } from "@/lib/subjects";
 import { packMatching, unpackMatching } from "@/lib/matching";
 import { normalizeMathInput } from "@/lib/step-problems";
@@ -589,6 +590,16 @@ export default function MyQuestions() {
               accessibilityLabel="Đề derivation"
               className="min-h-[44px] rounded-md border-2 border-line bg-paper px-3 text-base text-ink"
             />
+            <MathInsertBar
+              keys={["x", "^", "(", ")", "/", "*"]}
+              onInsert={(k) => setDerivStart(derivStart + k)}
+            />
+            {derivStart.trim().length > 0 && (
+              <View className="mt-2 flex-row items-center gap-2 rounded-md bg-num/5 px-3 py-2">
+                <Text className="text-xs font-bold text-muted">Xem trước</Text>
+                <MathText value={derivStart} size={20} weight="700" />
+              </View>
+            )}
 
             {derivMode === "expression" ? (
               <>
@@ -602,6 +613,10 @@ export default function MyQuestions() {
                   placeholderTextColor="#a1a1aa"
                   accessibilityLabel="Kết quả đích"
                   className="min-h-[44px] rounded-md border-2 border-line bg-paper px-3 text-base text-ink"
+                />
+                <MathInsertBar
+                  keys={["x", "^", "(", ")", "/", "*"]}
+                  onInsert={(k) => setDerivTarget(derivTarget + k)}
                 />
               </>
             ) : (
@@ -711,6 +726,18 @@ export default function MyQuestions() {
               accessibilityLabel="Đáp án đúng"
               className="min-h-[48px] rounded-md border-2 border-line bg-paper px-3 text-base text-ink"
             />
+            {type === "expression" && (
+              <MathInsertBar
+                keys={["x", "^", "(", ")", "/", "*"]}
+                onInsert={(k) => setCorrect(correct + k)}
+              />
+            )}
+            {(type === "fraction" || type === "expression") && correct.trim().length > 0 && (
+              <View className="mt-2 flex-row items-center gap-2 rounded-md bg-num/5 px-3 py-2">
+                <Text className="text-xs font-bold text-muted">Xem trước</Text>
+                <MathText value={correct} size={20} weight="700" />
+              </View>
+            )}
             {type === "numeric" && (
               <View className="mt-3 flex-row gap-3">
                 <View className="flex-1">
