@@ -61,6 +61,8 @@ export interface Question {
   choices?: string[];
   correct: string | string[];
   options?: { tolerance?: number; unordered?: boolean; roundTo?: number };
+  /** Gợi ý/hướng dẫn (tùy chọn) — CỐ Ý hiện khi HS làm bài (khác explanation hiện sau). */
+  hint?: string;
   explanation: string;
 }
 

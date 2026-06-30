@@ -4,6 +4,8 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ Gợi ý/hướng dẫn kèm câu ✅ vừa xong** (`feature/question-hint`, PR 5/5 — TRỌN nhóm soạn câu+môn): cột hint + RPC trả hint (CỐ Ý hiện khi HS làm, khác explanation ẩn — D4). curriculum Question.hint; QuestionCard render "💡 gợi ý"; authoring thêm ô Gợi ý. migration 0020. e2e question-hint PASS.
+
 **+ Câu Sắp thứ tự (ordering) ✅ vừa xong** (`feature/ordering`, PR 4/5): engine type "ordering" (so dãy theo vị trí, +3 test); migration 0019 (CHECK). Authoring nhập mục theo đúng thứ tự → lưu correct=JSON, choices=XÁO TRỘN (chống lộ). AnswerInput OrderingInput (↑↓). Edge parse JSON. e2e ordering PASS. (Nối cặp/matching để PR sau nếu cần.)
 
 **+ Tùy chọn chấm câu tự soạn ✅ vừa xong** (`feature/custom-options`, PR 3/5): câu tự soạn lưu options (jsonb, migration 0018) → numeric: làm tròn N chữ số + dung sai; fill-blank: KHÔNG theo thứ tự. Authoring UI + Edge truyền options vào engine (engine đã hỗ trợ sẵn). e2e custom-options (fill-blank unordered→100%) PASS.

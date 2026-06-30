@@ -30,6 +30,7 @@ export interface CustomQuestion {
   explanation: string | null;
   imageUrl: string | null;
   subject: string | null; // null = Toán (mặc định)
+  hint: string | null;
   options: GradeOpts | null; // tùy chọn chấm (numeric: roundTo/tolerance; fill-blank: unordered)
 }
 
@@ -41,6 +42,7 @@ export interface NewCustomQuestion {
   explanation?: string | null;
   imageUrl?: string | null;
   subject?: string | null;
+  hint?: string | null;
   options?: GradeOpts | null;
 }
 
@@ -66,7 +68,9 @@ export function useMyCustomQuestions() {
       if (!supabase || !user) return [];
       const { data, error } = await supabase
         .from("custom_questions")
-        .select("id, type, prompt, choices, correct, explanation, image_url, subject, options")
+        .select(
+          "id, type, prompt, choices, correct, explanation, image_url, subject, options, hint",
+        )
         .eq("author_id", user.id)
         .order("created_at", { ascending: false });
       if (error) throw error;
@@ -80,6 +84,7 @@ export function useMyCustomQuestions() {
         imageUrl: (r.image_url as string | null) ?? null,
         subject: (r.subject as string | null) ?? null,
         options: (r.options as GradeOpts | null) ?? null,
+        hint: (r.hint as string | null) ?? null,
       }));
     },
   });
@@ -105,6 +110,7 @@ export function useCreateCustomQuestion() {
         image_url: q.imageUrl ?? null,
         subject: q.subject ?? null,
         options: q.options ?? null,
+        hint: q.hint ?? null,
       });
       if (error) throw error;
     },
@@ -132,6 +138,7 @@ export function useUpdateCustomQuestion() {
           image_url: q.imageUrl ?? null,
           subject: q.subject ?? null,
           options: q.options ?? null,
+          hint: q.hint ?? null,
         })
         .eq("id", q.id);
       if (error) throw error;
@@ -171,6 +178,7 @@ export function useStudentCustomQuestions(ids: string[]) {
           prompt: string;
           choices: string[] | null;
           image_url: string | null;
+          hint: string | null;
         }): Question => ({
           id: r.id,
           skillId: "custom",
@@ -181,6 +189,7 @@ export function useStudentCustomQuestions(ids: string[]) {
           correct: "", // đáp án ẩn — không gửi cho HS (chấm ở Edge)
           explanation: "", // giải thích ẩn với HS khi làm bài
           image: r.image_url ? { src: r.image_url, alt: "Ảnh câu hỏi" } : undefined,
+          hint: r.hint ?? undefined, // gợi ý CỐ Ý hiện khi làm
         }),
       );
     },

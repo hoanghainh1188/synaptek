@@ -36,6 +36,13 @@ export function QuestionCard({ question, topicName, color = "#2563eb" }: Questio
       <View className="mt-3">
         <MathText value={question.prompt} size={24} weight="600" />
       </View>
+
+      {question.hint ? (
+        <View className="mt-3 flex-row items-start gap-2 rounded-md bg-brand/5 p-3">
+          <Text>💡</Text>
+          <Text className="flex-1 text-sm text-ink">{question.hint}</Text>
+        </View>
+      ) : null}
     </View>
   );
 }
