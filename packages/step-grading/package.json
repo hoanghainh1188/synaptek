@@ -1,0 +1,11 @@
+{
+  "name": "@synaptek/step-grading",
+  "version": "0.1.0",
+  "description": "Chấm lời giải TỪNG BƯỚC bằng lấy mẫu (D9, không CAS) — định vị dòng sai đầu tiên + điểm thành phần. Tái dùng sampler của grading-engine; chạy client + Edge.",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "node --experimental-strip-types --no-warnings tests/step-grading.test.ts"
+  },
+  "license": "UNLICENSED"
+}

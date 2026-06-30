@@ -402,6 +402,14 @@ function compileExpr(raw: string): Tok[] | null {
   return toRpn(toks);
 }
 
+/** Giá trị biểu thức tại x (null nếu sai định dạng / không xác định). Cho chấm-từng-bước (step-grading). */
+export function evalExpr(expr: string, x: number): number | null {
+  const rpn = compileExpr(expr);
+  if (!rpn) return null;
+  const v = evalRpn(rpn, x);
+  return v === null || !Number.isFinite(v) ? null : v;
+}
+
 /** Hai biểu thức tương đương? Lấy mẫu x trên nhiều giá trị (số học: 1 mẫu là đủ). */
 export function expressionsEquivalent(a: string, b: string, tol = EPS): boolean {
   const ra = compileExpr(a);
