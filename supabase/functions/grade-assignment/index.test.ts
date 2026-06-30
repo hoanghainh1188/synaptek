@@ -43,6 +43,35 @@ Deno.test("không câu nào có key → autoScore 0, không lỗi", () => {
   assertEquals(Object.keys(r.perQuestion).length, 0);
 });
 
+// Trình bày từng bước (derivation): chấm lời giải nhiều dòng qua step-grading.
+const DERIV_KEYS: Record<string, AnswerKey> = {
+  d1: {
+    type: "derivation",
+    correct: JSON.stringify({ mode: "equation", variable: "x", start: "2x + 3 = 7" }),
+  },
+  d2: {
+    type: "derivation",
+    correct: JSON.stringify({ mode: "expression", target: "24", start: "12 + 3*4" }),
+  },
+};
+
+Deno.test("derivation: lời giải đúng → isCorrect (đạt đích), điểm đầy đủ", () => {
+  const r = gradeSubmission(["d1"], { d1: ["2x = 4", "x = 2"] }, DERIV_KEYS);
+  assertEquals(r.perQuestion.d1.isCorrect, true);
+  assertEquals(r.autoScore, 1);
+});
+
+Deno.test("derivation: bước sai → không đạt, feedbackCode incorrect", () => {
+  const r = gradeSubmission(["d2"], { d2: ["15 * 4"] }, DERIV_KEYS); // 12+3 trước → 60 ≠ 24
+  assertEquals(r.perQuestion.d2.isCorrect, false);
+  assertEquals(r.perQuestion.d2.feedbackCode, "incorrect");
+});
+
+Deno.test("derivation: ẩn đáp án — chỉ trả {isCorrect, feedbackCode}", () => {
+  const r = gradeSubmission(["d1"], { d1: ["2x = 4", "x = 2"] }, DERIV_KEYS);
+  assertEquals(Object.keys(r.perQuestion.d1).sort(), ["feedbackCode", "isCorrect"]);
+});
+
 // Bảo đảm kiểu AnswerKey dùng được (khớp answer-keys tự sinh).
 const _typecheck: AnswerKey = { type: "mcq", correct: "A" };
 void _typecheck;

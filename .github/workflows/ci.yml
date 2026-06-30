@@ -173,7 +173,8 @@ jobs:
             tests/e2e/custom-options.spec.ts \
             tests/e2e/ordering.spec.ts \
             tests/e2e/question-hint.spec.ts \
-            tests/e2e/matching.spec.ts
+            tests/e2e/matching.spec.ts \
+            tests/e2e/derivation.spec.ts
         working-directory: apps/app
 
       - name: Stop Supabase

@@ -4,6 +4,8 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ Câu "trình bày từng bước" GIAO ĐƯỢC ✅ (feature/derivation-question, PR đang mở):** loại derivation soạn/giao được, chấm CHÍNH THỨC server-side qua step-grading (Edge). migration 0022; spec ẩn trong correct (JSON), choices=[start,mode,variable] cho HS; engine QuestionType +derivation (grade() default); authoring (mode/đề/đích/biến) + AnswerInput nhập nhiều dòng (preview per-line). Decision Log D40. Deno +3 test, e2e derivation (GV soạn PT → HS nộp lời giải → 100%) PASS.
+
 **+ Mở rộng nội dung Tiếng Việt (feature/tv-expand, PR đang mở):** thêm lớp 1 (dấu câu), LỚP 2 (từ chỉ đặc điểm · mẫu câu "Ai thế nào?"), LỚP 3 (đồng nghĩa/trái nghĩa). Tổng nội dung 205 câu (TV ~45 câu, 3 lớp). e2e subject-browse mở rộng kiểm lớp 2. Vẫn gốc bám CT, không chép SGK.
 
 **+ Đa môn — NỀN ✅ (feature/full-subject, PR đang mở):** Grade.subject (mặc định math) + subjectsOf/topicsByGrade(subject) + bộ chọn MÔN ở home. Seed Tiếng Việt lớp 1 (2 chủ đề: từ loại, chính tả; 15 câu). Decision Log D39. Nội dung gốc bám CT GDPT, KHÔNG chép SGK — seed nhỏ, content thật cần review (D14). e2e khách subject-browse (2 ca) + curriculum +2 test. Tương thích ngược (Toán nguyên vẹn).
