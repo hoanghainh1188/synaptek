@@ -4,6 +4,8 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ Hỗ trợ nhập toán khi SOẠN câu ✅ (feature/authoring-math-input, PR đang mở):** ô đáp án fraction/expression + đề/đích derivation thêm thanh chèn nhanh (MathInsertBar: x ^ ( ) / \*) + xem trước MathText. e2e authoring-math (GV chèn → preview → lưu) PASS. Decision Log D42. Trọn Hướng 1 (bàn phím toán: HS đáp án + GV soạn).
+
 **+ Bàn phím toán có cấu trúc ✅ (feature/math-keypad, PR đang mở):** ô đáp án expression thêm nút ^ ( ) x + - \* (numeric/fraction giữ gọn); biểu thức hiển thị qua MathText (mũ đẹp). math-keypad.ts thuần (mathKeypadKeys/isOperatorKey, +4 test). KHÔNG đổi engine. e2e auth math-keypad (HS bấm 2(x+2) → chấm tương đương 100%) PASS. Decision Log D41.
 
 **+ Câu "trình bày từng bước" GIAO ĐƯỢC ✅ (feature/derivation-question, PR đang mở):** loại derivation soạn/giao được, chấm CHÍNH THỨC server-side qua step-grading (Edge). migration 0022; spec ẩn trong correct (JSON), choices=[start,mode,variable] cho HS; engine QuestionType +derivation (grade() default); authoring (mode/đề/đích/biến) + AnswerInput nhập nhiều dòng (preview per-line). Decision Log D40. Deno +3 test, e2e derivation (GV soạn PT → HS nộp lời giải → 100%) PASS.
