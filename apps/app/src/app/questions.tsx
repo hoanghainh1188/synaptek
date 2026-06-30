@@ -44,6 +44,7 @@ export default function MyQuestions() {
   const [choices, setChoices] = useState(["", ""]);
   const [correct, setCorrect] = useState("");
   const [explanation, setExplanation] = useState("");
+  const [hint, setHint] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -58,6 +59,7 @@ export default function MyQuestions() {
     setChoices(["", ""]);
     setCorrect("");
     setExplanation("");
+    setHint("");
     setImageUrl(null);
     setSubject(DEFAULT_SUBJECT);
     setRoundTo("");
@@ -110,6 +112,7 @@ export default function MyQuestions() {
     setType(qq.type);
     setPrompt(qq.prompt);
     setExplanation(qq.explanation ?? "");
+    setHint(qq.hint ?? "");
     setImageUrl(qq.imageUrl);
     setSubject(qq.subject ?? DEFAULT_SUBJECT);
     setRoundTo(qq.options?.roundTo != null ? String(qq.options.roundTo) : "");
@@ -203,6 +206,7 @@ export default function MyQuestions() {
       choices: type === "mcq" || type === "multi" ? opts : type === "ordering" ? shuffled : null,
       correct: correctValue,
       explanation: explanation.trim() || null,
+      hint: hint.trim() || null,
       imageUrl,
       subject,
       options: buildOptions(),
@@ -528,6 +532,18 @@ export default function MyQuestions() {
             )}
           </>
         )}
+
+        <Text className="mt-4 mb-1 text-sm font-bold text-muted">
+          Gợi ý (tuỳ chọn — HS thấy khi làm)
+        </Text>
+        <TextInput
+          value={hint}
+          onChangeText={setHint}
+          placeholder="VD: Nhớ quy đồng mẫu số trước nhé"
+          placeholderTextColor="#a1a1aa"
+          accessibilityLabel="Gợi ý"
+          className="min-h-[44px] rounded-md border-2 border-line bg-paper px-3 text-base text-ink"
+        />
 
         <Text className="mt-4 mb-1 text-sm font-bold text-muted">Giải thích (tuỳ chọn)</Text>
         <TextInput
