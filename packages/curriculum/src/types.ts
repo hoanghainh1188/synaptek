@@ -41,9 +41,11 @@ export interface Strand {
   topics: Topic[];
 }
 
-/** Một lớp (file content/curriculum/grade-<n>.json). */
+/** Một lớp của một MÔN (file content/curriculum/*.json). */
 export interface Grade {
   grade: number;
+  /** Môn học: "math" (mặc định nếu thiếu) · "vietnamese" · "english" · "science"… */
+  subject?: string;
   strands: Strand[];
   skills: Skill[];
 }

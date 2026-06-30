@@ -71,7 +71,7 @@ jobs:
         working-directory: apps/app
 
       - name: E2E (Playwright, guest flows)
-        run: npx playwright test tests/e2e/practice.spec.ts tests/e2e/review-lower-grade.spec.ts tests/e2e/diagnostic-path.spec.ts tests/e2e/streak-xp.spec.ts tests/e2e/step-practice.spec.ts
+        run: npx playwright test tests/e2e/practice.spec.ts tests/e2e/review-lower-grade.spec.ts tests/e2e/diagnostic-path.spec.ts tests/e2e/streak-xp.spec.ts tests/e2e/step-practice.spec.ts tests/e2e/subject-browse.spec.ts
         working-directory: apps/app
 
   # GATE bảo mật: RLS cô lập (chéo vai trò GV/HS/PH) — chạy THẬT trên DB Supabase + migrations.

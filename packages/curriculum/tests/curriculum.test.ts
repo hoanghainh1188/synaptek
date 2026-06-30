@@ -12,6 +12,8 @@ import {
   topicsByGrade,
   questionsForTopic,
   buildSession,
+  subjectsOf,
+  gradeSubject,
   type Grade,
   type Question,
 } from "../src/index.ts";
@@ -211,6 +213,39 @@ test("buildSession lấy đúng count, shuffle tất định theo seed", () => {
   const a = buildSession(fractions, { count: 5, shuffleSeed: 42 }).map((q) => q.id);
   const b = buildSession(fractions, { count: 5, shuffleSeed: 42 }).map((q) => q.id);
   assert.deepEqual(a, b); // lặp lại được
+});
+
+// ── Đa môn (subject) ─────────────────────────────────────────────────────────
+test("gradeSubject mặc định 'math' khi thiếu; subjectsOf gộp + math trước", () => {
+  const math1: Grade = { grade: 1, strands: [], skills: [] };
+  const vn1: Grade = { grade: 1, subject: "vietnamese", strands: [], skills: [] };
+  assert.equal(gradeSubject(math1), "math");
+  assert.equal(gradeSubject(vn1), "vietnamese");
+  assert.deepEqual(subjectsOf([vn1, math1]), ["math", "vietnamese"]); // math luôn trước
+});
+
+test("topicsByGrade lọc theo môn", () => {
+  const math1: Grade = {
+    grade: 1,
+    strands: [{ id: "m", name: "M", topics: [{ id: "m.t", name: "T", grade: 1, skillIds: [] }] }],
+    skills: [],
+  };
+  const vn1: Grade = {
+    grade: 1,
+    subject: "vietnamese",
+    strands: [{ id: "v", name: "V", topics: [{ id: "v.t", name: "T", grade: 1, skillIds: [] }] }],
+    skills: [],
+  };
+  const all = [math1, vn1];
+  assert.deepEqual(
+    topicsByGrade(all, 1, "math").map((t) => t.id),
+    ["m.t"],
+  );
+  assert.deepEqual(
+    topicsByGrade(all, 1, "vietnamese").map((t) => t.id),
+    ["v.t"],
+  );
+  assert.equal(topicsByGrade(all, 1).length, 2); // không lọc → cả hai
 });
 
 console.log(`\n${passed} test(s) passed.`);

@@ -1,10 +1,25 @@
 // Traversal + dựng phiên luyện tập. TS thuần.
 import type { Grade, Question, Topic } from "./types.ts";
 
-/** Tất cả chủ đề của một lớp (gộp mọi mạch). */
-export function topicsByGrade(curricula: Grade[], grade: number): Topic[] {
+/** Môn của một Grade (mặc định "math" nếu thiếu). */
+export function gradeSubject(g: Grade): string {
+  return g.subject ?? "math";
+}
+
+/** Danh sách môn có trong curricula (giữ thứ tự xuất hiện; "math" luôn trước nếu có). */
+export function subjectsOf(curricula: Grade[]): string[] {
+  const seen: string[] = [];
+  for (const g of curricula) {
+    const s = gradeSubject(g);
+    if (!seen.includes(s)) seen.push(s);
+  }
+  return seen.sort((a, b) => (a === "math" ? -1 : b === "math" ? 1 : 0));
+}
+
+/** Tất cả chủ đề của một lớp (gộp mọi mạch); lọc theo môn nếu truyền `subject`. */
+export function topicsByGrade(curricula: Grade[], grade: number, subject?: string): Topic[] {
   return curricula
-    .filter((g) => g.grade === grade)
+    .filter((g) => g.grade === grade && (subject === undefined || gradeSubject(g) === subject))
     .flatMap((g) => g.strands.flatMap((s) => s.topics));
 }
 
