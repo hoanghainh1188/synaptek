@@ -237,6 +237,18 @@ export default function Home() {
         </Pressable>
       )}
 
+      {/* Luyện trình bày từng bước (HS đăng nhập) — chấm từng bước, định vị chỗ sai */}
+      {isStudent && user && (
+        <Pressable
+          accessibilityLabel="Trình bày từng bước"
+          onPress={() => router.push("/step-practice")}
+          className="mt-2 min-h-[48px] flex-row items-center justify-center gap-2 rounded-lg bg-surface shadow-sm"
+        >
+          <Text className="text-lg">✍️</Text>
+          <Text className="font-display font-bold text-ink">Luyện trình bày từng bước</Text>
+        </Pressable>
+      )}
+
       {/* Lớp học (HS đăng nhập) — lớp của tôi + bài được giao + vào lớp bằng mã */}
       {isStudent && user && (
         <View className="mt-4 flex-row gap-2">

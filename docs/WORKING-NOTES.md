@@ -4,6 +4,8 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ Chấm từng bước — UI luyện tập (feature/step-practice-ui, PR đang mở):** màn /step-practice (client-only, low-stakes) — chọn bài số học nhiều bước/PT, nhập từng dòng → chấm qua @synaptek/step-grading, tô xanh/đỏ + định vị dòng sai + điểm. step-problems.ts (5 bài seed, +2 test; lời giải mẫu validate qua engine). Lối vào "Luyện trình bày từng bước" ở home. e2e GUEST step-practice (2 ca).
+
 **+ Chấm từng bước — NỀN ✅ vừa xong** (`feature/step-grading`, PR đang mở): package thuần /step-grading (gradeDerivation) chấm lời giải nhiều dòng bằng lấy mẫu — expression (≡ giá trị) + equation (cùng tập nghiệm qua chân-trị); evalExpr mới ở grading-engine. firstErrorIndex + validSteps + reachedGoal + score. 7 unit test. Decision Log D38. CHƯA tích hợp UI/loại câu (PR sau — cần bàn phím nhập có cấu trúc).
 
 **+ Đồng bộ tài liệu ✅ vừa xong** (`docs/sync-status`): Decision Log thêm D32–D37 (BXH·avatar·nhãn môn·loại câu multi/ordering/matching·tùy chọn chấm·gợi ý — migrations 0014–0021); CLAUDE.md Active/Recent + 02-roadmap.md "Sau M4" cập nhật đúng trạng thái (M0–M4 đóng; còn M5 + Tương lai).
