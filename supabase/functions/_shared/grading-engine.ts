@@ -22,7 +22,10 @@ export type QuestionType =
   | "fill-blank"
   | "multi"
   | "ordering"
-  | "matching";
+  | "matching"
+  // "derivation" (trình bày từng bước) là loại câu HỢP LỆ trong catalog nhưng KHÔNG chấm bằng grade()
+  // — chấm bằng @synaptek/step-grading (gradeDerivation). grade() gặp nó sẽ rơi vào default → format-error.
+  | "derivation";
 
 export type FeedbackCode = "correct" | "incorrect" | "empty" | "partial" | "format-error";
 

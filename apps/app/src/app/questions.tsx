@@ -19,6 +19,7 @@ import {
 import { MathText } from "@/components/math/MathText";
 import { SUBJECTS, subjectLabel, DEFAULT_SUBJECT } from "@/lib/subjects";
 import { packMatching, unpackMatching } from "@/lib/matching";
+import { normalizeMathInput } from "@/lib/step-problems";
 
 const TYPES: { value: CustomType; label: string }[] = [
   { value: "mcq", label: "Trắc nghiệm" },
@@ -30,6 +31,7 @@ const TYPES: { value: CustomType; label: string }[] = [
   { value: "multi", label: "Chọn nhiều" },
   { value: "ordering", label: "Sắp thứ tự" },
   { value: "matching", label: "Nối cặp" },
+  { value: "derivation", label: "Trình bày từng bước" },
 ];
 
 export default function MyQuestions() {
@@ -56,6 +58,10 @@ export default function MyQuestions() {
   const [tolerance, setTolerance] = useState(""); // numeric: dung sai
   const [unordered, setUnordered] = useState(false); // fill-blank: không theo thứ tự
   const [rights, setRights] = useState(["", ""]); // matching: vế phải (song song choices = vế trái)
+  const [derivMode, setDerivMode] = useState<"expression" | "equation">("expression"); // derivation
+  const [derivStart, setDerivStart] = useState(""); // derivation: dòng đề
+  const [derivTarget, setDerivTarget] = useState(""); // derivation (expression): kết quả rút gọn
+  const [derivVar, setDerivVar] = useState("x"); // derivation (equation): biến
 
   const reset = () => {
     setPrompt("");
@@ -69,6 +75,10 @@ export default function MyQuestions() {
     setTolerance("");
     setUnordered(false);
     setRights(["", ""]);
+    setDerivMode("expression");
+    setDerivStart("");
+    setDerivTarget("");
+    setDerivVar("x");
     setEditingId(null);
   };
 
@@ -155,6 +165,23 @@ export default function MyQuestions() {
         setChoices(["", ""]);
       }
       setCorrect("");
+    } else if (qq.type === "derivation") {
+      // correct = JSON spec {mode, variable, target, start}.
+      try {
+        const s = JSON.parse(qq.correct) as {
+          mode?: "expression" | "equation";
+          variable?: string;
+          target?: string;
+          start?: string;
+        };
+        setDerivMode(s.mode === "equation" ? "equation" : "expression");
+        setDerivStart(s.start ?? "");
+        setDerivTarget(s.target ?? "");
+        setDerivVar(s.variable || "x");
+      } catch {
+        /* bỏ qua */
+      }
+      setCorrect("");
     } else {
       setChoices(["", ""]);
       setCorrect(qq.correct);
@@ -199,6 +226,12 @@ export default function MyQuestions() {
       return blankCount >= 1 && ans.length === blankCount;
     }
     if (type === "true-false") return correct === "true" || correct === "false";
+    if (type === "derivation") {
+      if (derivStart.trim().length === 0) return false;
+      return derivMode === "expression"
+        ? derivTarget.trim().length > 0
+        : derivVar.trim().length > 0;
+    }
     return correct.trim().length > 0; // numeric/fraction/expression
   })();
 
@@ -236,13 +269,23 @@ export default function MyQuestions() {
       }
       return [...mRights].reverse();
     })();
-    // fill-blank/ordering/matching: đáp án lưu JSON array; còn lại là chuỗi đơn.
+    // derivation: correct = JSON spec {mode,variable,target,start} (ẩn); choices = [start, mode, variable] (HS thấy).
+    const dStart = normalizeMathInput(derivStart.trim());
+    const dVar = derivVar.trim() || "x";
+    const derivSpec =
+      derivMode === "expression"
+        ? { mode: "expression", target: normalizeMathInput(derivTarget.trim()), start: dStart }
+        : { mode: "equation", variable: dVar, start: dStart };
+    const derivChoices = [dStart, derivMode, derivMode === "equation" ? dVar : ""];
+    // fill-blank/ordering/matching: đáp án lưu JSON array; derivation: JSON spec; còn lại là chuỗi đơn.
     const correctValue =
       type === "fill-blank" || type === "ordering"
         ? JSON.stringify(opts)
         : type === "matching"
           ? JSON.stringify(mRights)
-          : correct.trim();
+          : type === "derivation"
+            ? JSON.stringify(derivSpec)
+            : correct.trim();
     const payload = {
       type,
       prompt: prompt.trim(),
@@ -253,7 +296,9 @@ export default function MyQuestions() {
             ? shuffled
             : type === "matching"
               ? packMatching(mLefts, mRightsShuffled)
-              : null,
+              : type === "derivation"
+                ? derivChoices
+                : null,
       correct: correctValue,
       explanation: explanation.trim() || null,
       hint: hint.trim() || null,
@@ -507,6 +552,74 @@ export default function MyQuestions() {
             >
               <Text className="font-bold text-brand">+ Thêm cặp</Text>
             </Pressable>
+          </View>
+        )}
+
+        {type === "derivation" && (
+          <View className="mt-4">
+            <Text className="mb-1 text-sm font-bold text-muted">Kiểu bài</Text>
+            <View className="flex-row gap-2">
+              {(
+                [
+                  { v: "expression", label: "Rút gọn / tính" },
+                  { v: "equation", label: "Giải phương trình" },
+                ] as const
+              ).map(({ v, label }) => (
+                <Pressable
+                  key={v}
+                  accessibilityLabel={label}
+                  onPress={() => setDerivMode(v)}
+                  className={`min-h-[44px] flex-1 items-center justify-center rounded-md border-2 ${derivMode === v ? "border-num bg-num/10" : "border-line bg-paper"}`}
+                >
+                  <Text className={`font-bold ${derivMode === v ? "text-num" : "text-ink"}`}>
+                    {label}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+
+            <Text className="mb-1 mt-3 text-sm font-bold text-muted">
+              Đề (dòng đầu HS biến đổi từ đây)
+            </Text>
+            <TextInput
+              value={derivStart}
+              onChangeText={setDerivStart}
+              placeholder={derivMode === "equation" ? "vd 2x + 3 = 7" : "vd 12 + 3*4"}
+              placeholderTextColor="#a1a1aa"
+              accessibilityLabel="Đề derivation"
+              className="min-h-[44px] rounded-md border-2 border-line bg-paper px-3 text-base text-ink"
+            />
+
+            {derivMode === "expression" ? (
+              <>
+                <Text className="mb-1 mt-3 text-sm font-bold text-muted">
+                  Kết quả rút gọn (đích)
+                </Text>
+                <TextInput
+                  value={derivTarget}
+                  onChangeText={setDerivTarget}
+                  placeholder="vd 24"
+                  placeholderTextColor="#a1a1aa"
+                  accessibilityLabel="Kết quả đích"
+                  className="min-h-[44px] rounded-md border-2 border-line bg-paper px-3 text-base text-ink"
+                />
+              </>
+            ) : (
+              <>
+                <Text className="mb-1 mt-3 text-sm font-bold text-muted">Biến (mặc định x)</Text>
+                <TextInput
+                  value={derivVar}
+                  onChangeText={setDerivVar}
+                  placeholder="x"
+                  placeholderTextColor="#a1a1aa"
+                  accessibilityLabel="Biến"
+                  className="min-h-[44px] w-20 rounded-md border-2 border-line bg-paper px-3 text-base text-ink"
+                />
+                <Text className="mt-1 text-xs text-muted">
+                  Đạt đích khi HS đưa về dạng {derivVar.trim() || "x"} = số.
+                </Text>
+              </>
+            )}
           </View>
         )}
 

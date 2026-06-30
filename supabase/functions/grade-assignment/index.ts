@@ -2,6 +2,7 @@
 // Dùng lại @synaptek/grading-engine (moat) + ANSWER_KEYS tự sinh từ content/ (D6/D13). ĐÁP ÁN KHÔNG
 // rời server: phản hồi chỉ gồm isCorrect/feedbackCode/score, KHÔNG kèm `correct`. auto_score do server ghi.
 import { grade, type GradeInput } from "@synaptek/grading-engine";
+import { gradeDerivation } from "@synaptek/step-grading";
 import { createClient } from "@supabase/supabase-js";
 import { checkSubmitAllowed, pickForStudent } from "@synaptek/classroom";
 import { ANSWER_KEYS, type AnswerKey } from "../_shared/answer-keys.ts";
@@ -44,6 +45,38 @@ export function gradeSubmission(
   for (const qid of questionIds) {
     const key = keys[qid];
     if (!key) continue; // câu thiếu trong answer-keys → bỏ qua, không vỡ
+
+    // Trình bày từng bước (derivation): chấm LỜI GIẢI nhiều dòng bằng step-grading.
+    // correct = JSON spec {mode, variable, target, start}; answer = mảng dòng HS nhập.
+    if (key.type === "derivation") {
+      let spec: {
+        mode: "expression" | "equation";
+        variable?: string;
+        target?: string;
+        start?: string;
+      };
+      try {
+        spec = JSON.parse(key.correct as string);
+      } catch {
+        continue; // spec hỏng → bỏ qua câu
+      }
+      const ans = answers[qid];
+      const studentLines = Array.isArray(ans) ? ans.map(String) : [];
+      const full = [spec.start ?? "", ...studentLines].filter((l) => l.trim() !== "");
+      const dr = gradeDerivation(full, {
+        mode: spec.mode,
+        variable: spec.variable,
+        target: spec.target,
+      });
+      perQuestion[qid] = {
+        isCorrect: dr.reachedGoal,
+        feedbackCode: dr.reachedGoal ? "correct" : dr.firstErrorIndex > 0 ? "incorrect" : "partial",
+      };
+      sum += dr.score;
+      n++;
+      continue;
+    }
+
     const input: GradeInput = {
       type: key.type,
       correct: key.correct,

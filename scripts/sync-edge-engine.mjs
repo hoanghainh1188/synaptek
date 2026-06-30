@@ -47,6 +47,16 @@ writeFileSync(
 );
 console.log(`generated ${CR_DEST}/index.ts`);
 
+// 2c) step-grading — chấm LỜI GIẢI từng bước cho Edge (D4/D13). Phụ thuộc grading-engine qua import map deno.json.
+const SG_DEST = "supabase/functions/_shared/step-grading";
+syncFile("packages/step-grading/src/step-grading.ts", `${SG_DEST}/step-grading.ts`);
+writeFileSync(
+  `${SG_DEST}/index.ts`,
+  `// ⚠️ AUTO-GENERATED (npm run sync:edge) — re-export tối thiểu cho Edge Function. Lý do: D13.\n` +
+    `export { gradeDerivation } from "./step-grading.ts";\n`,
+);
+console.log(`generated ${SG_DEST}/index.ts`);
+
 // 3) answer-keys — đáp án cho CHẤM CHÍNH THỨC server-side (D4). Sinh từ content/questions (D6);
 //    edge chỉ mount supabase/functions (D13) nên đáp án phải là artifact tự sinh ở _shared (KHÔNG vào client/DB).
 const QDIR = "content/questions";
@@ -69,7 +79,7 @@ writeFileSync(
   AK_DEST,
   `// ⚠️ AUTO-GENERATED từ ${QDIR}/*.json — KHÔNG sửa tay (npm run sync:edge). Đáp án chấm server (D4/D6/D13).\n` +
     `import type { QuestionType } from "./grading-engine.ts";\n` +
-    `export interface AnswerKey { type: QuestionType; correct: string | string[]; tolerance?: number; unordered?: boolean; roundTo?: number }\n` +
+    `export interface AnswerKey { type: QuestionType | "derivation"; correct: string | string[]; tolerance?: number; unordered?: boolean; roundTo?: number }\n` +
     `export const ANSWER_KEYS: Record<string, AnswerKey> = ${JSON.stringify(keys, null, 2)};\n`,
 );
 console.log(`generated ${AK_DEST}: ${Object.keys(keys).length} đáp án`);
