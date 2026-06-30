@@ -18,6 +18,7 @@ import {
 } from "@/lib/supabase/custom-questions";
 import { MathText } from "@/components/math/MathText";
 import { SUBJECTS, subjectLabel, DEFAULT_SUBJECT } from "@/lib/subjects";
+import { packMatching, unpackMatching } from "@/lib/matching";
 
 const TYPES: { value: CustomType; label: string }[] = [
   { value: "mcq", label: "Trắc nghiệm" },
@@ -28,6 +29,7 @@ const TYPES: { value: CustomType; label: string }[] = [
   { value: "fill-blank", label: "Điền chỗ trống" },
   { value: "multi", label: "Chọn nhiều" },
   { value: "ordering", label: "Sắp thứ tự" },
+  { value: "matching", label: "Nối cặp" },
 ];
 
 export default function MyQuestions() {
@@ -53,6 +55,7 @@ export default function MyQuestions() {
   const [roundTo, setRoundTo] = useState(""); // numeric: làm tròn N chữ số
   const [tolerance, setTolerance] = useState(""); // numeric: dung sai
   const [unordered, setUnordered] = useState(false); // fill-blank: không theo thứ tự
+  const [rights, setRights] = useState(["", ""]); // matching: vế phải (song song choices = vế trái)
 
   const reset = () => {
     setPrompt("");
@@ -65,6 +68,7 @@ export default function MyQuestions() {
     setRoundTo("");
     setTolerance("");
     setUnordered(false);
+    setRights(["", ""]);
     setEditingId(null);
   };
 
@@ -130,6 +134,19 @@ export default function MyQuestions() {
         setChoices(["", ""]);
       }
       setCorrect("");
+    } else if (qq.type === "matching") {
+      // trái = unpack(choices); phải = correct (JSON, theo thứ tự trái).
+      const { lefts } = unpackMatching(qq.choices ?? []);
+      let rs: string[] = [];
+      try {
+        const arr = JSON.parse(qq.correct);
+        if (Array.isArray(arr)) rs = arr.map(String);
+      } catch {
+        /* bỏ qua */
+      }
+      setChoices(lefts.length ? lefts : ["", ""]);
+      setRights(rs.length ? rs : ["", ""]);
+      setCorrect("");
     } else if (qq.type === "fill-blank") {
       try {
         const arr = JSON.parse(qq.correct);
@@ -173,6 +190,10 @@ export default function MyQuestions() {
     if (type === "ordering") {
       return choices.map((c) => c.trim()).filter(Boolean).length >= 2;
     }
+    if (type === "matching") {
+      const pairs = choices.filter((l, i) => l.trim() && (rights[i] ?? "").trim());
+      return pairs.length >= 2;
+    }
     if (type === "fill-blank") {
       const ans = choices.map((c) => c.trim()).filter(Boolean);
       return blankCount >= 1 && ans.length === blankCount;
@@ -197,13 +218,42 @@ export default function MyQuestions() {
       }
       return [...opts].reverse();
     })();
-    // fill-blank/ordering: đáp án lưu JSON array; còn lại là chuỗi đơn.
+    // matching: cặp (trái[i], phải[i]) — lưu correct = phải theo thứ tự trái; choices = gói trái + phải XÁO TRỘN.
+    const mPairs = choices
+      .map((l, i) => ({ left: l.trim(), right: (rights[i] ?? "").trim() }))
+      .filter((p) => p.left && p.right);
+    const mLefts = mPairs.map((p) => p.left);
+    const mRights = mPairs.map((p) => p.right);
+    const mRightsShuffled = (() => {
+      if (mRights.length < 2) return mRights;
+      for (let tries = 0; tries < 5; tries++) {
+        const a = [...mRights];
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+        if (a.some((x, i) => x !== mRights[i])) return a;
+      }
+      return [...mRights].reverse();
+    })();
+    // fill-blank/ordering/matching: đáp án lưu JSON array; còn lại là chuỗi đơn.
     const correctValue =
-      type === "fill-blank" || type === "ordering" ? JSON.stringify(opts) : correct.trim();
+      type === "fill-blank" || type === "ordering"
+        ? JSON.stringify(opts)
+        : type === "matching"
+          ? JSON.stringify(mRights)
+          : correct.trim();
     const payload = {
       type,
       prompt: prompt.trim(),
-      choices: type === "mcq" || type === "multi" ? opts : type === "ordering" ? shuffled : null,
+      choices:
+        type === "mcq" || type === "multi"
+          ? opts
+          : type === "ordering"
+            ? shuffled
+            : type === "matching"
+              ? packMatching(mLefts, mRightsShuffled)
+              : null,
       correct: correctValue,
       explanation: explanation.trim() || null,
       hint: hint.trim() || null,
@@ -411,6 +461,51 @@ export default function MyQuestions() {
               className="mt-2 self-start"
             >
               <Text className="font-bold text-brand">+ Thêm mục</Text>
+            </Pressable>
+          </View>
+        )}
+
+        {type === "matching" && (
+          <View className="mt-4">
+            <Text className="mb-1 text-sm font-bold text-muted">
+              Các cặp (vế trái — vế phải đúng; HS thấy phải bị xáo trộn)
+            </Text>
+            {choices.map((c, i) => (
+              <View key={i} className="mt-2 flex-row items-center gap-2">
+                <TextInput
+                  value={c}
+                  onChangeText={(v) => setChoices((prev) => prev.map((x, j) => (j === i ? v : x)))}
+                  placeholder={`Trái ${i + 1}`}
+                  placeholderTextColor="#a1a1aa"
+                  accessibilityLabel={`Vế trái ${i + 1}`}
+                  className="min-h-[44px] flex-1 rounded-md border-2 border-line bg-paper px-3 text-base text-ink"
+                />
+                <Text className="text-muted">→</Text>
+                <TextInput
+                  value={rights[i] ?? ""}
+                  onChangeText={(v) =>
+                    setRights((prev) => {
+                      const next = [...prev];
+                      next[i] = v;
+                      return next;
+                    })
+                  }
+                  placeholder={`Phải ${i + 1}`}
+                  placeholderTextColor="#a1a1aa"
+                  accessibilityLabel={`Vế phải ${i + 1}`}
+                  className="min-h-[44px] flex-1 rounded-md border-2 border-line bg-paper px-3 text-base text-ink"
+                />
+              </View>
+            ))}
+            <Pressable
+              accessibilityLabel="Thêm cặp"
+              onPress={() => {
+                setChoices((prev) => [...prev, ""]);
+                setRights((prev) => [...prev, ""]);
+              }}
+              className="mt-2 self-start"
+            >
+              <Text className="font-bold text-brand">+ Thêm cặp</Text>
             </Pressable>
           </View>
         )}

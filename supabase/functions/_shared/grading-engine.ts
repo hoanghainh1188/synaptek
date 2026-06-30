@@ -21,7 +21,8 @@ export type QuestionType =
   | "expression"
   | "fill-blank"
   | "multi"
-  | "ordering";
+  | "ordering"
+  | "matching";
 
 export type FeedbackCode = "correct" | "incorrect" | "empty" | "partial" | "format-error";
 
@@ -525,8 +526,10 @@ export function grade(input: GradeInput): GradeResult {
       return result(ok, ok ? 1 : 0, ok ? "correct" : "incorrect", correct, answer);
     }
 
+    case "matching":
     case "ordering": {
-      // Sắp thứ tự: ĐÚNG khi dãy trả lời khớp dãy đáp án THEO VỊ TRÍ (chuẩn hóa hoa/thường).
+      // Sắp thứ tự / Nối cặp: ĐÚNG khi dãy trả lời khớp dãy đáp án THEO VỊ TRÍ (chuẩn hóa hoa/thường).
+      // (matching: answer[i] = vế phải HS chọn cho vế trái[i]; correct[i] = vế phải đúng của trái[i])
       const c = (Array.isArray(correct) ? correct : [correct]).map((s) => s.trim().toLowerCase());
       const a = (Array.isArray(answer) ? answer : [answer]).map((s) => s.trim().toLowerCase());
       const ok = c.length === a.length && c.every((x, i) => x === a[i]);
