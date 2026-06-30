@@ -4,6 +4,8 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ Mở rộng nội dung Tiếng Việt (feature/tv-expand, PR đang mở):** thêm lớp 1 (dấu câu), LỚP 2 (từ chỉ đặc điểm · mẫu câu "Ai thế nào?"), LỚP 3 (đồng nghĩa/trái nghĩa). Tổng nội dung 205 câu (TV ~45 câu, 3 lớp). e2e subject-browse mở rộng kiểm lớp 2. Vẫn gốc bám CT, không chép SGK.
+
 **+ Đa môn — NỀN ✅ (feature/full-subject, PR đang mở):** Grade.subject (mặc định math) + subjectsOf/topicsByGrade(subject) + bộ chọn MÔN ở home. Seed Tiếng Việt lớp 1 (2 chủ đề: từ loại, chính tả; 15 câu). Decision Log D39. Nội dung gốc bám CT GDPT, KHÔNG chép SGK — seed nhỏ, content thật cần review (D14). e2e khách subject-browse (2 ca) + curriculum +2 test. Tương thích ngược (Toán nguyên vẹn).
 
 **+ Chấm từng bước — UI luyện tập (feature/step-practice-ui, PR đang mở):** màn /step-practice (client-only, low-stakes) — chọn bài số học nhiều bước/PT, nhập từng dòng → chấm qua @synaptek/step-grading, tô xanh/đỏ + định vị dòng sai + điểm. step-problems.ts (5 bài seed, +2 test; lời giải mẫu validate qua engine). Lối vào "Luyện trình bày từng bước" ở home. e2e GUEST step-practice (2 ca).

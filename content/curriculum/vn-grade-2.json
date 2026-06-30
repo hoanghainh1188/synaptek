@@ -1,0 +1,28 @@
+{
+  "grade": 2,
+  "subject": "vietnamese",
+  "strands": [
+    {
+      "id": "tv.g2.tucau",
+      "name": "Từ và câu",
+      "topics": [
+        {
+          "id": "tv.g2.tudacdiem",
+          "name": "Từ chỉ đặc điểm",
+          "grade": 2,
+          "skillIds": ["tv.g2.tudacdiem"]
+        },
+        {
+          "id": "tv.g2.cauaithenao",
+          "name": "Mẫu câu: Ai thế nào?",
+          "grade": 2,
+          "skillIds": ["tv.g2.cauaithenao"]
+        }
+      ]
+    }
+  ],
+  "skills": [
+    { "id": "tv.g2.tudacdiem", "name": "Nhận biết từ chỉ đặc điểm", "prerequisites": [] },
+    { "id": "tv.g2.cauaithenao", "name": "Mẫu câu Ai thế nào?", "prerequisites": [] }
+  ]
+}

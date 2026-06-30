@@ -1,0 +1,21 @@
+{
+  "grade": 3,
+  "subject": "vietnamese",
+  "strands": [
+    {
+      "id": "tv.g3.tuvung",
+      "name": "Mở rộng vốn từ",
+      "topics": [
+        {
+          "id": "tv.g3.dongtrainghia",
+          "name": "Từ đồng nghĩa, trái nghĩa",
+          "grade": 3,
+          "skillIds": ["tv.g3.dongtrainghia"]
+        }
+      ]
+    }
+  ],
+  "skills": [
+    { "id": "tv.g3.dongtrainghia", "name": "Từ đồng nghĩa / trái nghĩa", "prerequisites": [] }
+  ]
+}

@@ -25,10 +25,23 @@
           "skillIds": ["tv.g1.chinhta"]
         }
       ]
+    },
+    {
+      "id": "tv.g1.cau",
+      "name": "Câu",
+      "topics": [
+        {
+          "id": "tv.g1.daucau",
+          "name": "Dấu câu: dấu chấm, dấu hỏi",
+          "grade": 1,
+          "skillIds": ["tv.g1.daucau"]
+        }
+      ]
     }
   ],
   "skills": [
     { "id": "tv.g1.tuloai", "name": "Phân biệt từ chỉ sự vật / hoạt động", "prerequisites": [] },
-    { "id": "tv.g1.chinhta", "name": "Quy tắc c/k, g/gh, ng/ngh", "prerequisites": [] }
+    { "id": "tv.g1.chinhta", "name": "Quy tắc c/k, g/gh, ng/ngh", "prerequisites": [] },
+    { "id": "tv.g1.daucau", "name": "Dùng dấu chấm, dấu hỏi", "prerequisites": [] }
   ]
 }
