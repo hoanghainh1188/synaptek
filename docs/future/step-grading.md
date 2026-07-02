@@ -1,7 +1,28 @@
-# Thiết kế (tương lai xa): Chấm trình bày từng bước + LaTeX
+# Thiết kế: Chấm trình bày từng bước + LaTeX
 
-> **Trạng thái: Ý tưởng/Thiết kế — CHƯA làm.** Phụ thuộc M5 (native) + mở lên THCS/THPT + bàn phím nhập toán.
-> Đây là bản ghi để dành (văn hoá Decision Log). Khi triển khai → tạo spec Spec Kit riêng + Decision Log mới.
+> **Trạng thái: phần THUẬT TOÁN/TÍCH HỢP đã ship (Decision Log D38/D40–D42/D44/D45); phần LaTeX render/input
+> CHƯA làm.** Xem "✅ Đã triển khai" bên dưới cho hiện trạng, phần còn lại của tài liệu là thiết kế gốc —
+> vẫn đúng cho phần LaTeX chưa làm, giữ lại làm tham chiếu.
+
+## ✅ Đã triển khai (khác thiết kế gốc ở chỗ KHÔNG cần đợi M5/THCS)
+
+Toàn bộ phần "Kiến trúc đề xuất" bên dưới đã thành hiện thực, khớp gần như nguyên văn thiết kế gốc:
+
+- **`packages/step-grading`** (D38): `gradeDerivation(lines, spec)` — đúng chữ ký đề xuất
+  (`firstErrorIndex`/`validSteps`/`totalSteps`/`reachedGoal`/`score`), 2 mode `expression`/`equation`,
+  sampler tái dùng từ `grading-engine` (`evalExpr` mới thêm cho việc này).
+- **Loại câu `derivation` giao/chấm được** (D40): soạn/giao qua `custom_questions`, chấm CHÍNH THỨC ở Edge
+  `grade-assignment` (server-authoritative, D4) — không phải chỉ luyện tập client-only như dự tính ban đầu.
+- **UX nhập KHÔNG cần LaTeX** (D41/D42): bàn phím toán có cấu trúc (mũ/ngoặc/biến/căn — sinh biểu thức
+  engine-parse được, đúng hướng "cần bàn phím toán có cấu trúc" đã nêu) cho cả HS trả lời lẫn GV/PH soạn câu.
+  **Đây là phần thiết kế gốc gọi là "rủi ro lớn nhất" — đã giải quyết mà KHÔNG cần đợi mở lên THCS/THPT.**
+- **Lồng vào câu nhiều phần** (D44): derivation có thể là 1 phần trong câu a/b/c, chấm qua
+  `gradeCompoundParts` (kết hợp `grade()` + `gradeDerivation` cùng lượt).
+- **Căn bậc hai** (D45): mở rộng tokenizer engine (`√`/`sqrt()`) — bước đầu cho "đi sâu THCS" mà thiết kế
+  gốc dự tính, đã làm ĐỘC LẬP không cần chờ mở lớp.
+
+**Còn thiếu so với thiết kế gốc**: LaTeX render (KaTeX/MathJax) và LaTeX-as-input cho THCS/THPT — xem mục
+"LaTeX" bên dưới, vẫn đúng nguyên trạng thiết kế. Lớp giải thích LLM (mục "Nguyên tắc tin cậy") cũng chưa làm.
 
 ## Mục tiêu
 
@@ -68,13 +89,14 @@ gradeDerivation(lines, spec) → {
 **Engine CHẤM, LLM chỉ GIẢI THÍCH.** Điểm luôn từ value-sampling (tất định); LLM chỉ sinh gợi ý/diễn giải
 bám `firstErrorIndex` engine đã định vị → không "dạy sai".
 
-## Lộ trình khi triển khai
+## Lộ trình PHẦN CÒN LẠI (LaTeX + THCS/THPT)
 
-1. **KaTeX render** trước (mọi cấp, rủi ro thấp).
-2. **MVP một mode**: rút gọn biểu thức/phân số (bất biến = bằng giá trị — đúng lõi engine).
-3. Nhập dòng dạng text trước (hoãn bàn phím xịn); trả `firstErrorIndex` + điểm theo bước.
-4. **LLM lớp giải thích** (tùy chọn) bám lỗi engine.
-5. Đẩy lên **THCS/THPT** (nơi step-grading + LaTeX-input phát huy nhất).
+Các bước 2–3 của thiết kế gốc (MVP một mode, nhập dòng text) đã xong qua D38/D40. Còn lại:
+
+1. **KaTeX render** (mọi cấp, rủi ro thấp) — chưa làm, MathText hiện tại KHÔNG phải LaTeX engine.
+2. **LLM lớp giải thích** (tùy chọn) bám lỗi engine — chưa làm.
+3. Đẩy lên **THCS/THPT** (nơi LaTeX-input phát huy nhất, cần vượt qua giới hạn bàn phím có cấu trúc hiện tại
+   cho biểu thức phức tạp hơn) — chưa bắt đầu.
 
 ## Liên hệ
 

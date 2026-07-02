@@ -7,55 +7,45 @@
 
 ```mermaid
 mindmap
-  root((Synaptek<br/>Toán Tiểu học))
-    🧠 Moat chấm
-      ✅ mcq · true-false · numeric VN
-      ✅ fraction · expression · fill-blank
-      ✅ Client tức thì + Server ẩn đáp án
-      ✅ Chẩn đoán lỗi (sai dấu / lệch 10 / làm tròn / đảo phân số)
+  root((Synaptek<br/>Toán Tiểu học+))
+    🧠 Moat chấm (grading-engine)
+      ✅ 9 loại grade(): mcq · true-false · numeric · fraction
+      ✅ expression · fill-blank · multi · ordering · matching
+      ✅ +2 loại orchestrate riêng: derivation (từng bước) · compound (nhiều phần, có thể lồng derivation)
+      ✅ Số VN · hỗn số · % · đơn vị đo · số La Mã · căn bậc hai √/sqrt()
+      ✅ Tương đương biểu thức qua lấy mẫu (D9, không CAS)
+      ✅ 6 chẩn đoán lỗi (sai dấu/lệch10/đảo phân số/làm tròn/lệch1/đảo chữ số)
+      ✅ Client tức thì + Server ẩn đáp án (D4)
     🎒 Học sinh
       M1 Luyện tập ✅
-        ✅ Chủ đề lớp 4 + ôn lớp 1-3
-        ✅ Chấm tức thì + giải thích
-        ✅ Auth tối thiểu + lưu tiến độ
+        ✅ Đa môn (Toán lớp 1-5 + Tiếng Việt lớp 1-3)
+        ✅ Chấm tức thì + giải thích + gợi ý
+        ✅ Bàn phím toán có cấu trúc (mũ/ngoặc/biến/căn)
       M2 Mastery & Lộ trình ✅
-        ✅ HS xem lớp đang tham gia
-        ✅ Chẩn đoán + mastery BKT
-        ✅ Lộ trình học gì tiếp
-        ✅ Heatmap điểm yếu
-        ✅ Gamification XP streak huy hiệu
-        ✅ Ôn ngắt quãng + nhắc in-app
-        ✅ Ôn lại câu sai (sổ tay lỗi)
-        ⏳ Push nhắc chờ M5
+        ✅ Mastery BKT + lộ trình + heatmap
+        ✅ Gamification XP/streak/huy hiệu/avatar theo XP
+        ✅ Ôn ngắt quãng + sổ tay lỗi (ôn lại câu sai)
+        ✅ Mục tiêu hằng ngày + luyện nhanh + BXH lớp
+        ⏳ Push nhắc thật — chờ M5 (projectId EAS)
     🧑‍🏫 Giáo viên M3 ✅
-      ✅ Báo cáo lớp + xuất CSV
-      ✅ Lớp + mã mời + roster
-      ✅ Giao bài + giới hạn nộp
-      ✅ Chấm chính thức ẩn đáp án
-      ✅ Ghi đè điểm + nhận xét audit
-      ✅ Phân tích lớp + RLS chéo vai trò
-      ⏳ Sửa xóa bài · đổi vai trò
-    👪 Phụ huynh M4
-      ✅ Liên kết phụ huynh - con (mã)
-      ✅ Theo dõi tiến độ con (read-only)
-      ✅ Giao bài tại nhà (PH→con)
-    📚 Nội dung D14
-      ✅ Pipeline JSON + validate
-      ⏳ Khối lượng câu hỏi còn mỏng
-      ✅ Authoring UI (GV/PH soạn câu)
-      ✅ 6 loại câu tự soạn (đủ: mcq/số/phân số/đúng-sai/biểu thức/điền chỗ trống)
-      ✅ Nội dung lớp 1-5 (160 câu)
+      ✅ Lớp + mã mời + roster + sửa/xóa bài + đổi vai trò
+      ✅ Giao bài (giới hạn nộp/pool ngẫu nhiên/giao đích danh)
+      ✅ Chấm chính thức ẩn đáp án + ghi đè + nhận xét
+      ✅ Báo cáo lớp + cảnh báo HS yếu + xu hướng + xuất CSV
+      ✅ Soạn câu 11 loại (đủ bộ engine) + ảnh + gợi ý + tùy chọn chấm
+    👪 Phụ huynh M4 ✅
+      ✅ Liên kết PH-con (mã) + theo dõi read-only
+      ✅ Gợi ý ôn điểm yếu + giao bài tại nhà
     ⚙️ Hạ tầng
-      ✅ Monorepo + CI + Spec Kit
-      ✅ Supabase BaaS + Edge Functions
-      ✅ Deploy auto Web + Backend
-      ⏳ cron review-scheduler
-      🔮 M5 Native EAS + push + offline
+      ✅ Monorepo + CI 3-gate (verify/RLS/e2e-auth) + Spec Kit
+      ✅ Supabase BaaS + Edge Functions, deploy auto Web+Backend
+      ⏳ cron review-scheduler lên lịch hosted thật
+      🔮 M5 Native (EAS build/push/offline/store) — chặn bởi tài khoản
     🔭 Tương lai xa
-      🔮 THCS THPT
-      🔮 Môn khác Lý Hóa Anh
-      🔮 Chấm trình bày từng bước + LaTeX
-      🔮 Gia sư AI
+      🔮 THCS/THPT sâu hơn (chưa bắt đầu)
+      🔮 Môn khác đầy đủ Lý/Hóa/Anh (mới có nền đa môn)
+      🔮 LaTeX render/input cho chấm từng bước (thuật toán đã có, LaTeX chưa)
+      🔮 Gia sư AI (chưa bắt đầu)
 ```
 
 ## Theo trạng thái (flowchart)
@@ -67,26 +57,24 @@ flowchart LR
   S --> WIP["⏳ Chưa ship / dang dở"]
   S --> FUTURE["🔮 Tương lai"]
 
-  SHIPPED --> A1["Moat: chấm tương đương<br/>client + server ẩn đáp án"]
-  SHIPPED --> A2["M1 HS: luyện tập + chấm tức thì + auth"]
-  SHIPPED --> A3["M2: BKT · lộ trình · heatmap · gamification · ôn ngắt quãng"]
+  SHIPPED --> A1["Moat: 11 loại câu, chấm tương đương<br/>client + server ẩn đáp án"]
+  SHIPPED --> A2["M1 HS: luyện tập đa môn + chấm tức thì + bàn phím toán"]
+  SHIPPED --> A3["M2: BKT · lộ trình · heatmap · gamification · avatar/BXH · ôn ngắt quãng"]
   SHIPPED --> A4["M3 GV: lớp · giao bài · chấm chính thức · ghi đè · phân tích · RLS"]
-  SHIPPED --> A5["Giới hạn nộp bài hạn/số lần/timer"]
+  SHIPPED --> A5["Giới hạn nộp bài (hạn/số lần/timer) + pool ngẫu nhiên + giao đích danh"]
   SHIPPED --> A6["Deploy hosted AUTO: Vercel + Supabase"]
+  SHIPPED --> A7["M4 Phụ huynh: liên kết PH-con + theo dõi + gợi ý ôn + giao bài tại nhà"]
+  SHIPPED --> A8["Authoring: 11 loại câu tự soạn (kể cả từng bước, nhiều phần, căn bậc hai)"]
+  SHIPPED --> A9["Nội dung 205 câu, 5 lớp Toán + 3 lớp Tiếng Việt"]
+  SHIPPED --> A10["Ôn lại câu sai + phản hồi lỗi thông minh + xem lời giải"]
+  SHIPPED --> A11["GV sửa/xóa bài tự soạn · HS/GV/PH đổi vai trò"]
 
-  WIP --> B1["Push thật cần EAS + native"]
-  WIP --> B2["cron review-scheduler lên lịch"]
-  WIP --> B3["GV sửa/xóa bài · đổi vai trò"]
-  SHIPPED --> A8["Authoring: GV/PH soạn câu tự tạo (chấm server-side)"]
-  SHIPPED --> A9["Nội dung lớp 1-5 (160 câu, 16 skill)"]
-  SHIPPED --> A10["Ôn lại câu sai (đóng vòng khắc phục điểm yếu)"]
-  SHIPPED --> A11["Phản hồi lỗi thông minh (vì sao sai)"]
-  SHIPPED --> A12["Xem lời giải sau khi nộp bài tập"]
-  WIP --> B5["Verify iOS/Android"]
+  WIP --> B1["Push thật + cron review-scheduler — cần EAS projectId"]
+  WIP --> B2["Verify thật trên iOS/Android (mới verify web)"]
 
-  SHIPPED --> A7["M4 Phụ huynh: liên kết PH-con + theo dõi read-only (đủ 3 vai trò) + giao bài tại nhà"]
-  FUTURE --> C2["M5 Native EAS · offline · push"]
-  FUTURE --> C3["THCS/THPT · môn khác · chấm từng bước + LaTeX · gia sư AI"]
+  FUTURE --> C1["M5 Native: EAS build · offline · lên store — cần tài khoản EAS/Apple/Google"]
+  FUTURE --> C2["THCS/THPT sâu hơn · môn khác đầy đủ (Lý/Hóa/Anh)"]
+  FUTURE --> C3["LaTeX render/input cho chấm từng bước · gia sư AI"]
 ```
 
 ## Chú thích trạng thái
@@ -95,11 +83,21 @@ flowchart LR
 | ------- | --------------------------------------------------------------------------- |
 | ✅      | Đã ship (đã làm + test/verify; phần lớn đã merge `develop` + deploy hosted) |
 | ⏳      | Chưa ship hoặc dang dở (đã có nền nhưng chưa hoàn thiện / chờ điều kiện)    |
-| 🔮      | Tương lai (chưa bắt đầu)                                                    |
+| 🔮      | Tương lai (chưa bắt đầu, hoặc mới có nền)                                   |
 
 ### Ghi chú "⏳ dang dở" — vì sao chưa làm
 
-- **Push thật + cron**: gắn với app native (token push). Web-only hiện chưa có token → hoãn **M5**.
-- **Nội dung câu hỏi**: mới ~21 câu — Rủi ro #1 (khối lượng + bản quyền). Cần biên soạn thêm; authoring UI để M4.
-- **GV sửa/xóa bài, đổi vai trò trong hồ sơ**: tính năng nhỏ, bổ sung khi cần.
-- **iOS/Android**: mới verify trên web; native kiểm ở M5.
+- **Push thật + cron review-scheduler**: gắn với app native (token push cần `eas init` sinh projectId) và
+  lên lịch pg_cron/pg_net trên hosted (Vault key) — cả hai đều cần tài khoản/thao tác thủ công, xem
+  `docs/M5-NATIVE.md`.
+- **iOS/Android**: mới verify trên web; build/verify thiết bị thật thuộc M5 (cần tài khoản EAS, Apple
+  Developer $99/năm cho iOS).
+
+### Ghi chú "🔮 tương lai" — mức độ sẵn sàng thật
+
+- **M5 Native**: nền đã dựng xong trong repo (`eas.json`, plugin push, `docs/M5-NATIVE.md`) — chỉ còn thao
+  tác cần tài khoản.
+- **Chấm từng bước + LaTeX**: phần **thuật toán/tích hợp đã ship** (package `@synaptek/step-grading`, loại
+  câu `derivation` giao/chấm được, lồng vào câu nhiều phần, bàn phím toán). Phần **LaTeX render/input thật
+  sự (KaTeX/MathJax) chưa làm** — hiện chỉ có component `MathText` tự chế (không phải LaTeX engine).
+- **THCS/THPT · môn khác · gia sư AI**: chưa bắt đầu triển khai.
