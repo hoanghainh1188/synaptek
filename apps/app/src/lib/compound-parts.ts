@@ -1,6 +1,8 @@
 // Câu "nhiều phần" (a/b/c…, D43) — soạn thảo từng phần con phía client. THUẦN, test được.
-// Phạm vi PR đầu: 9 loại đơn giản (KHÔNG derivation/compound — tránh lồng 2 tầng chấm).
+// D44: cho phép LỒNG derivation (trình bày từng bước) làm 1 phần — chấm ở server qua gradeCompoundParts
+// (@synaptek/step-grading, orchestrate grade() + gradeDerivation cùng lượt). compound KHÔNG lồng compound.
 import { packMatching, unpackMatching } from "./matching.ts";
+import { normalizeMathInput } from "./step-problems.ts";
 
 export const COMPOUND_PART_TYPES = [
   "mcq",
@@ -12,6 +14,7 @@ export const COMPOUND_PART_TYPES = [
   "multi",
   "ordering",
   "matching",
+  "derivation",
 ] as const;
 
 export type CompoundPartType = (typeof COMPOUND_PART_TYPES)[number];
@@ -26,10 +29,28 @@ export interface PartDraft {
   rights: string[];
   /** đáp án đơn (mcq/true-false/numeric/fraction/expression); multi = JSON mảng chọn. */
   correct: string;
+  /** CHỈ dùng cho derivation — kiểu bài (rút gọn/tính vs giải phương trình). */
+  derivMode: "expression" | "equation";
+  /** CHỈ dùng cho derivation — dòng đề HS biến đổi từ đây. */
+  derivStart: string;
+  /** CHỈ dùng cho derivation (mode expression) — kết quả rút gọn mong muốn. */
+  derivTarget: string;
+  /** CHỈ dùng cho derivation (mode equation) — biến (mặc định "x"). */
+  derivVar: string;
 }
 
 export function emptyPart(): PartDraft {
-  return { type: "numeric", prompt: "", items: ["", ""], rights: ["", ""], correct: "" };
+  return {
+    type: "numeric",
+    prompt: "",
+    items: ["", ""],
+    rights: ["", ""],
+    correct: "",
+    derivMode: "expression",
+    derivStart: "",
+    derivTarget: "",
+    derivVar: "x",
+  };
 }
 
 /** Phần con hợp lệ chưa? (theo từng loại, giống logic soạn câu đơn). */
@@ -55,6 +76,11 @@ export function partValid(p: PartDraft): boolean {
     }
     case "true-false":
       return p.correct === "true" || p.correct === "false";
+    case "derivation":
+      if (p.derivStart.trim().length === 0) return false;
+      return p.derivMode === "expression"
+        ? p.derivTarget.trim().length > 0
+        : p.derivVar.trim().length > 0;
     default: // numeric | fraction | expression
       return p.correct.trim().length > 0;
   }
@@ -144,6 +170,22 @@ export function buildPart(p: PartDraft): { display: PartDisplay; answer: PartAns
       answer: { type: p.type, correct: p.correct },
     };
   }
+  if (p.type === "derivation") {
+    const start = normalizeMathInput(p.derivStart.trim());
+    const variable = p.derivVar.trim() || "x";
+    const spec =
+      p.derivMode === "expression"
+        ? { mode: "expression", target: normalizeMathInput(p.derivTarget.trim()), start }
+        : { mode: "equation", variable, start };
+    return {
+      display: {
+        type: p.type,
+        prompt: p.prompt,
+        choices: [start, p.derivMode, p.derivMode === "equation" ? variable : ""],
+      },
+      answer: { type: p.type, correct: JSON.stringify(spec) },
+    };
+  }
   // numeric | fraction | expression
   return {
     display: { type: p.type, prompt: p.prompt },
@@ -162,7 +204,11 @@ export function buildCompoundPayload(parts: PartDraft[]): { choices: string[]; c
 
 /** Giá trị mặc định cho đáp án 1 phần (HS chưa làm) — theo loại (mảng cho loại nhiều-phần-tử). */
 export function defaultPartAnswer(type: CompoundPartType): string | string[] {
-  return type === "fill-blank" || type === "multi" || type === "ordering" || type === "matching"
+  return type === "fill-blank" ||
+    type === "multi" ||
+    type === "ordering" ||
+    type === "matching" ||
+    type === "derivation"
     ? []
     : "";
 }
@@ -186,52 +232,69 @@ export function decodeCompound(choices: string[] | null, correctJson: string): P
   return displays.map((d, i): PartDraft => {
     const type: CompoundPartType = d?.type ?? "numeric";
     const ans = answers[i];
+    const base = emptyPart(); // gốc: đủ trường (kể cả deriv*) — mỗi nhánh chỉ ghi đè phần liên quan.
     if (type === "matching") {
       const { lefts } = unpackMatching(d?.choices);
       const rights = Array.isArray(ans?.correct) ? ans.correct.map(String) : [];
       return {
+        ...base,
         type,
         prompt: d?.prompt ?? "",
         items: lefts.length ? lefts : ["", ""],
         rights: rights.length ? rights : ["", ""],
-        correct: "",
       };
     }
     if (type === "ordering") {
       const order = Array.isArray(ans?.correct) ? ans.correct.map(String) : (d?.choices ?? []);
       return {
+        ...base,
         type,
         prompt: d?.prompt ?? "",
         items: order.length ? order : ["", ""],
-        rights: ["", ""],
-        correct: "",
       };
     }
     if (type === "fill-blank") {
       const items = Array.isArray(ans?.correct) ? ans.correct.map(String) : [];
       return {
+        ...base,
         type,
         prompt: d?.prompt ?? "",
         items: items.length ? items : ["", ""],
-        rights: ["", ""],
-        correct: "",
       };
     }
     if (type === "mcq" || type === "multi") {
       return {
+        ...base,
         type,
         prompt: d?.prompt ?? "",
         items: d?.choices?.length ? d.choices : ["", ""],
-        rights: ["", ""],
         correct: type === "multi" ? JSON.stringify(ans?.correct ?? []) : String(ans?.correct ?? ""),
+      };
+    }
+    if (type === "derivation") {
+      let spec: { mode?: "expression" | "equation"; variable?: string; target?: string } = {};
+      if (typeof ans?.correct === "string") {
+        try {
+          spec = JSON.parse(ans.correct);
+        } catch {
+          /* correct hỏng → coi như rỗng */
+        }
+      }
+      return {
+        ...base,
+        type,
+        prompt: d?.prompt ?? "",
+        derivMode: spec.mode === "equation" ? "equation" : "expression",
+        derivStart: d?.choices?.[0] ?? "",
+        derivTarget: spec.target ?? "",
+        derivVar: spec.variable || d?.choices?.[2] || "x",
       };
     }
     // true-false | numeric | fraction | expression
     return {
+      ...base,
       type,
       prompt: d?.prompt ?? "",
-      items: ["", ""],
-      rights: ["", ""],
       correct: String(ans?.correct ?? ""),
     };
   });

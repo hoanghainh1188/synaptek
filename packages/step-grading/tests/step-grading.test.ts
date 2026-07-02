@@ -59,3 +59,51 @@ test("một dòng (chỉ đề) → totalSteps 0, score 0", () => {
   assert.equal(r.score, 0);
   assert.equal(r.reachedGoal, false);
 });
+
+// ── gradeCompoundParts (câu nhiều phần LỒNG derivation, D44) ────────────────────
+import { gradeCompoundParts, type CompoundPartSpec } from "../src/step-grading.ts";
+
+test("compound lồng derivation: mọi phần đúng → isCorrect true, score 1", () => {
+  const parts: CompoundPartSpec[] = [
+    { type: "numeric", correct: "8" },
+    {
+      type: "derivation",
+      correct: JSON.stringify({ mode: "equation", variable: "x", start: "2x + 3 = 7" }),
+    },
+  ];
+  const r = gradeCompoundParts(parts, ["8", ["2x = 4", "x = 2"]]);
+  assert.equal(r.isCorrect, true);
+  assert.equal(r.score, 1);
+  assert.equal(r.perPart.length, 2);
+});
+
+test("compound lồng derivation: phần derivation sai bước → isCorrect false, score giảm", () => {
+  const parts: CompoundPartSpec[] = [
+    { type: "numeric", correct: "8" },
+    {
+      type: "derivation",
+      correct: JSON.stringify({ mode: "equation", variable: "x", start: "2x + 3 = 7" }),
+    },
+  ];
+  const r = gradeCompoundParts(parts, ["8", ["x = 3"]]); // sai tập nghiệm
+  assert.equal(r.isCorrect, false);
+  assert.equal(r.perPart[1].isCorrect, false);
+  assert.ok(r.score < 1 && r.score > 0);
+});
+
+test("compound lồng derivation: spec hỏng → phần đó tính sai, không vỡ", () => {
+  const parts: CompoundPartSpec[] = [{ type: "derivation", correct: "not-json" }];
+  const r = gradeCompoundParts(parts, [["x = 2"]]);
+  assert.equal(r.isCorrect, false);
+  assert.equal(r.score, 0);
+});
+
+test("compound toàn phần thường (không derivation) vẫn hoạt động", () => {
+  const parts: CompoundPartSpec[] = [
+    { type: "numeric", correct: "8" },
+    { type: "mcq", correct: "B" },
+  ];
+  const r = gradeCompoundParts(parts, ["8", "B"]);
+  assert.equal(r.isCorrect, true);
+  assert.equal(r.score, 1);
+});

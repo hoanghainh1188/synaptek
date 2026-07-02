@@ -113,6 +113,41 @@ Deno.test("compound: ẩn đáp án — chỉ trả {isCorrect, feedbackCode}", 
   assertEquals(Object.keys(r.perQuestion.c1).sort(), ["feedbackCode", "isCorrect"]);
 });
 
+// Compound LỒNG derivation (D44): 1 phần thường + 1 phần "trình bày từng bước".
+const COMPOUND_DERIV_KEYS: Record<string, AnswerKey> = {
+  c2: {
+    type: "compound",
+    correct: JSON.stringify([
+      { type: "numeric", correct: "8" },
+      {
+        type: "derivation",
+        correct: JSON.stringify({ mode: "equation", variable: "x", start: "2x + 3 = 7" }),
+      },
+    ]),
+  },
+};
+
+Deno.test("compound lồng derivation: mọi phần đúng → isCorrect true, điểm đầy đủ", () => {
+  const r = gradeSubmission(
+    ["c2"],
+    { c2: [JSON.stringify("8"), JSON.stringify(["2x = 4", "x = 2"])] },
+    COMPOUND_DERIV_KEYS,
+  );
+  assertEquals(r.perQuestion.c2.isCorrect, true);
+  assertEquals(r.autoScore, 1);
+});
+
+Deno.test("compound lồng derivation: bước derivation sai → isCorrect false, điểm giảm", () => {
+  const r = gradeSubmission(
+    ["c2"],
+    { c2: [JSON.stringify("8"), JSON.stringify(["x = 3"])] }, // sai tập nghiệm
+    COMPOUND_DERIV_KEYS,
+  );
+  assertEquals(r.perQuestion.c2.isCorrect, false);
+  assertEquals(r.perQuestion.c2.feedbackCode, "partial");
+  assert(r.autoScore > 0 && r.autoScore < 1);
+});
+
 // Bảo đảm kiểu AnswerKey dùng được (khớp answer-keys tự sinh).
 const _typecheck: AnswerKey = { type: "mcq", correct: "A" };
 void _typecheck;

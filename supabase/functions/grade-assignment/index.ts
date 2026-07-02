@@ -1,8 +1,8 @@
 // Edge Function `grade-assignment` — CHẤM CHÍNH THỨC một bài nộp (M3 US2, D4). HS phải đăng nhập.
 // Dùng lại @synaptek/grading-engine (moat) + ANSWER_KEYS tự sinh từ content/ (D6/D13). ĐÁP ÁN KHÔNG
 // rời server: phản hồi chỉ gồm isCorrect/feedbackCode/score, KHÔNG kèm `correct`. auto_score do server ghi.
-import { grade, gradeCompound, type GradeInput, type CompoundPart } from "@synaptek/grading-engine";
-import { gradeDerivation } from "@synaptek/step-grading";
+import { grade, type GradeInput } from "@synaptek/grading-engine";
+import { gradeDerivation, gradeCompoundParts, type CompoundPartSpec } from "@synaptek/step-grading";
 import { createClient } from "@supabase/supabase-js";
 import { checkSubmitAllowed, pickForStudent } from "@synaptek/classroom";
 import { ANSWER_KEYS, type AnswerKey } from "../_shared/answer-keys.ts";
@@ -77,10 +77,12 @@ export function gradeSubmission(
       continue;
     }
 
-    // Câu nhiều phần (compound, a/b/c): correct = JSON mảng đáp án ẨN từng phần {type,correct,options};
-    // answer = mảng chuỗi (mỗi phần tử là JSON của đáp án 1 phần, kể cả khi phần đó tự là string[]).
+    // Câu nhiều phần (compound, a/b/c, CÓ THỂ lồng derivation — D44): correct = JSON mảng đáp án ẨN
+    // từng phần {type,correct,options}; answer = mảng chuỗi (mỗi phần tử là JSON của đáp án 1 phần,
+    // kể cả khi phần đó tự là string[]). gradeCompoundParts (step-grading) chấm phần thường qua
+    // grade() và phần derivation qua gradeDerivation trong CÙNG một lượt.
     if (key.type === "compound") {
-      let parts: CompoundPart[];
+      let parts: CompoundPartSpec[];
       try {
         parts = JSON.parse(key.correct as string);
       } catch {
@@ -95,7 +97,7 @@ export function gradeSubmission(
           return ansArr[i] ?? "";
         }
       });
-      const cr = gradeCompound(parts, perPartAnswers);
+      const cr = gradeCompoundParts(parts, perPartAnswers);
       perQuestion[qid] = {
         isCorrect: cr.isCorrect,
         feedbackCode: cr.isCorrect ? "correct" : cr.score > 0 ? "partial" : "incorrect",
