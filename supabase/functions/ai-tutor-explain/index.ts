@@ -101,10 +101,15 @@ export async function callGemini(
       }),
     },
   );
-  if (!res.ok) throw new Error(`gemini_error_${res.status}`);
+  if (!res.ok) {
+    const errBody = await res.text().catch(() => "");
+    throw new Error(`gemini_error_${res.status}: ${errBody.slice(0, 500)}`);
+  }
   const data = await res.json();
   const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-  if (typeof text !== "string" || text.trim() === "") throw new Error("gemini_empty_response");
+  if (typeof text !== "string" || text.trim() === "") {
+    throw new Error(`gemini_empty_response: ${JSON.stringify(data).slice(0, 500)}`);
+  }
   return text.trim();
 }
 
@@ -144,7 +149,10 @@ export async function handler(req: Request): Promise<Response> {
   try {
     const explanation = await callGemini(buildUserMessage(input), apiKey, model);
     return json({ explanation });
-  } catch {
+  } catch (e) {
+    // Log chi tiết ở server (Supabase Dashboard → Edge Functions → Logs) — KHÔNG trả cho client
+    // (tránh lộ nội dung lỗi upstream/API key ra ngoài). Client chỉ nhận mã lỗi chung "ai_failed".
+    console.error("ai-tutor-explain: gemini call failed:", e instanceof Error ? e.message : e);
     return json({ error: "ai_failed" });
   }
 }
