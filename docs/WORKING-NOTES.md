@@ -256,31 +256,42 @@ Decision Log **D19** (BKT) · **D20** (gamification) · **D21** (cron+push) đã
   mới: **D14** (content thủ công JSON + import, luồng riêng), **D15** (lớp 4 + ôn lớp 1–3), **D16**
   (auth tối thiểu Supabase).
 
-## Việc tiếp theo (theo thứ tự)
+## Còn mở (cập nhật — thay cho "Việc tiếp theo"/"Nợ kỹ thuật" cũ bên dưới, vốn là snapshot thời M0–M2 đã lỗi thời)
 
-1. **Merge PR `feature/m2-polish`** → `develop` (CI xanh) → **đóng M2**.
-2. **M3 — Giáo viên** (`specs/003-*`, chưa tạo): tạo lớp + mã mời; soạn/giao bài; chấm chính thức
-   server-side + ghi đè thủ công + nhận xét; phân tích lớp; **RLS chéo vai trò đầy đủ**. Bắt đầu bằng
-   Spec Kit `specify`. (Edge Function `grade` hiện dùng stub đáp án — M3 đọc `content/questions` phía server.)
-3. **Deploy hosted M2** (khi sẵn sàng, không chặn M3): `supabase link` → `db push` →
-   `functions deploy grade review-scheduler` + lên lịch cron (Vault key); cấu hình **EAS projectId** cho push.
-4. **Verify iOS sim** khi có Mac simulator (web đã pass).
-5. **Dọn nhánh**: xóa `feature/m2-mastery-path` (đã merge).
+Kiểm kỹ ở phiên 2026-07-02 (đối chiếu roadmap + Decision Log D26–D45). Còn lại thực chất:
 
-## Nợ kỹ thuật / để ý sau
+- **M5 native** — chặn bởi tài khoản (EAS/Apple/Google), không phải việc code. Chi tiết + lệnh cụ thể:
+  `docs/M5-NATIVE.md`.
+- **Push thật + cron review-scheduler lên lịch hosted** — phụ thuộc M5.1 (projectId EAS).
+- **Nhóm "Tương lai"** (`docs/02-roadmap.md`): THCS/THPT sâu hơn · môn khác đầy đủ (Lý/Hóa/Anh, mới có nền
+  đa môn D39) · LaTeX render/input cho chấm từng bước (thuật toán đã ship D38–D45, LaTeX thật chưa —
+  `docs/future/step-grading.md`) · gia sư AI — cả 4 đều **chưa bắt đầu**, là quyết định phạm vi sản phẩm.
+- **Nguồn nội dung & bản quyền** (rủi ro #1 gốc, D14 vẫn đúng): câu hỏi bám CT GDPT 2018, KHÔNG chép SGK —
+  chưa có quy trình review chính thức cho nội dung mới thêm.
+- **Tên `synaptek`**: chưa kiểm tra trùng thương hiệu/tên miền/app store trước khi đăng ký chính thức.
 
-- `correctCount` (huy hiệu) suy từ `attempts` server lúc kết thúc phiên → có thể trễ vài câu sát ngưỡng;
-  đánh giá lại mỗi phiên nên hội tụ. Cân nhắc đếm chính xác nếu cần.
-- `auth-progress.spec.ts`: strict-mode 2×"Tiến độ" — pre-existing (hydration Expo static-render), không CI.
-- Push token trả null tới khi có **EAS projectId**; cron chưa lên lịch trên hosted (best-effort, đã tài liệu).
+Các mục lịch sử bên dưới (Việc tiếp theo M0–M2, Nợ kỹ thuật thời đó) giữ lại làm bản ghi — **đã hoàn tất
+hết**, không còn là việc cần làm.
 
-> **Định hướng tương lai (chủ repo nêu):** sẽ còn cải tiến tiếp. Ý tưởng để ngỏ: tinh chỉnh tham số BKT
-> bằng dữ liệu thật; heatmap dạng lỗi chi tiết hơn; populate heatmap demo (cần login). Ghi lại khi rõ.
+## Việc tiếp theo (LỊCH SỬ — thời M0→M2, đã xong)
 
-## Ghi chú / quyết định mở
+1. ~~Merge PR `feature/m2-polish` → đóng M2~~ ✅
+2. ~~M3 — Giáo viên~~ ✅ đóng (xem D22–D25)
+3. ~~Deploy hosted M2~~ ✅ — deploy auto Web+Backend từ `develop` đã vận hành
+4. ~~Verify iOS sim~~ — thay bằng kế hoạch M5 thật (`docs/M5-NATIVE.md`), sim không còn trong kế hoạch
+5. ~~Dọn nhánh `feature/m2-mastery-path`~~ ✅
+
+## Nợ kỹ thuật / để ý sau (LỊCH SỬ — thời M0→M2)
+
+- `correctCount` (huy hiệu) suy từ `attempts` server lúc kết thúc phiên — đặc điểm thiết kế đã biết, vẫn
+  đúng nguyên trạng ở `packages/learning-path/src/gamification.ts`, không phải lỗi cần sửa.
+- ~~`auth-progress.spec.ts` strict-mode~~ — hiện chạy trong CI (`e2e-auth` job) và xanh, không còn vấn đề.
+- ~~Push token/cron~~ — xem mục "Còn mở" ở trên (M5).
+
+> **Định hướng tương lai (chủ repo nêu, thời M0–M2):** tinh chỉnh tham số BKT bằng dữ liệu thật; heatmap
+> dạng lỗi chi tiết hơn — cả hai vẫn là ý tưởng mở, chưa làm, chưa được nêu lại gần đây.
+
+## Ghi chú / quyết định mở (LỊCH SỬ — thời M1, đã chốt)
 
 - **Lớp khởi đầu M1**: ✅ chốt **lớp 4** + cho ôn lớp 1–3 (D15).
 - **Auth M1**: ✅ chốt **tối thiểu** (Supabase email/mật khẩu) (D16).
-- **Nguồn nội dung & bản quyền** (rủi ro #1): câu hỏi bám CT GDPT 2018 nhưng KHÔNG chép nguyên văn SGK
-  → biên soạn **thủ công JSON + import** (D14), luồng riêng, cần quy trình review.
-- **Tên `synaptek`**: kiểm tra trùng thương hiệu/tên miền/app store trước khi đăng ký chính thức.
