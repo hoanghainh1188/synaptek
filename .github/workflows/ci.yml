@@ -59,7 +59,7 @@ jobs:
           deno-version: v2.x
 
       - name: Tests (edge functions — Deno)
-        run: deno test review-scheduler/index.test.ts grade-assignment/index.test.ts
+        run: deno test review-scheduler/index.test.ts grade-assignment/index.test.ts ai-tutor-explain/index.test.ts
         working-directory: supabase/functions
 
       - name: Build web (Expo export)
@@ -179,7 +179,8 @@ jobs:
             tests/e2e/authoring-math.spec.ts \
             tests/e2e/compound.spec.ts \
             tests/e2e/compound-derivation.spec.ts \
-            tests/e2e/sqrt.spec.ts
+            tests/e2e/sqrt.spec.ts \
+            tests/e2e/ai-tutor.spec.ts
         working-directory: apps/app
 
       - name: Stop Supabase

@@ -214,6 +214,7 @@ export default function Practice() {
         {q && state.status === "feedback" && currentRecord(state) ? (
           <View className="mt-4">
             <Feedback
+              key={currentRecord(state)!.questionId}
               record={currentRecord(state)!}
               question={q}
               isLast={state.index + 1 >= total}

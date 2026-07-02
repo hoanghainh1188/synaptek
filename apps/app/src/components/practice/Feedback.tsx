@@ -1,9 +1,11 @@
 // Phản hồi đúng/sai + giải thích (không phán xét). Hiện sau khi nộp.
+import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import type { Question } from "@synaptek/curriculum";
 import type { AnswerRecord } from "@/lib/session";
 import { MathText } from "@/components/math/MathText";
 import { Mascot } from "@/components/Mascot";
+import { useExplainWrongAnswer } from "@/lib/supabase/ai-tutor";
 
 interface FeedbackProps {
   record: AnswerRecord;
@@ -27,6 +29,25 @@ export function Feedback({ record, question, onNext, isLast }: FeedbackProps) {
   const correctText = Array.isArray(question.correct)
     ? question.correct.join(" ; ")
     : question.correct;
+  const explainAi = useExplainWrongAnswer();
+  const [aiError, setAiError] = useState<string | null>(null);
+
+  const askAi = () => {
+    setAiError(null);
+    const studentAnswer = Array.isArray(record.answer) ? record.answer.join(", ") : record.answer;
+    explainAi.mutate(
+      {
+        prompt: question.prompt,
+        studentAnswer,
+        correctAnswer: correctText,
+        diagnosis: record.diagnosis,
+      },
+      {
+        onError: (e) => setAiError(e instanceof Error ? e.message : "Không hỏi được, thử lại sau."),
+      },
+    );
+  };
+
   return (
     <View
       className={`rounded-lg bg-surface p-5 ${ok ? "border-2 border-ok/40" : "border-2 border-no/30"}`}
@@ -64,6 +85,32 @@ export function Feedback({ record, question, onNext, isLast }: FeedbackProps) {
           <MathText value={question.explanation} size={16} weight="600" />
         </View>
       </View>
+
+      {!ok && (
+        <View className="mt-3">
+          {!explainAi.data && (
+            <Pressable
+              accessibilityLabel="Hỏi tại sao sai"
+              disabled={explainAi.isPending}
+              onPress={askAi}
+              className="min-h-[44px] items-center justify-center rounded-md border-2 border-brand/30 bg-brand/5"
+            >
+              <Text className="font-bold text-brand">
+                {explainAi.isPending ? "Đang hỏi gia sư AI…" : "🤖 Hỏi tại sao sai?"}
+              </Text>
+            </Pressable>
+          )}
+          {explainAi.data && (
+            <View className="rounded-md bg-brand/5 p-3">
+              <Text className="text-[13px] font-extrabold uppercase tracking-wide text-brand">
+                🤖 Gia sư AI giải thích
+              </Text>
+              <Text className="mt-1 text-sm text-ink">{explainAi.data}</Text>
+            </View>
+          )}
+          {aiError && <Text className="mt-2 text-sm font-semibold text-no">{aiError}</Text>}
+        </View>
+      )}
 
       <Pressable
         onPress={onNext}

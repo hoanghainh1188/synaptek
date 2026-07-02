@@ -4,7 +4,17 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
-**+ Căn bậc hai (√) ✅ vừa xong (feature/sqrt-engine, PR đang mở):** engine nhận cả `√` (ký hiệu) lẫn `sqrt(...)` (chữ), tương đương nhau — toán tử một ngôi cùng precedence `neg` (`√x^2`=`√(x^2)`, `√4*2`=`(√4)*2`, nhân ngầm `2√4`=`2*√4`). Căn số âm → NaN tự lọc ở sampling (giống chia 0, D9), không throw. `numericScalar` thêm fallback `sqrtConstantValue` (chỉ khi chuỗi chứa √/sqrt) → HS gõ "√16" ở câu numeric vẫn khớp "4". Áp dụng numeric+expression (derivation thừa hưởng tự động qua `expressionsEquivalent` chung). +13 unit test engine (72 tổng). Bàn phím toán (`math-keypad.ts`) + 6 chỗ thanh chèn nhanh soạn câu đều thêm nút √ — +1 unit test math-keypad. e2e sqrt (HS gõ √16 bằng bàn phím → chấm tương đương 4) PASS. Decision Log D45.
+**+ Gia sư AI (MVP) ✅ vừa xong (feature/ai-tutor, PR đang mở):** Edge Function `ai-tutor-explain` gọi
+Claude API (`claude-haiku-4-5-20251001`) giải thích ngắn gọn vì sao HS SAI — **engine vẫn chấm, LLM chỉ
+giải thích** (docs/future/step-grading.md). Nút "🤖 Hỏi tại sao sai?" xuất hiện CHỈ khi sai, trong
+`Feedback.tsx` (màn luyện tập). Ngữ cảnh do client gửi (không bí mật) — Edge chỉ validate hình dạng/độ
+dài, không tra DB. Lỗi mềm (`not_configured`/`ai_failed`) trả HTTP 200 (không phải 503/502 — hành vi
+`supabase-js` chặn đọc body khi non-2xx). **CHƯA set `ANTHROPIC_API_KEY`** — trả lời graceful "chưa sẵn
+sàng", verify qua e2e `ai-tutor.spec.ts` (không gọi API thật). +10 Deno test (validateInput/buildUserMessage).
+Decision Log D46. **Còn lại để dùng thật**: `supabase secrets set ANTHROPIC_API_KEY=...` (xem
+`supabase/README.md` mục "Gia sư AI").
+
+**+ Căn bậc hai (√) ✅ (feature/sqrt-engine, đã merge #72):** engine nhận cả `√` (ký hiệu) lẫn `sqrt(...)` (chữ), tương đương nhau — toán tử một ngôi cùng precedence `neg` (`√x^2`=`√(x^2)`, `√4*2`=`(√4)*2`, nhân ngầm `2√4`=`2*√4`). Căn số âm → NaN tự lọc ở sampling (giống chia 0, D9), không throw. `numericScalar` thêm fallback `sqrtConstantValue` (chỉ khi chuỗi chứa √/sqrt) → HS gõ "√16" ở câu numeric vẫn khớp "4". Áp dụng numeric+expression (derivation thừa hưởng tự động qua `expressionsEquivalent` chung). +13 unit test engine (72 tổng). Bàn phím toán (`math-keypad.ts`) + 6 chỗ thanh chèn nhanh soạn câu đều thêm nút √ — +1 unit test math-keypad. e2e sqrt (HS gõ √16 bằng bàn phím → chấm tương đương 4) PASS. Decision Log D45.
 
 **+ Câu nhiều phần LỒNG derivation ✅ (feature/compound-question tiếp, đã merge #71):** `COMPOUND_PART_TYPES` thêm `derivation` (trình bày từng bước làm 1 phần a/b/c). Orchestrator mới `gradeCompoundParts` sống ở `@synaptek/step-grading` (không phải grading-engine — tránh phụ thuộc ngược) — chấm phần thường qua `grade()`, phần derivation qua `gradeDerivation`, cùng lượt, điểm = trung bình. Edge `grade-assignment` chuyển compound sang dùng hàm mới (superset) — 2 Deno test thêm. `compound-parts.ts` + `CompoundPartsEditor` thêm UI soạn derivation lồng (mode/đề/đích/biến, nhãn `phần {letter}` chống trùng a11y) — 4 unit test thêm (13 tổng). e2e compound-derivation (soạn a=numeric, b=từng bước → giao → HS đúng cả 2 → 100%) PASS. Decision Log D44.
 
@@ -258,14 +268,18 @@ Decision Log **D19** (BKT) · **D20** (gamification) · **D21** (cron+push) đã
 
 ## Còn mở (cập nhật — thay cho "Việc tiếp theo"/"Nợ kỹ thuật" cũ bên dưới, vốn là snapshot thời M0–M2 đã lỗi thời)
 
-Kiểm kỹ ở phiên 2026-07-02 (đối chiếu roadmap + Decision Log D26–D45). Còn lại thực chất:
+Kiểm kỹ ở phiên 2026-07-02 (đối chiếu roadmap + Decision Log D26–D46). Còn lại thực chất:
 
 - **M5 native** — chặn bởi tài khoản (EAS/Apple/Google), không phải việc code. Chi tiết + lệnh cụ thể:
   `docs/M5-NATIVE.md`.
 - **Push thật + cron review-scheduler lên lịch hosted** — phụ thuộc M5.1 (projectId EAS).
-- **Nhóm "Tương lai"** (`docs/02-roadmap.md`): THCS/THPT sâu hơn · môn khác đầy đủ (Lý/Hóa/Anh, mới có nền
-  đa môn D39) · LaTeX render/input cho chấm từng bước (thuật toán đã ship D38–D45, LaTeX thật chưa —
-  `docs/future/step-grading.md`) · gia sư AI — cả 4 đều **chưa bắt đầu**, là quyết định phạm vi sản phẩm.
+- **Gia sư AI**: MVP đã ship (D46, `ai-tutor-explain`) — CHỈ còn thiếu `ANTHROPIC_API_KEY` thật (chưa có,
+  `supabase secrets set` khi sẵn sàng) để trả lời thật thay vì "chưa sẵn sàng"; mở rộng phạm vi (chat tự
+  do, các màn khác ngoài luyện tập) là quyết định sản phẩm riêng, chưa làm.
+- **Nhóm "Tương lai" còn lại** (`docs/02-roadmap.md`): THCS/THPT sâu hơn · môn khác đầy đủ (Lý/Hóa/Anh,
+  mới có nền đa môn D39) · LaTeX render/input cho chấm từng bước (thuật toán đã ship D38–D45, LaTeX thật
+  chưa — `docs/future/step-grading.md`) — cả 3 đều **chưa bắt đầu**, là quyết định phạm vi sản phẩm (cần
+  chuyên môn sư phạm + quy trình nội dung, khác gia sư AI vốn là việc engineering thuần).
 - **Nguồn nội dung & bản quyền** (rủi ro #1 gốc, D14 vẫn đúng): câu hỏi bám CT GDPT 2018, KHÔNG chép SGK —
   chưa có quy trình review chính thức cho nội dung mới thêm.
 - **Tên `synaptek`**: chưa kiểm tra trùng thương hiệu/tên miền/app store trước khi đăng ký chính thức.
