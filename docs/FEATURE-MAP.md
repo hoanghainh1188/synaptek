@@ -41,11 +41,14 @@ mindmap
       ✅ Supabase BaaS + Edge Functions, deploy auto Web+Backend
       ⏳ cron review-scheduler lên lịch hosted thật
       🔮 M5 Native (EAS build/push/offline/store) — chặn bởi tài khoản
+    🤖 Gia sư AI
+      ✅ MVP: giải thích khi HS sai (Claude Haiku, engine vẫn chấm)
+      ⏳ chờ ANTHROPIC_API_KEY thật — chỉ code/wiring, không cần key để hoàn thiện
+      🔮 mở rộng phạm vi (chat tự do, màn khác ngoài luyện tập)
     🔭 Tương lai xa
       🔮 THCS/THPT sâu hơn (chưa bắt đầu)
       🔮 Môn khác đầy đủ Lý/Hóa/Anh (mới có nền đa môn)
       🔮 LaTeX render/input cho chấm từng bước (thuật toán đã có, LaTeX chưa)
-      🔮 Gia sư AI (chưa bắt đầu)
 ```
 
 ## Theo trạng thái (flowchart)
@@ -68,13 +71,15 @@ flowchart LR
   SHIPPED --> A9["Nội dung 205 câu, 5 lớp Toán + 3 lớp Tiếng Việt"]
   SHIPPED --> A10["Ôn lại câu sai + phản hồi lỗi thông minh + xem lời giải"]
   SHIPPED --> A11["GV sửa/xóa bài tự soạn · HS/GV/PH đổi vai trò"]
+  SHIPPED --> A12["Gia sư AI MVP: giải thích khi HS sai (Claude Haiku, engine vẫn chấm)"]
 
   WIP --> B1["Push thật + cron review-scheduler — cần EAS projectId"]
   WIP --> B2["Verify thật trên iOS/Android (mới verify web)"]
+  WIP --> B3["Gia sư AI: chờ ANTHROPIC_API_KEY thật để trả lời (code đã xong)"]
 
   FUTURE --> C1["M5 Native: EAS build · offline · lên store — cần tài khoản EAS/Apple/Google"]
   FUTURE --> C2["THCS/THPT sâu hơn · môn khác đầy đủ (Lý/Hóa/Anh)"]
-  FUTURE --> C3["LaTeX render/input cho chấm từng bước · gia sư AI"]
+  FUTURE --> C3["LaTeX render/input cho chấm từng bước · gia sư AI mở rộng (chat tự do)"]
 ```
 
 ## Chú thích trạng thái
@@ -92,6 +97,9 @@ flowchart LR
   `docs/M5-NATIVE.md`.
 - **iOS/Android**: mới verify trên web; build/verify thiết bị thật thuộc M5 (cần tài khoản EAS, Apple
   Developer $99/năm cho iOS).
+- **Gia sư AI**: code/wiring đã xong (Edge Function `ai-tutor-explain`, UI, test) — chỉ thiếu
+  `supabase secrets set ANTHROPIC_API_KEY=...` để trả lời thật; hiện graceful "chưa sẵn sàng" (xem
+  `supabase/README.md` mục "Gia sư AI").
 
 ### Ghi chú "🔮 tương lai" — mức độ sẵn sàng thật
 
@@ -100,4 +108,5 @@ flowchart LR
 - **Chấm từng bước + LaTeX**: phần **thuật toán/tích hợp đã ship** (package `@synaptek/step-grading`, loại
   câu `derivation` giao/chấm được, lồng vào câu nhiều phần, bàn phím toán). Phần **LaTeX render/input thật
   sự (KaTeX/MathJax) chưa làm** — hiện chỉ có component `MathText` tự chế (không phải LaTeX engine).
-- **THCS/THPT · môn khác · gia sư AI**: chưa bắt đầu triển khai.
+- **THCS/THPT · môn khác**: chưa bắt đầu triển khai — cần chuyên môn sư phạm + quy trình nội dung (D14),
+  khác gia sư AI (đã MVP, việc engineering thuần).

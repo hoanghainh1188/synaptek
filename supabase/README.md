@@ -5,14 +5,15 @@ dạng file; áp lên project thật bằng Supabase CLI.
 
 ```
 supabase/
-├── config.toml              cấu hình local + khai báo function `grade` (verify_jwt)
-├── migrations/
-│   └── 0001_init.sql        profiles · attempts · skill_mastery + RLS + trigger tạo profile
+├── config.toml              cấu hình local + khai báo verify_jwt từng function
+├── migrations/              0001–0023 (xem CLAUDE.md/Decision Log cho danh sách đầy đủ)
 └── functions/
-    ├── deno.json            import map: @synaptek/{grading-engine,learning-path} → ./_shared/*
-    ├── _shared/             bản TỰ SINH (npm run sync:edge): grading-engine.ts + learning-path/{schedule,time,index}
-    ├── grade/index.ts       chấm chính thức server-side, dùng lại engine (consumer #2)
-    └── review-scheduler/    job nền nhắc ôn (D21): đọc skill_mastery.due_at, ghi review_reminders, push best-effort
+    ├── deno.json            import map: @synaptek/{grading-engine,learning-path,classroom,step-grading} → ./_shared/*
+    ├── _shared/             bản TỰ SINH (npm run sync:edge) — KHÔNG sửa tay (D13)
+    ├── grade/index.ts       chấm nhanh 1 câu server-side, dùng lại engine (consumer #2)
+    ├── grade-assignment/    chấm chính thức bài tập (M3 US2, D4) — hỗ trợ compound/derivation/pool
+    ├── review-scheduler/    job nền nhắc ôn (D21): đọc skill_mastery.due_at, ghi review_reminders, push best-effort
+    └── ai-tutor-explain/    gia sư AI (D46): giải thích vì sao SAI qua Claude API — engine vẫn chấm, LLM chỉ giải thích
 ```
 
 ## Chạy & deploy (cần Supabase CLI + Docker)
@@ -75,6 +76,26 @@ select cron.schedule(
 > Test idempotency (SC-006) ở `functions/review-scheduler/index.test.ts` (Deno, fake client) —
 > chạy 2 lần cùng `due_date` → đúng 1 dòng nhắc/HS; push chỉ gọi cho dòng mới.
 
+## Gia sư AI `ai-tutor-explain` (D46)
+
+Giải thích NGẮN GỌN vì sao HS trả lời SAI qua Claude API — **KHÔNG chấm điểm** (engine đã chấm; nguyên
+tắc "Engine CHẤM, LLM chỉ GIẢI THÍCH" — `docs/future/step-grading.md`). Ngữ cảnh (đề/đáp án HS/đáp án
+đúng/chẩn đoán) do client gửi (không bí mật, đã hiện với HS) — Edge chỉ validate hình dạng + gọi Claude,
+không tra cứu DB.
+
+```bash
+supabase functions serve ai-tutor-explain      # chạy thử (cần JWT — verify_jwt = true)
+supabase secrets set ANTHROPIC_API_KEY=sk-ant-...   # BẮT BUỘC để trả lời thật; thiếu → "not_configured" (graceful)
+supabase functions deploy ai-tutor-explain     # hosted
+```
+
+- Model mặc định `claude-haiku-4-5-20251001` (rẻ/nhanh, đủ cho giải thích 2-3 câu) — `max_tokens: 200`.
+- Yêu cầu đăng nhập (chống gọi ẩn danh tốn phí); validate độ dài chuỗi input (≤300 ký tự/trường).
+- **Chưa set `ANTHROPIC_API_KEY`** (thực trạng hiện tại) → trả `{error:"not_configured"}` (HTTP 200, không
+  phải lỗi protocol) để client hiện thông báo thân thiện thay vì crash — verify ở `ai-tutor.spec.ts` (e2e).
+- Test hàm thuần (validate/build prompt) ở `functions/ai-tutor-explain/index.test.ts` (Deno) — không gọi
+  Anthropic thật.
+
 ## Vì sao chấm ở server (D4)
 
 Client chỉ gửi `{ questionId, answer }`. **Đáp án đúng không bao giờ rời server** — tra ở server rồi
@@ -91,7 +112,9 @@ chạy _cùng_ engine cho phản hồi tức thì khi luyện tập tự do (low
   cấm sửa tay), import map trỏ vào đó. `packages/` vẫn là nguồn-sự-thật; CI nên chạy sync +
   `git diff --exit-code` để chống lệch.
 
-## Chưa làm (migration sau, M3)
+## Trạng thái tổng quan
 
-`classes` · `class_members` · `assignments` · `assignment_submissions` · `parent_links` — RLS chéo
-vai trò (giáo viên thấy HS trong lớp; phụ huynh thấy con) sẽ thiết kế ở M3.
+M0–M4 đã đóng (`classes`/`assignments`/`parent_links` + RLS chéo vai trò từ M3/M4, xem CLAUDE.md +
+Decision Log). Còn mở: M5 native (chặn bởi tài khoản EAS/Apple/Google, `docs/M5-NATIVE.md`) và các
+hướng "Tương lai" (THCS/THPT, môn mới, LaTeX, gia sư AI mở rộng) — xem `docs/WORKING-NOTES.md` mục
+"Còn mở".

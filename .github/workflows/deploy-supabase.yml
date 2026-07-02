@@ -57,7 +57,7 @@ jobs:
         run: supabase db push
 
       - name: Deploy Edge Functions
-        run: supabase functions deploy grade grade-assignment review-scheduler --project-ref "$REF"
+        run: supabase functions deploy grade grade-assignment review-scheduler ai-tutor-explain --project-ref "$REF"
 
       # Đồng bộ auth config hosted theo chủ ý repo (idempotent). jwt_exp = 604800 (1 tuần) khớp config.toml;
       # mailer_autoconfirm = true để luồng đăng-ký-đăng-nhập-ngay chạy (chưa cấu hình SMTP).
