@@ -21,6 +21,14 @@ import { MathInsertBar } from "@/components/practice/MathInsertBar";
 import { SUBJECTS, subjectLabel, DEFAULT_SUBJECT } from "@/lib/subjects";
 import { packMatching, unpackMatching } from "@/lib/matching";
 import { normalizeMathInput } from "@/lib/step-problems";
+import {
+  emptyPart,
+  partValid,
+  buildCompoundPayload,
+  decodeCompound,
+  type PartDraft,
+} from "@/lib/compound-parts";
+import { CompoundPartsEditor } from "@/components/practice/CompoundPartsEditor";
 
 const TYPES: { value: CustomType; label: string }[] = [
   { value: "mcq", label: "Trắc nghiệm" },
@@ -33,6 +41,7 @@ const TYPES: { value: CustomType; label: string }[] = [
   { value: "ordering", label: "Sắp thứ tự" },
   { value: "matching", label: "Nối cặp" },
   { value: "derivation", label: "Trình bày từng bước" },
+  { value: "compound", label: "Nhiều phần (a/b/c)" },
 ];
 
 export default function MyQuestions() {
@@ -63,6 +72,7 @@ export default function MyQuestions() {
   const [derivStart, setDerivStart] = useState(""); // derivation: dòng đề
   const [derivTarget, setDerivTarget] = useState(""); // derivation (expression): kết quả rút gọn
   const [derivVar, setDerivVar] = useState("x"); // derivation (equation): biến
+  const [parts, setParts] = useState<PartDraft[]>([emptyPart()]); // compound: các phần a/b/c
 
   const reset = () => {
     setPrompt("");
@@ -80,6 +90,7 @@ export default function MyQuestions() {
     setDerivStart("");
     setDerivTarget("");
     setDerivVar("x");
+    setParts([emptyPart()]);
     setEditingId(null);
   };
 
@@ -133,6 +144,7 @@ export default function MyQuestions() {
     setRoundTo(qq.options?.roundTo != null ? String(qq.options.roundTo) : "");
     setTolerance(qq.options?.tolerance != null ? String(qq.options.tolerance) : "");
     setUnordered(qq.options?.unordered === true);
+    setParts(qq.type === "compound" ? decodeCompound(qq.choices, qq.correct) : [emptyPart()]);
     if (qq.type === "mcq" || qq.type === "multi") {
       setChoices(qq.choices ?? ["", ""]);
       setCorrect(qq.correct); // multi: correct là JSON mảng
@@ -227,6 +239,7 @@ export default function MyQuestions() {
       return blankCount >= 1 && ans.length === blankCount;
     }
     if (type === "true-false") return correct === "true" || correct === "false";
+    if (type === "compound") return parts.length >= 1 && parts.every(partValid);
     if (type === "derivation") {
       if (derivStart.trim().length === 0) return false;
       return derivMode === "expression"
@@ -278,7 +291,9 @@ export default function MyQuestions() {
         ? { mode: "expression", target: normalizeMathInput(derivTarget.trim()), start: dStart }
         : { mode: "equation", variable: dVar, start: dStart };
     const derivChoices = [dStart, derivMode, derivMode === "equation" ? dVar : ""];
-    // fill-blank/ordering/matching: đáp án lưu JSON array; derivation: JSON spec; còn lại là chuỗi đơn.
+    // compound (nhiều phần a/b/c): choices = mảng JSON hiển thị từng phần; correct = mảng JSON đáp án ẨN từng phần.
+    const compoundPayload = type === "compound" ? buildCompoundPayload(parts) : null;
+    // fill-blank/ordering/matching: đáp án lưu JSON array; derivation: JSON spec; compound: JSON mảng; còn lại chuỗi đơn.
     const correctValue =
       type === "fill-blank" || type === "ordering"
         ? JSON.stringify(opts)
@@ -286,7 +301,9 @@ export default function MyQuestions() {
           ? JSON.stringify(mRights)
           : type === "derivation"
             ? JSON.stringify(derivSpec)
-            : correct.trim();
+            : type === "compound"
+              ? (compoundPayload?.correct ?? "[]")
+              : correct.trim();
     const payload = {
       type,
       prompt: prompt.trim(),
@@ -299,7 +316,9 @@ export default function MyQuestions() {
               ? packMatching(mLefts, mRightsShuffled)
               : type === "derivation"
                 ? derivChoices
-                : null,
+                : type === "compound"
+                  ? (compoundPayload?.choices ?? [])
+                  : null,
       correct: correctValue,
       explanation: explanation.trim() || null,
       hint: hint.trim() || null,
@@ -384,6 +403,7 @@ export default function MyQuestions() {
                   setType(t.value);
                   setCorrect(""); // đổi loại → xoá đáp án cũ (tránh không hợp lệ)
                   setChoices(["", ""]);
+                  setParts([emptyPart()]);
                 }}
                 className={`min-h-[44px] flex-1 items-center justify-center rounded-md border-2 ${active ? "border-brand bg-brand/10" : "border-line bg-paper"}`}
               >
@@ -635,6 +655,23 @@ export default function MyQuestions() {
                 </Text>
               </>
             )}
+          </View>
+        )}
+
+        {type === "compound" && (
+          <View className="mt-4">
+            <Text className="text-xs text-muted">
+              "Đề bài" ở trên là chỉ dẫn chung (vd "Giải các phần sau"). Mỗi phần bên dưới chấm độc
+              lập, điểm câu = trung bình các phần.
+            </Text>
+            <CompoundPartsEditor parts={parts} onChange={setParts} />
+            <Pressable
+              accessibilityLabel="Thêm phần"
+              onPress={() => setParts((prev) => [...prev, emptyPart()])}
+              className="mt-3 self-start"
+            >
+              <Text className="font-bold text-brand">+ Thêm phần</Text>
+            </Pressable>
           </View>
         )}
 

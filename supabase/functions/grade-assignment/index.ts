@@ -1,7 +1,7 @@
 // Edge Function `grade-assignment` — CHẤM CHÍNH THỨC một bài nộp (M3 US2, D4). HS phải đăng nhập.
 // Dùng lại @synaptek/grading-engine (moat) + ANSWER_KEYS tự sinh từ content/ (D6/D13). ĐÁP ÁN KHÔNG
 // rời server: phản hồi chỉ gồm isCorrect/feedbackCode/score, KHÔNG kèm `correct`. auto_score do server ghi.
-import { grade, type GradeInput } from "@synaptek/grading-engine";
+import { grade, gradeCompound, type GradeInput, type CompoundPart } from "@synaptek/grading-engine";
 import { gradeDerivation } from "@synaptek/step-grading";
 import { createClient } from "@supabase/supabase-js";
 import { checkSubmitAllowed, pickForStudent } from "@synaptek/classroom";
@@ -73,6 +73,34 @@ export function gradeSubmission(
         feedbackCode: dr.reachedGoal ? "correct" : dr.firstErrorIndex > 0 ? "incorrect" : "partial",
       };
       sum += dr.score;
+      n++;
+      continue;
+    }
+
+    // Câu nhiều phần (compound, a/b/c): correct = JSON mảng đáp án ẨN từng phần {type,correct,options};
+    // answer = mảng chuỗi (mỗi phần tử là JSON của đáp án 1 phần, kể cả khi phần đó tự là string[]).
+    if (key.type === "compound") {
+      let parts: CompoundPart[];
+      try {
+        parts = JSON.parse(key.correct as string);
+      } catch {
+        continue; // spec hỏng → bỏ qua câu
+      }
+      const ansRaw = answers[qid];
+      const ansArr = Array.isArray(ansRaw) ? ansRaw : [];
+      const perPartAnswers = parts.map((_, i) => {
+        try {
+          return JSON.parse(ansArr[i] ?? '""');
+        } catch {
+          return ansArr[i] ?? "";
+        }
+      });
+      const cr = gradeCompound(parts, perPartAnswers);
+      perQuestion[qid] = {
+        isCorrect: cr.isCorrect,
+        feedbackCode: cr.isCorrect ? "correct" : cr.score > 0 ? "partial" : "incorrect",
+      };
+      sum += cr.score;
       n++;
       continue;
     }

@@ -15,7 +15,8 @@ export type CustomType =
   | "multi"
   | "ordering"
   | "matching"
-  | "derivation";
+  | "derivation"
+  | "compound";
 
 export interface GradeOpts {
   tolerance?: number;
@@ -108,7 +109,8 @@ export function useCreateCustomQuestion() {
           q.type === "multi" ||
           q.type === "ordering" ||
           q.type === "matching" ||
-          q.type === "derivation"
+          q.type === "derivation" ||
+          q.type === "compound"
             ? (q.choices ?? [])
             : null,
         correct: q.correct,
@@ -140,7 +142,8 @@ export function useUpdateCustomQuestion() {
             q.type === "multi" ||
             q.type === "ordering" ||
             q.type === "matching" ||
-            q.type === "derivation"
+            q.type === "derivation" ||
+            q.type === "compound"
               ? (q.choices ?? [])
               : null,
           correct: q.correct,

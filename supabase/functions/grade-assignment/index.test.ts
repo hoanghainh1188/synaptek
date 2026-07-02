@@ -72,6 +72,47 @@ Deno.test("derivation: ẩn đáp án — chỉ trả {isCorrect, feedbackCode}"
   assertEquals(Object.keys(r.perQuestion.d1).sort(), ["feedbackCode", "isCorrect"]);
 });
 
+// Câu nhiều phần (compound, a/b/c, D43): mỗi phần chấm độc lập qua gradeCompound, điểm = trung bình.
+const COMPOUND_KEYS: Record<string, AnswerKey> = {
+  c1: {
+    type: "compound",
+    correct: JSON.stringify([
+      { type: "numeric", correct: "8" },
+      { type: "mcq", correct: "B" },
+    ]),
+  },
+};
+
+Deno.test("compound: mọi phần đúng → isCorrect true, điểm đầy đủ", () => {
+  const r = gradeSubmission(
+    ["c1"],
+    { c1: [JSON.stringify("8"), JSON.stringify("B")] },
+    COMPOUND_KEYS,
+  );
+  assertEquals(r.perQuestion.c1.isCorrect, true);
+  assertEquals(r.autoScore, 1);
+});
+
+Deno.test("compound: 1/2 phần sai → isCorrect false, điểm = trung bình (partial)", () => {
+  const r = gradeSubmission(
+    ["c1"],
+    { c1: [JSON.stringify("8"), JSON.stringify("A")] },
+    COMPOUND_KEYS,
+  );
+  assertEquals(r.perQuestion.c1.isCorrect, false);
+  assertEquals(r.perQuestion.c1.feedbackCode, "partial");
+  assertEquals(r.autoScore, 0.5);
+});
+
+Deno.test("compound: ẩn đáp án — chỉ trả {isCorrect, feedbackCode}", () => {
+  const r = gradeSubmission(
+    ["c1"],
+    { c1: [JSON.stringify("8"), JSON.stringify("B")] },
+    COMPOUND_KEYS,
+  );
+  assertEquals(Object.keys(r.perQuestion.c1).sort(), ["feedbackCode", "isCorrect"]);
+});
+
 // Bảo đảm kiểu AnswerKey dùng được (khớp answer-keys tự sinh).
 const _typecheck: AnswerKey = { type: "mcq", correct: "A" };
 void _typecheck;

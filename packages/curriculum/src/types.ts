@@ -15,6 +15,7 @@ export const QUESTION_TYPES = [
   "ordering",
   "matching",
   "derivation",
+  "compound",
 ] as const;
 
 /** Kỹ năng / "yêu cầu cần đạt" — đơn vị mastery nguyên tử (M2 dùng). */

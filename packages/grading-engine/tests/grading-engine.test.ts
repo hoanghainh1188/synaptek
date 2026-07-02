@@ -344,6 +344,45 @@ test("matching: thiếu một cặp → sai", () => {
   assert.equal(grade({ type: "matching", correct: ["4", "6"], answer: ["4"] }).isCorrect, false);
 });
 
+// ── Compound (câu nhiều phần a/b/c) ──────────────────────────────────────────
+import { gradeCompound } from "../src/grading-engine.ts";
+
+test("compound: mọi phần đúng → isCorrect true, score 1", () => {
+  const r = gradeCompound(
+    [
+      { type: "numeric", correct: "8" },
+      { type: "mcq", correct: "B" },
+    ],
+    ["8", "B"],
+  );
+  assert.equal(r.isCorrect, true);
+  assert.equal(r.score, 1);
+  assert.equal(r.perPart.length, 2);
+});
+
+test("compound: 1/2 phần sai → isCorrect false, score = trung bình", () => {
+  const r = gradeCompound(
+    [
+      { type: "numeric", correct: "8" },
+      { type: "mcq", correct: "B" },
+    ],
+    ["8", "A"],
+  );
+  assert.equal(r.isCorrect, false);
+  assert.equal(r.score, 0.5);
+});
+
+test("compound: mảng rỗng → score 0, isCorrect false", () => {
+  const r = gradeCompound([], []);
+  assert.equal(r.isCorrect, false);
+  assert.equal(r.score, 0);
+});
+
+test("compound: options riêng từng phần (numeric roundTo)", () => {
+  const r = gradeCompound([{ type: "numeric", correct: "1.5", options: { roundTo: 1 } }], ["1.49"]);
+  assert.equal(r.isCorrect, true);
+});
+
 // ── evalExpr (cho step-grading) ──────────────────────────────────────────────
 import { evalExpr } from "../src/grading-engine.ts";
 test("evalExpr: tính giá trị tại x; sai định dạng → null", () => {

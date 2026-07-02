@@ -4,6 +4,8 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ Câu "nhiều phần" (a/b/c) ✅ vừa xong (feature/compound-question, PR đang mở):** loại `compound` soạn/giao được — mỗi phần là 1 trong 9 loại đơn giản (không derivation/compound lồng). `choices` = mảng JSON hiển thị từng phần; `correct` = mảng JSON đáp án ẨN từng phần. Engine `gradeCompound(parts, answers)` chấm từng phần độc lập, điểm = TRUNG BÌNH các phần (isCorrect chỉ true khi mọi phần đúng) — 4 unit test. Edge `grade-assignment` thêm nhánh compound — 3 Deno test. Client: `compound-parts.ts` thuần (build/decode/valid, +10 unit test) + `CompoundPartsEditor` (soạn, nhãn theo chữ cái phần chống trùng a11y) + `CompoundInput` (làm bài, đệ quy `AnswerInput`). migration 0023. e2e compound (soạn 2 phần → giao → HS đúng 1/sai 1 → 50%) PASS. Decision Log D43.
+
 **+ Hỗ trợ nhập toán khi SOẠN câu ✅ (feature/authoring-math-input, PR đang mở):** ô đáp án fraction/expression + đề/đích derivation thêm thanh chèn nhanh (MathInsertBar: x ^ ( ) / \*) + xem trước MathText. e2e authoring-math (GV chèn → preview → lưu) PASS. Decision Log D42. Trọn Hướng 1 (bàn phím toán: HS đáp án + GV soạn).
 
 **+ Bàn phím toán có cấu trúc ✅ (feature/math-keypad, PR đang mở):** ô đáp án expression thêm nút ^ ( ) x + - \* (numeric/fraction giữ gọn); biểu thức hiển thị qua MathText (mũ đẹp). math-keypad.ts thuần (mathKeypadKeys/isOperatorKey, +4 test). KHÔNG đổi engine. e2e auth math-keypad (HS bấm 2(x+2) → chấm tương đương 100%) PASS. Decision Log D41.
