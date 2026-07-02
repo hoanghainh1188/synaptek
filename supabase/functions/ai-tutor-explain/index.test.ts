@@ -1,5 +1,5 @@
 // Test gia sư AI (D46). deno test ai-tutor-explain/index.test.ts
-// Chỉ test hàm THUẦN (validateInput/buildUserMessage) — không gọi Anthropic thật/không cần Supabase live.
+// Chỉ test hàm THUẦN (validateInput/buildUserMessage) — không gọi Gemini thật/không cần Supabase live.
 import { assertEquals, assert } from "jsr:@std/assert@1";
 import { validateInput, buildUserMessage, type ExplainInput } from "./index.ts";
 

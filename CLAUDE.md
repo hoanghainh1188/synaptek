@@ -75,7 +75,7 @@ nhật `docs/WORKING-NOTES.md` (điểm tiếp tục) + Decision Log/spec/file l
   từng bước + nhiều phần a/b/c, CÓ THỂ lồng derivation) + nhãn môn + tùy chọn chấm + ảnh + gợi ý + bàn phím
   toán có cấu trúc; engine moat mở rộng (hỗn số/%/đơn vị/La Mã/căn bậc hai/6 chẩn đoán); đa môn (nền + seed
   Tiếng Việt lớp 1–3); TN học sinh (mục tiêu ngày · luyện nhanh · BXH · avatar); insight GV–PH; **gia sư AI
-  MVP** (giải thích khi sai, chờ `ANTHROPIC_API_KEY` thật). **Còn lại**: M5 native/store (chờ tài khoản,
+  MVP** (Gemini, giải thích khi sai, chờ `GEMINI_API_KEY` thật). **Còn lại**: M5 native/store (chờ tài khoản,
   `docs/M5-NATIVE.md`) - nhóm "Tương lai" (THCS/THPT sâu hơn · môn khác đầy đủ · chấm từng bước+LaTeX thật).
 - **Stack**: TypeScript · Expo SDK 56 / Expo Router / React 19 / RN 0.85. Packages: `@synaptek/grading-engine`
   (moat) + `@synaptek/curriculum` + `@synaptek/learning-path` (heatmap/mastery) + `@synaptek/classroom` (mã mời +
@@ -83,17 +83,17 @@ nhật `docs/WORKING-NOTES.md` (điểm tiếp tục) + Decision Log/spec/file l
   NativeWind v4, `@supabase/supabase-js`, TanStack Query.
 - **Storage**: Supabase — migrations **`0001`–`0023`** (mới nhất: 0021 nối cặp · 0022 trình bày từng bước ·
   0023 nhiều phần a/b/c). RLS chéo vai trò qua helper `SECURITY DEFINER` (D24/D26/D30/D32). Edge Functions:
-  `grade` · `grade-assignment` · `review-scheduler` · `ai-tutor-explain` (D46, cần secret `ANTHROPIC_API_KEY`
-  riêng). Deploy: web Vercel auto + backend GitHub Action auto (db push + functions deploy + ensure auth
-  config) từ `develop`.
+  `grade` · `grade-assignment` · `review-scheduler` · `ai-tutor-explain` (D46, Gemini, cần secret
+  `GEMINI_API_KEY` riêng). Deploy: web Vercel auto + backend GitHub Action auto (db push + functions
+  deploy + ensure auth config) từ `develop`.
 - **CI** (`.github/workflows/ci.yml`): 3 gate — **verify** (format · npm test · engine↔_shared sync · content ·
   deno · web build · 6 guest e2e) · **RLS isolation** (rls-\*.sql trên Supabase thật) · **e2e-auth** (34 luồng
   đăng nhập trên Supabase+Edge). Supabase CLI pin `2.108.0`.
 
 ## Recent Changes
 
-- **Gia sư AI MVP (sau M4)**: Edge Function `ai-tutor-explain` gọi Claude API giải thích vì sao HS SAI —
-  engine vẫn chấm, LLM chỉ giải thích. Nút "Hỏi tại sao sai?" ở màn luyện tập. Chưa có `ANTHROPIC_API_KEY`
+- **Gia sư AI MVP (sau M4)**: Edge Function `ai-tutor-explain` gọi Gemini API giải thích vì sao HS SAI —
+  engine vẫn chấm, LLM chỉ giải thích. Nút "Hỏi tại sao sai?" ở màn luyện tập. Chưa có `GEMINI_API_KEY`
   thật → graceful "chưa sẵn sàng". Decision Log **D46**.
 - **Căn bậc hai √/sqrt() (sau M4)**: tokenizer nhận cả √ (ký hiệu) lẫn sqrt() (chữ), toán tử một ngôi cùng
   precedence `neg`; áp dụng numeric+expression (derivation thừa hưởng qua expressionsEquivalent chung); bàn

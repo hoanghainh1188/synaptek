@@ -4,14 +4,17 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
-**+ Gia sư AI (MVP) ✅ vừa xong (feature/ai-tutor, PR đang mở):** Edge Function `ai-tutor-explain` gọi
-Claude API (`claude-haiku-4-5-20251001`) giải thích ngắn gọn vì sao HS SAI — **engine vẫn chấm, LLM chỉ
-giải thích** (docs/future/step-grading.md). Nút "🤖 Hỏi tại sao sai?" xuất hiện CHỈ khi sai, trong
-`Feedback.tsx` (màn luyện tập). Ngữ cảnh do client gửi (không bí mật) — Edge chỉ validate hình dạng/độ
-dài, không tra DB. Lỗi mềm (`not_configured`/`ai_failed`) trả HTTP 200 (không phải 503/502 — hành vi
-`supabase-js` chặn đọc body khi non-2xx). **CHƯA set `ANTHROPIC_API_KEY`** — trả lời graceful "chưa sẵn
-sàng", verify qua e2e `ai-tutor.spec.ts` (không gọi API thật). +10 Deno test (validateInput/buildUserMessage).
-Decision Log D46. **Còn lại để dùng thật**: `supabase secrets set ANTHROPIC_API_KEY=...` (xem
+**+ Gia sư AI (MVP) ✅ (feature/ai-tutor, đã merge #74; đổi provider sang Gemini sau merge):** Edge
+Function `ai-tutor-explain` gọi **Gemini API** (`gemini-2.5-flash-lite`, đổi qua secret `GEMINI_MODEL`
+không cần sửa code) giải thích ngắn gọn vì sao HS SAI — **engine vẫn chấm, LLM chỉ giải thích**
+(docs/future/step-grading.md). Một provider duy nhất (không thiết kế đa provider khi chưa có nhu cầu cụ
+thể — `callGemini` tách riêng nên đổi/thêm provider sau vẫn nhỏ). Nút "🤖 Hỏi tại sao sai?" xuất hiện CHỈ
+khi sai, trong `Feedback.tsx` (màn luyện tập). Ngữ cảnh do client gửi (không bí mật) — Edge chỉ validate
+hình dạng/độ dài, không tra DB. Lỗi mềm (`not_configured`/`ai_failed`) trả HTTP 200 (không phải 503/502 —
+hành vi `supabase-js` chặn đọc body khi non-2xx). **CHƯA set `GEMINI_API_KEY`** — trả lời graceful "chưa
+sẵn sàng", verify qua e2e `ai-tutor.spec.ts` (không gọi API thật). +10 Deno test
+(validateInput/buildUserMessage). Decision Log D46 (cập nhật). **Còn lại để dùng thật**:
+`supabase secrets set GEMINI_API_KEY=...` (lấy miễn phí tại aistudio.google.com/apikey; xem
 `supabase/README.md` mục "Gia sư AI").
 
 **+ Căn bậc hai (√) ✅ (feature/sqrt-engine, đã merge #72):** engine nhận cả `√` (ký hiệu) lẫn `sqrt(...)` (chữ), tương đương nhau — toán tử một ngôi cùng precedence `neg` (`√x^2`=`√(x^2)`, `√4*2`=`(√4)*2`, nhân ngầm `2√4`=`2*√4`). Căn số âm → NaN tự lọc ở sampling (giống chia 0, D9), không throw. `numericScalar` thêm fallback `sqrtConstantValue` (chỉ khi chuỗi chứa √/sqrt) → HS gõ "√16" ở câu numeric vẫn khớp "4". Áp dụng numeric+expression (derivation thừa hưởng tự động qua `expressionsEquivalent` chung). +13 unit test engine (72 tổng). Bàn phím toán (`math-keypad.ts`) + 6 chỗ thanh chèn nhanh soạn câu đều thêm nút √ — +1 unit test math-keypad. e2e sqrt (HS gõ √16 bằng bàn phím → chấm tương đương 4) PASS. Decision Log D45.
@@ -273,9 +276,9 @@ Kiểm kỹ ở phiên 2026-07-02 (đối chiếu roadmap + Decision Log D26–D
 - **M5 native** — chặn bởi tài khoản (EAS/Apple/Google), không phải việc code. Chi tiết + lệnh cụ thể:
   `docs/M5-NATIVE.md`.
 - **Push thật + cron review-scheduler lên lịch hosted** — phụ thuộc M5.1 (projectId EAS).
-- **Gia sư AI**: MVP đã ship (D46, `ai-tutor-explain`) — CHỈ còn thiếu `ANTHROPIC_API_KEY` thật (chưa có,
-  `supabase secrets set` khi sẵn sàng) để trả lời thật thay vì "chưa sẵn sàng"; mở rộng phạm vi (chat tự
-  do, các màn khác ngoài luyện tập) là quyết định sản phẩm riêng, chưa làm.
+- **Gia sư AI**: MVP đã ship (D46, `ai-tutor-explain`, dùng Gemini) — CHỈ còn thiếu `GEMINI_API_KEY` thật
+  (chưa có, `supabase secrets set` khi sẵn sàng) để trả lời thật thay vì "chưa sẵn sàng"; mở rộng phạm vi
+  (chat tự do, các màn khác ngoài luyện tập, đa provider) là quyết định sản phẩm riêng, chưa làm.
 - **Nhóm "Tương lai" còn lại** (`docs/02-roadmap.md`): THCS/THPT sâu hơn · môn khác đầy đủ (Lý/Hóa/Anh,
   mới có nền đa môn D39) · LaTeX render/input cho chấm từng bước (thuật toán đã ship D38–D45, LaTeX thật
   chưa — `docs/future/step-grading.md`) — cả 3 đều **chưa bắt đầu**, là quyết định phạm vi sản phẩm (cần
