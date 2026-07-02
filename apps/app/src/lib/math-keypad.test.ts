@@ -27,3 +27,10 @@ test("isOperatorKey phân biệt số và toán tử", () => {
   assert.equal(isOperatorKey("/"), true);
   assert.equal(isOperatorKey("5"), false);
 });
+
+test("numeric + expression đều có phím căn √ (D45); fraction không cần", () => {
+  assert.ok(mathKeypadKeys("numeric").includes("√"));
+  assert.ok(mathKeypadKeys("expression").includes("√"));
+  assert.ok(!mathKeypadKeys("fraction").includes("√"));
+  assert.equal(isOperatorKey("√"), true);
+});

@@ -249,9 +249,16 @@ export function measureValue(raw: string): { base: number; group: string } | nul
   return { base: num * u.factor, group: u.group };
 }
 
-/** Giá trị "số học" của một chuỗi: số (VN/%) hoặc số La Mã. */
+/** Căn bậc hai HẰNG SỐ (không biến) trong đáp số, vd "√16"→4, "sqrt(16)+3"→7 (D45). Chỉ thử khi
+ *  chuỗi thật sự chứa ký hiệu căn — tránh chạy tokenizer biểu thức cho mọi đáp số numeric bình thường. */
+function sqrtConstantValue(raw: string): number | null {
+  if (!raw.includes("√") && !raw.toLowerCase().includes("sqrt")) return null;
+  return evalExpr(raw, 0); // không có biến "x" thật trong đáp số căn hằng số → x=0 vô hại
+}
+
+/** Giá trị "số học" của một chuỗi: số (VN/%), số La Mã, hoặc căn bậc hai hằng số. */
 function numericScalar(raw: string): number | null {
-  return parseNumber(raw) ?? romanValue(raw);
+  return parseNumber(raw) ?? romanValue(raw) ?? sqrtConstantValue(raw);
 }
 
 /** Làm tròn về n chữ số thập phân (tránh sai số nhị phân của toFixed). */
@@ -268,8 +275,10 @@ type Tok =
   | { t: "op"; v: string }
   | { t: "paren"; v: "(" | ")" };
 
-const PREC: Record<string, number> = { "+": 1, "-": 1, "*": 2, "/": 2, "^": 4, neg: 3 };
-const RIGHT = new Set(["^", "neg"]);
+// "sqrt" (căn bậc hai, D45) là toán tử MỘT NGÔI đứng trước (như "neg") — cùng precedence để
+// "√x^2" = √(x^2) và "√4*2" = (√4)*2, đúng quy ước toán học thông thường.
+const PREC: Record<string, number> = { "+": 1, "-": 1, "*": 2, "/": 2, "^": 4, neg: 3, sqrt: 3 };
+const RIGHT = new Set(["^", "neg", "sqrt"]);
 
 function tokenize(raw: string): Tok[] | null {
   const s = raw.trim().replace(/\s+/g, "");
@@ -288,6 +297,12 @@ function tokenize(raw: string): Tok[] | null {
     } else if (c === "x") {
       out.push({ t: "var" });
       i++;
+    } else if (c === "√") {
+      out.push({ t: "op", v: "sqrt" });
+      i++;
+    } else if (s.slice(i, i + 4) === "sqrt") {
+      out.push({ t: "op", v: "sqrt" });
+      i += 4;
     } else if ("+-*/^".includes(c)) {
       out.push({ t: "op", v: c });
       i++;
@@ -301,7 +316,7 @@ function tokenize(raw: string): Tok[] | null {
   return insertImplicitMul(out);
 }
 
-/** Chèn "*" cho nhân ngầm: 2x → 2*x · 2(x+2) → 2*(x+2) · (x)(x) → (x)*(x). */
+/** Chèn "*" cho nhân ngầm: 2x → 2*x · 2(x+2) → 2*(x+2) · (x)(x) → (x)*(x) · 2√4 → 2*√4. */
 function insertImplicitMul(toks: Tok[]): Tok[] {
   const out: Tok[] = [];
   for (let k = 0; k < toks.length; k++) {
@@ -310,7 +325,10 @@ function insertImplicitMul(toks: Tok[]): Tok[] {
     const endsOperand =
       prev && (prev.t === "num" || prev.t === "var" || (prev.t === "paren" && prev.v === ")"));
     const startsOperand =
-      cur.t === "num" || cur.t === "var" || (cur.t === "paren" && cur.v === "(");
+      cur.t === "num" ||
+      cur.t === "var" ||
+      (cur.t === "paren" && cur.v === "(") ||
+      (cur.t === "op" && cur.v === "sqrt");
     if (endsOperand && startsOperand) out.push({ t: "op", v: "*" });
     out.push(cur);
   }
@@ -371,6 +389,12 @@ function evalRpn(rpn: Tok[], x: number): number | null {
       if (tok.v === "neg") {
         if (st.length < 1) return null;
         st.push(-(st.pop() as number));
+        continue;
+      }
+      if (tok.v === "sqrt") {
+        // căn số âm → NaN, tự lọc ở evalExpr/expressionsEquivalent (giống chia 0) — không ném lỗi.
+        if (st.length < 1) return null;
+        st.push(Math.sqrt(st.pop() as number));
         continue;
       }
       if (st.length < 2) return null;

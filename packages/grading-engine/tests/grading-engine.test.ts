@@ -6,7 +6,7 @@
  * đáng tin — engine chạy ở cả client (phản hồi tức thì) lẫn Edge Function (chấm chính thức).
  */
 import assert from "node:assert";
-import { grade } from "../src/grading-engine.ts";
+import { grade, expressionsEquivalent } from "../src/grading-engine.ts";
 
 let passed = 0;
 function test(name: string, fn: () => void) {
@@ -390,6 +390,69 @@ test("evalExpr: tính giá trị tại x; sai định dạng → null", () => {
   assert.equal(evalExpr("x^2", 3), 9);
   assert.equal(evalExpr("2(x+1)", 4), 10); // nhân ngầm
   assert.equal(evalExpr(")(", 1), null);
+});
+
+// ── Căn bậc hai (√ · sqrt(), D45) ─────────────────────────────────────────────
+test("evalExpr: √ và sqrt() cho cùng giá trị", () => {
+  assert.equal(evalExpr("√16", 0), 4);
+  assert.equal(evalExpr("sqrt(16)", 0), 4);
+  assert.equal(evalExpr("√(16)", 0), 4);
+});
+
+test("evalExpr: 2√4 = 2*√4 (nhân ngầm trước căn)", () => {
+  assert.equal(evalExpr("2√4", 0), 4);
+});
+
+test("evalExpr: √4 + 2 = 4 (√ ưu tiên trước +, sau *)", () => {
+  assert.equal(evalExpr("√4+2", 0), 4);
+  assert.equal(evalExpr("√4*2", 0), 4);
+});
+
+test("evalExpr: √(x+1) tính theo biến x", () => {
+  assert.equal(evalExpr("√(x+1)", 3), 2);
+  assert.equal(evalExpr("√(x+1)", 8), 3);
+});
+
+test("evalExpr: căn số âm → null (miền không xác định, không ném lỗi)", () => {
+  assert.equal(evalExpr("√(-4)", 0), null);
+});
+
+test("expression: √16 ≡ 4 (numeric literal)", () => {
+  assert.equal(expressionsEquivalent("√16", "4"), true);
+});
+
+test("expression: √4 + x ≡ 2 + x (căn hằng số kết hợp biến)", () => {
+  assert.equal(expressionsEquivalent("√4+x", "2+x"), true);
+});
+
+test("expression: √(x^2) ≢ x nói chung (mẫu âm cho |x|≠x → không trùng)", () => {
+  // √(x^2) = |x|, chỉ bằng x khi x≥0 — mẫu âm (-1,-2,-1.5) làm giá trị lệch → không tương đương.
+  assert.equal(expressionsEquivalent("√(x^2)", "x"), false);
+});
+
+test("numeric: '√16' ≡ '4' (đáp số HS nhập dạng căn)", () => {
+  const r = grade({ type: "numeric", correct: "4", answer: "√16" });
+  assert.equal(r.isCorrect, true);
+});
+
+test("numeric: 'sqrt(16)+3' ≡ '7'", () => {
+  const r = grade({ type: "numeric", correct: "7", answer: "sqrt(16)+3" });
+  assert.equal(r.isCorrect, true);
+});
+
+test("numeric: '√16' ≠ '5' (sai)", () => {
+  const r = grade({ type: "numeric", correct: "5", answer: "√16" });
+  assert.equal(r.isCorrect, false);
+});
+
+test("numeric bình thường không chứa căn: không bị ảnh hưởng", () => {
+  assert.equal(grade({ type: "numeric", correct: "12", answer: "12" }).isCorrect, true);
+});
+
+test("expression: √(-4) so bất kỳ → sai (miền không xác định, không throw)", () => {
+  const r = grade({ type: "expression", correct: "2", answer: "√(-4)" });
+  assert.equal(r.isCorrect, false);
+  assert.equal(r.feedbackCode, "incorrect");
 });
 
 console.log(`\n${passed} test(s) passed.`);

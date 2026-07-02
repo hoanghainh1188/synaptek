@@ -48,8 +48,8 @@ Toàn bộ rationale ở `docs/00-architecture.md` §0 (Decision Log D1–D13). 
 File đơn: `packages/grading-engine/src/grading-engine.ts`. Hàm `grade(input) → { isCorrect, score,
 feedbackCode, normalized, diagnosis? }`. Hỗ trợ **9 loại**: `mcq` · `true-false` · `numeric` · `fraction` ·
 `expression` · `fill-blank` · `multi` · `ordering` · `matching`. Số kiểu VN (phẩy=thập phân — D8) + hỗn số/%/
-đơn vị đo/La Mã; tương đương biểu thức qua **lấy mẫu giá trị x** (D9, không CAS); 6 chẩn đoán lỗi (D-mở rộng).
-Sửa engine → chạy lại `npm test` và cập nhật test trước (TDD).
+đơn vị đo/La Mã/**căn bậc hai `√`·`sqrt()`** (D45); tương đương biểu thức qua **lấy mẫu giá trị x** (D9,
+không CAS); 6 chẩn đoán lỗi (D-mở rộng). Sửa engine → chạy lại `npm test` và cập nhật test trước (TDD).
 
 ## Quy trình làm việc (mặc định)
 
@@ -71,12 +71,12 @@ nhật `docs/WORKING-NOTES.md` (điểm tiếp tục) + Decision Log/spec/file l
 ## Active Technologies (managed by Spec Kit)
 
 - **Đang làm**: **M0–M4 ✅ đóng hết** (luyện tập · mastery/lộ trình · giáo viên · phụ huynh + nội dung lớp 1–5).
-  Sau M4 đã làm thêm nhiều ngoài roadmap (xem Decision Log D26–D44): authoring **11 loại câu** (gồm trình bày
+  Sau M4 đã làm thêm nhiều ngoài roadmap (xem Decision Log D26–D45): authoring **11 loại câu** (gồm trình bày
   từng bước + nhiều phần a/b/c, CÓ THỂ lồng derivation) + nhãn môn + tùy chọn chấm + ảnh + gợi ý + bàn phím
-  toán có cấu trúc; engine moat mở rộng (hỗn số/%/đơn vị/La Mã/6 chẩn đoán); đa môn (nền + seed Tiếng Việt lớp
-  1–3); TN học sinh (mục
-  tiêu ngày · luyện nhanh · BXH · avatar); insight GV–PH. **Còn lại**: M5 native/store (chờ tài khoản,
-  `docs/M5-NATIVE.md`) - nhóm "Tương lai" (THCS/THPT · căn bậc hai · chấm từng bước+LaTeX · gia sư AI).
+  toán có cấu trúc; engine moat mở rộng (hỗn số/%/đơn vị/La Mã/căn bậc hai/6 chẩn đoán); đa môn (nền + seed
+  Tiếng Việt lớp 1–3); TN học sinh (mục tiêu ngày · luyện nhanh · BXH · avatar); insight GV–PH. **Còn lại**:
+  M5 native/store (chờ tài khoản, `docs/M5-NATIVE.md`) - nhóm "Tương lai" (THCS/THPT sâu hơn · chấm từng
+  bước+LaTeX · gia sư AI).
 - **Stack**: TypeScript · Expo SDK 56 / Expo Router / React 19 / RN 0.85. Packages: `@synaptek/grading-engine`
   (moat) + `@synaptek/curriculum` + `@synaptek/learning-path` (heatmap/mastery) + `@synaptek/classroom` (mã mời +
   giới hạn nộp + điểm + tổng hợp + `pickForStudent`) + `@synaptek/step-grading` (chấm lời giải từng bước).
@@ -85,11 +85,14 @@ nhật `docs/WORKING-NOTES.md` (điểm tiếp tục) + Decision Log/spec/file l
   0023 nhiều phần a/b/c). RLS chéo vai trò qua helper `SECURITY DEFINER` (D24/D26/D30/D32). Deploy: web Vercel
   auto + backend GitHub Action auto (db push + functions deploy + ensure auth config) từ `develop`.
 - **CI** (`.github/workflows/ci.yml`): 3 gate — **verify** (format · npm test · engine↔_shared sync · content ·
-  deno · web build · 6 guest e2e) · **RLS isolation** (rls-\*.sql trên Supabase thật) · **e2e-auth** (32 luồng
+  deno · web build · 6 guest e2e) · **RLS isolation** (rls-\*.sql trên Supabase thật) · **e2e-auth** (33 luồng
   đăng nhập trên Supabase+Edge). Supabase CLI pin `2.108.0`.
 
 ## Recent Changes
 
+- **Căn bậc hai √/sqrt() (sau M4)**: tokenizer nhận cả √ (ký hiệu) lẫn sqrt() (chữ), toán tử một ngôi cùng
+  precedence `neg`; áp dụng numeric+expression (derivation thừa hưởng qua expressionsEquivalent chung); bàn
+  phím toán + thanh chèn nhanh soạn câu thêm nút √. Decision Log **D45**.
 - **Câu nhiều phần LỒNG derivation (sau M4)**: `gradeCompoundParts` (mới, ở `@synaptek/step-grading` — tránh
   phụ thuộc ngược grading-engine) chấm phần thường qua `grade()` + phần derivation qua `gradeDerivation` cùng
   lượt. Decision Log **D44**.
