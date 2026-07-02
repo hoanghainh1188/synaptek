@@ -178,7 +178,8 @@ jobs:
             tests/e2e/math-keypad.spec.ts \
             tests/e2e/authoring-math.spec.ts \
             tests/e2e/compound.spec.ts \
-            tests/e2e/compound-derivation.spec.ts
+            tests/e2e/compound-derivation.spec.ts \
+            tests/e2e/sqrt.spec.ts
         working-directory: apps/app
 
       - name: Stop Supabase

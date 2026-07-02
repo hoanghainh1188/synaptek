@@ -247,7 +247,7 @@ function PartFields({ part: p, letter, onChange }: PartFieldsProps) {
           className="min-h-[40px] rounded-md border-2 border-line bg-surface px-3 text-sm text-ink"
         />
         <MathInsertBar
-          keys={["x", "^", "(", ")", "/", "*"]}
+          keys={["x", "^", "√", "(", ")", "/", "*"]}
           onInsert={(k) => onChange({ derivStart: p.derivStart + k })}
         />
         {p.derivStart.trim().length > 0 && (
@@ -269,7 +269,7 @@ function PartFields({ part: p, letter, onChange }: PartFieldsProps) {
               className="min-h-[40px] rounded-md border-2 border-line bg-surface px-3 text-sm text-ink"
             />
             <MathInsertBar
-              keys={["x", "^", "(", ")", "/", "*"]}
+              keys={["x", "^", "√", "(", ")", "/", "*"]}
               onInsert={(k) => onChange({ derivTarget: p.derivTarget + k })}
             />
           </>
@@ -303,7 +303,7 @@ function PartFields({ part: p, letter, onChange }: PartFieldsProps) {
       />
       {p.type === "expression" && (
         <MathInsertBar
-          keys={["x", "^", "(", ")", "/", "*"]}
+          keys={["x", "^", "√", "(", ")", "/", "*"]}
           onInsert={(k) => onChange({ correct: p.correct + k })}
         />
       )}

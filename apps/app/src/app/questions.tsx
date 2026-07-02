@@ -611,7 +611,7 @@ export default function MyQuestions() {
               className="min-h-[44px] rounded-md border-2 border-line bg-paper px-3 text-base text-ink"
             />
             <MathInsertBar
-              keys={["x", "^", "(", ")", "/", "*"]}
+              keys={["x", "^", "√", "(", ")", "/", "*"]}
               onInsert={(k) => setDerivStart(derivStart + k)}
             />
             {derivStart.trim().length > 0 && (
@@ -635,7 +635,7 @@ export default function MyQuestions() {
                   className="min-h-[44px] rounded-md border-2 border-line bg-paper px-3 text-base text-ink"
                 />
                 <MathInsertBar
-                  keys={["x", "^", "(", ")", "/", "*"]}
+                  keys={["x", "^", "√", "(", ")", "/", "*"]}
                   onInsert={(k) => setDerivTarget(derivTarget + k)}
                 />
               </>
@@ -765,7 +765,7 @@ export default function MyQuestions() {
             />
             {type === "expression" && (
               <MathInsertBar
-                keys={["x", "^", "(", ")", "/", "*"]}
+                keys={["x", "^", "√", "(", ")", "/", "*"]}
                 onInsert={(k) => setCorrect(correct + k)}
               />
             )}
