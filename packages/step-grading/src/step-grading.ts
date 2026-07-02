@@ -5,7 +5,13 @@
 //  - "expression": dòng N ≡ dòng N−1 về GIÁ TRỊ (rút gọn biểu thức/phân số).
 //  - "equation":   dòng N cùng TẬP NGHIỆM dòng N−1 (chân trị eq trùng tại mọi mẫu).
 // Định vị DÒNG SAI ĐẦU TIÊN + điểm thành phần. Nhiều cách giải đều được chấp nhận (chỉ kiểm bất biến + đích).
-import { evalExpr, expressionsEquivalent } from "@synaptek/grading-engine";
+import {
+  evalExpr,
+  expressionsEquivalent,
+  grade,
+  type QuestionType,
+  type GradeOptions,
+} from "@synaptek/grading-engine";
 
 export type StepMode = "expression" | "equation";
 
@@ -105,4 +111,64 @@ export function gradeDerivation(lines: string[], spec: DerivationSpec): Derivati
         : false);
   const score = totalSteps === 0 ? 0 : validSteps / totalSteps;
   return { firstErrorIndex, validSteps, totalSteps, reachedGoal, score };
+}
+
+// ── Câu "nhiều phần" (compound) CÓ THỂ lồng derivation (D44) ────────────────────
+// grading-engine.gradeCompound() chỉ orchestrate grade() (9 loại đơn giản) — không biết derivation
+// (spec JSON khác hình dạng GradeInput). Sống ở ĐÂY (không phải grading-engine) vì cần gọi CẢ
+// grade() lẫn gradeDerivation() mà không tạo phụ thuộc ngược grading-engine → step-grading.
+
+/** Phần con thường (1 trong 9 loại đơn giản) — chấm qua grade(). */
+export interface CompoundSimplePart {
+  type: Exclude<QuestionType, "derivation" | "compound">;
+  correct: string | string[];
+  options?: GradeOptions;
+}
+
+/** Phần con "trình bày từng bước" — correct = JSON chuỗi spec {mode,variable,target,start} (ẩn). */
+export interface CompoundDerivationPart {
+  type: "derivation";
+  correct: string;
+}
+
+export type CompoundPartSpec = CompoundSimplePart | CompoundDerivationPart;
+
+export interface CompoundPartsResult {
+  /** Đúng TOÀN BỘ khi mọi phần đều đúng. */
+  isCorrect: boolean;
+  /** Điểm trung bình các phần (0..1). */
+  score: number;
+  perPart: { isCorrect: boolean; score: number }[];
+}
+
+/** Chấm câu nhiều phần a/b/c: phần thường qua grade(), phần derivation qua gradeDerivation. */
+export function gradeCompoundParts(
+  parts: CompoundPartSpec[],
+  answers: (string | string[])[],
+): CompoundPartsResult {
+  const perPart = parts.map((p, i) => {
+    const ans = answers[i];
+    if (p.type === "derivation") {
+      let spec: { mode: StepMode; variable?: string; target?: string; start?: string };
+      try {
+        spec = JSON.parse(p.correct);
+      } catch {
+        return { isCorrect: false, score: 0 };
+      }
+      const lines = Array.isArray(ans) ? ans.map(String) : [];
+      const full = [spec.start ?? "", ...lines].filter((l) => l.trim() !== "");
+      const dr = gradeDerivation(full, {
+        mode: spec.mode,
+        variable: spec.variable,
+        target: spec.target,
+      });
+      return { isCorrect: dr.reachedGoal, score: dr.score };
+    }
+    const r = grade({ type: p.type, correct: p.correct, answer: ans ?? "", options: p.options });
+    return { isCorrect: r.isCorrect, score: r.score };
+  });
+  const score =
+    perPart.length === 0 ? 0 : perPart.reduce((s, r) => s + r.score, 0) / perPart.length;
+  const isCorrect = perPart.length > 0 && perPart.every((r) => r.isCorrect);
+  return { isCorrect, score, perPart };
 }

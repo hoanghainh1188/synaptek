@@ -53,7 +53,8 @@ syncFile("packages/step-grading/src/step-grading.ts", `${SG_DEST}/step-grading.t
 writeFileSync(
   `${SG_DEST}/index.ts`,
   `// ⚠️ AUTO-GENERATED (npm run sync:edge) — re-export tối thiểu cho Edge Function. Lý do: D13.\n` +
-    `export { gradeDerivation } from "./step-grading.ts";\n`,
+    `export { gradeDerivation, gradeCompoundParts } from "./step-grading.ts";\n` +
+    `export type { CompoundPartSpec } from "./step-grading.ts";\n`,
 );
 console.log(`generated ${SG_DEST}/index.ts`);
 

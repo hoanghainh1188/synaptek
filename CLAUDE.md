@@ -71,9 +71,10 @@ nhật `docs/WORKING-NOTES.md` (điểm tiếp tục) + Decision Log/spec/file l
 ## Active Technologies (managed by Spec Kit)
 
 - **Đang làm**: **M0–M4 ✅ đóng hết** (luyện tập · mastery/lộ trình · giáo viên · phụ huynh + nội dung lớp 1–5).
-  Sau M4 đã làm thêm nhiều ngoài roadmap (xem Decision Log D26–D43): authoring **11 loại câu** (gồm trình bày
-  từng bước + nhiều phần a/b/c) + nhãn môn + tùy chọn chấm + ảnh + gợi ý + bàn phím toán có cấu trúc; engine
-  moat mở rộng (hỗn số/%/đơn vị/La Mã/6 chẩn đoán); đa môn (nền + seed Tiếng Việt lớp 1–3); TN học sinh (mục
+  Sau M4 đã làm thêm nhiều ngoài roadmap (xem Decision Log D26–D44): authoring **11 loại câu** (gồm trình bày
+  từng bước + nhiều phần a/b/c, CÓ THỂ lồng derivation) + nhãn môn + tùy chọn chấm + ảnh + gợi ý + bàn phím
+  toán có cấu trúc; engine moat mở rộng (hỗn số/%/đơn vị/La Mã/6 chẩn đoán); đa môn (nền + seed Tiếng Việt lớp
+  1–3); TN học sinh (mục
   tiêu ngày · luyện nhanh · BXH · avatar); insight GV–PH. **Còn lại**: M5 native/store (chờ tài khoản,
   `docs/M5-NATIVE.md`) - nhóm "Tương lai" (THCS/THPT · căn bậc hai · chấm từng bước+LaTeX · gia sư AI).
 - **Stack**: TypeScript · Expo SDK 56 / Expo Router / React 19 / RN 0.85. Packages: `@synaptek/grading-engine`
@@ -84,13 +85,16 @@ nhật `docs/WORKING-NOTES.md` (điểm tiếp tục) + Decision Log/spec/file l
   0023 nhiều phần a/b/c). RLS chéo vai trò qua helper `SECURITY DEFINER` (D24/D26/D30/D32). Deploy: web Vercel
   auto + backend GitHub Action auto (db push + functions deploy + ensure auth config) từ `develop`.
 - **CI** (`.github/workflows/ci.yml`): 3 gate — **verify** (format · npm test · engine↔_shared sync · content ·
-  deno · web build · 6 guest e2e) · **RLS isolation** (rls-\*.sql trên Supabase thật) · **e2e-auth** (31 luồng
+  deno · web build · 6 guest e2e) · **RLS isolation** (rls-\*.sql trên Supabase thật) · **e2e-auth** (32 luồng
   đăng nhập trên Supabase+Edge). Supabase CLI pin `2.108.0`.
 
 ## Recent Changes
 
-- **Câu nhiều phần (a/b/c) (sau M4)**: loại `compound` — mỗi phần là 1 trong 9 loại đơn giản, chấm độc lập
-  qua `gradeCompound` (engine), điểm = trung bình các phần. Decision Log **D43**; migration `0023`.
+- **Câu nhiều phần LỒNG derivation (sau M4)**: `gradeCompoundParts` (mới, ở `@synaptek/step-grading` — tránh
+  phụ thuộc ngược grading-engine) chấm phần thường qua `grade()` + phần derivation qua `gradeDerivation` cùng
+  lượt. Decision Log **D44**.
+- **Câu nhiều phần (a/b/c) (sau M4)**: loại `compound` — mỗi phần là 1 trong 9 loại đơn giản (nay thêm được
+  derivation, D44), chấm độc lập, điểm = trung bình các phần. Decision Log **D43**; migration `0023`.
 - **Trình bày từng bước + bàn phím toán (sau M4)**: loại `derivation` giao/chấm được qua `@synaptek/step-grading`
   (Edge); bàn phím toán có cấu trúc cho HS (đáp án) và GV/PH (soạn câu, chèn nhanh + xem trước). Decision Log
   **D38/D40–D42**; migration `0022`.

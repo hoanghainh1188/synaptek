@@ -3,7 +3,12 @@
 import { Pressable, Text, TextInput, View } from "react-native";
 import { MathText } from "@/components/math/MathText";
 import { MathInsertBar } from "@/components/practice/MathInsertBar";
-import { COMPOUND_PART_TYPES, type CompoundPartType, type PartDraft } from "@/lib/compound-parts";
+import {
+  COMPOUND_PART_TYPES,
+  emptyPart,
+  type CompoundPartType,
+  type PartDraft,
+} from "@/lib/compound-parts";
 
 const PART_TYPE_LABELS: Record<CompoundPartType, string> = {
   mcq: "Trắc nghiệm",
@@ -15,6 +20,7 @@ const PART_TYPE_LABELS: Record<CompoundPartType, string> = {
   multi: "Chọn nhiều",
   ordering: "Sắp thứ tự",
   matching: "Nối cặp",
+  derivation: "Từng bước",
 };
 
 function updateAt(parts: PartDraft[], i: number, patch: Partial<PartDraft>): PartDraft[] {
@@ -206,6 +212,84 @@ function PartFields({ part: p, letter, onChange }: PartFieldsProps) {
     );
   }
 
+  if (p.type === "derivation") {
+    return (
+      <View className="mt-2 gap-2">
+        <View className="flex-row gap-2">
+          {(
+            [
+              ["expression", "Rút gọn / tính"],
+              ["equation", "Giải phương trình"],
+            ] as const
+          ).map(([v, label]) => (
+            <Pressable
+              key={v}
+              accessibilityLabel={`Kiểu bài ${label} phần ${letter}`}
+              onPress={() => onChange({ derivMode: v })}
+              className={`min-h-[36px] flex-1 items-center justify-center rounded-md border-2 ${p.derivMode === v ? "border-num bg-num/10" : "border-line bg-surface"}`}
+            >
+              <Text
+                className={`text-xs font-bold ${p.derivMode === v ? "text-num" : "text-muted"}`}
+              >
+                {label}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
+
+        <Text className="text-xs font-bold text-muted">Đề (dòng đầu HS biến đổi từ đây)</Text>
+        <TextInput
+          value={p.derivStart}
+          onChangeText={(v) => onChange({ derivStart: v })}
+          placeholder={p.derivMode === "equation" ? "vd 2x + 3 = 7" : "vd 12 + 3*4"}
+          placeholderTextColor="#a1a1aa"
+          accessibilityLabel={`Đề derivation phần ${letter}`}
+          className="min-h-[40px] rounded-md border-2 border-line bg-surface px-3 text-sm text-ink"
+        />
+        <MathInsertBar
+          keys={["x", "^", "(", ")", "/", "*"]}
+          onInsert={(k) => onChange({ derivStart: p.derivStart + k })}
+        />
+        {p.derivStart.trim().length > 0 && (
+          <View className="flex-row items-center gap-2 rounded-md bg-num/5 px-3 py-2">
+            <Text className="text-xs font-bold text-muted">Xem trước</Text>
+            <MathText value={p.derivStart} size={18} weight="700" />
+          </View>
+        )}
+
+        {p.derivMode === "expression" ? (
+          <>
+            <Text className="text-xs font-bold text-muted">Kết quả rút gọn (đích)</Text>
+            <TextInput
+              value={p.derivTarget}
+              onChangeText={(v) => onChange({ derivTarget: v })}
+              placeholder="vd 24"
+              placeholderTextColor="#a1a1aa"
+              accessibilityLabel={`Kết quả đích phần ${letter}`}
+              className="min-h-[40px] rounded-md border-2 border-line bg-surface px-3 text-sm text-ink"
+            />
+            <MathInsertBar
+              keys={["x", "^", "(", ")", "/", "*"]}
+              onInsert={(k) => onChange({ derivTarget: p.derivTarget + k })}
+            />
+          </>
+        ) : (
+          <>
+            <Text className="text-xs font-bold text-muted">Biến (mặc định x)</Text>
+            <TextInput
+              value={p.derivVar}
+              onChangeText={(v) => onChange({ derivVar: v })}
+              placeholder="x"
+              placeholderTextColor="#a1a1aa"
+              accessibilityLabel={`Biến phần ${letter}`}
+              className="min-h-[40px] w-20 rounded-md border-2 border-line bg-surface px-3 text-sm text-ink"
+            />
+          </>
+        )}
+      </View>
+    );
+  }
+
   // numeric | fraction | expression
   return (
     <View className="mt-2">
@@ -263,7 +347,7 @@ export function CompoundPartsEditor({ parts, onChange }: CompoundPartsEditorProp
                   key={t}
                   accessibilityLabel={`Loại phần ${letter} ${PART_TYPE_LABELS[t]}`}
                   onPress={() =>
-                    onChange(updateAt(parts, i, { type: t, correct: "", items: ["", ""] }))
+                    onChange(updateAt(parts, i, { ...emptyPart(), type: t, prompt: p.prompt }))
                   }
                   className={`min-h-[32px] items-center justify-center rounded-full px-2.5 ${p.type === t ? "bg-brand" : "bg-surface"}`}
                 >
