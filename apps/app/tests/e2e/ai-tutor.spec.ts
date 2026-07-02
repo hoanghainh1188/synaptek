@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 // CẦN Supabase + functions. Gia sư AI (D46): sau khi HS trả lời SAI, nút "Hỏi tại sao sai?" gọi Edge
-// Function ai-tutor-explain — MÔI TRƯỜNG TEST CHƯA CÓ ANTHROPIC_API_KEY (thực trạng hiện tại) nên phải
+// Function ai-tutor-explain — MÔI TRƯỜNG TEST CHƯA CÓ GEMINI_API_KEY (thực trạng hiện tại) nên phải
 // trả lỗi THÂN THIỆN "chưa sẵn sàng" (không throw/crash) — verify graceful-degrade, không gọi API thật.
 test("gia sư AI: nút hỏi hiện khi sai, báo lỗi thân thiện khi chưa cấu hình key", async ({
   page,

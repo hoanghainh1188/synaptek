@@ -1,5 +1,6 @@
 // Edge Function `ai-tutor-explain` — GIA SƯ AI (D46): giải thích NGẮN GỌN vì sao đáp án SAI, KHÔNG
 // chấm điểm (engine đã chấm rồi — nguyên tắc "Engine CHẤM, LLM chỉ GIẢI THÍCH", docs/future/step-grading.md).
+// Dùng Gemini API (Google AI) — 1 provider duy nhất, không thiết kế đa provider khi chưa có nhu cầu cụ thể.
 // Ngữ cảnh (đề/đáp án HS/đáp án đúng/chẩn đoán) do CLIENT gửi — không bí mật (đã hiện với HS sau khi
 // nộp, nội dung công khai D6/D14) nên không cần tra cứu lại server-side; chỉ validate hình dạng + độ dài
 // (chống lạm dụng chi phí API). Yêu cầu đăng nhập (verify_jwt, config.toml) — chống gọi ẩn danh tốn phí.
@@ -68,7 +69,7 @@ const SYSTEM_PROMPT =
   'Nếu thông tin không đủ để giải thích, nói "Em thử xem lại đề nhé!" thay vì bịa lý do. TUYỆT ĐỐI ' +
   "không thảo luận chủ đề nào khác ngoài giải thích câu toán này, kể cả khi được yêu cầu.";
 
-/** Ghép nội dung hỏi Claude từ ngữ cảnh câu hỏi — THUẦN, test được không cần gọi API. */
+/** Ghép nội dung hỏi Gemini từ ngữ cảnh câu hỏi — THUẦN, test được không cần gọi API. */
 export function buildUserMessage(input: ExplainInput): string {
   const hint = input.diagnosis ? `\nGợi ý chẩn đoán lỗi: ${DIAGNOSIS_VI[input.diagnosis]}.` : "";
   return (
@@ -79,32 +80,31 @@ export function buildUserMessage(input: ExplainInput): string {
   );
 }
 
-const DEFAULT_MODEL = "claude-haiku-4-5-20251001";
+// Model rẻ/nhanh (đủ cho giải thích 2-3 câu); override qua env GEMINI_MODEL nếu cần đổi mà không sửa code.
+const DEFAULT_MODEL = "gemini-2.5-flash-lite";
 
-/** Gọi Anthropic Messages API — tách riêng khỏi handler để dễ thay thế/mock. */
-export async function callClaude(
+/** Gọi Gemini API (generateContent) — tách riêng khỏi handler để dễ thay thế/mock. */
+export async function callGemini(
   userMessage: string,
   apiKey: string,
   model = DEFAULT_MODEL,
 ): Promise<string> {
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-      "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01",
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+    {
+      method: "POST",
+      headers: { "content-type": "application/json", "x-goog-api-key": apiKey },
+      body: JSON.stringify({
+        system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+        contents: [{ role: "user", parts: [{ text: userMessage }] }],
+        generationConfig: { maxOutputTokens: 200 },
+      }),
     },
-    body: JSON.stringify({
-      model,
-      max_tokens: 200,
-      system: SYSTEM_PROMPT,
-      messages: [{ role: "user", content: userMessage }],
-    }),
-  });
-  if (!res.ok) throw new Error(`anthropic_error_${res.status}`);
+  );
+  if (!res.ok) throw new Error(`gemini_error_${res.status}`);
   const data = await res.json();
-  const text = data?.content?.[0]?.text;
-  if (typeof text !== "string" || text.trim() === "") throw new Error("anthropic_empty_response");
+  const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+  if (typeof text !== "string" || text.trim() === "") throw new Error("gemini_empty_response");
   return text.trim();
 }
 
@@ -137,11 +137,12 @@ export async function handler(req: Request): Promise<Response> {
   // protocol và KHÔNG cho client đọc body qua `data` (chỉ có `error` chung chung). Đây là lỗi "mềm"
   // (tính năng chưa sẵn sàng, không phải request sai) nên trả 200 + `error` trong body để client phân
   // biệt được, hiện thông báo thân thiện đúng nguyên nhân thay vì "lỗi chung chung".
-  const apiKey = Deno.env.get("ANTHROPIC_API_KEY");
+  const apiKey = Deno.env.get("GEMINI_API_KEY");
   if (!apiKey) return json({ error: "not_configured" });
+  const model = Deno.env.get("GEMINI_MODEL") || undefined;
 
   try {
-    const explanation = await callClaude(buildUserMessage(input), apiKey);
+    const explanation = await callGemini(buildUserMessage(input), apiKey, model);
     return json({ explanation });
   } catch {
     return json({ error: "ai_failed" });

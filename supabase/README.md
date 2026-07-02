@@ -13,7 +13,7 @@ supabase/
     ├── grade/index.ts       chấm nhanh 1 câu server-side, dùng lại engine (consumer #2)
     ├── grade-assignment/    chấm chính thức bài tập (M3 US2, D4) — hỗ trợ compound/derivation/pool
     ├── review-scheduler/    job nền nhắc ôn (D21): đọc skill_mastery.due_at, ghi review_reminders, push best-effort
-    └── ai-tutor-explain/    gia sư AI (D46): giải thích vì sao SAI qua Claude API — engine vẫn chấm, LLM chỉ giải thích
+    └── ai-tutor-explain/    gia sư AI (D46): giải thích vì sao SAI qua Gemini API — engine vẫn chấm, LLM chỉ giải thích
 ```
 
 ## Chạy & deploy (cần Supabase CLI + Docker)
@@ -78,23 +78,25 @@ select cron.schedule(
 
 ## Gia sư AI `ai-tutor-explain` (D46)
 
-Giải thích NGẮN GỌN vì sao HS trả lời SAI qua Claude API — **KHÔNG chấm điểm** (engine đã chấm; nguyên
-tắc "Engine CHẤM, LLM chỉ GIẢI THÍCH" — `docs/future/step-grading.md`). Ngữ cảnh (đề/đáp án HS/đáp án
-đúng/chẩn đoán) do client gửi (không bí mật, đã hiện với HS) — Edge chỉ validate hình dạng + gọi Claude,
-không tra cứu DB.
+Giải thích NGẮN GỌN vì sao HS trả lời SAI qua Gemini API (Google AI) — **KHÔNG chấm điểm** (engine đã
+chấm; nguyên tắc "Engine CHẤM, LLM chỉ GIẢI THÍCH" — `docs/future/step-grading.md`). Ngữ cảnh (đề/đáp án
+HS/đáp án đúng/chẩn đoán) do client gửi (không bí mật, đã hiện với HS) — Edge chỉ validate hình dạng + gọi
+Gemini, không tra cứu DB. **Một provider duy nhất** — không thiết kế đa provider khi chưa có nhu cầu cụ thể.
 
 ```bash
 supabase functions serve ai-tutor-explain      # chạy thử (cần JWT — verify_jwt = true)
-supabase secrets set ANTHROPIC_API_KEY=sk-ant-...   # BẮT BUỘC để trả lời thật; thiếu → "not_configured" (graceful)
+supabase secrets set GEMINI_API_KEY=AIza...    # BẮT BUỘC để trả lời thật; thiếu → "not_configured" (graceful)
+                                                # Lấy key miễn phí tại: aistudio.google.com/apikey
 supabase functions deploy ai-tutor-explain     # hosted
 ```
 
-- Model mặc định `claude-haiku-4-5-20251001` (rẻ/nhanh, đủ cho giải thích 2-3 câu) — `max_tokens: 200`.
+- Model mặc định `gemini-2.5-flash-lite` (rẻ/nhanh, đủ cho giải thích 2-3 câu) — `maxOutputTokens: 200`.
+  Đổi model không cần sửa code: set secret `GEMINI_MODEL=<tên model khác>`.
 - Yêu cầu đăng nhập (chống gọi ẩn danh tốn phí); validate độ dài chuỗi input (≤300 ký tự/trường).
-- **Chưa set `ANTHROPIC_API_KEY`** (thực trạng hiện tại) → trả `{error:"not_configured"}` (HTTP 200, không
+- **Chưa set `GEMINI_API_KEY`** (thực trạng hiện tại) → trả `{error:"not_configured"}` (HTTP 200, không
   phải lỗi protocol) để client hiện thông báo thân thiện thay vì crash — verify ở `ai-tutor.spec.ts` (e2e).
 - Test hàm thuần (validate/build prompt) ở `functions/ai-tutor-explain/index.test.ts` (Deno) — không gọi
-  Anthropic thật.
+  Gemini thật.
 
 ## Vì sao chấm ở server (D4)
 
