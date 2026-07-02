@@ -199,7 +199,14 @@ export default function DoAssignment() {
                   question={q}
                   value={
                     answers[q.id] ??
-                    (["fill-blank", "multi", "ordering", "matching", "derivation"].includes(q.type)
+                    ([
+                      "fill-blank",
+                      "multi",
+                      "ordering",
+                      "matching",
+                      "derivation",
+                      "compound",
+                    ].includes(q.type)
                       ? []
                       : "")
                   }

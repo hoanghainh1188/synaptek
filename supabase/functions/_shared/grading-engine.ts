@@ -23,9 +23,12 @@ export type QuestionType =
   | "multi"
   | "ordering"
   | "matching"
-  // "derivation" (trình bày từng bước) là loại câu HỢP LỆ trong catalog nhưng KHÔNG chấm bằng grade()
-  // — chấm bằng @synaptek/step-grading (gradeDerivation). grade() gặp nó sẽ rơi vào default → format-error.
-  | "derivation";
+  // "derivation" (trình bày từng bước) và "compound" (nhiều phần a/b/c) là loại câu HỢP LỆ trong
+  // catalog nhưng KHÔNG chấm bằng grade() — derivation dùng @synaptek/step-grading (gradeDerivation);
+  // compound dùng gradeCompound() (dưới) — orchestrate grade() cho từng phần con.
+  // grade() gặp 1 trong 2 sẽ rơi vào default → format-error.
+  | "derivation"
+  | "compound";
 
 export type FeedbackCode = "correct" | "incorrect" | "empty" | "partial" | "format-error";
 
@@ -581,4 +584,33 @@ export function grade(input: GradeInput): GradeResult {
     default:
       return result(false, 0, "format-error", correct, answer);
   }
+}
+
+/** Một phần con của câu "nhiều phần" (a/b/c) — cùng hình dạng GradeInput, không lồng compound/derivation. */
+export interface CompoundPart {
+  type: QuestionType;
+  correct: string | string[];
+  options?: GradeOptions;
+}
+
+export interface CompoundResult {
+  /** Đúng TOÀN BỘ khi mọi phần đều đúng. */
+  isCorrect: boolean;
+  /** Điểm trung bình các phần (0..1). */
+  score: number;
+  perPart: GradeResult[];
+}
+
+/** Chấm câu "nhiều phần" (a/b/c…): mỗi phần chấm độc lập qua grade(), điểm = trung bình. */
+export function gradeCompound(
+  parts: CompoundPart[],
+  answers: (string | string[])[],
+): CompoundResult {
+  const perPart = parts.map((p, i) =>
+    grade({ type: p.type, correct: p.correct, answer: answers[i] ?? "", options: p.options }),
+  );
+  const score =
+    perPart.length === 0 ? 0 : perPart.reduce((s, r) => s + r.score, 0) / perPart.length;
+  const isCorrect = perPart.length > 0 && perPart.every((r) => r.isCorrect);
+  return { isCorrect, score, perPart };
 }
