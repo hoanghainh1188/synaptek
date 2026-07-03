@@ -1,6 +1,8 @@
 // Auth tối thiểu (D16): email/mật khẩu qua Supabase. Guest khi chưa cấu hình / chưa đăng nhập.
 // Quên mật khẩu (D47): resetPasswordForEmail gửi link khôi phục; updatePassword đặt mật khẩu mới
 // (cần phiên "recovery" tạm — Supabase tự cấp khi phát hiện link trong URL, web: detectSessionInUrl).
+// Đổi mật khẩu khi ĐÃ đăng nhập (D48): changePassword xác thực lại mật khẩu HIỆN TẠI trước khi đổi —
+// chống đổi mật khẩu khi phiên bị chiếm dụng (vd thiết bị công cộng còn đăng nhập) mà không biết mật khẩu thật.
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import * as Linking from "expo-linking";
 import type { User } from "@supabase/supabase-js";
@@ -23,6 +25,7 @@ interface AuthValue {
   signOut(): Promise<void>;
   resetPasswordForEmail(email: string): Promise<{ error?: string }>;
   updatePassword(newPassword: string): Promise<{ error?: string }>;
+  changePassword(currentPassword: string, newPassword: string): Promise<{ error?: string }>;
 }
 
 const AuthContext = createContext<AuthValue | null>(null);
@@ -82,6 +85,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!supabase) return { error: "Chưa cấu hình đăng nhập." };
       const { error } = await supabase.auth.updateUser({ password: newPassword });
       if (!error) setRecoveryMode(false);
+      return error ? { error: error.message } : {};
+    },
+    async changePassword(currentPassword, newPassword) {
+      if (!supabase) return { error: "Chưa cấu hình đăng nhập." };
+      if (!user?.email) return { error: "Không xác định được email tài khoản." };
+      const { error: reauthError } = await supabase.auth.signInWithPassword({
+        email: user.email,
+        password: currentPassword,
+      });
+      if (reauthError) return { error: "Mật khẩu hiện tại không đúng." };
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
       return error ? { error: error.message } : {};
     },
   };

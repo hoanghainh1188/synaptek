@@ -350,6 +350,20 @@ export default function Profile() {
         <BadgeGrid catalog={catalog} earned={earned} />
       </View>
 
+      {/* Bảo mật — đổi mật khẩu khi đã đăng nhập (D48, khác quên mật khẩu qua email) */}
+      {user && (
+        <View className="mt-8">
+          <Text className="font-display text-xl font-bold text-ink">Bảo mật</Text>
+          <Pressable
+            accessibilityLabel="Đổi mật khẩu"
+            onPress={() => router.push("/change-password")}
+            className="mt-3 min-h-[48px] items-center justify-center rounded-md bg-surface shadow-sm"
+          >
+            <Text className="font-display font-bold text-ink">Đổi mật khẩu ›</Text>
+          </Pressable>
+        </View>
+      )}
+
       {/* Đăng xuất (có xác nhận) */}
       {user && (
         <View className="mt-8">
