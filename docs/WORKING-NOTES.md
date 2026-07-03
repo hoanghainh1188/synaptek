@@ -4,6 +4,19 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ Khung cấp học 2 tầng — chuẩn bị THCS/THPT ✅ vừa xong (feature/level-tiers, PR đang mở):** User hỏi
+"nâng cấp học — có nên thêm phân cấp vào chương trình không". Sau khảo sát: mô hình `grade` đang PHẲNG
+(chỉ số 1–5), môn đã là chiều độc lập (D39), DB `grade_level` đã cho phép 1–12 sẵn — chỉ 2 chỗ khoá cứng
+1–5 (validate `schema.ts` + UI `GRADE_FILTERS`). Khuyến nghị + user chọn: **chuẩn bị khung 2 tầng thuần
+kỹ thuật** (không thêm nội dung — nội dung cần chuyên môn sư phạm mới là thứ chặn thật). Đã làm: module
+thuần `level.ts` ("cấp" SUY RA từ số lớp, không lưu riêng — tránh lệch; Tiểu học 1–5/THCS 6–9/THPT
+10–12); nới validate 1→12 (không cần migration, DB đã sẵn); home đổi picker phẳng → 2 tầng cấp→lớp,
+hàng "Cấp" chỉ hiện khi >1 cấp có nội dung (nay chỉ Tiểu học → ẨN, giữ nguyên như cũ, tương thích ngược
+100%). Verify đường 2 tầng bằng **fixture grade-6.json giả** lúc build (screenshot xác nhận Cấp: Tiểu
+học/THCS + Lớp 6–9 hoạt động) rồi XOÁ — không commit fixture. 7 unit test level + e2e guest
+`level-picker.spec.ts` (khoá tương thích ngược). Decision Log **D54**. **Ngã rẽ lớn hơn để dành**: bộ
+chấm Tiếng Anh/ngôn ngữ cần khác moat hiện tại (lấy mẫu giá trị) — bàn khi quyết mở môn mới.
+
 **+ Fix bug thật do USER báo trực tiếp — 2 lượt fix (feature/latex-fix-css, đã merge #81, sau khi D53 đã
 merge):** Screenshot user gửi: phân số "1/2" ở màn luyện tập hiện thành "21" (không gạch ngang, tử/mẫu
 đảo + dính liền). Nguyên nhân gốc: `@import "katex/dist/katex.min.css"` trong `global.css` KHÔNG được

@@ -9,3 +9,12 @@ export {
   subjectsOf,
   gradeSubject,
 } from "./select.ts";
+export {
+  LEVELS,
+  levelOfGrade,
+  levelInfo,
+  gradesInLevel,
+  levelsWithContent,
+  type EducationLevel,
+  type LevelInfo,
+} from "./level.ts";

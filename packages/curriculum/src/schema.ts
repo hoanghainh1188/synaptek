@@ -8,7 +8,10 @@ import {
 } from "./types.ts";
 
 const isStr = (v: unknown): v is string => typeof v === "string" && v.length > 0;
-const isGrade = (v: unknown): v is number => typeof v === "number" && v >= 1 && v <= 5;
+// Lớp 1–12 (cả 3 cấp GDPT) — nới từ 1–5 để đón THCS/THPT; "cấp" suy ra từ số này (level.ts). DB
+// profiles.grade_level đã cho phép 1–12 sẵn từ 0001.
+const isGrade = (v: unknown): v is number =>
+  typeof v === "number" && Number.isInteger(v) && v >= 1 && v <= 12;
 
 /** Phát hiện chu trình trong DAG prerequisites (DFS). */
 function findCycle(skills: Skill[]): string | null {
@@ -41,7 +44,7 @@ export function validateCurriculum(g: unknown): ValidationError[] {
   if (typeof g !== "object" || g === null) return [{ path: "/", message: "phải là object" }];
   const grade = g as Partial<Grade>;
 
-  if (!isGrade(grade.grade)) e("/grade", "phải là số 1..5");
+  if (!isGrade(grade.grade)) e("/grade", "phải là số nguyên 1..12");
   if (!Array.isArray(grade.skills)) e("/skills", "phải là mảng");
   if (!Array.isArray(grade.strands)) e("/strands", "phải là mảng");
   if (errs.length) return errs;
@@ -73,7 +76,7 @@ export function validateCurriculum(g: unknown): ValidationError[] {
       if (topicIds.has(t.id)) e(`${tp}/id`, `id trùng: ${t.id}`);
       topicIds.add(t.id);
       if (!isStr(t.name)) e(`${tp}/name`, "thiếu name");
-      if (!isGrade(t.grade)) e(`${tp}/grade`, "grade 1..5");
+      if (!isGrade(t.grade)) e(`${tp}/grade`, "grade 1..12");
       if (!Array.isArray(t.skillIds)) return e(`${tp}/skillIds`, "phải là mảng");
       for (const sid of t.skillIds) {
         if (!skillIds.has(sid)) e(`${tp}/skillIds`, `trỏ skill không tồn tại: ${sid}`);
@@ -96,7 +99,7 @@ export function validateQuestion(q: unknown, knownSkillIds?: Set<string>): Valid
   if (!isStr(x.skillId)) e("/skillId", "thiếu skillId");
   else if (knownSkillIds && !knownSkillIds.has(x.skillId))
     e("/skillId", `skill không tồn tại: ${x.skillId}`);
-  if (!isGrade(x.grade)) e("/grade", "grade 1..5");
+  if (!isGrade(x.grade)) e("/grade", "grade 1..12");
   if (!x.type || !QUESTION_TYPES.includes(x.type)) e("/type", `type không hợp lệ: ${x.type}`);
   if (!isStr(x.prompt)) e("/prompt", "thiếu prompt");
   if (!isStr(x.explanation)) e("/explanation", "thiếu explanation");

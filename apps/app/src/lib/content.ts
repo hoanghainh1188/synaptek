@@ -4,18 +4,32 @@ import {
   allTopics,
   subjectsOf,
   topicsByGrade,
+  levelsWithContent,
+  type LevelInfo,
   type QuestionImage,
   type Topic,
 } from "@synaptek/curriculum";
 import type { Badge } from "@synaptek/learning-path";
 import { BADGES, CURRICULA, IMAGES, QUESTIONS } from "./content.generated";
 
-/** Lớp hiển thị trên chip lọc (D15: lớp 4 + ôn 1–3). */
+/** Lớp Tiểu học (D15: lớp 4 + ôn 1–3). Bộ chọn theo cấp dùng `listGradesInLevel`; hằng này giữ lại
+ *  cho các nơi còn chỉ phục vụ Tiểu học (vd composer GV). */
 export const GRADE_FILTERS = [1, 2, 3, 4, 5] as const;
 
 /** Các môn có nội dung (mặc định chỉ ["math"]). */
 export function listSubjects(): string[] {
   return subjectsOf(CURRICULA);
+}
+
+/** Các cấp học CÓ nội dung cho một môn (Tiểu học/THCS/THPT) — chỉ hiện hàng "Cấp" khi >1. */
+export function listLevels(subject: string = "math"): LevelInfo[] {
+  return levelsWithContent(CURRICULA, subject);
+}
+
+/** Lớp đầu tiên (quét mọi cấp 1–12) có nội dung cho một môn; undefined nếu môn chưa có gì. */
+export function firstGradeWithContent(subject: string): number | undefined {
+  for (let g = 1; g <= 12; g++) if (topicsByGrade(CURRICULA, g, subject).length > 0) return g;
+  return undefined;
 }
 
 /** Chủ đề của một lớp; lọc theo môn (mặc định "math"). */
