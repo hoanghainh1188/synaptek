@@ -4,7 +4,16 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
-**+ Quên mật khẩu ✅ vừa xong (feature/forgot-password, PR đang mở):** `auth.tsx` thêm
+**+ Đổi mật khẩu khi ĐÃ đăng nhập ✅ vừa xong (feature/change-password, PR đang mở):** `auth.tsx` thêm
+`changePassword(currentPassword, newPassword)` — xác thực lại mật khẩu hiện tại qua `signInWithPassword`
+trước khi `updateUser` (chống đổi mật khẩu khi phiên bị chiếm dụng). Màn `change-password.tsx` mới, vào
+từ mục "Bảo mật" ở Hồ sơ. **Chủ động chọn hướng này** (trong 3 lựa chọn: đổi mật khẩu / đổi tên hiển
+thị / xóa tài khoản) vì KHÔNG phụ thuộc email/domain (đang tạm dừng vụ mua domain cho Resend) — hoạt
+động đầy đủ ngay, không cần chờ `RESEND_API_KEY`. E2E `change-password.spec.ts` verify cả 2 nhánh (sai
+mật khẩu hiện tại bị từ chối; đúng thì đổi + đăng nhập lại bằng mật khẩu mới thành công). Decision Log
+**D48**.
+
+**+ Quên mật khẩu ✅ (feature/forgot-password, đã merge #77):** `auth.tsx` thêm
 `resetPasswordForEmail`/`updatePassword` + `recoveryMode` (theo dõi event `PASSWORD_RECOVERY`). Màn
 `forgot-password.tsx` (luôn báo "đã gửi" giống nhau — chống dò email đã đăng ký) + `reset-password.tsx`
 (grace-period 2.5s chờ Supabase xử lý URL bất đồng bộ trước khi báo "link không hợp lệ"). Link "Quên
@@ -287,7 +296,7 @@ Decision Log **D19** (BKT) · **D20** (gamification) · **D21** (cron+push) đã
 
 ## Còn mở (cập nhật — thay cho "Việc tiếp theo"/"Nợ kỹ thuật" cũ bên dưới, vốn là snapshot thời M0–M2 đã lỗi thời)
 
-Kiểm kỹ ở phiên 2026-07-02 (đối chiếu roadmap + Decision Log D26–D47). Còn lại thực chất:
+Kiểm kỹ ở phiên 2026-07-02/03 (đối chiếu roadmap + Decision Log D26–D48). Còn lại thực chất:
 
 - **M5 native** — chặn bởi tài khoản (EAS/Apple/Google), không phải việc code. Chi tiết + lệnh cụ thể:
   `docs/M5-NATIVE.md`.
@@ -295,12 +304,18 @@ Kiểm kỹ ở phiên 2026-07-02 (đối chiếu roadmap + Decision Log D26–D
 - **Gia sư AI**: MVP đã ship (D46, `ai-tutor-explain`, dùng Gemini) — CHỈ còn thiếu `GEMINI_API_KEY` thật
   (chưa có, `supabase secrets set` khi sẵn sàng) để trả lời thật thay vì "chưa sẵn sàng"; mở rộng phạm vi
   (chat tự do, các màn khác ngoài luyện tập, đa provider) là quyết định sản phẩm riêng, chưa làm.
-- **Quên mật khẩu**: đã ship (D47) — CHỈ còn thiếu `RESEND_API_KEY` + verify domain thật tại
-  resend.com/domains (chưa có domain, đang dùng sandbox `onboarding@resend.dev` chỉ gửi được về email
-  chủ tài khoản Resend). Xem `supabase/README.md` mục "Quên mật khẩu" để bật khi sẵn sàng.
-- **Auth/quản lý người dùng còn thiếu khác** (audit cùng phiên): xác thực email, đổi mật khẩu khi đã
-  đăng nhập, đổi tên hiển thị, đổi email, xóa tài khoản, avatar ảnh thật, social login, MFA, quản lý
-  phiên đăng nhập — chưa làm, độ ưu tiên trung bình→thấp, chưa được yêu cầu cụ thể.
+- **Quên mật khẩu**: đã ship (D47) — **TẠM DỪNG** theo quyết định của chủ repo (chưa có domain nào cả,
+  kể cả cho web app). Hiện dùng mailer mặc định Supabase — CHỈ gửi được cho thành viên team Supabase
+  (KHÔNG phải HS/GV/PH thật), giới hạn 2 email/giờ — nghĩa là **HS/GV/PH thật KHÔNG nhận được email khôi
+  phục lúc này**. Cần: mua domain (~$10-15/năm, dùng chung được cho web + email) → verify tại
+  resend.com/domains → `gh secret set RESEND_API_KEY` → `gh workflow run deploy-supabase.yml`. Xem
+  `supabase/README.md` mục "Quên mật khẩu".
+- **Đổi mật khẩu khi đã đăng nhập**: đã ship (D48) — hoạt động đầy đủ, KHÔNG phụ thuộc domain/email.
+- **Auth/quản lý người dùng còn thiếu khác** (audit cùng phiên): xác thực email, đổi tên hiển thị, đổi
+  email, xóa tài khoản, avatar ảnh thật, social login, MFA, quản lý phiên đăng nhập — chưa làm. Lưu ý:
+  **xác thực email** và **đổi email** cũng cần gửi email xác nhận → bị chặn bởi cùng vụ domain/Resend
+  như quên mật khẩu; **đổi tên hiển thị**/**xóa tài khoản** thì KHÔNG phụ thuộc domain, làm được ngay
+  nếu cần.
 - **Nhóm "Tương lai" còn lại** (`docs/02-roadmap.md`): THCS/THPT sâu hơn · môn khác đầy đủ (Lý/Hóa/Anh,
   mới có nền đa môn D39) · LaTeX render/input cho chấm từng bước (thuật toán đã ship D38–D45, LaTeX thật
   chưa — `docs/future/step-grading.md`) — cả 3 đều **chưa bắt đầu**, là quyết định phạm vi sản phẩm (cần

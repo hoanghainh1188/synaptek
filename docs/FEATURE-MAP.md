@@ -47,9 +47,10 @@ mindmap
       🔮 mở rộng phạm vi (chat tự do, màn khác ngoài luyện tập)
     🔐 Auth & quản lý người dùng
       ✅ Đăng nhập/đăng ký email-mật khẩu + đăng xuất + đổi vai trò
-      ✅ Quên mật khẩu (Resend SMTP, chống dò email)
-      ⏳ chờ RESEND_API_KEY + verify domain — sandbox chỉ gửi về email chủ tài khoản Resend
-      🔮 xác thực email · đổi mật khẩu/tên/email khi đã đăng nhập · xóa tài khoản
+      ✅ Đổi mật khẩu khi đã đăng nhập (xác thực lại mật khẩu hiện tại)
+      ✅ Quên mật khẩu (Resend SMTP, chống dò email) — TẠM DỪNG vì chưa có domain
+      ⏳ chờ chủ repo mua domain → verify Resend → RESEND_API_KEY
+      🔮 xác thực email · đổi tên hiển thị/email khi đã đăng nhập · xóa tài khoản
       🔮 avatar ảnh thật · social login · MFA · quản lý phiên đăng nhập
     🔭 Tương lai xa
       🔮 THCS/THPT sâu hơn (chưa bắt đầu)
@@ -79,16 +80,17 @@ flowchart LR
   SHIPPED --> A11["GV sửa/xóa bài tự soạn · HS/GV/PH đổi vai trò"]
   SHIPPED --> A12["Gia sư AI MVP: giải thích khi HS sai (Gemini, engine vẫn chấm)"]
   SHIPPED --> A13["Quên mật khẩu: link khôi phục qua Resend SMTP, chống dò email"]
+  SHIPPED --> A14["Đổi mật khẩu khi đã đăng nhập: xác thực lại mật khẩu hiện tại trước khi đổi"]
 
   WIP --> B1["Push thật + cron review-scheduler — cần EAS projectId"]
   WIP --> B2["Verify thật trên iOS/Android (mới verify web)"]
   WIP --> B3["Gia sư AI: chờ GEMINI_API_KEY thật để trả lời (code đã xong)"]
-  WIP --> B4["Quên mật khẩu: chờ RESEND_API_KEY + verify domain (code đã xong)"]
+  WIP --> B4["Quên mật khẩu: TẠM DỪNG, chờ chủ repo mua domain rồi verify Resend (code đã xong)"]
 
   FUTURE --> C1["M5 Native: EAS build · offline · lên store — cần tài khoản EAS/Apple/Google"]
   FUTURE --> C2["THCS/THPT sâu hơn · môn khác đầy đủ (Lý/Hóa/Anh)"]
   FUTURE --> C3["LaTeX render/input cho chấm từng bước · gia sư AI mở rộng (chat tự do)"]
-  FUTURE --> C4["Auth mở rộng: xác thực email · đổi mật khẩu/tên/email · xóa TK · avatar thật · social login · MFA"]
+  FUTURE --> C4["Auth mở rộng: xác thực email/đổi email (cần domain) · đổi tên · xóa TK · avatar thật · social login · MFA"]
 ```
 
 ## Chú thích trạng thái
@@ -110,9 +112,10 @@ flowchart LR
   `supabase secrets set GEMINI_API_KEY=...` để trả lời thật; hiện graceful "chưa sẵn sàng" (xem
   `supabase/README.md` mục "Gia sư AI").
 - **Quên mật khẩu**: code/wiring đã xong (`forgot-password.tsx`/`reset-password.tsx`, SMTP config, test
-  qua Mailpit cục bộ) — chỉ thiếu `RESEND_API_KEY` + verify domain thật tại resend.com/domains để gửi
-  email tới HS/GV/PH thật (sandbox hiện tại chỉ gửi về email chủ tài khoản Resend), xem
-  `supabase/README.md` mục "Quên mật khẩu".
+  qua Mailpit cục bộ). **TẠM DỪNG theo quyết định chủ repo** — chưa có domain nào cả (kể cả cho web).
+  Hiện dùng mailer mặc định Supabase, CHỈ gửi được cho thành viên team Supabase — **HS/GV/PH thật KHÔNG
+  nhận được email khôi phục lúc này**. Cần: mua domain → verify tại resend.com/domains →
+  `RESEND_API_KEY`, xem `supabase/README.md` mục "Quên mật khẩu".
 
 ### Ghi chú "🔮 tương lai" — mức độ sẵn sàng thật
 
