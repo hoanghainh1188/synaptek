@@ -31,6 +31,14 @@ qua MathML (`<mfrac>` con — không phụ thuộc CSS, nên cũng đổi `katex
 tạm revert fix rồi chạy lại (fail đúng như kỳ vọng), sau đó khôi phục fix (pass). Decision Log D53
 (cập nhật 2 lần).
 
+**+ Tự động hoá đồng bộ vendor assets KaTeX (cùng nhánh, theo yêu cầu user "đối với cấu trúc lưu trữ
+có cần sửa gì không"):** `public/katex/` ban đầu copy TAY từ `node_modules/katex/dist` — dễ quên cập
+nhật khi nâng cấp `katex`. Thêm `scripts/sync-katex-assets.mjs` (`npm run sync:katex`) + gate CI
+`git diff` chống lệch, đúng pattern `sync:edge` đã có cho code TỰ SINH (D13). Loại `public/katex/`
+khỏi prettier (`.prettierignore`) — nếu không, prettier tự format lại CSS minified thành nhiều dòng,
+lệch với bản gốc script sinh ra mỗi lần chạy (bắt được lúc `git diff --exit-code` fail ngay sau khi
+thêm script, trước khi thêm `.prettierignore`).
+
 **+ LaTeX render thật qua KaTeX ✅ (feature/latex-katex, đã merge #80):** Trong 4 việc "cần quyết
 định phạm vi sản phẩm lớn hơn" (THCS/THPT sâu hơn · môn mới Lý/Hóa/Anh · LaTeX thật · gia sư AI mở
 rộng), user chọn làm LaTeX trước — **duy nhất không phụ thuộc nội dung/chuyên môn sư phạm hay quyết
