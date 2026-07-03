@@ -4,7 +4,7 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
-**+ Fix bug thật do USER báo trực tiếp — 2 lượt fix (feature/latex-fix-css, PR đang mở, sau khi D53 đã
+**+ Fix bug thật do USER báo trực tiếp — 2 lượt fix (feature/latex-fix-css, đã merge #81, sau khi D53 đã
 merge):** Screenshot user gửi: phân số "1/2" ở màn luyện tập hiện thành "21" (không gạch ngang, tử/mẫu
 đảo + dính liền). Nguyên nhân gốc: `@import "katex/dist/katex.min.css"` trong `global.css` KHÔNG được
 Metro resolve (CSS `@import` trỏ gói npm — khác `import` JS/TS) → KaTeX render HTML nhưng KHÔNG có
@@ -20,8 +20,8 @@ test SAU ĐÓ fail `net::ERR_CONNECTION_REFUSED` (không phải lỗi test logic
 
 **Lượt fix #2 (chốt)**: copy `katex.min.css` + fonts vào `public/katex/` (Expo Router static assets,
 tự copy vào `dist/` lúc export) + nạp qua thẻ `<link>` chèn tay trong `useEffect`, KHÔNG qua Metro
-module graph nữa (tách hẳn khỏi cả `@import` CSS lẫn `import` JS). Verify lại toàn bộ 59 spec local
-(`CI=true npx playwright test`, mô phỏng đúng điều kiện CI) — sạch, không OOM.
+module graph nữa (tách hẳn khỏi cả `@import` CSS lẫn `import` JS). Verify lại toàn bộ e2e local
+(`CI=true npx playwright test`, mô phỏng đúng điều kiện CI, 48 file spec) — sạch, không OOM.
 
 **Bài học**: unit test + e2e ban đầu (chỉ đếm số phần tử `.katex`) ĐỀU XANH dù bug hiển thị tồn tại —
 đếm elements không đủ, DOM vẫn có `.katex` hợp lệ chỉ THIẾU CSS. Viết lại test: verify

@@ -88,7 +88,10 @@ nhật `docs/WORKING-NOTES.md` (điểm tiếp tục) + Decision Log/spec/file l
   (moat) + `@synaptek/curriculum` + `@synaptek/learning-path` (heatmap/mastery) + `@synaptek/classroom` (mã mời +
   giới hạn nộp + điểm + tổng hợp + `pickForStudent`) + `@synaptek/step-grading` (chấm lời giải từng bước).
   NativeWind v4, `@supabase/supabase-js`, TanStack Query, `katex` (D53, render LaTeX web-only qua
-  `MathText.web.tsx` — pattern platform-split file `.web.tsx`, native dùng `MathText.tsx` cũ).
+  `MathText.web.tsx` — pattern platform-split file `.web.tsx`, native dùng `MathText.tsx` cũ; CSS/font
+  nạp qua `public/katex/` — static asset, KHÔNG qua Metro module graph, xem D53). Vendor assets TỰ
+  ĐỘNG đồng bộ: `npm run sync:edge` (engine↔Edge) + `npm run sync:katex` (`node_modules/katex` →
+  `public/katex/`) — cả hai có gate CI `git diff` chống lệch (D13).
 - **Storage**: Supabase — migrations **`0001`–`0025`** (mới nhất: 0023 nhiều phần a/b/c · 0024 avatar ảnh
   thật · 0025 xóa tài khoản). RLS chéo vai trò qua helper `SECURITY DEFINER` (D24/D26/D30/D32). Edge
   Functions: `grade` · `grade-assignment` · `review-scheduler` · `ai-tutor-explain` (D46, Gemini, cần
