@@ -57,7 +57,9 @@ mindmap
     🔭 Tương lai xa
       🔮 THCS/THPT sâu hơn (chưa bắt đầu)
       🔮 Môn khác đầy đủ Lý/Hóa/Anh (mới có nền đa môn)
-      🔮 LaTeX render/input cho chấm từng bước (thuật toán đã có, LaTeX chưa)
+      ✅ LaTeX render (KaTeX, web-only) cho câu hỏi/lời giải
+      🔮 LaTeX-as-input (gõ trực tiếp) — chủ đích chỉ hợp THCS/THPT
+      🔮 Gia sư AI mở rộng (chat tự do) — cần quyết định an toàn sản phẩm trước
 ```
 
 ## Theo trạng thái (flowchart)
@@ -84,6 +86,7 @@ flowchart LR
   SHIPPED --> A13["Quên mật khẩu: link khôi phục qua Resend SMTP, chống dò email"]
   SHIPPED --> A14["Đổi mật khẩu khi đã đăng nhập: xác thực lại mật khẩu hiện tại trước khi đổi"]
   SHIPPED --> A15["Tự phục vụ tài khoản: đổi tên · đăng xuất thiết bị khác · avatar ảnh thật · xóa TK"]
+  SHIPPED --> A16["LaTeX render thật (KaTeX, web-only) cho câu hỏi/lời giải"]
 
   WIP --> B1["Push thật + cron review-scheduler — cần EAS projectId"]
   WIP --> B2["Verify thật trên iOS/Android (mới verify web)"]
@@ -91,8 +94,8 @@ flowchart LR
   WIP --> B4["Quên mật khẩu: TẠM DỪNG, chờ chủ repo mua domain rồi verify Resend (code đã xong)"]
 
   FUTURE --> C1["M5 Native: EAS build · offline · lên store — cần tài khoản EAS/Apple/Google"]
-  FUTURE --> C2["THCS/THPT sâu hơn · môn khác đầy đủ (Lý/Hóa/Anh)"]
-  FUTURE --> C3["LaTeX render/input cho chấm từng bước · gia sư AI mở rộng (chat tự do)"]
+  FUTURE --> C2["THCS/THPT sâu hơn · môn khác đầy đủ (Lý/Hóa/Anh) — cần nội dung/chuyên môn sư phạm"]
+  FUTURE --> C3["LaTeX-as-input (gõ trực tiếp, chủ đích chỉ hợp THCS/THPT) · gia sư AI mở rộng (chat tự do, cần quyết định an toàn)"]
   FUTURE --> C4["Auth mở rộng: xác thực email/đổi email (cần domain) · social login · MFA"]
 ```
 
@@ -125,7 +128,8 @@ flowchart LR
 - **M5 Native**: nền đã dựng xong trong repo (`eas.json`, plugin push, `docs/M5-NATIVE.md`) — chỉ còn thao
   tác cần tài khoản.
 - **Chấm từng bước + LaTeX**: phần **thuật toán/tích hợp đã ship** (package `@synaptek/step-grading`, loại
-  câu `derivation` giao/chấm được, lồng vào câu nhiều phần, bàn phím toán). Phần **LaTeX render/input thật
-  sự (KaTeX/MathJax) chưa làm** — hiện chỉ có component `MathText` tự chế (không phải LaTeX engine).
+  câu `derivation` giao/chấm được, lồng vào câu nhiều phần, bàn phím toán) và **LaTeX render đã ship**
+  (KaTeX, web-only, D53 — `MathText.web.tsx`). Phần **LaTeX-as-input (gõ trực tiếp) chủ đích CHƯA làm** —
+  chỉ hợp THCS/THPT, tiểu học dùng bàn phím có cấu trúc phù hợp lứa tuổi hơn.
 - **THCS/THPT · môn khác**: chưa bắt đầu triển khai — cần chuyên môn sư phạm + quy trình nội dung (D14),
   khác gia sư AI (đã MVP, việc engineering thuần).

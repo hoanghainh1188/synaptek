@@ -1,8 +1,9 @@
 # Thiết kế: Chấm trình bày từng bước + LaTeX
 
-> **Trạng thái: phần THUẬT TOÁN/TÍCH HỢP đã ship (Decision Log D38/D40–D42/D44/D45); phần LaTeX render/input
-> CHƯA làm.** Xem "✅ Đã triển khai" bên dưới cho hiện trạng, phần còn lại của tài liệu là thiết kế gốc —
-> vẫn đúng cho phần LaTeX chưa làm, giữ lại làm tham chiếu.
+> **Trạng thái: phần THUẬT TOÁN/TÍCH HỢP đã ship (Decision Log D38/D40–D42/D44/D45); LaTeX RENDER (hiển
+> thị) đã ship (D53, KaTeX, web-only); LaTeX-as-INPUT (gõ trực tiếp) vẫn CHƯA làm — chủ đích, chỉ hợp
+> THCS/THPT, xem mục "LaTeX" bên dưới.** Xem "✅ Đã triển khai" bên dưới cho hiện trạng, phần còn lại của
+> tài liệu là thiết kế gốc — vẫn đúng cho phần LaTeX-input chưa làm, giữ lại làm tham chiếu.
 
 ## ✅ Đã triển khai (khác thiết kế gốc ở chỗ KHÔNG cần đợi M5/THCS)
 
@@ -20,9 +21,14 @@ Toàn bộ phần "Kiến trúc đề xuất" bên dưới đã thành hiện th
   `gradeCompoundParts` (kết hợp `grade()` + `gradeDerivation` cùng lượt).
 - **Căn bậc hai** (D45): mở rộng tokenizer engine (`√`/`sqrt()`) — bước đầu cho "đi sâu THCS" mà thiết kế
   gốc dự tính, đã làm ĐỘC LẬP không cần chờ mở lớp.
+- **KaTeX render** (D53): `MathText.web.tsx` (Metro chọn khi build web) đổi segment `frac`/`sup` từ
+  FractionView/mũ-unicode tự chế sang KaTeX thật (`katex.renderToString`) — CHỈ hiển thị, KHÔNG đổi cú
+  pháp lưu/nhập (`parseMathMarkup`/bàn phím toán giữ nguyên, D53 quyết định "chỉ nâng hiển thị"). Native
+  giữ nguyên renderer cũ (`MathText.tsx`, KaTeX là thư viện DOM-only không chạy RN native).
 
-**Còn thiếu so với thiết kế gốc**: LaTeX render (KaTeX/MathJax) và LaTeX-as-input cho THCS/THPT — xem mục
-"LaTeX" bên dưới, vẫn đúng nguyên trạng thiết kế. Lớp giải thích LLM (mục "Nguyên tắc tin cậy") cũng chưa làm.
+**Còn thiếu so với thiết kế gốc**: LaTeX-as-input cho THCS/THPT — xem mục "LaTeX" bên dưới, vẫn đúng
+nguyên trạng thiết kế (chủ đích chưa làm, tiểu học dùng bàn phím có cấu trúc phù hợp lứa tuổi hơn). Lớp
+giải thích LLM (mục "Nguyên tắc tin cậy") cũng chưa làm.
 
 ## Mục tiêu
 
@@ -93,7 +99,7 @@ bám `firstErrorIndex` engine đã định vị → không "dạy sai".
 
 Các bước 2–3 của thiết kế gốc (MVP một mode, nhập dòng text) đã xong qua D38/D40. Còn lại:
 
-1. **KaTeX render** (mọi cấp, rủi ro thấp) — chưa làm, MathText hiện tại KHÔNG phải LaTeX engine.
+1. ~~KaTeX render (mọi cấp, rủi ro thấp)~~ — ✅ xong (D53).
 2. **LLM lớp giải thích** (tùy chọn) bám lỗi engine — chưa làm.
 3. Đẩy lên **THCS/THPT** (nơi LaTeX-input phát huy nhất, cần vượt qua giới hạn bàn phím có cấu trúc hiện tại
    cho biểu thức phức tạp hơn) — chưa bắt đầu.
