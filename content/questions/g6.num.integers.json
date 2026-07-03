@@ -1,0 +1,173 @@
+[
+  {
+    "id": "g6.num.integers.q001",
+    "skillId": "g6.num.integer.concept",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Số đối của -9 là số nào?",
+    "difficulty": 1,
+    "correct": "9",
+    "explanation": "Số đối của một số nguyên có cùng khoảng cách tới 0 nhưng khác dấu. Số đối của -9 là 9."
+  },
+  {
+    "id": "g6.num.integers.q002",
+    "skillId": "g6.num.integer.concept",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Số đối của 15 là số nào?",
+    "difficulty": 1,
+    "correct": "-15",
+    "explanation": "Số đối của 15 là -15 (cùng khoảng cách tới 0, khác dấu)."
+  },
+  {
+    "id": "g6.num.integers.q003",
+    "skillId": "g6.num.integer.concept",
+    "grade": 6,
+    "type": "mcq",
+    "prompt": "Số nào lớn hơn: -3 hay -8?",
+    "difficulty": 1,
+    "choices": ["-3", "-8"],
+    "correct": "-3",
+    "explanation": "Trên trục số, số nằm bên phải thì lớn hơn. -3 nằm bên phải -8 nên -3 > -8."
+  },
+  {
+    "id": "g6.num.integers.q004",
+    "skillId": "g6.num.integer.concept",
+    "grade": 6,
+    "type": "true-false",
+    "prompt": "-5 < -2. Đúng hay sai?",
+    "difficulty": 1,
+    "correct": "true",
+    "explanation": "Với số nguyên âm, số nào có phần số càng lớn thì càng nhỏ. -5 nằm bên trái -2 nên -5 < -2 — đúng."
+  },
+  {
+    "id": "g6.num.integers.q005",
+    "skillId": "g6.num.integer.concept",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Giá trị tuyệt đối của -7, viết |-7|, bằng bao nhiêu?",
+    "difficulty": 1,
+    "correct": "7",
+    "explanation": "Giá trị tuyệt đối là khoảng cách từ số đó tới 0, luôn không âm. |-7| = 7."
+  },
+  {
+    "id": "g6.num.integers.q006",
+    "skillId": "g6.num.integer.addsub",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tính: (-7) + 3",
+    "difficulty": 1,
+    "correct": "-4",
+    "explanation": "Khác dấu: lấy 7 - 3 = 4 rồi giữ dấu của số có giá trị tuyệt đối lớn hơn (số -7). Kết quả -4."
+  },
+  {
+    "id": "g6.num.integers.q007",
+    "skillId": "g6.num.integer.addsub",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tính: (-8) + (-5)",
+    "difficulty": 1,
+    "correct": "-13",
+    "explanation": "Cùng dấu âm: cộng hai giá trị tuyệt đối 8 + 5 = 13 rồi giữ dấu âm. Kết quả -13."
+  },
+  {
+    "id": "g6.num.integers.q008",
+    "skillId": "g6.num.integer.addsub",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tính: 5 + (-9)",
+    "difficulty": 1,
+    "correct": "-4",
+    "explanation": "Khác dấu: lấy 9 - 5 = 4 rồi giữ dấu của -9. Kết quả -4."
+  },
+  {
+    "id": "g6.num.integers.q009",
+    "skillId": "g6.num.integer.addsub",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tính: (-6) - (-10)",
+    "difficulty": 2,
+    "correct": "4",
+    "explanation": "Trừ một số bằng cộng số đối: (-6) - (-10) = (-6) + 10 = 4."
+  },
+  {
+    "id": "g6.num.integers.q010",
+    "skillId": "g6.num.integer.addsub",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tính: 12 - 20",
+    "difficulty": 1,
+    "correct": "-8",
+    "explanation": "12 - 20 = 12 + (-20). Khác dấu: 20 - 12 = 8, giữ dấu âm. Kết quả -8."
+  },
+  {
+    "id": "g6.num.integers.q011",
+    "skillId": "g6.num.integer.addsub",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tính: (-15) - 7",
+    "difficulty": 2,
+    "correct": "-22",
+    "explanation": "(-15) - 7 = (-15) + (-7). Cùng dấu âm: 15 + 7 = 22, giữ dấu âm. Kết quả -22."
+  },
+  {
+    "id": "g6.num.integers.q012",
+    "skillId": "g6.num.integer.muldiv",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tính: (-4) × 6",
+    "difficulty": 1,
+    "correct": "-24",
+    "explanation": "Nhân hai số khác dấu được số âm: 4 × 6 = 24, kết quả -24."
+  },
+  {
+    "id": "g6.num.integers.q013",
+    "skillId": "g6.num.integer.muldiv",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tính: (-5) × (-7)",
+    "difficulty": 2,
+    "correct": "35",
+    "explanation": "Nhân hai số cùng dấu âm được số dương: 5 × 7 = 35."
+  },
+  {
+    "id": "g6.num.integers.q014",
+    "skillId": "g6.num.integer.muldiv",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tính: 8 × (-3)",
+    "difficulty": 1,
+    "correct": "-24",
+    "explanation": "Nhân hai số khác dấu được số âm: 8 × 3 = 24, kết quả -24."
+  },
+  {
+    "id": "g6.num.integers.q015",
+    "skillId": "g6.num.integer.muldiv",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tính: (-36) : 9",
+    "difficulty": 2,
+    "correct": "-4",
+    "explanation": "Chia hai số khác dấu được số âm: 36 : 9 = 4, kết quả -4."
+  },
+  {
+    "id": "g6.num.integers.q016",
+    "skillId": "g6.num.integer.muldiv",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tính: (-48) : (-6)",
+    "difficulty": 2,
+    "correct": "8",
+    "explanation": "Chia hai số cùng dấu âm được số dương: 48 : 6 = 8."
+  },
+  {
+    "id": "g6.num.integers.q017",
+    "skillId": "g6.num.integer.muldiv",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tính: 42 : (-7)",
+    "difficulty": 1,
+    "correct": "-6",
+    "explanation": "Chia hai số khác dấu được số âm: 42 : 7 = 6, kết quả -6."
+  }
+]

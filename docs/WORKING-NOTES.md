@@ -4,7 +4,19 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
-**+ Khung cấp học 2 tầng — chuẩn bị THCS/THPT ✅ vừa xong (feature/level-tiers, PR đang mở):** User hỏi
+**+ THCS Toán lớp 6 — pilot Số nguyên + gate tự-chấm nội dung ✅ vừa xong (feature/thcs-integers, PR đang
+mở):** Nội dung cấp trên ĐẦU TIÊN — kích hoạt khung 2 tầng D54, hàng "Cấp: Tiểu học/THCS" nay HIỆN thật
+trên home (trước dormant). **Quy trình đã chốt (user chọn qua AskUserQuestion)**: AI nháp câu bám CT
+GDPT + làm tooling; **chủ repo tự DUYỆT** trước merge (cửa bắt buộc cho nội dung trẻ em, D14). Pilot:
+`content/curriculum/grade-6.json` (mạch "Số và Đại số", chủ đề "Số nguyên", 3 skill) + 17 câu numeric số
+nguyên âm (`g6.num.integers.json`) — engine đã hỗ trợ số âm sẵn. **Gate tự-chấm mới** trong
+`validate:content` (+CI): chạy `grade()` THẬT với answer=correct → phải isCorrect, bắt tự động lỗi soạn
+đáp án TRƯỚC khi người duyệt đọc (đã verify bắt được câu sai bằng fixture tạm; áp cho cả 205 câu cũ đều
+pass). e2e `level-picker.spec.ts` viết lại (nay THCS thật): picker 2 tầng + luyện+chấm đúng câu số âm.
+Decision Log **D55**. **Bước tiếp**: chủ repo DUYỆT 17 câu trong PR trước merge; sau đó nhân rộng chủ đề
+lớp 6 (Phân số/Số thập phân THCS…) hoặc quyết mở môn/lớp khác.
+
+**+ Khung cấp học 2 tầng — chuẩn bị THCS/THPT ✅ (feature/level-tiers, đã merge #83):** User hỏi
 "nâng cấp học — có nên thêm phân cấp vào chương trình không". Sau khảo sát: mô hình `grade` đang PHẲNG
 (chỉ số 1–5), môn đã là chiều độc lập (D39), DB `grade_level` đã cho phép 1–12 sẵn — chỉ 2 chỗ khoá cứng
 1–5 (validate `schema.ts` + UI `GRADE_FILTERS`). Khuyến nghị + user chọn: **chuẩn bị khung 2 tầng thuần

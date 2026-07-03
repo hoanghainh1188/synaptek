@@ -4,6 +4,23 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { validateCurriculum, validateQuestion } from "@synaptek/curriculum";
 import { validateBadges } from "@synaptek/learning-path";
+import { grade } from "@synaptek/grading-engine";
+
+// Tự-chấm (self-grade): chạy ENGINE THẬT với answer = chính đáp án 'correct' → phải ra isCorrect.
+// Bắt tự động cả một lớp lỗi soạn (đáp án gõ nhầm định dạng, tự mâu thuẫn, sai kiểu) TRƯỚC khi người
+// duyệt đọc — engine không kiểm được đúng chương trình/sư phạm, nhưng kiểm được "đáp án có tự đúng không".
+// derivation/compound có orchestrator riêng (step-grading/gradeCompound) → bỏ qua ở gate này.
+const SELF_GRADE_TYPES = new Set([
+  "mcq",
+  "true-false",
+  "numeric",
+  "fraction",
+  "expression",
+  "fill-blank",
+  "multi",
+  "ordering",
+  "matching",
+]);
 
 const ROOT = process.cwd();
 const C = join(ROOT, "content");
@@ -46,7 +63,8 @@ for (const f of ls("questions", /\.json$/)) {
   }
   arr.forEach((q, i) => {
     const where = `questions/${f}[${i}] (${q?.id ?? "?"})`;
-    for (const e of validateQuestion(q, skillIds)) err(`${where} ${e.path}: ${e.message}`);
+    const schemaErrs = validateQuestion(q, skillIds);
+    for (const e of schemaErrs) err(`${where} ${e.path}: ${e.message}`);
     if (q?.id) {
       if (seenIds.has(q.id)) err(`${where}: id trùng toàn cục: ${q.id}`);
       seenIds.add(q.id);
@@ -55,6 +73,24 @@ for (const f of ls("questions", /\.json$/)) {
     const src = q?.image?.src;
     if (src && !/^(https?:|data:)/.test(src) && !imageKeys.has(src)) {
       err(`${where}: ảnh bundle '${src}' không có trong content/images/`);
+    }
+    // Tự-chấm: đáp án 'correct' phải TỰ chấm đúng (chỉ khi schema đã hợp lệ — tránh nhiễu lỗi kép).
+    if (schemaErrs.length === 0 && SELF_GRADE_TYPES.has(q.type)) {
+      try {
+        const r = grade({
+          type: q.type,
+          correct: q.correct,
+          answer: q.correct,
+          options: q.options,
+        });
+        if (!r.isCorrect) {
+          err(
+            `${where}: đáp án 'correct' KHÔNG tự chấm đúng (feedbackCode=${r.feedbackCode}) — soạn sai?`,
+          );
+        }
+      } catch (e) {
+        err(`${where}: engine ném lỗi khi tự chấm: ${e.message}`);
+      }
     }
   });
 }

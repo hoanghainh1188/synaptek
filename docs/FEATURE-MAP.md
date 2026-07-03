@@ -79,7 +79,7 @@ flowchart LR
   SHIPPED --> A6["Deploy hosted AUTO: Vercel + Supabase"]
   SHIPPED --> A7["M4 Phụ huynh: liên kết PH-con + theo dõi + gợi ý ôn + giao bài tại nhà"]
   SHIPPED --> A8["Authoring: 11 loại câu tự soạn (kể cả từng bước, nhiều phần, căn bậc hai)"]
-  SHIPPED --> A9["Nội dung 205 câu, 5 lớp Toán + 3 lớp Tiếng Việt"]
+  SHIPPED --> A9["Nội dung 222 câu: Toán lớp 1–5 + Tiếng Việt lớp 1–3 + pilot THCS Toán lớp 6 (Số nguyên)"]
   SHIPPED --> A10["Ôn lại câu sai + phản hồi lỗi thông minh + xem lời giải"]
   SHIPPED --> A11["GV sửa/xóa bài tự soạn · HS/GV/PH đổi vai trò"]
   SHIPPED --> A12["Gia sư AI MVP: giải thích khi HS sai (Gemini, engine vẫn chấm)"]
