@@ -52,3 +52,7 @@ verify_jwt = true
 # Gia sư AI (D46): giải thích vì sao sai — bắt buộc đăng nhập (chống gọi ẩn danh tốn phí API).
 [functions.ai-tutor-explain]
 verify_jwt = true
+
+# Xóa tài khoản (D52): chỉ tự xóa CHÍNH MÌNH — bắt buộc đăng nhập.
+[functions.delete-account]
+verify_jwt = true

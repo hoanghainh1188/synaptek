@@ -37,7 +37,7 @@ test("đổi mật khẩu: sai mật khẩu hiện tại bị từ chối, đún
   await page.getByLabel("Về hồ sơ").click();
 
   // Đăng xuất rồi đăng nhập lại bằng mật khẩu MỚI để xác nhận đã đổi thật.
-  await page.getByLabel("Đăng xuất").click();
+  await page.getByLabel("Đăng xuất", { exact: true }).click();
   await page.getByLabel("Xác nhận đăng xuất").click();
   await expect(page.getByLabel("Đăng nhập")).toBeVisible({ timeout: 15_000 });
 

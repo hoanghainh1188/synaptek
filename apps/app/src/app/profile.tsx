@@ -1,12 +1,22 @@
 // Hồ sơ học sinh (US2 T036 · US3 T048: nhắc ôn). XP · streak · huy hiệu · bật/tắt nhắc. Guest → mời đăng nhập.
-import { useState } from "react";
-import { Platform, Pressable, ScrollView, Text, View } from "react-native";
+import { useRef, useState } from "react";
+import {
+  ActivityIndicator,
+  Image,
+  Platform,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { getBadges } from "@/lib/content";
 import { useAuth } from "@/lib/supabase/auth";
 import { useGamification } from "@/lib/supabase/gamification";
 import { useMyRole, useSetRole, type Role } from "@/lib/supabase/role";
+import { useMyFullName, useSetFullName } from "@/lib/supabase/profile";
 import {
   useMyParentCode,
   useRegenerateParentCode,
@@ -18,7 +28,13 @@ import { registerForPush } from "@/lib/notifications";
 import { useSavePushToken, useSetPushEnabled } from "@/lib/supabase/push";
 import { BadgeGrid } from "@/components/gamification/BadgeGrid";
 import { AVATARS, avatarEmoji, isAvatarUnlocked } from "@/lib/avatars";
-import { useMyAvatar, useSetAvatar } from "@/lib/supabase/avatar";
+import {
+  useMyAvatar,
+  useSetAvatar,
+  useMyAvatarPhoto,
+  useSetAvatarPhoto,
+  uploadAvatarPhoto,
+} from "@/lib/supabase/avatar";
 import { Mascot } from "@/components/Mascot";
 import { BackButton } from "@/components/BackButton";
 
@@ -30,14 +46,20 @@ const ROLE_LABEL: Record<Role, string> = {
 
 export default function Profile() {
   const insets = useSafeAreaInsets();
-  const { user, signOut } = useAuth();
+  const { user, signOut, signOutOtherDevices, deleteAccount } = useAuth();
   const gami = useGamification();
   const myAvatar = useMyAvatar();
   const setAvatar = useSetAvatar();
+  const myAvatarPhoto = useMyAvatarPhoto();
+  const setAvatarPhoto = useSetAvatarPhoto();
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [photoMsg, setPhotoMsg] = useState<string | null>(null);
   const catalog = getBadges();
 
   const role = useMyRole();
   const setRole = useSetRole();
+  const myFullName = useMyFullName();
+  const setFullName = useSetFullName();
   const parentCode = useMyParentCode();
   const regenCode = useRegenerateParentCode();
   const clearCode = useClearParentCode();
@@ -48,6 +70,15 @@ export default function Profile() {
   const [pushMsg, setPushMsg] = useState<string | null>(null);
   const [pendingRole, setPendingRole] = useState<Role | null>(null);
   const [confirmLogout, setConfirmLogout] = useState(false);
+  const [editingName, setEditingName] = useState(false);
+  const [nameDraft, setNameDraft] = useState("");
+  const [confirmOtherDevices, setConfirmOtherDevices] = useState(false);
+  const [otherDevicesMsg, setOtherDevicesMsg] = useState<string | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState("");
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const deletingRef = useRef(false);
 
   const state = gami.data?.state;
   const earned = new Set(gami.data?.earnedBadgeIds ?? []);
@@ -106,13 +137,123 @@ export default function Profile() {
         </View>
       )}
 
-      {/* Avatar mở khoá theo XP */}
+      {/* Tên hiển thị (D49) — sửa được sau khi đăng ký, khác lúc trước chỉ đặt được 1 lần */}
+      {user && (
+        <View className="mt-6">
+          <Text className="font-display text-xl font-bold text-ink">Tên hiển thị</Text>
+          {!editingName ? (
+            <Pressable
+              accessibilityLabel="Đổi tên hiển thị"
+              onPress={() => {
+                setNameDraft(myFullName.data ?? "");
+                setEditingName(true);
+              }}
+              className="mt-2 min-h-[44px] flex-row items-center justify-between rounded-md border-2 border-line bg-surface px-3"
+            >
+              <Text className="font-semibold text-ink">{myFullName.data || "(chưa đặt tên)"}</Text>
+              <Text className="font-bold text-brand">Sửa</Text>
+            </Pressable>
+          ) : (
+            <View className="mt-2 rounded-md border-2 border-line bg-surface p-3">
+              <TextInput
+                value={nameDraft}
+                onChangeText={setNameDraft}
+                placeholder="Tên của em"
+                placeholderTextColor="#a1a1aa"
+                accessibilityLabel="Tên hiển thị mới"
+                className="min-h-[44px] rounded-md border-2 border-line bg-paper px-3 text-base text-ink"
+              />
+              <View className="mt-2 flex-row gap-2">
+                <Pressable
+                  accessibilityLabel="Lưu tên hiển thị"
+                  disabled={!nameDraft.trim() || setFullName.isPending}
+                  onPress={() =>
+                    setFullName.mutate(nameDraft.trim(), {
+                      onSuccess: () => setEditingName(false),
+                    })
+                  }
+                  className={`min-h-[40px] flex-1 items-center justify-center rounded-md ${nameDraft.trim() ? "bg-brand" : "bg-line"}`}
+                >
+                  <Text className="font-display font-bold text-white">Lưu</Text>
+                </Pressable>
+                <Pressable
+                  accessibilityLabel="Huỷ đổi tên"
+                  onPress={() => setEditingName(false)}
+                  className="min-h-[40px] flex-1 items-center justify-center rounded-md bg-paper"
+                >
+                  <Text className="font-display font-bold text-ink">Huỷ</Text>
+                </Pressable>
+              </View>
+            </View>
+          )}
+        </View>
+      )}
+
+      {/* Avatar mở khoá theo XP + ảnh thật (D51, lựa chọn thêm) */}
       {user && (
         <View className="mt-6">
           <View className="flex-row items-center gap-2">
-            <Text className="text-3xl">{avatarEmoji(myAvatar.data)}</Text>
+            {myAvatarPhoto.data ? (
+              <Image
+                source={{ uri: myAvatarPhoto.data }}
+                accessibilityLabel="Ảnh đại diện hiện tại"
+                className="h-9 w-9 rounded-full"
+              />
+            ) : (
+              <Text className="text-3xl">{avatarEmoji(myAvatar.data)}</Text>
+            )}
             <Text className="font-display text-xl font-bold text-ink">Avatar của em</Text>
           </View>
+
+          <View className="mt-3 flex-row items-center gap-3">
+            <Pressable
+              accessibilityLabel="Tải ảnh đại diện lên"
+              disabled={uploadingPhoto}
+              onPress={() => {
+                if (Platform.OS !== "web" || typeof document === "undefined") {
+                  setPhotoMsg("Tải ảnh hiện hỗ trợ trên web.");
+                  return;
+                }
+                const input = document.createElement("input");
+                input.type = "file";
+                input.accept = "image/*";
+                input.onchange = async () => {
+                  const file = input.files?.[0];
+                  if (!file) return;
+                  setUploadingPhoto(true);
+                  setPhotoMsg(null);
+                  try {
+                    const url = await uploadAvatarPhoto(file, user.id);
+                    setAvatarPhoto.mutate(url);
+                  } catch {
+                    setPhotoMsg("Tải ảnh thất bại (tối đa 2MB, chỉ ảnh).");
+                  } finally {
+                    setUploadingPhoto(false);
+                  }
+                };
+                input.click();
+              }}
+              className="min-h-[40px] items-center justify-center rounded-md bg-surface px-3 shadow-sm"
+            >
+              <Text className="font-display font-bold text-ink">
+                {uploadingPhoto ? "Đang tải…" : "Tải ảnh lên"}
+              </Text>
+            </Pressable>
+            {myAvatarPhoto.data && (
+              <Pressable
+                accessibilityLabel="Dùng lại emoji"
+                onPress={() => setAvatarPhoto.mutate(null)}
+                className="min-h-[40px] items-center justify-center rounded-md bg-paper px-3"
+              >
+                <Text className="font-display font-bold text-ink">Dùng lại emoji</Text>
+              </Pressable>
+            )}
+          </View>
+          {photoMsg && <Text className="mt-1 text-xs text-no">{photoMsg}</Text>}
+          <Text className="mt-1 text-xs text-muted">
+            Nên dùng ảnh vui/hoạt hình thay vì ảnh mặt thật của em nhé.
+          </Text>
+
           <View className="mt-3 flex-row flex-wrap gap-2">
             {AVATARS.map((a) => {
               const unlocked = isAvatarUnlocked(a, state?.totalXp ?? 0);
@@ -350,7 +491,7 @@ export default function Profile() {
         <BadgeGrid catalog={catalog} earned={earned} />
       </View>
 
-      {/* Bảo mật — đổi mật khẩu khi đã đăng nhập (D48, khác quên mật khẩu qua email) */}
+      {/* Bảo mật — đổi mật khẩu khi đã đăng nhập (D48) + đăng xuất thiết bị khác (D50) */}
       {user && (
         <View className="mt-8">
           <Text className="font-display text-xl font-bold text-ink">Bảo mật</Text>
@@ -361,6 +502,53 @@ export default function Profile() {
           >
             <Text className="font-display font-bold text-ink">Đổi mật khẩu ›</Text>
           </Pressable>
+
+          {!confirmOtherDevices ? (
+            <Pressable
+              accessibilityLabel="Đăng xuất khỏi thiết bị khác"
+              onPress={() => {
+                setOtherDevicesMsg(null);
+                setConfirmOtherDevices(true);
+              }}
+              className="mt-2 min-h-[48px] items-center justify-center rounded-md bg-surface shadow-sm"
+            >
+              <Text className="font-display font-bold text-ink">Đăng xuất khỏi thiết bị khác</Text>
+            </Pressable>
+          ) : (
+            <View className="mt-2 rounded-md border-2 border-line bg-surface p-3">
+              <Text className="text-sm text-ink">
+                Thu hồi đăng nhập ở MỌI thiết bị khác — chỉ giữ lại phiên trên thiết bị này. Hữu ích
+                nếu em nghi ngờ ai đó khác đang đăng nhập tài khoản của mình.
+              </Text>
+              <View className="mt-2 flex-row gap-2">
+                <Pressable
+                  accessibilityLabel="Xác nhận đăng xuất thiết bị khác"
+                  onPress={async () => {
+                    const res = await signOutOtherDevices();
+                    setConfirmOtherDevices(false);
+                    setOtherDevicesMsg(
+                      res.error
+                        ? "Không thực hiện được, thử lại sau."
+                        : "Đã đăng xuất thiết bị khác ✓",
+                    );
+                  }}
+                  className="min-h-[40px] flex-1 items-center justify-center rounded-md bg-brand"
+                >
+                  <Text className="font-display font-bold text-white">Xác nhận</Text>
+                </Pressable>
+                <Pressable
+                  accessibilityLabel="Huỷ đăng xuất thiết bị khác"
+                  onPress={() => setConfirmOtherDevices(false)}
+                  className="min-h-[40px] flex-1 items-center justify-center rounded-md bg-paper"
+                >
+                  <Text className="font-display font-bold text-ink">Huỷ</Text>
+                </Pressable>
+              </View>
+            </View>
+          )}
+          {otherDevicesMsg && (
+            <Text className="mt-2 text-sm font-semibold text-brand">{otherDevicesMsg}</Text>
+          )}
         </View>
       )}
 
@@ -393,6 +581,84 @@ export default function Profile() {
                 <Pressable
                   accessibilityLabel="Huỷ đăng xuất"
                   onPress={() => setConfirmLogout(false)}
+                  className="min-h-[44px] flex-1 items-center justify-center rounded-md bg-paper"
+                >
+                  <Text className="font-display font-bold text-ink">Huỷ</Text>
+                </Pressable>
+              </View>
+            </View>
+          )}
+        </View>
+      )}
+
+      {/* Vùng nguy hiểm — xóa tài khoản (D52) */}
+      {user && (
+        <View className="mt-8">
+          <Text className="font-display text-xl font-bold text-no">Vùng nguy hiểm</Text>
+          {!confirmDelete ? (
+            <Pressable
+              accessibilityLabel="Xóa tài khoản"
+              onPress={() => {
+                setDeleteError(null);
+                setDeleteConfirmText("");
+                setConfirmDelete(true);
+              }}
+              className="mt-3 min-h-[48px] items-center justify-center rounded-md border-2 border-no/40"
+            >
+              <Text className="font-display font-bold text-no">Xóa tài khoản</Text>
+            </Pressable>
+          ) : (
+            <View className="mt-3 rounded-md border-2 border-no/30 p-3">
+              <Text className="text-sm text-ink">
+                Sau khi xóa, bạn KHÔNG đăng nhập lại được nữa. Nếu bạn là giáo viên còn lớp có học
+                sinh, cần xóa/chuyển giao lớp trước. Gõ "XÓA" để xác nhận.
+              </Text>
+              <TextInput
+                value={deleteConfirmText}
+                onChangeText={setDeleteConfirmText}
+                placeholder="XÓA"
+                placeholderTextColor="#a1a1aa"
+                accessibilityLabel="Gõ XÓA để xác nhận"
+                autoCapitalize="characters"
+                className="mt-2 min-h-[44px] rounded-md border-2 border-line bg-paper px-3 text-base text-ink"
+              />
+              {deleteError && (
+                <Text className="mt-2 text-sm font-semibold text-no">{deleteError}</Text>
+              )}
+              <View className="mt-2 flex-row gap-2">
+                <Pressable
+                  accessibilityLabel="Xác nhận xóa tài khoản"
+                  disabled={deleteConfirmText.trim() !== "XÓA" || deleting}
+                  onPress={async () => {
+                    // Khoá đồng bộ (ref, không phải state) — chặn double-invoke nếu onPress bắn 2 lần
+                    // (RN Web đôi khi bắn cả click+key cho cùng 1 lượt bấm) trước khi state kịp render lại.
+                    if (deletingRef.current) return;
+                    deletingRef.current = true;
+                    setDeleting(true);
+                    setDeleteError(null);
+                    const res = await deleteAccount();
+                    deletingRef.current = false;
+                    setDeleting(false);
+                    if (res.error) {
+                      setDeleteError(res.error);
+                      return;
+                    }
+                    setConfirmDelete(false);
+                    router.replace("/");
+                  }}
+                  className={`min-h-[44px] flex-1 items-center justify-center rounded-md ${
+                    deleteConfirmText.trim() === "XÓA" ? "bg-no" : "bg-line"
+                  }`}
+                >
+                  {deleting ? (
+                    <ActivityIndicator color="#fff" />
+                  ) : (
+                    <Text className="font-display font-bold text-white">Xóa vĩnh viễn</Text>
+                  )}
+                </Pressable>
+                <Pressable
+                  accessibilityLabel="Huỷ xóa tài khoản"
+                  onPress={() => setConfirmDelete(false)}
                   className="min-h-[44px] flex-1 items-center justify-center rounded-md bg-paper"
                 >
                   <Text className="font-display font-bold text-ink">Huỷ</Text>

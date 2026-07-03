@@ -3,6 +3,10 @@
 // (cần phiên "recovery" tạm — Supabase tự cấp khi phát hiện link trong URL, web: detectSessionInUrl).
 // Đổi mật khẩu khi ĐÃ đăng nhập (D48): changePassword xác thực lại mật khẩu HIỆN TẠI trước khi đổi —
 // chống đổi mật khẩu khi phiên bị chiếm dụng (vd thiết bị công cộng còn đăng nhập) mà không biết mật khẩu thật.
+// Đăng xuất thiết bị khác (D50): signOut({scope:"others"}) — supabase-js hỗ trợ sẵn, KHÔNG cần Admin
+// API/service-role. Không có API liệt kê CHI TIẾT từng phiên (thiết bị/vị trí) ở client — chỉ thu hồi được.
+// Xóa tài khoản (D52): deleteAccount gọi Edge Function delete-account (BẮT BUỘC service-role → không
+// thể làm ở client) — soft delete, GV bị chặn nếu còn lớp có học sinh. Xóa xong tự signOut() cục bộ.
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import * as Linking from "expo-linking";
 import type { User } from "@supabase/supabase-js";
@@ -26,6 +30,10 @@ interface AuthValue {
   resetPasswordForEmail(email: string): Promise<{ error?: string }>;
   updatePassword(newPassword: string): Promise<{ error?: string }>;
   changePassword(currentPassword: string, newPassword: string): Promise<{ error?: string }>;
+  /** Thu hồi phiên đăng nhập ở MỌI thiết bị khác, giữ nguyên phiên hiện tại (D50). */
+  signOutOtherDevices(): Promise<{ error?: string }>;
+  /** Xóa (soft delete) tài khoản CHÍNH MÌNH — GV còn lớp có HS sẽ bị chặn (D52). */
+  deleteAccount(): Promise<{ error?: string }>;
 }
 
 const AuthContext = createContext<AuthValue | null>(null);
@@ -97,6 +105,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (reauthError) return { error: "Mật khẩu hiện tại không đúng." };
       const { error } = await supabase.auth.updateUser({ password: newPassword });
       return error ? { error: error.message } : {};
+    },
+    async signOutOtherDevices() {
+      if (!supabase) return { error: "Chưa cấu hình đăng nhập." };
+      const { error } = await supabase.auth.signOut({ scope: "others" });
+      return error ? { error: error.message } : {};
+    },
+    async deleteAccount() {
+      if (!supabase) return { error: "Chưa cấu hình đăng nhập." };
+      const { data, error } = await supabase.functions.invoke("delete-account");
+      if (error) return { error: "Không xóa được tài khoản, thử lại sau." };
+      if (data?.error === "has_active_classes") {
+        return {
+          error: "Bạn còn lớp có học sinh — hãy xóa hoặc chuyển giao lớp trước khi xóa tài khoản.",
+        };
+      }
+      if (data?.error) return { error: "Không xóa được tài khoản, thử lại sau." };
+      await supabase.auth.signOut({ scope: "local" });
+      return {};
     },
   };
 
