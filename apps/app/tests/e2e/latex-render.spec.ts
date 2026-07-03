@@ -27,3 +27,32 @@ test("soạn câu có phân số + lũy thừa trong đề bài → render qua K
   const katexCount = await page.locator(".katex").count();
   expect(katexCount).toBeGreaterThanOrEqual(2);
 });
+
+// Guest, không cần Supabase. Bug thật đã gặp: CSS KaTeX không nạp được (Metro không resolve @import
+// CSS trỏ node_modules) → phân số render KHÔNG có style → "1/2" hiện thành chữ phẳng sai thứ tự "21"
+// (mẫu số trước tử số theo thứ tự DOM của KaTeX). Test đếm số phần tử .katex là CHƯA ĐỦ để bắt lỗi này
+// (DOM vẫn có phần tử .katex hợp lệ dù CSS không nạp) — phải verify CSS thật sự áp dụng + thứ tự ngữ
+// nghĩa qua MathML (<mfrac> con đúng thứ tự tử/mẫu, không phụ thuộc CSS).
+test("phân số MCQ render đúng: CSS KaTeX nạp được + đúng thứ tự tử/mẫu (MathML)", async ({
+  page,
+}) => {
+  await page.goto("/practice/g4.num.fractions");
+
+  const hasKatexCss = await page.evaluate(() =>
+    Array.from(document.styleSheets).some((sheet) => {
+      try {
+        return Array.from(sheet.cssRules).some((r) => r.cssText.includes(".katex"));
+      } catch {
+        return false;
+      }
+    }),
+  );
+  expect(hasKatexCss).toBe(true);
+
+  // Câu đầu "Phân số nào lớn hơn?" có 2 lựa chọn 1/2, 1/3 (content/questions/g4.num.fractions.json).
+  const firstFrac = page.locator(".katex mfrac").first();
+  await expect(firstFrac).toBeVisible({ timeout: 15_000 });
+  const [num, den] = await firstFrac.locator("> *").allTextContents();
+  expect(num).toBe("1");
+  expect(den).toBe("2");
+});

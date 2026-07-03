@@ -4,7 +4,22 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
-**+ LaTeX render thật qua KaTeX ✅ vừa xong (feature/latex-katex, PR đang mở):** Trong 4 việc "cần quyết
+**+ Fix bug thật do USER báo trực tiếp (feature/latex-fix-css, PR đang mở, sau khi D53 đã merge):**
+Screenshot user gửi: phân số "1/2" ở màn luyện tập hiện thành "21" (không có gạch ngang, tử/mẫu bị đảo
+
+- dính liền). Nguyên nhân: `@import "katex/dist/katex.min.css"` trong `global.css` KHÔNG được Metro
+  resolve (CSS `@import` trỏ gói npm — khác `import` JS/TS) → KaTeX render HTML nhưng KHÔNG có style →
+  cấu trúc định vị bằng CSS tuyệt đối (`.mfrac`/`.vlist`) sụp thành chữ phẳng đọc theo thứ tự DOM (mẫu số
+  trước). Fix: chuyển `import "katex/dist/katex.min.css"` vào NGAY file `KatexSpan.web.tsx` (import CSS
+  từ .tsx là cách Metro bundle chuẩn). **Bài học**: unit test + e2e ban đầu (chỉ đếm số phần tử `.katex`)
+  ĐỀU XANH dù bug tồn tại — đếm elements không đủ, DOM vẫn có `.katex` hợp lệ chỉ THIẾU CSS. Viết lại
+  test: verify `document.styleSheets` thật sự chứa rule `.katex` + verify thứ tự tử/mẫu qua MathML
+  (`<mfrac>` con — không phụ thuộc CSS, nên cũng đổi `katex.renderToString` sang output mặc định
+  `htmlAndMathml` để có MathML thật, kèm lợi ích accessibility cho trình đọc màn hình). Đã tự verify test
+  mới THẬT SỰ bắt được bug bằng cách tạm revert fix rồi chạy lại (fail đúng như kỳ vọng), sau đó khôi
+  phục fix (pass). Decision Log D53 (cập nhật).
+
+**+ LaTeX render thật qua KaTeX ✅ (feature/latex-katex, đã merge #80):** Trong 4 việc "cần quyết
 định phạm vi sản phẩm lớn hơn" (THCS/THPT sâu hơn · môn mới Lý/Hóa/Anh · LaTeX thật · gia sư AI mở
 rộng), user chọn làm LaTeX trước — **duy nhất không phụ thuộc nội dung/chuyên môn sư phạm hay quyết
 định an toàn sản phẩm**. `MathText.web.tsx` mới (pattern platform-split `.web.tsx` có sẵn trong repo) —
