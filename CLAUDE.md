@@ -71,7 +71,7 @@ nhật `docs/WORKING-NOTES.md` (điểm tiếp tục) + Decision Log/spec/file l
 ## Active Technologies (managed by Spec Kit)
 
 - **Đang làm**: **M0–M4 ✅ đóng hết** (luyện tập · mastery/lộ trình · giáo viên · phụ huynh + nội dung lớp 1–5).
-  Sau M4 đã làm thêm nhiều ngoài roadmap (xem Decision Log D26–D53): authoring **11 loại câu** (gồm trình bày
+  Sau M4 đã làm thêm nhiều ngoài roadmap (xem Decision Log D26–D54): authoring **11 loại câu** (gồm trình bày
   từng bước + nhiều phần a/b/c, CÓ THỂ lồng derivation) + nhãn môn + tùy chọn chấm + ảnh + gợi ý + bàn phím
   toán có cấu trúc; engine moat mở rộng (hỗn số/%/đơn vị/La Mã/căn bậc hai/6 chẩn đoán); đa môn (nền + seed
   Tiếng Việt lớp 1–3); TN học sinh (mục tiêu ngày · luyện nhanh · BXH · avatar); insight GV–PH; **gia sư AI
@@ -100,11 +100,16 @@ nhật `docs/WORKING-NOTES.md` (điểm tiếp tục) + Decision Log/spec/file l
   `deploy-supabase.yml`. Deploy: web Vercel auto + backend GitHub Action auto (db push + functions
   deploy + ensure auth config) từ `develop`.
 - **CI** (`.github/workflows/ci.yml`): 3 gate — **verify** (format · npm test · engine↔_shared sync · content ·
-  deno · web build · 6 guest e2e) · **RLS isolation** (rls-\*.sql trên Supabase thật) · **e2e-auth** (41 luồng
+  deno · web build · 7 guest e2e) · **RLS isolation** (rls-\*.sql trên Supabase thật) · **e2e-auth** (41 luồng
   đăng nhập trên Supabase+Edge). Supabase CLI pin `2.108.0`.
 
 ## Recent Changes
 
+- **Khung cấp học 2 tầng — chuẩn bị THCS/THPT (sau M4)**: module thuần `curriculum/src/level.ts` —
+  "cấp" (Tiểu học 1–5 · THCS 6–9 · THPT 10–12) SUY RA từ số lớp, KHÔNG lưu riêng (tránh lệch). Nới
+  validate curriculum/question 1–5 → 1–12 (DB `grade_level` đã cho phép 1–12 sẵn, không migration). Home
+  đổi picker phẳng → 2 tầng cấp→lớp, hàng "Cấp" chỉ hiện khi >1 cấp có nội dung (nay chỉ Tiểu học → ẨN,
+  tương thích ngược 100%). CHƯA thêm nội dung THCS/THPT (cần chuyên môn sư phạm). Decision Log **D54**.
 - **LaTeX render thật qua KaTeX (sau M4)**: `MathText.web.tsx` mới (platform-split `.web.tsx`, web-only)
   đổi segment `frac`/`sup` sang KaTeX thật thay vì FractionView/mũ-unicode tự chế — CHỈ nâng hiển thị,
   cú pháp lưu DB/bàn phím toán/engine chấm giữ nguyên. Native giữ renderer cũ (KaTeX là DOM-only).

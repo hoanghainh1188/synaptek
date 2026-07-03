@@ -4,10 +4,12 @@ import { Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import type { Recommendation } from "@synaptek/learning-path";
+import { gradesInLevel, levelOfGrade, type EducationLevel } from "@synaptek/curriculum";
 import {
-  GRADE_FILTERS,
   allGrades,
+  firstGradeWithContent,
   getQuestions,
+  listLevels,
   listSubjects,
   listTopics,
   skillName,
@@ -51,11 +53,23 @@ export default function Home() {
   const subjects = listSubjects();
   const topics = listTopics(grade, subject);
 
-  // Đổi môn: nếu lớp hiện tại không có chủ đề của môn → nhảy tới lớp đầu tiên có nội dung.
+  // Bộ chọn 2 tầng (cấp → lớp, D-mở rộng): hàng "Cấp" chỉ hiện khi môn có >1 cấp nội dung
+  // (Tiểu học/THCS/THPT); hàng "Lớp" hiện các lớp của cấp đang chọn. Chỉ Tiểu học → như cũ (1 hàng 1–5).
+  const levels = listLevels(subject);
+  const currentLevel: EducationLevel = levelOfGrade(grade) ?? levels[0]?.key ?? "primary";
+  const gradesShown = gradesInLevel(currentLevel);
+
+  // Đổi cấp: nhảy tới lớp có nội dung trong cấp+môn (ưu tiên), fallback lớp đầu cấp.
+  const selectLevel = (lv: EducationLevel) => {
+    const grades = gradesInLevel(lv);
+    setGrade(grades.find((g) => listTopics(g, subject).length > 0) ?? grades[0]);
+  };
+
+  // Đổi môn: nếu lớp hiện tại không có chủ đề của môn → nhảy tới lớp đầu tiên có nội dung (mọi cấp).
   const selectSubject = (s: string) => {
     setSubject(s);
     if (listTopics(grade, s).length === 0) {
-      const g = GRADE_FILTERS.find((gr) => listTopics(gr, s).length > 0);
+      const g = firstGradeWithContent(s);
       if (g) setGrade(g);
     }
   };
@@ -417,10 +431,34 @@ export default function Home() {
         </View>
       )}
 
-      {/* Duyệt chủ đề theo lớp */}
-      <View className={`${subjects.length > 1 ? "mt-4" : "mt-7"} flex-row items-center gap-2`}>
+      {/* Chọn cấp (chỉ hiện khi môn có >1 cấp nội dung — Tiểu học/THCS/THPT) */}
+      {levels.length > 1 && (
+        <View
+          className={`${subjects.length > 1 ? "mt-4" : "mt-7"} flex-row flex-wrap items-center gap-2`}
+        >
+          <Text className="mr-1 text-sm font-bold text-muted">Cấp</Text>
+          {levels.map((l) => {
+            const active = l.key === currentLevel;
+            return (
+              <Pressable
+                key={l.key}
+                accessibilityLabel={`Cấp ${l.label}`}
+                onPress={() => selectLevel(l.key)}
+                className={`min-h-[40px] items-center justify-center rounded-full px-3 ${active ? "bg-brand" : "bg-surface shadow-sm"}`}
+              >
+                <Text className={`font-bold ${active ? "text-white" : "text-ink"}`}>{l.label}</Text>
+              </Pressable>
+            );
+          })}
+        </View>
+      )}
+
+      {/* Duyệt chủ đề theo lớp (của cấp đang chọn) */}
+      <View
+        className={`${subjects.length > 1 || levels.length > 1 ? "mt-4" : "mt-7"} flex-row flex-wrap items-center gap-2`}
+      >
         <Text className="mr-1 text-sm font-bold text-muted">Lớp</Text>
-        {GRADE_FILTERS.map((g) => {
+        {gradesShown.map((g) => {
           const active = g === grade;
           return (
             <Pressable

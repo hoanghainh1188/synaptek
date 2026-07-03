@@ -14,6 +14,10 @@ import {
   buildSession,
   subjectsOf,
   gradeSubject,
+  levelOfGrade,
+  gradesInLevel,
+  levelsWithContent,
+  LEVELS,
   type Grade,
   type Question,
 } from "../src/index.ts";
@@ -246,6 +250,92 @@ test("topicsByGrade lọc theo môn", () => {
     ["v.t"],
   );
   assert.equal(topicsByGrade(all, 1).length, 2); // không lọc → cả hai
+});
+
+// ── Cấp học (level — suy ra từ số lớp, khung THCS/THPT) ───────────────────────
+test("levelOfGrade: 1–5 Tiểu học · 6–9 THCS · 10–12 THPT · ngoài → null", () => {
+  for (const g of [1, 2, 3, 4, 5]) assert.equal(levelOfGrade(g), "primary", `lớp ${g}`);
+  for (const g of [6, 7, 8, 9]) assert.equal(levelOfGrade(g), "lower-secondary", `lớp ${g}`);
+  for (const g of [10, 11, 12]) assert.equal(levelOfGrade(g), "upper-secondary", `lớp ${g}`);
+  for (const g of [0, 13, -1, 5.5]) assert.equal(levelOfGrade(g), null, `lớp ${g}`);
+});
+
+test("gradesInLevel: Tiểu học 1–5 · THCS 6–9 · THPT 10–12 (đầy đủ, kể cả lớp chưa có nội dung)", () => {
+  assert.deepEqual(gradesInLevel("primary"), [1, 2, 3, 4, 5]);
+  assert.deepEqual(gradesInLevel("lower-secondary"), [6, 7, 8, 9]);
+  assert.deepEqual(gradesInLevel("upper-secondary"), [10, 11, 12]);
+});
+
+test("levelsWithContent: chỉ lớp 1–5 → 1 cấp (Tiểu học); thêm lớp 6 → 2 cấp, giữ thứ tự", () => {
+  const primaryOnly: Grade[] = [
+    { grade: 1, strands: [], skills: [] },
+    { grade: 4, strands: [], skills: [] },
+  ];
+  assert.deepEqual(
+    levelsWithContent(primaryOnly).map((l) => l.key),
+    ["primary"],
+  );
+  const withThcs: Grade[] = [...primaryOnly, { grade: 6, strands: [], skills: [] }];
+  assert.deepEqual(
+    levelsWithContent(withThcs).map((l) => l.key),
+    ["primary", "lower-secondary"], // luôn Tiểu học trước THCS
+  );
+});
+
+test("levelsWithContent: lọc theo môn (Toán có THCS, Tiếng Việt chỉ Tiểu học)", () => {
+  const curricula: Grade[] = [
+    { grade: 4, strands: [], skills: [] }, // math (mặc định)
+    { grade: 8, strands: [], skills: [] }, // math THCS
+    { grade: 1, subject: "vietnamese", strands: [], skills: [] },
+  ];
+  assert.deepEqual(
+    levelsWithContent(curricula, "math").map((l) => l.key),
+    ["primary", "lower-secondary"],
+  );
+  assert.deepEqual(
+    levelsWithContent(curricula, "vietnamese").map((l) => l.key),
+    ["primary"],
+  );
+});
+
+test("LEVELS phủ trọn 1–12 không trùng lặp", () => {
+  const all = LEVELS.flatMap((l) => l.grades);
+  assert.deepEqual(
+    [...all].sort((a, b) => a - b),
+    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+  );
+  assert.equal(new Set(all).size, all.length); // không lớp nào thuộc 2 cấp
+});
+
+// ── Validate nới lớp 1..12 (đón THCS/THPT) ────────────────────────────────────
+test("Curriculum: grade 6..12 nay HỢP LỆ (trước chỉ 1..5)", () => {
+  for (const grade of [6, 9, 12]) {
+    const g: Grade = { grade, strands: [], skills: [] };
+    assert.deepEqual(validateCurriculum(g), [], `lớp ${grade}`);
+  }
+});
+
+test("Curriculum: grade 0/13/không-nguyên → vẫn lỗi", () => {
+  for (const grade of [0, 13, 5.5]) {
+    const g = { grade, strands: [], skills: [] };
+    assert.ok(
+      validateCurriculum(g).some((e) => e.path === "/grade"),
+      `lớp ${grade} phải lỗi`,
+    );
+  }
+});
+
+test("Question: grade 6 (THCS) nay hợp lệ", () => {
+  const errs = validateQuestion({
+    id: "x",
+    skillId: "s",
+    grade: 6,
+    type: "numeric",
+    prompt: "p",
+    correct: "1",
+    explanation: "e",
+  });
+  assert.ok(!errs.some((e) => e.path === "/grade"));
 });
 
 console.log(`\n${passed} test(s) passed.`);
