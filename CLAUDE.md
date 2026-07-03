@@ -71,31 +71,40 @@ nhật `docs/WORKING-NOTES.md` (điểm tiếp tục) + Decision Log/spec/file l
 ## Active Technologies (managed by Spec Kit)
 
 - **Đang làm**: **M0–M4 ✅ đóng hết** (luyện tập · mastery/lộ trình · giáo viên · phụ huynh + nội dung lớp 1–5).
-  Sau M4 đã làm thêm nhiều ngoài roadmap (xem Decision Log D26–D48): authoring **11 loại câu** (gồm trình bày
+  Sau M4 đã làm thêm nhiều ngoài roadmap (xem Decision Log D26–D52): authoring **11 loại câu** (gồm trình bày
   từng bước + nhiều phần a/b/c, CÓ THỂ lồng derivation) + nhãn môn + tùy chọn chấm + ảnh + gợi ý + bàn phím
   toán có cấu trúc; engine moat mở rộng (hỗn số/%/đơn vị/La Mã/căn bậc hai/6 chẩn đoán); đa môn (nền + seed
   Tiếng Việt lớp 1–3); TN học sinh (mục tiêu ngày · luyện nhanh · BXH · avatar); insight GV–PH; **gia sư AI
   MVP** (Gemini, giải thích khi sai, chờ `GEMINI_API_KEY` thật); **quên mật khẩu** (Resend SMTP — TẠM DỪNG,
-  chờ chủ repo mua domain); **đổi mật khẩu khi đã đăng nhập** (không phụ thuộc domain, hoạt động đầy đủ).
+  chờ chủ repo mua domain); **tự phục vụ tài khoản đầy đủ**: đổi mật khẩu khi đã đăng nhập · đổi tên hiển
+  thị · đăng xuất thiết bị khác · avatar ảnh thật (lựa chọn thêm cạnh emoji-XP) · xóa tài khoản (soft
+  delete, GV còn lớp có HS bị chặn) — cả 5 việc này KHÔNG phụ thuộc domain, hoạt động đầy đủ.
   **Còn lại**: M5 native/store (chờ tài khoản, `docs/M5-NATIVE.md`) - nhóm "Tương lai" (THCS/THPT sâu hơn ·
   môn khác đầy đủ · chấm từng bước+LaTeX thật) - auth còn thiếu: xác thực email/đổi email (chặn bởi domain,
-  cùng lý do quên mật khẩu), đổi tên hiển thị, xóa tài khoản, avatar ảnh thật, social login, MFA.
+  cùng lý do quên mật khẩu), social login, MFA.
 - **Stack**: TypeScript · Expo SDK 56 / Expo Router / React 19 / RN 0.85. Packages: `@synaptek/grading-engine`
   (moat) + `@synaptek/curriculum` + `@synaptek/learning-path` (heatmap/mastery) + `@synaptek/classroom` (mã mời +
   giới hạn nộp + điểm + tổng hợp + `pickForStudent`) + `@synaptek/step-grading` (chấm lời giải từng bước).
   NativeWind v4, `@supabase/supabase-js`, TanStack Query.
-- **Storage**: Supabase — migrations **`0001`–`0023`** (mới nhất: 0021 nối cặp · 0022 trình bày từng bước ·
-  0023 nhiều phần a/b/c). RLS chéo vai trò qua helper `SECURITY DEFINER` (D24/D26/D30/D32). Edge Functions:
-  `grade` · `grade-assignment` · `review-scheduler` · `ai-tutor-explain` (D46, Gemini, cần secret
-  `GEMINI_API_KEY` riêng). Auth SMTP: Resend (D47, cần secret `RESEND_API_KEY` + domain — TẠM DỪNG), cấu
-  hình qua Management API trong `deploy-supabase.yml`. Deploy: web Vercel auto + backend GitHub Action
-  auto (db push + functions deploy + ensure auth config) từ `develop`.
+- **Storage**: Supabase — migrations **`0001`–`0025`** (mới nhất: 0023 nhiều phần a/b/c · 0024 avatar ảnh
+  thật · 0025 xóa tài khoản). RLS chéo vai trò qua helper `SECURITY DEFINER` (D24/D26/D30/D32). Edge
+  Functions: `grade` · `grade-assignment` · `review-scheduler` · `ai-tutor-explain` (D46, Gemini, cần
+  secret `GEMINI_API_KEY` riêng) · `delete-account` (D52, service-role, soft delete). Auth SMTP: Resend
+  (D47, cần secret `RESEND_API_KEY` + domain — TẠM DỪNG), cấu hình qua Management API trong
+  `deploy-supabase.yml`. Deploy: web Vercel auto + backend GitHub Action auto (db push + functions
+  deploy + ensure auth config) từ `develop`.
 - **CI** (`.github/workflows/ci.yml`): 3 gate — **verify** (format · npm test · engine↔_shared sync · content ·
-  deno · web build · 6 guest e2e) · **RLS isolation** (rls-\*.sql trên Supabase thật) · **e2e-auth** (36 luồng
+  deno · web build · 6 guest e2e) · **RLS isolation** (rls-\*.sql trên Supabase thật) · **e2e-auth** (40 luồng
   đăng nhập trên Supabase+Edge). Supabase CLI pin `2.108.0`.
 
 ## Recent Changes
 
+- **Tự phục vụ tài khoản — trọn 4 việc (sau M4)**: đổi tên hiển thị (`profiles.full_name`, RLS có sẵn,
+  D49) · đăng xuất thiết bị khác (`signOut({scope:"others"})`, D50) · avatar ảnh thật (bucket Storage
+  `avatars` 2MB, LỰA CHỌN THÊM cạnh emoji-XP không thay thế, D51) · xóa tài khoản (Edge Function mới
+  `delete-account` service-role, soft delete, GV còn lớp có HS bị chặn, D52). Bug thật bắt được lúc
+  build: `service_role` cần GRANT tường minh từng bảng mới (không tự bypass như RLS) — thiếu GRANT trên
+  `profiles`/`classes` khiến role-check âm thầm sai, fix trong migration `0025`.
 - **Đổi mật khẩu khi đã đăng nhập (sau M4)**: `changePassword` xác thực lại mật khẩu hiện tại (chống
   đổi mật khẩu khi phiên bị chiếm dụng) trước khi `updateUser`. Màn `change-password.tsx`, vào từ Hồ sơ
   mục "Bảo mật". Không phụ thuộc domain/email — hoạt động đầy đủ. Decision Log **D48**.

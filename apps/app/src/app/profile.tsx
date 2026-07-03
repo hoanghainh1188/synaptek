@@ -1,6 +1,15 @@
 // Hồ sơ học sinh (US2 T036 · US3 T048: nhắc ôn). XP · streak · huy hiệu · bật/tắt nhắc. Guest → mời đăng nhập.
-import { useState } from "react";
-import { Image, Platform, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { useRef, useState } from "react";
+import {
+  ActivityIndicator,
+  Image,
+  Platform,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { getBadges } from "@/lib/content";
@@ -37,7 +46,7 @@ const ROLE_LABEL: Record<Role, string> = {
 
 export default function Profile() {
   const insets = useSafeAreaInsets();
-  const { user, signOut, signOutOtherDevices } = useAuth();
+  const { user, signOut, signOutOtherDevices, deleteAccount } = useAuth();
   const gami = useGamification();
   const myAvatar = useMyAvatar();
   const setAvatar = useSetAvatar();
@@ -65,6 +74,11 @@ export default function Profile() {
   const [nameDraft, setNameDraft] = useState("");
   const [confirmOtherDevices, setConfirmOtherDevices] = useState(false);
   const [otherDevicesMsg, setOtherDevicesMsg] = useState<string | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState("");
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const deletingRef = useRef(false);
 
   const state = gami.data?.state;
   const earned = new Set(gami.data?.earnedBadgeIds ?? []);
@@ -567,6 +581,84 @@ export default function Profile() {
                 <Pressable
                   accessibilityLabel="Huỷ đăng xuất"
                   onPress={() => setConfirmLogout(false)}
+                  className="min-h-[44px] flex-1 items-center justify-center rounded-md bg-paper"
+                >
+                  <Text className="font-display font-bold text-ink">Huỷ</Text>
+                </Pressable>
+              </View>
+            </View>
+          )}
+        </View>
+      )}
+
+      {/* Vùng nguy hiểm — xóa tài khoản (D52) */}
+      {user && (
+        <View className="mt-8">
+          <Text className="font-display text-xl font-bold text-no">Vùng nguy hiểm</Text>
+          {!confirmDelete ? (
+            <Pressable
+              accessibilityLabel="Xóa tài khoản"
+              onPress={() => {
+                setDeleteError(null);
+                setDeleteConfirmText("");
+                setConfirmDelete(true);
+              }}
+              className="mt-3 min-h-[48px] items-center justify-center rounded-md border-2 border-no/40"
+            >
+              <Text className="font-display font-bold text-no">Xóa tài khoản</Text>
+            </Pressable>
+          ) : (
+            <View className="mt-3 rounded-md border-2 border-no/30 p-3">
+              <Text className="text-sm text-ink">
+                Sau khi xóa, bạn KHÔNG đăng nhập lại được nữa. Nếu bạn là giáo viên còn lớp có học
+                sinh, cần xóa/chuyển giao lớp trước. Gõ "XÓA" để xác nhận.
+              </Text>
+              <TextInput
+                value={deleteConfirmText}
+                onChangeText={setDeleteConfirmText}
+                placeholder="XÓA"
+                placeholderTextColor="#a1a1aa"
+                accessibilityLabel="Gõ XÓA để xác nhận"
+                autoCapitalize="characters"
+                className="mt-2 min-h-[44px] rounded-md border-2 border-line bg-paper px-3 text-base text-ink"
+              />
+              {deleteError && (
+                <Text className="mt-2 text-sm font-semibold text-no">{deleteError}</Text>
+              )}
+              <View className="mt-2 flex-row gap-2">
+                <Pressable
+                  accessibilityLabel="Xác nhận xóa tài khoản"
+                  disabled={deleteConfirmText.trim() !== "XÓA" || deleting}
+                  onPress={async () => {
+                    // Khoá đồng bộ (ref, không phải state) — chặn double-invoke nếu onPress bắn 2 lần
+                    // (RN Web đôi khi bắn cả click+key cho cùng 1 lượt bấm) trước khi state kịp render lại.
+                    if (deletingRef.current) return;
+                    deletingRef.current = true;
+                    setDeleting(true);
+                    setDeleteError(null);
+                    const res = await deleteAccount();
+                    deletingRef.current = false;
+                    setDeleting(false);
+                    if (res.error) {
+                      setDeleteError(res.error);
+                      return;
+                    }
+                    setConfirmDelete(false);
+                    router.replace("/");
+                  }}
+                  className={`min-h-[44px] flex-1 items-center justify-center rounded-md ${
+                    deleteConfirmText.trim() === "XÓA" ? "bg-no" : "bg-line"
+                  }`}
+                >
+                  {deleting ? (
+                    <ActivityIndicator color="#fff" />
+                  ) : (
+                    <Text className="font-display font-bold text-white">Xóa vĩnh viễn</Text>
+                  )}
+                </Pressable>
+                <Pressable
+                  accessibilityLabel="Huỷ xóa tài khoản"
+                  onPress={() => setConfirmDelete(false)}
                   className="min-h-[44px] flex-1 items-center justify-center rounded-md bg-paper"
                 >
                   <Text className="font-display font-bold text-ink">Huỷ</Text>

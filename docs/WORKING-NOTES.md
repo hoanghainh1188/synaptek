@@ -4,22 +4,30 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
-**+ Đổi tên hiển thị + Đăng xuất thiết bị khác + Avatar ảnh thật ✅ vừa xong (feature/profile-self-service,
-PR #79 đang mở):** 3/4 việc trong nhóm "làm được ngay không phụ thuộc gì" (4 việc: đổi tên/xóa tài
-khoản/avatar ảnh thật/quản lý phiên — user chọn làm cả 4). `profile.ts` mới (`useMyFullName`/
-`useSetFullName`) update `profiles.full_name` qua RLS có sẵn, KHÔNG cần migration. UI sửa trực tiếp
-trong Hồ sơ (mục "Tên hiển thị", giống kiểu "Đổi vai trò"). `signOutOtherDevices()` dùng
-`signOut({scope:"others"})` — verify kỹ qua curl trực tiếp vào GoTrue local: server 204 + refresh token
-phiên gọi vẫn dùng được sau đó (đúng docs). KHÔNG có API liệt kê chi tiết từng phiên (thiết bị/vị trí) ở
-client — chỉ thu hồi được, nên chỉ làm 1 nút hành động trong mục Bảo mật, không phải màn "quản lý phiên"
-đầy đủ. Avatar ảnh thật: cột `profiles.avatar_photo_url` (migration 0024) + bucket Storage `avatars`
-(2MB, chỉ ảnh) — LỰA CHỌN THÊM bên cạnh emoji-XP, không thay thế; tái dùng pattern upload ảnh câu hỏi
-(D28). Bắt được 1 regression thật lúc build: label mới "Đăng xuất khỏi thiết bị khác" làm
+**+ Đổi tên hiển thị + Đăng xuất thiết bị khác + Avatar ảnh thật + Xóa tài khoản ✅ vừa xong
+(feature/profile-self-service, PR #79 đang mở):** TRỌN 4/4 việc trong nhóm "làm được ngay không phụ
+thuộc gì" mà user chọn làm. `profile.ts` mới (`useMyFullName`/`useSetFullName`) update
+`profiles.full_name` qua RLS có sẵn, KHÔNG cần migration. UI sửa trực tiếp trong Hồ sơ (mục "Tên hiển
+thị", giống kiểu "Đổi vai trò"). `signOutOtherDevices()` dùng `signOut({scope:"others"})` — verify kỹ
+qua curl trực tiếp vào GoTrue local: server 204 + refresh token phiên gọi vẫn dùng được sau đó (đúng
+docs). KHÔNG có API liệt kê chi tiết từng phiên (thiết bị/vị trí) ở client — chỉ thu hồi được, nên chỉ
+làm 1 nút hành động trong mục Bảo mật, không phải màn "quản lý phiên" đầy đủ. Avatar ảnh thật: cột
+`profiles.avatar_photo_url` (migration 0024) + bucket Storage `avatars` (2MB, chỉ ảnh) — LỰA CHỌN THÊM
+bên cạnh emoji-XP, không thay thế; tái dùng pattern upload ảnh câu hỏi (D28). Xóa tài khoản: Edge
+Function mới `delete-account` (service-role bắt buộc) — soft delete (`deleteUser(uid,true)`) + cột
+`profiles.deleted_at` (migration 0025); GV còn lớp có HS bị CHẶN (`blocksDeletion` thuần, unit test
+riêng); UI "Vùng nguy hiểm" gõ chữ "XÓA" để xác nhận. Decision Log **D49/D50/D51/D52**.
+
+**2 bug thật bắt được lúc build (đáng nhớ)**: (1) label mới "Đăng xuất khỏi thiết bị khác" làm
 `getByLabel("Đăng xuất")` (không exact) trong 3 test cũ (logout/change-password/forgot-password) khớp
-NHẦM 2 phần tử — fix bằng thêm `{exact:true}` cho cả 3. E2E `display-name.spec.ts` +
-`sign-out-other-devices.spec.ts` + `avatar-photo.spec.ts`. Decision Log **D49/D50/D51**.
-**Còn lại trong nhóm 4 việc**: xóa tài khoản (cần Edge Function service-role — soft delete, chặn xóa nếu
-GV còn lớp có HS, theo quyết định user).
+NHẦM 2 phần tử — fix `{exact:true}` cho cả 3. (2) **`service_role` KHÔNG tự có quyền đọc
+`public.profiles`/`public.classes`** dù dùng để bypass RLS trong Edge Function — project này yêu cầu
+GRANT tường minh từng bảng cho `service_role` (pattern đã có từ D21/0002·0003·0007, dễ quên khi thêm
+bảng mới cần Edge đọc). Thiếu GRANT khiến role-check âm thầm fallback "student", bỏ qua điều kiện chặn
+GV — lộ ra qua e2e chạy 2 lần liên tiếp lỗi giống hệt nhau (ban đầu tưởng nhầm là race condition/double-
+click, mất khá nhiều thời gian debug bằng cách thêm log trực tiếp vào Edge Function + đọc docker logs
+container `supabase_edge_runtime_synaptek` mới thấy đúng nguyên nhân — bài học: khi Edge Function dùng
+`admin`/service-role đọc bảng MỚI, luôn nhớ thêm GRANT trong cùng migration).
 
 **+ Đổi mật khẩu khi ĐÃ đăng nhập ✅ (feature/change-password, đã merge #78):** `auth.tsx` thêm
 `changePassword(currentPassword, newPassword)` — xác thực lại mật khẩu hiện tại qua `signInWithPassword`

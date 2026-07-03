@@ -49,9 +49,11 @@ mindmap
       ✅ Đăng nhập/đăng ký email-mật khẩu + đăng xuất + đổi vai trò
       ✅ Đổi mật khẩu khi đã đăng nhập (xác thực lại mật khẩu hiện tại)
       ✅ Quên mật khẩu (Resend SMTP, chống dò email) — TẠM DỪNG vì chưa có domain
+      ✅ Đổi tên hiển thị · đăng xuất thiết bị khác · avatar ảnh thật (thêm, cạnh emoji-XP)
+      ✅ Xóa tài khoản (soft delete, GV còn lớp có HS bị chặn)
       ⏳ chờ chủ repo mua domain → verify Resend → RESEND_API_KEY
-      🔮 xác thực email · đổi tên hiển thị/email khi đã đăng nhập · xóa tài khoản
-      🔮 avatar ảnh thật · social login · MFA · quản lý phiên đăng nhập
+      🔮 xác thực email · đổi email khi đã đăng nhập
+      🔮 social login · MFA
     🔭 Tương lai xa
       🔮 THCS/THPT sâu hơn (chưa bắt đầu)
       🔮 Môn khác đầy đủ Lý/Hóa/Anh (mới có nền đa môn)
@@ -81,6 +83,7 @@ flowchart LR
   SHIPPED --> A12["Gia sư AI MVP: giải thích khi HS sai (Gemini, engine vẫn chấm)"]
   SHIPPED --> A13["Quên mật khẩu: link khôi phục qua Resend SMTP, chống dò email"]
   SHIPPED --> A14["Đổi mật khẩu khi đã đăng nhập: xác thực lại mật khẩu hiện tại trước khi đổi"]
+  SHIPPED --> A15["Tự phục vụ tài khoản: đổi tên · đăng xuất thiết bị khác · avatar ảnh thật · xóa TK"]
 
   WIP --> B1["Push thật + cron review-scheduler — cần EAS projectId"]
   WIP --> B2["Verify thật trên iOS/Android (mới verify web)"]
@@ -90,7 +93,7 @@ flowchart LR
   FUTURE --> C1["M5 Native: EAS build · offline · lên store — cần tài khoản EAS/Apple/Google"]
   FUTURE --> C2["THCS/THPT sâu hơn · môn khác đầy đủ (Lý/Hóa/Anh)"]
   FUTURE --> C3["LaTeX render/input cho chấm từng bước · gia sư AI mở rộng (chat tự do)"]
-  FUTURE --> C4["Auth mở rộng: xác thực email/đổi email (cần domain) · đổi tên · xóa TK · avatar thật · social login · MFA"]
+  FUTURE --> C4["Auth mở rộng: xác thực email/đổi email (cần domain) · social login · MFA"]
 ```
 
 ## Chú thích trạng thái
