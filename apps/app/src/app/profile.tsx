@@ -1,6 +1,6 @@
 // Hồ sơ học sinh (US2 T036 · US3 T048: nhắc ôn). XP · streak · huy hiệu · bật/tắt nhắc. Guest → mời đăng nhập.
 import { useState } from "react";
-import { Platform, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { Image, Platform, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { getBadges } from "@/lib/content";
@@ -19,7 +19,13 @@ import { registerForPush } from "@/lib/notifications";
 import { useSavePushToken, useSetPushEnabled } from "@/lib/supabase/push";
 import { BadgeGrid } from "@/components/gamification/BadgeGrid";
 import { AVATARS, avatarEmoji, isAvatarUnlocked } from "@/lib/avatars";
-import { useMyAvatar, useSetAvatar } from "@/lib/supabase/avatar";
+import {
+  useMyAvatar,
+  useSetAvatar,
+  useMyAvatarPhoto,
+  useSetAvatarPhoto,
+  uploadAvatarPhoto,
+} from "@/lib/supabase/avatar";
 import { Mascot } from "@/components/Mascot";
 import { BackButton } from "@/components/BackButton";
 
@@ -35,6 +41,10 @@ export default function Profile() {
   const gami = useGamification();
   const myAvatar = useMyAvatar();
   const setAvatar = useSetAvatar();
+  const myAvatarPhoto = useMyAvatarPhoto();
+  const setAvatarPhoto = useSetAvatarPhoto();
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [photoMsg, setPhotoMsg] = useState<string | null>(null);
   const catalog = getBadges();
 
   const role = useMyRole();
@@ -165,13 +175,71 @@ export default function Profile() {
         </View>
       )}
 
-      {/* Avatar mở khoá theo XP */}
+      {/* Avatar mở khoá theo XP + ảnh thật (D51, lựa chọn thêm) */}
       {user && (
         <View className="mt-6">
           <View className="flex-row items-center gap-2">
-            <Text className="text-3xl">{avatarEmoji(myAvatar.data)}</Text>
+            {myAvatarPhoto.data ? (
+              <Image
+                source={{ uri: myAvatarPhoto.data }}
+                accessibilityLabel="Ảnh đại diện hiện tại"
+                className="h-9 w-9 rounded-full"
+              />
+            ) : (
+              <Text className="text-3xl">{avatarEmoji(myAvatar.data)}</Text>
+            )}
             <Text className="font-display text-xl font-bold text-ink">Avatar của em</Text>
           </View>
+
+          <View className="mt-3 flex-row items-center gap-3">
+            <Pressable
+              accessibilityLabel="Tải ảnh đại diện lên"
+              disabled={uploadingPhoto}
+              onPress={() => {
+                if (Platform.OS !== "web" || typeof document === "undefined") {
+                  setPhotoMsg("Tải ảnh hiện hỗ trợ trên web.");
+                  return;
+                }
+                const input = document.createElement("input");
+                input.type = "file";
+                input.accept = "image/*";
+                input.onchange = async () => {
+                  const file = input.files?.[0];
+                  if (!file) return;
+                  setUploadingPhoto(true);
+                  setPhotoMsg(null);
+                  try {
+                    const url = await uploadAvatarPhoto(file, user.id);
+                    setAvatarPhoto.mutate(url);
+                  } catch {
+                    setPhotoMsg("Tải ảnh thất bại (tối đa 2MB, chỉ ảnh).");
+                  } finally {
+                    setUploadingPhoto(false);
+                  }
+                };
+                input.click();
+              }}
+              className="min-h-[40px] items-center justify-center rounded-md bg-surface px-3 shadow-sm"
+            >
+              <Text className="font-display font-bold text-ink">
+                {uploadingPhoto ? "Đang tải…" : "Tải ảnh lên"}
+              </Text>
+            </Pressable>
+            {myAvatarPhoto.data && (
+              <Pressable
+                accessibilityLabel="Dùng lại emoji"
+                onPress={() => setAvatarPhoto.mutate(null)}
+                className="min-h-[40px] items-center justify-center rounded-md bg-paper px-3"
+              >
+                <Text className="font-display font-bold text-ink">Dùng lại emoji</Text>
+              </Pressable>
+            )}
+          </View>
+          {photoMsg && <Text className="mt-1 text-xs text-no">{photoMsg}</Text>}
+          <Text className="mt-1 text-xs text-muted">
+            Nên dùng ảnh vui/hoạt hình thay vì ảnh mặt thật của em nhé.
+          </Text>
+
           <View className="mt-3 flex-row flex-wrap gap-2">
             {AVATARS.map((a) => {
               const unlocked = isAvatarUnlocked(a, state?.totalXp ?? 0);

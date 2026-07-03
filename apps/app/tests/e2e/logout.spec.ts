@@ -11,7 +11,7 @@ test("đăng xuất khỏi tài khoản", async ({ page }) => {
   await page.getByText("Đăng ký", { exact: true }).click();
 
   await page.goto("/profile");
-  await page.getByLabel("Đăng xuất").click();
+  await page.getByLabel("Đăng xuất", { exact: true }).click();
   await page.getByLabel("Xác nhận đăng xuất").click();
   // về trang chủ guest → nút "Đăng nhập" xuất hiện
   await expect(page.getByLabel("Đăng nhập")).toBeVisible({ timeout: 15_000 });
