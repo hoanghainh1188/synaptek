@@ -180,7 +180,8 @@ jobs:
             tests/e2e/compound.spec.ts \
             tests/e2e/compound-derivation.spec.ts \
             tests/e2e/sqrt.spec.ts \
-            tests/e2e/ai-tutor.spec.ts
+            tests/e2e/ai-tutor.spec.ts \
+            tests/e2e/forgot-password.spec.ts
         working-directory: apps/app
 
       - name: Stop Supabase

@@ -1,6 +1,7 @@
-// Form đăng nhập/đăng ký email-mật khẩu (US2, T031).
+// Form đăng nhập/đăng ký email-mật khẩu (US2, T031). Quên mật khẩu: xem forgot-password.tsx (D47).
 import { useState } from "react";
 import { ActivityIndicator, Pressable, Text, TextInput, View } from "react-native";
+import { router } from "expo-router";
 import { useAuth } from "@/lib/supabase/auth";
 
 function Field(props: React.ComponentProps<typeof TextInput> & { label: string }) {
@@ -108,6 +109,7 @@ export function AuthForm({ onDone }: { onDone: () => void }) {
       <Pressable
         onPress={submit}
         disabled={busy}
+        accessibilityLabel={mode === "in" ? "Đăng nhập" : "Đăng ký"}
         className="min-h-[52px] items-center justify-center rounded-md bg-brand"
       >
         {busy ? (
@@ -118,6 +120,14 @@ export function AuthForm({ onDone }: { onDone: () => void }) {
           </Text>
         )}
       </Pressable>
+      {mode === "in" && (
+        <Pressable
+          accessibilityLabel="Quên mật khẩu"
+          onPress={() => router.push("/forgot-password")}
+        >
+          <Text className="text-center text-sm font-semibold text-brand">Quên mật khẩu?</Text>
+        </Pressable>
+      )}
       <Pressable onPress={() => setMode(mode === "in" ? "up" : "in")}>
         <Text className="text-center text-sm font-semibold text-muted">
           {mode === "in" ? "Chưa có tài khoản? Đăng ký" : "Đã có tài khoản? Đăng nhập"}

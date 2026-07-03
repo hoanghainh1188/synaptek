@@ -98,6 +98,30 @@ supabase functions deploy ai-tutor-explain     # hosted
 - Test hàm thuần (validate/build prompt) ở `functions/ai-tutor-explain/index.test.ts` (Deno) — không gọi
   Gemini thật.
 
+## Quên mật khẩu — SMTP Resend (D47)
+
+`resetPasswordForEmail` (Supabase Auth) gửi link khôi phục qua **SMTP tùy chỉnh** — mặc định Supabase
+dùng mailer chung giới hạn rất thấp, không đủ tin cậy cho email thật. Cấu hình qua Management API trong
+`deploy-supabase.yml` (idempotent), **CHỈ bật SMTP khi có secret `RESEND_API_KEY`** — chưa có thì email
+vẫn "gửi được" nhưng qua mailer mặc định (dễ bị delay/chặn).
+
+```bash
+gh secret set RESEND_API_KEY --body "re_xxxxxxxxx"     # 1 lần — lấy key tại resend.com/api-keys
+gh workflow run deploy-supabase.yml                    # chạy tay để áp ngay (workflow chỉ auto-chạy khi đụng path backend)
+```
+
+- SMTP: `smtp.resend.com:587`, user `resend`, pass = `RESEND_API_KEY`.
+- Sender tạm `onboarding@resend.dev` (domain sandbox Resend) — **CHỈ gửi được về đúng email đăng ký tài
+  khoản Resend** cho tới khi verify domain thật. Để gửi cho HS/GV/PH thật: vào
+  [resend.com/domains](https://resend.com/domains) → thêm domain → thêm DNS record (SPF/DKIM) nhà cung
+  cấp domain yêu cầu → verify → đổi `smtp_admin_email` trong `deploy-supabase.yml` sang
+  `no-reply@<domain-đã-verify>`.
+- `site_url`/`uri_allow_list` cũng được set cùng lúc (khớp URL production + wildcard `**` cho
+  `/reset-password`) — cần đổi nếu domain production đổi.
+- Local dev **KHÔNG cần Resend** — `supabase start` tự có Mailpit (SMTP giả, xem tại
+  `http://127.0.0.1:54324`) bắt mọi email gửi ra, kể cả recovery. E2E `forgot-password.spec.ts` đọc
+  email thật từ Mailpit để verify link khôi phục hoạt động đúng.
+
 ## Vì sao chấm ở server (D4)
 
 Client chỉ gửi `{ questionId, answer }`. **Đáp án đúng không bao giờ rời server** — tra ở server rồi

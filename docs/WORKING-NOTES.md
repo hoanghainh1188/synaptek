@@ -4,6 +4,22 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ Quên mật khẩu ✅ vừa xong (feature/forgot-password, PR đang mở):** `auth.tsx` thêm
+`resetPasswordForEmail`/`updatePassword` + `recoveryMode` (theo dõi event `PASSWORD_RECOVERY`). Màn
+`forgot-password.tsx` (luôn báo "đã gửi" giống nhau — chống dò email đã đăng ký) + `reset-password.tsx`
+(grace-period 2.5s chờ Supabase xử lý URL bất đồng bộ trước khi báo "link không hợp lệ"). Link "Quên
+mật khẩu?" mới trong `AuthForm` (chỉ mode đăng nhập); thêm `accessibilityLabel` cho nút submit (trước
+đây trùng text với heading, gây ambiguous selector — fix luôn nhân tiện). SMTP dùng **Resend** (free
+tier vĩnh viễn — SendGrid đã bỏ free tier 2025), cấu hình qua Management API trong
+`deploy-supabase.yml`, CHỈ bật khi có secret `RESEND_API_KEY` (chưa có → mailer mặc định Supabase).
+Sender tạm `onboarding@resend.dev` (sandbox — chỉ gửi được về email chủ tài khoản Resend cho tới khi
+verify domain thật). `additional_redirect_urls`/`uri_allow_list` dùng wildcard `**`. E2E
+`forgot-password.spec.ts` verify THẬT qua Mailpit (SMTP giả cục bộ, không cần Resend thật) — bắt được 2
+bug thật lúc build: (1) race condition URL bất đồng bộ (fix bằng grace-period), (2) href email bị
+HTML-entity-encode (`&amp;` cần giải mã trước khi dùng làm URL). Decision Log D47. **Còn lại để dùng
+thật**: `gh secret set RESEND_API_KEY` rồi verify domain tại resend.com/domains (xem
+`supabase/README.md` mục "Quên mật khẩu").
+
 **+ Gia sư AI (MVP) ✅ (feature/ai-tutor, đã merge #74; đổi provider sang Gemini sau merge):** Edge
 Function `ai-tutor-explain` gọi **Gemini API** (`gemini-2.5-flash-lite`, đổi qua secret `GEMINI_MODEL`
 không cần sửa code) giải thích ngắn gọn vì sao HS SAI — **engine vẫn chấm, LLM chỉ giải thích**
@@ -271,7 +287,7 @@ Decision Log **D19** (BKT) · **D20** (gamification) · **D21** (cron+push) đã
 
 ## Còn mở (cập nhật — thay cho "Việc tiếp theo"/"Nợ kỹ thuật" cũ bên dưới, vốn là snapshot thời M0–M2 đã lỗi thời)
 
-Kiểm kỹ ở phiên 2026-07-02 (đối chiếu roadmap + Decision Log D26–D46). Còn lại thực chất:
+Kiểm kỹ ở phiên 2026-07-02 (đối chiếu roadmap + Decision Log D26–D47). Còn lại thực chất:
 
 - **M5 native** — chặn bởi tài khoản (EAS/Apple/Google), không phải việc code. Chi tiết + lệnh cụ thể:
   `docs/M5-NATIVE.md`.
@@ -279,6 +295,12 @@ Kiểm kỹ ở phiên 2026-07-02 (đối chiếu roadmap + Decision Log D26–D
 - **Gia sư AI**: MVP đã ship (D46, `ai-tutor-explain`, dùng Gemini) — CHỈ còn thiếu `GEMINI_API_KEY` thật
   (chưa có, `supabase secrets set` khi sẵn sàng) để trả lời thật thay vì "chưa sẵn sàng"; mở rộng phạm vi
   (chat tự do, các màn khác ngoài luyện tập, đa provider) là quyết định sản phẩm riêng, chưa làm.
+- **Quên mật khẩu**: đã ship (D47) — CHỈ còn thiếu `RESEND_API_KEY` + verify domain thật tại
+  resend.com/domains (chưa có domain, đang dùng sandbox `onboarding@resend.dev` chỉ gửi được về email
+  chủ tài khoản Resend). Xem `supabase/README.md` mục "Quên mật khẩu" để bật khi sẵn sàng.
+- **Auth/quản lý người dùng còn thiếu khác** (audit cùng phiên): xác thực email, đổi mật khẩu khi đã
+  đăng nhập, đổi tên hiển thị, đổi email, xóa tài khoản, avatar ảnh thật, social login, MFA, quản lý
+  phiên đăng nhập — chưa làm, độ ưu tiên trung bình→thấp, chưa được yêu cầu cụ thể.
 - **Nhóm "Tương lai" còn lại** (`docs/02-roadmap.md`): THCS/THPT sâu hơn · môn khác đầy đủ (Lý/Hóa/Anh,
   mới có nền đa môn D39) · LaTeX render/input cho chấm từng bước (thuật toán đã ship D38–D45, LaTeX thật
   chưa — `docs/future/step-grading.md`) — cả 3 đều **chưa bắt đầu**, là quyết định phạm vi sản phẩm (cần
