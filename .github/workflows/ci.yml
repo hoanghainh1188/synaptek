@@ -1,7 +1,8 @@
 name: CI
 
 # Cổng chất lượng mỗi thay đổi vào develop:
-#   format (Prettier) → test (packages) → engine ↔ _shared in sync → build web (Expo export).
+#   format (Prettier) → test (packages) → engine ↔ _shared in sync → content in sync →
+#   KaTeX assets in sync → build web (Expo export).
 # Engine là moat (Constitution I). Build web type-check + bundle app universal.
 
 on:
@@ -51,6 +52,13 @@ jobs:
           npm run validate:content
           npm run gen:content
           git diff --exit-code -- apps/app/src/lib/content.generated.ts
+
+      # public/katex là vendor copy TỰ SINH từ node_modules/katex (D53). Chạy lại sync và đảm bảo
+      # không lệch — tránh quên cập nhật khi nâng cấp katex trong package.json.
+      - name: KaTeX assets in sync
+        run: |
+          npm run sync:katex
+          git diff --exit-code -- apps/app/public/katex
 
       # Edge Functions chạy trên Deno → test logic job nền (idempotency scheduler, SC-006).
       - name: Setup Deno

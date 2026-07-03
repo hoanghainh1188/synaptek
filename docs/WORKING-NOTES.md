@@ -4,7 +4,42 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
-**+ LaTeX render thật qua KaTeX ✅ vừa xong (feature/latex-katex, PR đang mở):** Trong 4 việc "cần quyết
+**+ Fix bug thật do USER báo trực tiếp — 2 lượt fix (feature/latex-fix-css, PR đang mở, sau khi D53 đã
+merge):** Screenshot user gửi: phân số "1/2" ở màn luyện tập hiện thành "21" (không gạch ngang, tử/mẫu
+đảo + dính liền). Nguyên nhân gốc: `@import "katex/dist/katex.min.css"` trong `global.css` KHÔNG được
+Metro resolve (CSS `@import` trỏ gói npm — khác `import` JS/TS) → KaTeX render HTML nhưng KHÔNG có
+style → cấu trúc định vị CSS tuyệt đối (`.mfrac`/`.vlist`) sụp thành chữ phẳng đọc theo thứ tự DOM.
+
+**Lượt fix #1** (`import "katex/dist/katex.min.css"` ngay trong `KatexSpan.web.tsx`) sửa đúng hiển thị
+NHƯNG tự gây ra bug MỚI nặng hơn, chỉ lộ ra khi chạy CI (41+ spec liên tục): Metro dev server RÒ RỈ BỘ
+NHỚ khi bundle lại CSS này qua nhiều request → `heap out of memory`, sập server giữa chừng → HÀNG LOẠT
+test SAU ĐÓ fail `net::ERR_CONNECTION_REFUSED` (không phải lỗi test logic). Debug bằng A/B thật:
+`git checkout develop` (chưa có `import` CSS) chạy sạch 57/57; branch có `import` CSS sập ở request
+~30 — xác nhận đúng nguyên nhân trước khi thử NODE_OPTIONS heap-bump (không đủ, vẫn sập) rồi mới quyết
+đổi hẳn cách nạp.
+
+**Lượt fix #2 (chốt)**: copy `katex.min.css` + fonts vào `public/katex/` (Expo Router static assets,
+tự copy vào `dist/` lúc export) + nạp qua thẻ `<link>` chèn tay trong `useEffect`, KHÔNG qua Metro
+module graph nữa (tách hẳn khỏi cả `@import` CSS lẫn `import` JS). Verify lại toàn bộ 59 spec local
+(`CI=true npx playwright test`, mô phỏng đúng điều kiện CI) — sạch, không OOM.
+
+**Bài học**: unit test + e2e ban đầu (chỉ đếm số phần tử `.katex`) ĐỀU XANH dù bug hiển thị tồn tại —
+đếm elements không đủ, DOM vẫn có `.katex` hợp lệ chỉ THIẾU CSS. Viết lại test: verify
+`document.styleSheets` thật sự chứa rule `.katex` (poll vì `<link>` nạp bất đồng bộ) + thứ tự tử/mẫu
+qua MathML (`<mfrac>` con — không phụ thuộc CSS, nên cũng đổi `katex.renderToString` sang output mặc
+định `htmlAndMathml`, kèm lợi ích accessibility). Đã tự verify test mới THẬT SỰ bắt được bug bằng cách
+tạm revert fix rồi chạy lại (fail đúng như kỳ vọng), sau đó khôi phục fix (pass). Decision Log D53
+(cập nhật 2 lần).
+
+**+ Tự động hoá đồng bộ vendor assets KaTeX (cùng nhánh, theo yêu cầu user "đối với cấu trúc lưu trữ
+có cần sửa gì không"):** `public/katex/` ban đầu copy TAY từ `node_modules/katex/dist` — dễ quên cập
+nhật khi nâng cấp `katex`. Thêm `scripts/sync-katex-assets.mjs` (`npm run sync:katex`) + gate CI
+`git diff` chống lệch, đúng pattern `sync:edge` đã có cho code TỰ SINH (D13). Loại `public/katex/`
+khỏi prettier (`.prettierignore`) — nếu không, prettier tự format lại CSS minified thành nhiều dòng,
+lệch với bản gốc script sinh ra mỗi lần chạy (bắt được lúc `git diff --exit-code` fail ngay sau khi
+thêm script, trước khi thêm `.prettierignore`).
+
+**+ LaTeX render thật qua KaTeX ✅ (feature/latex-katex, đã merge #80):** Trong 4 việc "cần quyết
 định phạm vi sản phẩm lớn hơn" (THCS/THPT sâu hơn · môn mới Lý/Hóa/Anh · LaTeX thật · gia sư AI mở
 rộng), user chọn làm LaTeX trước — **duy nhất không phụ thuộc nội dung/chuyên môn sư phạm hay quyết
 định an toàn sản phẩm**. `MathText.web.tsx` mới (pattern platform-split `.web.tsx` có sẵn trong repo) —
