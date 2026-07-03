@@ -1,12 +1,13 @@
 // Hồ sơ học sinh (US2 T036 · US3 T048: nhắc ôn). XP · streak · huy hiệu · bật/tắt nhắc. Guest → mời đăng nhập.
 import { useState } from "react";
-import { Platform, Pressable, ScrollView, Text, View } from "react-native";
+import { Platform, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { getBadges } from "@/lib/content";
 import { useAuth } from "@/lib/supabase/auth";
 import { useGamification } from "@/lib/supabase/gamification";
 import { useMyRole, useSetRole, type Role } from "@/lib/supabase/role";
+import { useMyFullName, useSetFullName } from "@/lib/supabase/profile";
 import {
   useMyParentCode,
   useRegenerateParentCode,
@@ -30,7 +31,7 @@ const ROLE_LABEL: Record<Role, string> = {
 
 export default function Profile() {
   const insets = useSafeAreaInsets();
-  const { user, signOut } = useAuth();
+  const { user, signOut, signOutOtherDevices } = useAuth();
   const gami = useGamification();
   const myAvatar = useMyAvatar();
   const setAvatar = useSetAvatar();
@@ -38,6 +39,8 @@ export default function Profile() {
 
   const role = useMyRole();
   const setRole = useSetRole();
+  const myFullName = useMyFullName();
+  const setFullName = useSetFullName();
   const parentCode = useMyParentCode();
   const regenCode = useRegenerateParentCode();
   const clearCode = useClearParentCode();
@@ -48,6 +51,10 @@ export default function Profile() {
   const [pushMsg, setPushMsg] = useState<string | null>(null);
   const [pendingRole, setPendingRole] = useState<Role | null>(null);
   const [confirmLogout, setConfirmLogout] = useState(false);
+  const [editingName, setEditingName] = useState(false);
+  const [nameDraft, setNameDraft] = useState("");
+  const [confirmOtherDevices, setConfirmOtherDevices] = useState(false);
+  const [otherDevicesMsg, setOtherDevicesMsg] = useState<string | null>(null);
 
   const state = gami.data?.state;
   const earned = new Set(gami.data?.earnedBadgeIds ?? []);
@@ -103,6 +110,58 @@ export default function Profile() {
           <StatCard value={String(state?.totalXp ?? 0)} label="XP" accent="#4f46e5" />
           <StatCard value={`${state?.currentStreak ?? 0}🔥`} label="Streak" accent="#ea580c" />
           <StatCard value={String(state?.longestStreak ?? 0)} label="Kỷ lục" accent="#16a34a" />
+        </View>
+      )}
+
+      {/* Tên hiển thị (D49) — sửa được sau khi đăng ký, khác lúc trước chỉ đặt được 1 lần */}
+      {user && (
+        <View className="mt-6">
+          <Text className="font-display text-xl font-bold text-ink">Tên hiển thị</Text>
+          {!editingName ? (
+            <Pressable
+              accessibilityLabel="Đổi tên hiển thị"
+              onPress={() => {
+                setNameDraft(myFullName.data ?? "");
+                setEditingName(true);
+              }}
+              className="mt-2 min-h-[44px] flex-row items-center justify-between rounded-md border-2 border-line bg-surface px-3"
+            >
+              <Text className="font-semibold text-ink">{myFullName.data || "(chưa đặt tên)"}</Text>
+              <Text className="font-bold text-brand">Sửa</Text>
+            </Pressable>
+          ) : (
+            <View className="mt-2 rounded-md border-2 border-line bg-surface p-3">
+              <TextInput
+                value={nameDraft}
+                onChangeText={setNameDraft}
+                placeholder="Tên của em"
+                placeholderTextColor="#a1a1aa"
+                accessibilityLabel="Tên hiển thị mới"
+                className="min-h-[44px] rounded-md border-2 border-line bg-paper px-3 text-base text-ink"
+              />
+              <View className="mt-2 flex-row gap-2">
+                <Pressable
+                  accessibilityLabel="Lưu tên hiển thị"
+                  disabled={!nameDraft.trim() || setFullName.isPending}
+                  onPress={() =>
+                    setFullName.mutate(nameDraft.trim(), {
+                      onSuccess: () => setEditingName(false),
+                    })
+                  }
+                  className={`min-h-[40px] flex-1 items-center justify-center rounded-md ${nameDraft.trim() ? "bg-brand" : "bg-line"}`}
+                >
+                  <Text className="font-display font-bold text-white">Lưu</Text>
+                </Pressable>
+                <Pressable
+                  accessibilityLabel="Huỷ đổi tên"
+                  onPress={() => setEditingName(false)}
+                  className="min-h-[40px] flex-1 items-center justify-center rounded-md bg-paper"
+                >
+                  <Text className="font-display font-bold text-ink">Huỷ</Text>
+                </Pressable>
+              </View>
+            </View>
+          )}
         </View>
       )}
 
@@ -350,7 +409,7 @@ export default function Profile() {
         <BadgeGrid catalog={catalog} earned={earned} />
       </View>
 
-      {/* Bảo mật — đổi mật khẩu khi đã đăng nhập (D48, khác quên mật khẩu qua email) */}
+      {/* Bảo mật — đổi mật khẩu khi đã đăng nhập (D48) + đăng xuất thiết bị khác (D50) */}
       {user && (
         <View className="mt-8">
           <Text className="font-display text-xl font-bold text-ink">Bảo mật</Text>
@@ -361,6 +420,53 @@ export default function Profile() {
           >
             <Text className="font-display font-bold text-ink">Đổi mật khẩu ›</Text>
           </Pressable>
+
+          {!confirmOtherDevices ? (
+            <Pressable
+              accessibilityLabel="Đăng xuất khỏi thiết bị khác"
+              onPress={() => {
+                setOtherDevicesMsg(null);
+                setConfirmOtherDevices(true);
+              }}
+              className="mt-2 min-h-[48px] items-center justify-center rounded-md bg-surface shadow-sm"
+            >
+              <Text className="font-display font-bold text-ink">Đăng xuất khỏi thiết bị khác</Text>
+            </Pressable>
+          ) : (
+            <View className="mt-2 rounded-md border-2 border-line bg-surface p-3">
+              <Text className="text-sm text-ink">
+                Thu hồi đăng nhập ở MỌI thiết bị khác — chỉ giữ lại phiên trên thiết bị này. Hữu ích
+                nếu em nghi ngờ ai đó khác đang đăng nhập tài khoản của mình.
+              </Text>
+              <View className="mt-2 flex-row gap-2">
+                <Pressable
+                  accessibilityLabel="Xác nhận đăng xuất thiết bị khác"
+                  onPress={async () => {
+                    const res = await signOutOtherDevices();
+                    setConfirmOtherDevices(false);
+                    setOtherDevicesMsg(
+                      res.error
+                        ? "Không thực hiện được, thử lại sau."
+                        : "Đã đăng xuất thiết bị khác ✓",
+                    );
+                  }}
+                  className="min-h-[40px] flex-1 items-center justify-center rounded-md bg-brand"
+                >
+                  <Text className="font-display font-bold text-white">Xác nhận</Text>
+                </Pressable>
+                <Pressable
+                  accessibilityLabel="Huỷ đăng xuất thiết bị khác"
+                  onPress={() => setConfirmOtherDevices(false)}
+                  className="min-h-[40px] flex-1 items-center justify-center rounded-md bg-paper"
+                >
+                  <Text className="font-display font-bold text-ink">Huỷ</Text>
+                </Pressable>
+              </View>
+            </View>
+          )}
+          {otherDevicesMsg && (
+            <Text className="mt-2 text-sm font-semibold text-brand">{otherDevicesMsg}</Text>
+          )}
         </View>
       )}
 

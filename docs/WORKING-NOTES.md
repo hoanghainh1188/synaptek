@@ -4,7 +4,19 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
-**+ Đổi mật khẩu khi ĐÃ đăng nhập ✅ vừa xong (feature/change-password, PR đang mở):** `auth.tsx` thêm
+**+ Đổi tên hiển thị + Đăng xuất thiết bị khác ✅ vừa xong (feature/profile-self-service, PR đang mở):**
+Tiếp tục nhóm "làm được ngay không phụ thuộc gì" (4 việc: đổi tên/xóa tài khoản/avatar ảnh thật/quản lý
+phiên — user chọn làm cả 4, đây là 2 việc đơn giản nhất). `profile.ts` mới (`useMyFullName`/
+`useSetFullName`) update `profiles.full_name` qua RLS có sẵn, KHÔNG cần migration. UI sửa trực tiếp
+trong Hồ sơ (mục "Tên hiển thị", giống kiểu "Đổi vai trò"). `signOutOtherDevices()` dùng
+`signOut({scope:"others"})` — verify kỹ qua curl trực tiếp vào GoTrue local: server 204 + refresh token
+phiên gọi vẫn dùng được sau đó (đúng docs). KHÔNG có API liệt kê chi tiết từng phiên (thiết bị/vị trí) ở
+client — chỉ thu hồi được, nên chỉ làm 1 nút hành động trong mục Bảo mật, không phải màn "quản lý phiên"
+đầy đủ. E2E `display-name.spec.ts` + `sign-out-other-devices.spec.ts`. Decision Log **D49/D50**.
+**Còn lại trong nhóm 4 việc**: avatar ảnh thật (cần Storage bucket + migration), xóa tài khoản (cần Edge
+Function service-role — soft delete, chặn xóa nếu GV còn lớp có HS, theo quyết định user).
+
+**+ Đổi mật khẩu khi ĐÃ đăng nhập ✅ (feature/change-password, đã merge #78):** `auth.tsx` thêm
 `changePassword(currentPassword, newPassword)` — xác thực lại mật khẩu hiện tại qua `signInWithPassword`
 trước khi `updateUser` (chống đổi mật khẩu khi phiên bị chiếm dụng). Màn `change-password.tsx` mới, vào
 từ mục "Bảo mật" ở Hồ sơ. **Chủ động chọn hướng này** (trong 3 lựa chọn: đổi mật khẩu / đổi tên hiển
