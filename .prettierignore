@@ -17,3 +17,5 @@ apps/app/expo-env.d.ts
 supabase/functions/_shared/
 # Manifest nội dung = artifact TỰ SINH (npm run gen:content); gate là `git diff` sync, KHÔNG phải prettier.
 apps/app/src/lib/content.generated.ts
+# KaTeX CSS = vendor copy TỰ SINH (npm run sync:katex, D53); giữ nguyên bản minified gốc.
+apps/app/public/katex/
