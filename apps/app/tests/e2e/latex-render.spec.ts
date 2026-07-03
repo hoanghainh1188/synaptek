@@ -38,16 +38,23 @@ test("phân số MCQ render đúng: CSS KaTeX nạp được + đúng thứ tự
 }) => {
   await page.goto("/practice/g4.num.fractions");
 
-  const hasKatexCss = await page.evaluate(() =>
-    Array.from(document.styleSheets).some((sheet) => {
-      try {
-        return Array.from(sheet.cssRules).some((r) => r.cssText.includes(".katex"));
-      } catch {
-        return false;
-      }
-    }),
-  );
-  expect(hasKatexCss).toBe(true);
+  // <link> CSS nạp qua useEffect (bất đồng bộ) rồi cần round-trip mạng để load thật — poll thay vì
+  // check 1 lần (check ngay lúc goto() xong từng flaky vì CSS chưa kịp nạp).
+  await expect
+    .poll(
+      () =>
+        page.evaluate(() =>
+          Array.from(document.styleSheets).some((sheet) => {
+            try {
+              return Array.from(sheet.cssRules).some((r) => r.cssText.includes(".katex"));
+            } catch {
+              return false;
+            }
+          }),
+        ),
+      { timeout: 15_000 },
+    )
+    .toBe(true);
 
   // Câu đầu "Phân số nào lớn hơn?" có 2 lựa chọn 1/2, 1/3 (content/questions/g4.num.fractions.json).
   const firstFrac = page.locator(".katex mfrac").first();

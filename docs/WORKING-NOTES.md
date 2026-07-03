@@ -4,20 +4,32 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
-**+ Fix bug thật do USER báo trực tiếp (feature/latex-fix-css, PR đang mở, sau khi D53 đã merge):**
-Screenshot user gửi: phân số "1/2" ở màn luyện tập hiện thành "21" (không có gạch ngang, tử/mẫu bị đảo
+**+ Fix bug thật do USER báo trực tiếp — 2 lượt fix (feature/latex-fix-css, PR đang mở, sau khi D53 đã
+merge):** Screenshot user gửi: phân số "1/2" ở màn luyện tập hiện thành "21" (không gạch ngang, tử/mẫu
+đảo + dính liền). Nguyên nhân gốc: `@import "katex/dist/katex.min.css"` trong `global.css` KHÔNG được
+Metro resolve (CSS `@import` trỏ gói npm — khác `import` JS/TS) → KaTeX render HTML nhưng KHÔNG có
+style → cấu trúc định vị CSS tuyệt đối (`.mfrac`/`.vlist`) sụp thành chữ phẳng đọc theo thứ tự DOM.
 
-- dính liền). Nguyên nhân: `@import "katex/dist/katex.min.css"` trong `global.css` KHÔNG được Metro
-  resolve (CSS `@import` trỏ gói npm — khác `import` JS/TS) → KaTeX render HTML nhưng KHÔNG có style →
-  cấu trúc định vị bằng CSS tuyệt đối (`.mfrac`/`.vlist`) sụp thành chữ phẳng đọc theo thứ tự DOM (mẫu số
-  trước). Fix: chuyển `import "katex/dist/katex.min.css"` vào NGAY file `KatexSpan.web.tsx` (import CSS
-  từ .tsx là cách Metro bundle chuẩn). **Bài học**: unit test + e2e ban đầu (chỉ đếm số phần tử `.katex`)
-  ĐỀU XANH dù bug tồn tại — đếm elements không đủ, DOM vẫn có `.katex` hợp lệ chỉ THIẾU CSS. Viết lại
-  test: verify `document.styleSheets` thật sự chứa rule `.katex` + verify thứ tự tử/mẫu qua MathML
-  (`<mfrac>` con — không phụ thuộc CSS, nên cũng đổi `katex.renderToString` sang output mặc định
-  `htmlAndMathml` để có MathML thật, kèm lợi ích accessibility cho trình đọc màn hình). Đã tự verify test
-  mới THẬT SỰ bắt được bug bằng cách tạm revert fix rồi chạy lại (fail đúng như kỳ vọng), sau đó khôi
-  phục fix (pass). Decision Log D53 (cập nhật).
+**Lượt fix #1** (`import "katex/dist/katex.min.css"` ngay trong `KatexSpan.web.tsx`) sửa đúng hiển thị
+NHƯNG tự gây ra bug MỚI nặng hơn, chỉ lộ ra khi chạy CI (41+ spec liên tục): Metro dev server RÒ RỈ BỘ
+NHỚ khi bundle lại CSS này qua nhiều request → `heap out of memory`, sập server giữa chừng → HÀNG LOẠT
+test SAU ĐÓ fail `net::ERR_CONNECTION_REFUSED` (không phải lỗi test logic). Debug bằng A/B thật:
+`git checkout develop` (chưa có `import` CSS) chạy sạch 57/57; branch có `import` CSS sập ở request
+~30 — xác nhận đúng nguyên nhân trước khi thử NODE_OPTIONS heap-bump (không đủ, vẫn sập) rồi mới quyết
+đổi hẳn cách nạp.
+
+**Lượt fix #2 (chốt)**: copy `katex.min.css` + fonts vào `public/katex/` (Expo Router static assets,
+tự copy vào `dist/` lúc export) + nạp qua thẻ `<link>` chèn tay trong `useEffect`, KHÔNG qua Metro
+module graph nữa (tách hẳn khỏi cả `@import` CSS lẫn `import` JS). Verify lại toàn bộ 59 spec local
+(`CI=true npx playwright test`, mô phỏng đúng điều kiện CI) — sạch, không OOM.
+
+**Bài học**: unit test + e2e ban đầu (chỉ đếm số phần tử `.katex`) ĐỀU XANH dù bug hiển thị tồn tại —
+đếm elements không đủ, DOM vẫn có `.katex` hợp lệ chỉ THIẾU CSS. Viết lại test: verify
+`document.styleSheets` thật sự chứa rule `.katex` (poll vì `<link>` nạp bất đồng bộ) + thứ tự tử/mẫu
+qua MathML (`<mfrac>` con — không phụ thuộc CSS, nên cũng đổi `katex.renderToString` sang output mặc
+định `htmlAndMathml`, kèm lợi ích accessibility). Đã tự verify test mới THẬT SỰ bắt được bug bằng cách
+tạm revert fix rồi chạy lại (fail đúng như kỳ vọng), sau đó khôi phục fix (pass). Decision Log D53
+(cập nhật 2 lần).
 
 **+ LaTeX render thật qua KaTeX ✅ (feature/latex-katex, đã merge #80):** Trong 4 việc "cần quyết
 định phạm vi sản phẩm lớn hơn" (THCS/THPT sâu hơn · môn mới Lý/Hóa/Anh · LaTeX thật · gia sư AI mở
