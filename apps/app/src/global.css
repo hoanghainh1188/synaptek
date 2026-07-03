@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* KaTeX (D53) — render LaTeX thật cho phân số/lũy thừa trong MathText (web-only). */
+@import "katex/dist/katex.min.css";
+
 /* Web: Nunito làm font nền (RN-web Text kế thừa nếu không tự đặt font-family). */
 html,
 body {

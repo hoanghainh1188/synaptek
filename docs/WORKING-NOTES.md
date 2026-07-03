@@ -4,8 +4,25 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
-**+ Đổi tên hiển thị + Đăng xuất thiết bị khác + Avatar ảnh thật + Xóa tài khoản ✅ vừa xong
-(feature/profile-self-service, PR #79 đang mở):** TRỌN 4/4 việc trong nhóm "làm được ngay không phụ
+**+ LaTeX render thật qua KaTeX ✅ vừa xong (feature/latex-katex, PR đang mở):** Trong 4 việc "cần quyết
+định phạm vi sản phẩm lớn hơn" (THCS/THPT sâu hơn · môn mới Lý/Hóa/Anh · LaTeX thật · gia sư AI mở
+rộng), user chọn làm LaTeX trước — **duy nhất không phụ thuộc nội dung/chuyên môn sư phạm hay quyết
+định an toàn sản phẩm**. `MathText.web.tsx` mới (pattern platform-split `.web.tsx` có sẵn trong repo) —
+segment `frac`/`sup` (từ `parseMathMarkup`) render qua KaTeX thật thay vì FractionView/mũ-unicode tự
+chế. CHỈ nâng hiển thị — cú pháp lưu DB/bàn phím toán/engine chấm giữ nguyên (hàm thuần
+`segmentToLatex` mới, có unit test). Native giữ nguyên renderer cũ (KaTeX là DOM-only). E2E
+`latex-render.spec.ts` verify tích hợp thật (đếm `.katex` element sau khi soạn+lưu câu có
+phân số/lũy thừa). Decision Log **D53**.
+
+**Phát hiện đáng nhớ lúc build**: đo bundle THẬT (qua `git stash` so sánh trước/sau) cho thấy KaTeX
+thêm ~76KB gzip JS — cao hơn ước tính ban đầu (~15-30KB) đưa ra lúc hỏi ý kiến user. Đồng thời phát
+hiện baseline TOÀN BỘ app (1 bundle Metro duy nhất, chưa code-split theo route) đã ~702KB gzip TRƯỚC
+khi thêm KaTeX — vượt xa ngân sách nêu trong quy tắc hiệu năng chung, nhưng vì lý do kiến trúc
+KHÔNG LIÊN QUAN tới thay đổi này (Expo Router web export chưa cấu hình code-split) — ghi lại đây cho
+ai muốn tối ưu bundle sau này, không phải việc cần xử lý ngay trong phạm vi D53.
+
+**+ Đổi tên hiển thị + Đăng xuất thiết bị khác + Avatar ảnh thật + Xóa tài khoản ✅ (feature/profile-self-service,
+đã merge #79):** TRỌN 4/4 việc trong nhóm "làm được ngay không phụ
 thuộc gì" mà user chọn làm. `profile.ts` mới (`useMyFullName`/`useSetFullName`) update
 `profiles.full_name` qua RLS có sẵn, KHÔNG cần migration. UI sửa trực tiếp trong Hồ sơ (mục "Tên hiển
 thị", giống kiểu "Đổi vai trò"). `signOutOtherDevices()` dùng `signOut({scope:"others"})` — verify kỹ

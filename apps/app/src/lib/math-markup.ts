@@ -21,3 +21,12 @@ export function parseMathMarkup(input: string): MathSegment[] {
   if (last < input.length) out.push({ kind: "text", value: input.slice(last) });
   return out.length ? out : [{ kind: "text", value: input }];
 }
+
+/** Chuyển 1 segment toán (frac/sup) sang cú pháp LaTeX cho KaTeX (web, D53). null nếu là "text"
+ *  (không render qua KaTeX — giữ nguyên tiếng Việt qua Text thường, tránh KaTeX làm hỏng dấu). num/
+ *  den/base/exp chỉ chứa [A-Za-z0-9-] (đảm bảo bởi RE ở trên) nên không cần escape ký tự LaTeX đặc biệt. */
+export function segmentToLatex(seg: MathSegment): string | null {
+  if (seg.kind === "frac") return `\\frac{${seg.num}}{${seg.den}}`;
+  if (seg.kind === "sup") return `${seg.base}^{${seg.exp}}`;
+  return null;
+}
