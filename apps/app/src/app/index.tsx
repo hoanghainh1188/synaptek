@@ -19,6 +19,7 @@ import {
   topicOfSkill,
 } from "@/lib/content";
 import { subjectLabel } from "@/lib/subjects";
+import { currentGreeting } from "@/lib/greeting";
 import { buildMasteryMap, toSkillAttempts } from "@/lib/mastery";
 import { wrongQuestionIds } from "@/lib/mistakes";
 import { dailyProgress } from "@/lib/daily-goal";
@@ -48,6 +49,8 @@ const REASON_LABEL: Record<Recommendation["reason"], string> = {
 
 export default function Home() {
   const insets = useSafeAreaInsets();
+  // Lời chào theo giờ địa phương — tính 1 lần lúc mở màn (đủ tốt; không cần cập nhật realtime).
+  const greeting = useMemo(() => currentGreeting(), []);
   const [grade, setGrade] = useState(4);
   const [subject, setSubject] = useState("math");
   const subjects = listSubjects();
@@ -122,7 +125,7 @@ export default function Home() {
     >
       <View className="flex-row items-start justify-between">
         <View>
-          <Text className="text-sm text-muted">Chào buổi sáng,</Text>
+          <Text className="text-sm text-muted">{greeting}</Text>
           <Text className="font-display text-3xl font-extrabold text-ink">
             {isTeacher
               ? "Khu vực giáo viên 👋"
