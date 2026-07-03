@@ -71,7 +71,7 @@ nhật `docs/WORKING-NOTES.md` (điểm tiếp tục) + Decision Log/spec/file l
 ## Active Technologies (managed by Spec Kit)
 
 - **Đang làm**: **M0–M4 ✅ đóng hết** (luyện tập · mastery/lộ trình · giáo viên · phụ huynh + nội dung lớp 1–5).
-  Sau M4 đã làm thêm nhiều ngoài roadmap (xem Decision Log D26–D54): authoring **11 loại câu** (gồm trình bày
+  Sau M4 đã làm thêm nhiều ngoài roadmap (xem Decision Log D26–D55): authoring **11 loại câu** (gồm trình bày
   từng bước + nhiều phần a/b/c, CÓ THỂ lồng derivation) + nhãn môn + tùy chọn chấm + ảnh + gợi ý + bàn phím
   toán có cấu trúc; engine moat mở rộng (hỗn số/%/đơn vị/La Mã/căn bậc hai/6 chẩn đoán); đa môn (nền + seed
   Tiếng Việt lớp 1–3); TN học sinh (mục tiêu ngày · luyện nhanh · BXH · avatar); insight GV–PH; **gia sư AI
@@ -79,10 +79,13 @@ nhật `docs/WORKING-NOTES.md` (điểm tiếp tục) + Decision Log/spec/file l
   chờ chủ repo mua domain); **tự phục vụ tài khoản đầy đủ**: đổi mật khẩu khi đã đăng nhập · đổi tên hiển
   thị · đăng xuất thiết bị khác · avatar ảnh thật (lựa chọn thêm cạnh emoji-XP) · xóa tài khoản (soft
   delete, GV còn lớp có HS bị chặn) — cả 5 việc này KHÔNG phụ thuộc domain, hoạt động đầy đủ; **LaTeX
-  render thật qua KaTeX** (web-only, chỉ nâng hiển thị, D53).
-  **Còn lại**: M5 native/store (chờ tài khoản, `docs/M5-NATIVE.md`) - nhóm "Tương lai còn lại" (THCS/THPT
-  sâu hơn · môn mới Lý/Hóa/Anh · gia sư AI mở rộng chat tự do — cả 3 cần quyết định phạm vi sản phẩm/nội
-  dung/an toàn trước khi code, chưa quyết) - auth còn thiếu: xác thực email/đổi email (chặn bởi domain,
+  render thật qua KaTeX** (web-only, chỉ nâng hiển thị, D53); **khung cấp học 2 tầng** (Tiểu học/THCS/THPT
+  suy ra từ số lớp, D54) + **pilot THCS Toán lớp 6 Số nguyên** (17 câu, D55) + **gate tự-chấm nội dung**
+  (validate:content chạy engine trên đáp án). Quy trình nội dung cấp trên: AI nháp bám CT GDPT + tooling,
+  chủ repo DUYỆT trước merge (cửa bắt buộc, D14/D55).
+  **Còn lại**: M5 native/store (chờ tài khoản, `docs/M5-NATIVE.md`) - nhóm "Tương lai còn lại" (mở rộng
+  THCS/THPT sâu hơn từ pilot · môn mới Lý/Hóa/Anh — Tiếng Anh cần bộ chấm khác moat · gia sư AI mở rộng
+  chat tự do — cần quyết định phạm vi/an toàn) - auth còn thiếu: xác thực email/đổi email (chặn bởi domain,
   cùng lý do quên mật khẩu), social login, MFA.
 - **Stack**: TypeScript · Expo SDK 56 / Expo Router / React 19 / RN 0.85. Packages: `@synaptek/grading-engine`
   (moat) + `@synaptek/curriculum` + `@synaptek/learning-path` (heatmap/mastery) + `@synaptek/classroom` (mã mời +
@@ -105,11 +108,16 @@ nhật `docs/WORKING-NOTES.md` (điểm tiếp tục) + Decision Log/spec/file l
 
 ## Recent Changes
 
+- **THCS Toán lớp 6 pilot (Số nguyên) + gate tự-chấm nội dung (sau M4)**: nội dung cấp trên đầu tiên —
+  `content/curriculum/grade-6.json` (mạch "Số và Đại số", chủ đề "Số nguyên", 3 skill) + 17 câu numeric
+  số nguyên âm. Kích hoạt khung 2 tầng D54 → hàng "Cấp: THCS" nay HIỆN thật trên home. `validate:content`
+  thêm gate TỰ-CHẤM: chạy `grade()` với answer=correct → phải isCorrect (bắt lỗi soạn đáp án tự động, áp
+  cả 205 câu cũ). Quy trình: AI nháp bám CT GDPT + tooling, **chủ repo DUYỆT trước merge** (D14/D55). Nội
+  dung tổng 222 câu, 25 kỹ năng. Decision Log **D55**.
 - **Khung cấp học 2 tầng — chuẩn bị THCS/THPT (sau M4)**: module thuần `curriculum/src/level.ts` —
   "cấp" (Tiểu học 1–5 · THCS 6–9 · THPT 10–12) SUY RA từ số lớp, KHÔNG lưu riêng (tránh lệch). Nới
   validate curriculum/question 1–5 → 1–12 (DB `grade_level` đã cho phép 1–12 sẵn, không migration). Home
-  đổi picker phẳng → 2 tầng cấp→lớp, hàng "Cấp" chỉ hiện khi >1 cấp có nội dung (nay chỉ Tiểu học → ẨN,
-  tương thích ngược 100%). CHƯA thêm nội dung THCS/THPT (cần chuyên môn sư phạm). Decision Log **D54**.
+  đổi picker phẳng → 2 tầng cấp→lớp, hàng "Cấp" chỉ hiện khi >1 cấp có nội dung. Decision Log **D54**.
 - **LaTeX render thật qua KaTeX (sau M4)**: `MathText.web.tsx` mới (platform-split `.web.tsx`, web-only)
   đổi segment `frac`/`sup` sang KaTeX thật thay vì FractionView/mũ-unicode tự chế — CHỈ nâng hiển thị,
   cú pháp lưu DB/bàn phím toán/engine chấm giữ nguyên. Native giữ renderer cũ (KaTeX là DOM-only).

@@ -1,0 +1,37 @@
+{
+  "grade": 6,
+  "strands": [
+    {
+      "id": "g6.num",
+      "name": "Số và Đại số",
+      "topics": [
+        {
+          "id": "g6.num.integers",
+          "name": "Số nguyên",
+          "grade": 6,
+          "skillIds": ["g6.num.integer.concept", "g6.num.integer.addsub", "g6.num.integer.muldiv"]
+        }
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "g6.num.integer.concept",
+      "name": "Số nguyên âm, tập hợp ℤ, so sánh và số đối",
+      "description": "Nhận biết số nguyên âm, thứ tự trong ℤ, số đối, giá trị tuyệt đối.",
+      "prerequisites": []
+    },
+    {
+      "id": "g6.num.integer.addsub",
+      "name": "Cộng, trừ số nguyên",
+      "description": "Quy tắc cộng/trừ hai số nguyên cùng dấu, khác dấu.",
+      "prerequisites": ["g6.num.integer.concept"]
+    },
+    {
+      "id": "g6.num.integer.muldiv",
+      "name": "Nhân, chia số nguyên",
+      "description": "Quy tắc dấu khi nhân/chia hai số nguyên.",
+      "prerequisites": ["g6.num.integer.addsub"]
+    }
+  ]
+}
