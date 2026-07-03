@@ -1,7 +1,9 @@
 name: Deploy Supabase
 
 # Tự động áp migration + deploy Edge Functions lên Supabase hosted khi push develop (chỉ khi đụng backend).
-# Bí mật ở GitHub Secrets: SUPABASE_ACCESS_TOKEN (PAT), SUPABASE_DB_PASSWORD, SUPABASE_PROJECT_REF.
+# Bí mật ở GitHub Secrets: SUPABASE_ACCESS_TOKEN (PAT), SUPABASE_DB_PASSWORD, SUPABASE_PROJECT_REF,
+# RESEND_API_KEY (SMTP quên mật khẩu — D47, tùy chọn: bỏ trống thì email dùng dịch vụ mặc định giới
+# hạn thấp của Supabase, không đủ tin cậy cho email khôi phục mật khẩu thật).
 on:
   push:
     branches: [develop]
@@ -24,6 +26,7 @@ jobs:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
       REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
     steps:
       - uses: actions/checkout@v4
 
@@ -60,11 +63,35 @@ jobs:
         run: supabase functions deploy grade grade-assignment review-scheduler ai-tutor-explain --project-ref "$REF"
 
       # Đồng bộ auth config hosted theo chủ ý repo (idempotent). jwt_exp = 604800 (1 tuần) khớp config.toml;
-      # mailer_autoconfirm = true để luồng đăng-ký-đăng-nhập-ngay chạy (chưa cấu hình SMTP).
-      - name: Ensure auth config (jwt expiry + auto-confirm)
+      # mailer_autoconfirm = true để luồng đăng-ký-đăng-nhập-ngay chạy. site_url + uri_allow_list (D47,
+      # quên mật khẩu) khớp config.toml (wildcard **) để link trong email redirect đúng về app. SMTP
+      # Resend CHỈ bật khi đã có secret RESEND_API_KEY — chưa có thì Supabase dùng mailer mặc định
+      # (giới hạn thấp, tạm đủ để không phá luồng hiện có, KHÔNG đủ tin cậy cho email khôi phục thật).
+      - name: Ensure auth config (jwt expiry + auto-confirm + redirect URLs + SMTP)
         run: |
+          PAYLOAD=$(jq -n \
+            --arg site_url "https://demo-synaptek.vercel.app" \
+            --arg uri_allow_list "http://localhost:8081/**,https://demo-synaptek.vercel.app/**,synaptek://**" \
+            '{jwt_exp: 604800, mailer_autoconfirm: true, site_url: $site_url, uri_allow_list: $uri_allow_list}')
+          if [ -n "$RESEND_API_KEY" ]; then
+            PAYLOAD=$(echo "$PAYLOAD" | jq \
+              --arg pass "$RESEND_API_KEY" \
+              '. + {
+                smtp_host: "smtp.resend.com",
+                smtp_port: 587,
+                smtp_user: "resend",
+                smtp_pass: $pass,
+                smtp_sender_name: "Synaptek",
+                smtp_admin_email: "onboarding@resend.dev",
+                mailer_subjects_recovery: "Khôi phục mật khẩu Synaptek",
+                mailer_templates_recovery_content: "<h2>Khôi phục mật khẩu</h2><p>Bấm vào link bên dưới để đặt mật khẩu mới cho tài khoản Synaptek của bạn.</p><p><a href=\"{{ .ConfirmationURL }}\">Đặt lại mật khẩu</a></p><p>Nếu bạn không yêu cầu, hãy bỏ qua email này.</p>"
+              }')
+            echo "SMTP: Resend bật (smtp_admin_email=onboarding@resend.dev — CHỈ gửi được về email chủ tài khoản Resend cho tới khi verify domain thật, xem supabase/README.md)"
+          else
+            echo "SMTP: chưa có secret RESEND_API_KEY — dùng mailer mặc định của Supabase (giới hạn thấp)"
+          fi
           curl -fsS -X PATCH "https://api.supabase.com/v1/projects/$REF/config/auth" \
             -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
             -H "Content-Type: application/json" \
-            -d '{"jwt_exp": 604800, "mailer_autoconfirm": true}' > /dev/null
-          echo "auth config: jwt_exp=604800, mailer_autoconfirm=true"
+            -d "$PAYLOAD" > /dev/null
+          echo "auth config: jwt_exp=604800, mailer_autoconfirm=true, site_url=https://demo-synaptek.vercel.app"

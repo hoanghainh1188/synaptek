@@ -22,7 +22,8 @@ port = 54323
 enabled = true
 # Cổng mặc định của Expo web dev (expo start --web).
 site_url = "http://localhost:8081"
-additional_redirect_urls = ["http://localhost:8081", "synaptek://"]
+# Wildcard (**) để khớp cả đường dẫn con — vd /reset-password (D47, quên mật khẩu).
+additional_redirect_urls = ["http://localhost:8081/**", "synaptek://**"]
 # Phiên đăng nhập 1 tuần (đỡ phải đăng nhập lại khi demo/dùng thường). Hosted: set tương ứng ở Dashboard.
 jwt_expiry = 604800
 enable_signup = true
