@@ -41,7 +41,9 @@ test("GV sửa + xoá bài tập", async ({ page }) => {
   await expect(page.getByText("Chưa giao bài nào.")).toBeVisible({ timeout: 15_000 });
 });
 
-test("đổi vai trò trong Hồ sơ (HS → GV)", async ({ page }) => {
+// Học sinh (trẻ em) KHÔNG được tự đổi vai trò — không hiện nút đổi (chống tự "leo" lên GV/PH; DB cũng
+// chặn ở migration 0026).
+test("học sinh KHÔNG đổi được vai trò (khoá)", async ({ page }) => {
   const s = Date.now();
   await page.goto("/login");
   await page.getByText("Chưa có tài khoản? Đăng ký").click();
@@ -52,12 +54,28 @@ test("đổi vai trò trong Hồ sơ (HS → GV)", async ({ page }) => {
   await waitSignedIn(page);
 
   await page.goto("/profile");
-  // HS: thấy "Bài được giao"
   await expect(page.getByLabel("Bài được giao")).toBeVisible({ timeout: 15_000 });
-  // đổi sang Giáo viên — flow xác nhận: Đổi vai trò… → chọn Giáo viên → Xác nhận
+  // HS: thấy "Vai trò: Học sinh" nhưng KHÔNG có nút "Đổi vai trò".
+  await expect(page.getByText(/Vai trò: Học sinh/)).toBeVisible();
+  await expect(page.getByLabel("Đổi vai trò")).toHaveCount(0);
+});
+
+// GV vẫn đổi được vai trò nhưng CHỈ giữa GV<->PH (không có tuỳ chọn Học sinh).
+test("giáo viên đổi vai trò sang phụ huynh (không có tuỳ chọn học sinh)", async ({ page }) => {
+  const s = Date.now();
+  await page.goto("/login");
+  await page.getByText("Chưa có tài khoản? Đăng ký").click();
+  await page.getByPlaceholder("Tên của em").fill("Cô Role");
+  await page.getByLabel("Giáo viên").click();
+  await page.getByPlaceholder("email@vidu.com").fill(`grole${s}@test.local`);
+  await page.getByPlaceholder("••••••").fill("matkhau123");
+  await page.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(page);
+
+  await page.goto("/profile");
   await page.getByLabel("Đổi vai trò").click();
-  await page.getByLabel("Chọn Giáo viên").click();
+  await expect(page.getByLabel("Chọn Học sinh")).toHaveCount(0);
+  await page.getByLabel("Chọn Phụ huynh").click();
   await page.getByLabel("Xác nhận đổi vai trò").click();
-  // sau đổi: hiện "Lớp của tôi"
-  await expect(page.getByLabel("Lớp của tôi")).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByLabel("Con của tôi")).toBeVisible({ timeout: 15_000 });
 });

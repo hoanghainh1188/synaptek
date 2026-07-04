@@ -335,61 +335,63 @@ export default function Profile() {
             </Pressable>
           )}
 
-          {/* Đổi vai trò — CÓ XÁC NHẬN (đổi vai trò thay đổi toàn bộ trải nghiệm) */}
+          {/* Vai trò. HỌC SINH: khoá — không hiện nút đổi (chống trẻ tự "leo" lên GV/PH; DB cũng chặn,
+              migration 0026). GV/PH: đổi được nhưng CHỈ giữa GV<->PH (không hạ về học sinh). */}
           <Text className="mt-4 mb-1 text-sm font-bold text-muted">
             Vai trò: {ROLE_LABEL[role.data ?? "student"]}
           </Text>
-          {!pendingRole ? (
-            <Pressable
-              accessibilityLabel="Đổi vai trò"
-              onPress={() => setPendingRole(role.data ?? "student")}
-              className="min-h-[44px] items-center justify-center rounded-md border-2 border-line bg-surface"
-            >
-              <Text className="font-display font-bold text-muted">Đổi vai trò…</Text>
-            </Pressable>
-          ) : (
-            <View className="rounded-md border-2 border-line bg-surface p-3">
-              <View className="flex-row gap-2">
-                {(["student", "teacher", "parent"] as const).map((value) => {
-                  const active = pendingRole === value;
-                  return (
-                    <Pressable
-                      key={value}
-                      accessibilityLabel={`Chọn ${ROLE_LABEL[value]}`}
-                      onPress={() => setPendingRole(value)}
-                      className={`min-h-[40px] flex-1 items-center justify-center rounded-md border-2 ${active ? "border-brand bg-brand/10" : "border-line"}`}
-                    >
-                      <Text className={`font-bold ${active ? "text-brand" : "text-muted"}`}>
-                        {ROLE_LABEL[value]}
-                      </Text>
-                    </Pressable>
-                  );
-                })}
+          {(role.data === "teacher" || role.data === "parent") &&
+            (!pendingRole ? (
+              <Pressable
+                accessibilityLabel="Đổi vai trò"
+                onPress={() => setPendingRole(role.data ?? "teacher")}
+                className="min-h-[44px] items-center justify-center rounded-md border-2 border-line bg-surface"
+              >
+                <Text className="font-display font-bold text-muted">Đổi vai trò…</Text>
+              </Pressable>
+            ) : (
+              <View className="rounded-md border-2 border-line bg-surface p-3">
+                <View className="flex-row gap-2">
+                  {(["teacher", "parent"] as const).map((value) => {
+                    const active = pendingRole === value;
+                    return (
+                      <Pressable
+                        key={value}
+                        accessibilityLabel={`Chọn ${ROLE_LABEL[value]}`}
+                        onPress={() => setPendingRole(value)}
+                        className={`min-h-[40px] flex-1 items-center justify-center rounded-md border-2 ${active ? "border-brand bg-brand/10" : "border-line"}`}
+                      >
+                        <Text className={`font-bold ${active ? "text-brand" : "text-muted"}`}>
+                          {ROLE_LABEL[value]}
+                        </Text>
+                      </Pressable>
+                    );
+                  })}
+                </View>
+                <Text className="mt-2 text-xs text-muted">
+                  ⚠️ Đổi vai trò sẽ thay đổi toàn bộ trải nghiệm (màn hình, dữ liệu hiển thị).
+                </Text>
+                <View className="mt-2 flex-row gap-2">
+                  <Pressable
+                    accessibilityLabel="Xác nhận đổi vai trò"
+                    disabled={pendingRole === role.data || setRole.isPending}
+                    onPress={() =>
+                      setRole.mutate(pendingRole, { onSuccess: () => setPendingRole(null) })
+                    }
+                    className={`min-h-[40px] flex-1 items-center justify-center rounded-md ${pendingRole !== role.data ? "bg-brand" : "bg-line"}`}
+                  >
+                    <Text className="font-display font-bold text-white">Xác nhận</Text>
+                  </Pressable>
+                  <Pressable
+                    accessibilityLabel="Huỷ đổi vai trò"
+                    onPress={() => setPendingRole(null)}
+                    className="min-h-[40px] flex-1 items-center justify-center rounded-md bg-paper"
+                  >
+                    <Text className="font-display font-bold text-ink">Huỷ</Text>
+                  </Pressable>
+                </View>
               </View>
-              <Text className="mt-2 text-xs text-muted">
-                ⚠️ Đổi vai trò sẽ thay đổi toàn bộ trải nghiệm (màn hình, dữ liệu hiển thị).
-              </Text>
-              <View className="mt-2 flex-row gap-2">
-                <Pressable
-                  accessibilityLabel="Xác nhận đổi vai trò"
-                  disabled={pendingRole === role.data || setRole.isPending}
-                  onPress={() =>
-                    setRole.mutate(pendingRole, { onSuccess: () => setPendingRole(null) })
-                  }
-                  className={`min-h-[40px] flex-1 items-center justify-center rounded-md ${pendingRole !== role.data ? "bg-brand" : "bg-line"}`}
-                >
-                  <Text className="font-display font-bold text-white">Xác nhận</Text>
-                </Pressable>
-                <Pressable
-                  accessibilityLabel="Huỷ đổi vai trò"
-                  onPress={() => setPendingRole(null)}
-                  className="min-h-[40px] flex-1 items-center justify-center rounded-md bg-paper"
-                >
-                  <Text className="font-display font-bold text-ink">Huỷ</Text>
-                </Pressable>
-              </View>
-            </View>
-          )}
+            ))}
         </View>
       )}
 
