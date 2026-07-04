@@ -27,6 +27,8 @@ test("kết quả phiên: hiển thị XP nhận được + ăn mừng huy hiệ
   await page.goto(`/result?topic=Ph%C3%A2n%20s%E1%BB%91&topicId=g4.num.fractions&data=${data}`);
 
   await expect(page.getByText("Hoàn thành phiên!")).toBeVisible();
+  // Lời đánh giá theo tỉ lệ đúng (4/5 = 80% → "Giỏi lắm"), KHÔNG còn câu cố định.
+  await expect(page.getByText(/Giỏi lắm/)).toBeVisible();
   // XP nhận được trong phiên + tổng XP
   await expect(page.getByText("+55")).toBeVisible();
   await expect(page.getByText(/Tổng XP: 155/)).toBeVisible();
