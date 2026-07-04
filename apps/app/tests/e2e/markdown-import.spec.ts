@@ -17,6 +17,10 @@ test("nhập câu hàng loạt từ Markdown: xem trước tự-chấm + lưu", 
   await page.getByLabel("Nhập nhiều câu từ Markdown").click();
   await expect(page).toHaveURL(/questions-import/, { timeout: 10_000 });
 
+  // Trợ giúp hướng dẫn soạn: mở cú pháp → thấy ví dụ từng loại.
+  await page.getByLabel("Xem cú pháp Markdown").click();
+  await expect(page.getByText(/nhiều ô ngăn bằng/)).toBeVisible({ timeout: 10_000 });
+
   // Dán 2 câu: 1 số + 1 trắc nghiệm — cả hai tự-chấm đúng.
   const md = "### Tính 2 + 3\nanswer: 5\n\n### Số nào lớn hơn: -3 hay -8?\n* [x] -3\n* [ ] -8";
   await page.getByLabel("Nội dung Markdown").fill(md);

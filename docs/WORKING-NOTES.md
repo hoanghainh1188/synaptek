@@ -4,7 +4,16 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
-**+ AI nháp câu hỏi — PR2 ✅ (feature/ai-generate-questions, PR đang mở):** Lớp AI trên nền Markdown D65
+**+ Hướng dẫn soạn trong màn import ✅ (feature/import-help-guide, PR đang mở):** User hỏi "markdown có theo
+chuẩn nào không" → giải thích: format là **tự chế** (mượn GFM heading + task-list `* [x]`; `answer:`/`|` là
+quy ước riêng), không theo GIFT/Aiken/QTI (đánh đổi: mất liên thông Moodle, đổi lại đơn giản + hợp engine +
+phẩy VN). User muốn có **help hướng dẫn người soạn** → nâng block "Xem cú pháp" (D65) từ vắn tắt thành hướng
+dẫn đầy đủ: ví dụ Markdown **theo từng loại** (trắc nghiệm/chọn nhiều/số-phẩy-VN/phân số/đúng-sai/điền `|`) +
+dòng tùy chọn hint/explain/type + nút "Chèn ví dụ mẫu". Component `HelpBlock` (tiêu đề + snippet mono). Chỉ
+UI, không đổi parser/engine. e2e +1 assertion (mở cú pháp → thấy hướng dẫn). **Bước tiếp**: merge; sau đó nếu
+cần liên thông → thêm import GIFT/Aiken; hoặc việc khác.
+
+**+ AI nháp câu hỏi — PR2 ✅ (feature/ai-generate-questions, đã merge #98):** Lớp AI trên nền Markdown D65
 (user chọn "AI + Markdown"). Edge `generate-questions` (Gemini, pattern ai-tutor D46) sinh khối Markdown
 ĐÚNG định dạng parser D65 (prompt ép: phẩy VN, phân số a/b, 4 loại text, đáp án chính xác). Section "🤖 AI
 nháp" trên màn import: chủ đề + số câu → đổ Markdown vào ô → GV sửa → **dùng lại parser+tự-chấm+lưu của D65**.

@@ -53,6 +53,18 @@ function selfCheck(q: ParsedQuestion): boolean {
   }
 }
 
+/** Một mục hướng dẫn: tiêu đề loại câu + ví dụ Markdown (hiển thị đơn cách). */
+function HelpBlock({ title, code }: { title: string; code: string }) {
+  return (
+    <View className="mt-2">
+      <Text className="text-xs font-bold text-ink">{title}</Text>
+      <View className="mt-1 rounded-md bg-surface px-2 py-1.5">
+        <Text className="font-mono text-xs leading-5 text-ink">{code}</Text>
+      </View>
+    </View>
+  );
+}
+
 export default function QuestionsImport() {
   const insets = useSafeAreaInsets();
   const create = useCreateCustomQuestion();
@@ -188,24 +200,41 @@ export default function QuestionsImport() {
       </Pressable>
       {showHelp && (
         <View className="mt-2 rounded-lg bg-paper p-3">
-          <Text className="text-xs leading-5 text-ink">
-            • Mỗi câu bắt đầu bằng <Text className="font-bold">### đề bài</Text>
-            {"\n"}• Trắc nghiệm: mỗi lựa chọn 1 dòng <Text className="font-bold">* [x] đúng</Text> /{" "}
-            <Text className="font-bold">* [ ] sai</Text> (nhiều [x] = chọn nhiều)
-            {"\n"}• Đáp án khác: <Text className="font-bold">answer: …</Text> (đúng/sai · số · phân
-            số a/b)
-            {"\n"}• Điền chỗ trống nhiều ô: ngăn bằng dấu <Text className="font-bold">|</Text> (vd
-            answer: 3 | 3)
-            {"\n"}• Số thập phân dùng dấu phẩy: <Text className="font-bold">2,5</Text>
-            {"\n"}• Tùy chọn: <Text className="font-bold">hint:</Text> gợi ý ·{" "}
-            <Text className="font-bold">explain:</Text> lời giải
+          <Text className="text-xs leading-5 text-muted">
+            Mỗi câu bắt đầu bằng <Text className="font-bold text-ink">### đề bài</Text>, các dòng
+            bên dưới mô tả đáp án. Hệ thống tự nhận loại câu và{" "}
+            <Text className="font-bold text-ink">tự chấm</Text> khi xem trước (✓ = đáp án đúng, ⚠ =
+            cần sửa).
           </Text>
+
+          <HelpBlock title="Trắc nghiệm (1 đáp án đúng)" code={"### 2 + 2 = ?\n* [x] 4\n* [ ] 5"} />
+          <HelpBlock
+            title="Chọn nhiều (đánh [x] nhiều dòng)"
+            code={"### Số nào chẵn?\n* [x] 2\n* [x] 4\n* [ ] 3"}
+          />
+          <HelpBlock
+            title="Số — thập phân dùng dấu PHẨY"
+            code={"### Tính 1,2 + 1,3\nanswer: 2,5"}
+          />
+          <HelpBlock title="Phân số — viết a/b" code={"### Rút gọn 6/8\nanswer: 3/4"} />
+          <HelpBlock title="Đúng / Sai" code={"### 5 lớn hơn 3?\nanswer: đúng"} />
+          <HelpBlock
+            title="Điền chỗ trống — nhiều ô ngăn bằng |"
+            code={"### 2 + __ = 5 và 10 - __ = 7\nanswer: 3 | 3"}
+          />
+
+          <Text className="mt-3 text-xs leading-5 text-muted">
+            Dòng tùy chọn cho mỗi câu: <Text className="font-bold text-ink">hint:</Text> gợi ý (hiện
+            khi làm) · <Text className="font-bold text-ink">explain:</Text> lời giải (ẩn với HS khi
+            làm) · <Text className="font-bold text-ink">type:</Text> ép loại nếu hệ thống đoán sai.
+          </Text>
+
           <Pressable
             onPress={() => setMd(EXAMPLE)}
             accessibilityLabel="Chèn ví dụ mẫu"
-            className="mt-2 self-start rounded-md bg-brand/10 px-3 py-1"
+            className="mt-3 self-start rounded-md bg-brand/10 px-3 py-1"
           >
-            <Text className="text-xs font-bold text-brand">Chèn ví dụ mẫu</Text>
+            <Text className="text-xs font-bold text-brand">Chèn ví dụ mẫu vào ô nhập</Text>
           </Pressable>
         </View>
       )}
