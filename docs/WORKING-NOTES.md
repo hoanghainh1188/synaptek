@@ -4,7 +4,19 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
-**+ Đánh giá kết quả phiên + điểm thành phần ✅ vừa xong (fix/session-rating đã merge #86, fix/partial-credit
+**+ Nhân rộng nội dung THCS — lớp 6 Phân số ✅ (feature/thcs-g6-fractions, PR đang mở):** Hướng A (user chọn
+"theo hướng A" — nhân rộng nội dung THCS). Chủ đề THCS THỨ 2 sau pilot Số nguyên (D55), chứng minh quy trình
+soạn→validate→duyệt nhân rộng trơn. Chọn **Phân số** qua AskUserQuestion (chương kế Số nguyên trong CT GDPT
+lớp 6 + khoe moat rõ nhất). Thêm topic `g6.num.fractions` vào `grade-6.json` (3 skill concept/addsub/muldiv,
+DAG **liên chủ đề**: phân số lớp 6 dùng tử/mẫu SỐ NGUYÊN có âm → prereq trỏ sang skill Số nguyên) + 17 câu
+(`g6.num.fractions.json`: rút gọn/so sánh/±/×÷ phân số, gồm phân số ÂM + hỗn số). Engine đã hỗ trợ tương đương
+phân số/hỗn số/số âm sẵn → KHÔNG đổi engine. Gate tự-chấm D55 áp tự động (17 câu mới pass; tổng **239 câu, 28
+kỹ năng**). e2e +1 test khoe MOAT (HS nhập `9/12` cho câu rút gọn 6/8 đáp án 3/4 → chấm theo GIÁ TRỊ vẫn ĐÚNG);
+sửa 2 bẫy e2e: lớp 4+6 trùng tên chủ đề "Phân số" → `{exact:true}`; prompt "6/8" bị MathText tách node → assert
+text liền trước. Decision Log **D57**. **Bước tiếp**: chủ repo DUYỆT 17 câu trong PR trước merge; sau đó tiếp
+tục nhân rộng (Số thập phân lớp 6 / hoặc chương Số tự nhiên ƯCLN-BCNN / hoặc lớp khác).
+
+**+ Đánh giá kết quả phiên + điểm thành phần ✅ (fix/session-rating đã merge #86, fix/partial-credit
 PR đang mở):** User báo "đánh giá kết quả chưa chính xác". Hai lỗi: (1) lời đánh giá cuối phiên CỐ ĐỊNH
 "Em tiến bộ rồi đó" cho mọi điểm → `ratingMessage(ratio)` chia mức Xuất sắc/Giỏi/Khá/ôn lại/động viên
 (đã merge #86); (2) **điểm thành phần** bị bỏ (fill-blank đúng 2/3 chỗ = score 0.67 nhưng isCorrect

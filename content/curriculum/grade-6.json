@@ -10,6 +10,16 @@
           "name": "Số nguyên",
           "grade": 6,
           "skillIds": ["g6.num.integer.concept", "g6.num.integer.addsub", "g6.num.integer.muldiv"]
+        },
+        {
+          "id": "g6.num.fractions",
+          "name": "Phân số",
+          "grade": 6,
+          "skillIds": [
+            "g6.num.fraction.concept",
+            "g6.num.fraction.addsub",
+            "g6.num.fraction.muldiv"
+          ]
         }
       ]
     }
@@ -32,6 +42,24 @@
       "name": "Nhân, chia số nguyên",
       "description": "Quy tắc dấu khi nhân/chia hai số nguyên.",
       "prerequisites": ["g6.num.integer.addsub"]
+    },
+    {
+      "id": "g6.num.fraction.concept",
+      "name": "Phân số với tử/mẫu nguyên, rút gọn và so sánh",
+      "description": "Phân số có tử và mẫu là số nguyên (kể cả âm), phân số bằng nhau, rút gọn về tối giản, so sánh phân số.",
+      "prerequisites": ["g6.num.integer.concept"]
+    },
+    {
+      "id": "g6.num.fraction.addsub",
+      "name": "Cộng, trừ phân số",
+      "description": "Quy đồng mẫu rồi cộng/trừ phân số, kể cả phân số âm.",
+      "prerequisites": ["g6.num.fraction.concept", "g6.num.integer.addsub"]
+    },
+    {
+      "id": "g6.num.fraction.muldiv",
+      "name": "Nhân, chia phân số và hỗn số",
+      "description": "Nhân/chia phân số (kể cả âm), phân số của một số, đổi giữa hỗn số và phân số.",
+      "prerequisites": ["g6.num.fraction.addsub", "g6.num.integer.muldiv"]
     }
   ]
 }
