@@ -213,5 +213,6 @@ jobs:
             tests/e2e/sign-out-other-devices.spec.ts \
             tests/e2e/avatar-photo.spec.ts \
             tests/e2e/delete-account.spec.ts \
-            tests/e2e/latex-render.spec.ts
+            tests/e2e/latex-render.spec.ts \
+            tests/e2e/markdown-import.spec.ts
         working-directory: apps/app
