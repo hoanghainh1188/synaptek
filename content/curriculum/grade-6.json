@@ -38,6 +38,18 @@
           "skillIds": ["g6.num.decimal.concept", "g6.num.decimal.addsub", "g6.num.decimal.muldiv"]
         }
       ]
+    },
+    {
+      "id": "g6.geo",
+      "name": "Hình học và Đo lường",
+      "topics": [
+        {
+          "id": "g6.geo.plane",
+          "name": "Hình học trực quan",
+          "grade": 6,
+          "skillIds": ["g6.geo.shapes", "g6.geo.perimeter", "g6.geo.area"]
+        }
+      ]
     }
   ],
   "skills": [
@@ -112,6 +124,24 @@
       "name": "Nhân, chia số thập phân",
       "description": "Nhân/chia số thập phân, kể cả số thập phân âm; quy tắc dấu.",
       "prerequisites": ["g6.num.decimal.addsub", "g6.num.integer.muldiv"]
+    },
+    {
+      "id": "g6.geo.shapes",
+      "name": "Nhận biết hình phẳng và tính chất",
+      "description": "Nhận biết tam giác đều, hình vuông, lục giác đều, hình chữ nhật, hình thoi, hình bình hành, hình thang cân và tính chất cơ bản của chúng.",
+      "prerequisites": []
+    },
+    {
+      "id": "g6.geo.perimeter",
+      "name": "Chu vi các hình phẳng",
+      "description": "Tính chu vi hình vuông, hình chữ nhật, tam giác đều, lục giác đều.",
+      "prerequisites": ["g6.geo.shapes"]
+    },
+    {
+      "id": "g6.geo.area",
+      "name": "Diện tích các hình phẳng",
+      "description": "Tính diện tích hình vuông, hình chữ nhật, hình bình hành, hình thoi, hình thang.",
+      "prerequisites": ["g6.geo.shapes"]
     }
   ]
 }

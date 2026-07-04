@@ -648,6 +648,74 @@ export const ANSWER_KEYS: Record<string, AnswerKey> = {
     "type": "numeric",
     "correct": "10"
   },
+  "g6.geo.plane.q001": {
+    "type": "mcq",
+    "correct": "Lục giác đều"
+  },
+  "g6.geo.plane.q002": {
+    "type": "true-false",
+    "correct": "true"
+  },
+  "g6.geo.plane.q003": {
+    "type": "mcq",
+    "correct": "Hình thoi"
+  },
+  "g6.geo.plane.q004": {
+    "type": "true-false",
+    "correct": "true"
+  },
+  "g6.geo.plane.q005": {
+    "type": "mcq",
+    "correct": "2"
+  },
+  "g6.geo.plane.q006": {
+    "type": "true-false",
+    "correct": "true"
+  },
+  "g6.geo.plane.q007": {
+    "type": "numeric",
+    "correct": "20"
+  },
+  "g6.geo.plane.q008": {
+    "type": "numeric",
+    "correct": "20"
+  },
+  "g6.geo.plane.q009": {
+    "type": "numeric",
+    "correct": "21"
+  },
+  "g6.geo.plane.q010": {
+    "type": "numeric",
+    "correct": "36"
+  },
+  "g6.geo.plane.q011": {
+    "type": "numeric",
+    "correct": "22"
+  },
+  "g6.geo.plane.q012": {
+    "type": "numeric",
+    "correct": "24"
+  },
+  "g6.geo.plane.q013": {
+    "type": "numeric",
+    "correct": "25"
+  },
+  "g6.geo.plane.q014": {
+    "type": "numeric",
+    "correct": "24"
+  },
+  "g6.geo.plane.q015": {
+    "type": "numeric",
+    "correct": "24"
+  },
+  "g6.geo.plane.q016": {
+    "type": "numeric",
+    "correct": "24"
+  },
+  "g6.geo.plane.q017": {
+    "type": "numeric",
+    "correct": "32"
+  },
   "g6.num.decimals.q001": {
     "type": "numeric",
     "correct": "-2,5"
