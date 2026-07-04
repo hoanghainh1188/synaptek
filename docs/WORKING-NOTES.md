@@ -4,7 +4,16 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
-**+ Nhập câu hàng loạt bằng Markdown — PR1/nền ✅ (feature/markdown-import, PR đang mở):** User hỏi "làm sao
+**+ AI nháp câu hỏi — PR2 ✅ (feature/ai-generate-questions, PR đang mở):** Lớp AI trên nền Markdown D65
+(user chọn "AI + Markdown"). Edge `generate-questions` (Gemini, pattern ai-tutor D46) sinh khối Markdown
+ĐÚNG định dạng parser D65 (prompt ép: phẩy VN, phân số a/b, 4 loại text, đáp án chính xác). Section "🤖 AI
+nháp" trên màn import: chủ đề + số câu → đổ Markdown vào ô → GV sửa → **dùng lại parser+tự-chấm+lưu của D65**.
+An toàn nhiều lớp: LLM NHÁP → engine tự-chấm lọc (✓/⚠) → người duyệt. Config/deploy/CI Deno đăng ký function.
+Chưa có `GEMINI_API_KEY` → graceful. +8 Deno test, e2e +1 (graceful chưa-key). Decision Log **D66**. **Còn để
+dùng thật**: `supabase secrets set GEMINI_API_KEY=...` (free tier tại aistudio.google.com). **Bước tiếp**:
+merge; sau đó set key để bật AI thật / hoặc mở rộng authoring (ngân hàng câu dùng chung) / hoặc việc khác.
+
+**+ Nhập câu hàng loạt bằng Markdown — PR1/nền ✅ (feature/markdown-import, đã merge #97):** User hỏi "làm sao
 GV/PH lấp nội dung nhanh?" → khảo sát (authoring 11 loại nhưng SOẠN TỪNG CÂU, không batch/AI/tự-chấm-khi-soạn)
 → user chọn hướng **Markdown** (+ AI ở PR sau). **PR1 nền (deterministic, không cần AI/key)**: parser thuần
 `markdown-questions.ts` (`parseQuestionsMarkdown`, +21 test) suy loại tự động 6 loại text-friendly; màn

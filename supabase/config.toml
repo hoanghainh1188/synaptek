@@ -56,3 +56,7 @@ verify_jwt = true
 # Xóa tài khoản (D52): chỉ tự xóa CHÍNH MÌNH — bắt buộc đăng nhập.
 [functions.delete-account]
 verify_jwt = true
+
+# AI nháp câu hỏi (D-authoring-ai): sinh khối Markdown theo chủ đề — bắt buộc đăng nhập (chống gọi ẩn danh).
+[functions.generate-questions]
+verify_jwt = true
