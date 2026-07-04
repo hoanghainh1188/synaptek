@@ -370,6 +370,16 @@ export default function MyQuestions() {
       </Pressable>
       <Text className="font-display text-2xl font-extrabold text-ink">Ngân hàng câu của tôi</Text>
 
+      {/* Lối vào nhập hàng loạt bằng Markdown — soạn nhiều câu nhanh (D-authoring-import) */}
+      <Pressable
+        onPress={() => router.push("/questions-import")}
+        accessibilityLabel="Nhập nhiều câu từ Markdown"
+        className="mt-3 flex-row items-center gap-2 self-start rounded-lg border-2 border-brand bg-brand/5 px-4 py-2"
+      >
+        <Text className="text-base">📝</Text>
+        <Text className="font-display text-sm font-bold text-brand">Nhập nhiều câu (Markdown)</Text>
+      </Pressable>
+
       {/* Form soạn */}
       <View className="mt-5 rounded-lg bg-surface p-4 shadow-sm">
         <Text className="mb-1 text-sm font-bold text-muted">Môn</Text>

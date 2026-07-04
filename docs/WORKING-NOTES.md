@@ -4,7 +4,16 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
-**+ Nhân rộng THCS — lớp 6 Thống kê & Xác suất ✅ (feature/thcs-g6-stats, PR đang mở):** MẠCH THỨ 3 của lớp 6
+**+ Nhập câu hàng loạt bằng Markdown — PR1/nền ✅ (feature/markdown-import, PR đang mở):** User hỏi "làm sao
+GV/PH lấp nội dung nhanh?" → khảo sát (authoring 11 loại nhưng SOẠN TỪNG CÂU, không batch/AI/tự-chấm-khi-soạn)
+→ user chọn hướng **Markdown** (+ AI ở PR sau). **PR1 nền (deterministic, không cần AI/key)**: parser thuần
+`markdown-questions.ts` (`parseQuestionsMarkdown`, +21 test) suy loại tự động 6 loại text-friendly; màn
+`questions-import.tsx` dán→xem trước có **TỰ-CHẤM** (chạy `grade()` client, answer=correct → ✓/⚠ per câu, y hệt
+gate content)→lưu hàng loạt. Không migration. e2e +2. **Bẫy bắt bằng test**: phẩy VN "2,5" bị nhận nhầm điền-
+nhiều-ô → đổi ngăn cách điền sang `|`. Decision Log **D65**. **Bước tiếp (PR2)**: nút "AI nháp" (Gemini,
+`GEMINI_API_KEY` free tier) sinh khối Markdown theo chủ đề → GV sửa → dùng lại parser+preview của PR1.
+
+**+ Nhân rộng THCS — lớp 6 Thống kê & Xác suất ✅ (feature/thcs-g6-stats, đã merge #96):** MẠCH THỨ 3 của lớp 6
 (`g6.sta`, 2 topic Thống kê + Xác suất). **Phán đoán CT quan trọng**: trung bình cộng/mốt/trung vị là LỚP 7
 → cố ý KHÔNG đưa vào lớp 6; giữ Thống kê ở mức đọc/xử lí dữ liệu (tần số/max/min/tổng, **dữ liệu bằng chữ để
 né ảnh biểu đồ** — điểm "cần cân nhắc" user nêu). 3 skill: data · chance (chắc chắn/có thể/không thể + đếm kết
