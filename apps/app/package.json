@@ -54,6 +54,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "build:web": "expo export -p web",
+    "serve:dist": "node scripts/serve-dist.mjs",
+    "e2e:static": "expo export -p web && node scripts/serve-dist.mjs",
     "e2e": "playwright test",
     "lint": "expo lint"
   },
