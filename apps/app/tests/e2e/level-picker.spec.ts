@@ -72,3 +72,16 @@ test("THCS lớp 6 Số tự nhiên: luyện lũy thừa → chấm đúng", asy
   await page.getByText("Kiểm tra").click();
   await expect(page.getByText(/Tuyệt vời/)).toBeVisible({ timeout: 10_000 });
 });
+
+// THCS Toán lớp 6 (Hình học trực quan) — mạch mới "Hình học và Đo lường", chấm đúng câu nhận biết hình.
+test("THCS lớp 6 Hình học: nhận biết hình → chấm đúng", async ({ page }) => {
+  await page.goto("/");
+  await page.getByLabel("Cấp THCS").click();
+  await page.getByLabel("Hình học trực quan", { exact: true }).click();
+  await expect(page).toHaveURL(/practice\/g6\.geo\.plane/, { timeout: 10_000 });
+  // Câu đầu "Hình có 6 cạnh bằng nhau và 6 góc bằng nhau là hình gì?" → Lục giác đều (mcq).
+  await expect(page.getByText(/6 cạnh bằng nhau/)).toBeVisible({ timeout: 10_000 });
+  await page.getByLabel("Lục giác đều").click();
+  await page.getByText("Kiểm tra").click();
+  await expect(page.getByText(/Tuyệt vời/)).toBeVisible({ timeout: 10_000 });
+});

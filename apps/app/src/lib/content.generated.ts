@@ -19,16 +19,17 @@ import q_5 from "../../../../content/questions/g4.num.fractions.json";
 import q_6 from "../../../../content/questions/g5.geo.area-volume.json";
 import q_7 from "../../../../content/questions/g5.num.decimal.json";
 import q_8 from "../../../../content/questions/g5.num.percent.json";
-import q_9 from "../../../../content/questions/g6.num.decimals.json";
-import q_10 from "../../../../content/questions/g6.num.fractions.json";
-import q_11 from "../../../../content/questions/g6.num.integers.json";
-import q_12 from "../../../../content/questions/g6.num.naturals.json";
-import q_13 from "../../../../content/questions/tv.g1.chinhta.json";
-import q_14 from "../../../../content/questions/tv.g1.daucau.json";
-import q_15 from "../../../../content/questions/tv.g1.tuloai.json";
-import q_16 from "../../../../content/questions/tv.g2.cauaithenao.json";
-import q_17 from "../../../../content/questions/tv.g2.tudacdiem.json";
-import q_18 from "../../../../content/questions/tv.g3.dongtrainghia.json";
+import q_9 from "../../../../content/questions/g6.geo.plane.json";
+import q_10 from "../../../../content/questions/g6.num.decimals.json";
+import q_11 from "../../../../content/questions/g6.num.fractions.json";
+import q_12 from "../../../../content/questions/g6.num.integers.json";
+import q_13 from "../../../../content/questions/g6.num.naturals.json";
+import q_14 from "../../../../content/questions/tv.g1.chinhta.json";
+import q_15 from "../../../../content/questions/tv.g1.daucau.json";
+import q_16 from "../../../../content/questions/tv.g1.tuloai.json";
+import q_17 from "../../../../content/questions/tv.g2.cauaithenao.json";
+import q_18 from "../../../../content/questions/tv.g2.tudacdiem.json";
+import q_19 from "../../../../content/questions/tv.g3.dongtrainghia.json";
 import badges_0 from "../../../../content/gamification/badges.json";
 
 export const CURRICULA: Grade[] = [cur_0 as Grade, cur_1 as Grade, cur_2 as Grade, cur_3 as Grade, cur_4 as Grade, cur_5 as Grade, cur_6 as Grade, cur_7 as Grade, cur_8 as Grade];
@@ -42,16 +43,17 @@ export const QUESTIONS: Record<string, Question[]> = {
   "g5.geo.area-volume": q_6 as Question[],
   "g5.num.decimal": q_7 as Question[],
   "g5.num.percent": q_8 as Question[],
-  "g6.num.decimals": q_9 as Question[],
-  "g6.num.fractions": q_10 as Question[],
-  "g6.num.integers": q_11 as Question[],
-  "g6.num.naturals": q_12 as Question[],
-  "tv.g1.chinhta": q_13 as Question[],
-  "tv.g1.daucau": q_14 as Question[],
-  "tv.g1.tuloai": q_15 as Question[],
-  "tv.g2.cauaithenao": q_16 as Question[],
-  "tv.g2.tudacdiem": q_17 as Question[],
-  "tv.g3.dongtrainghia": q_18 as Question[],
+  "g6.geo.plane": q_9 as Question[],
+  "g6.num.decimals": q_10 as Question[],
+  "g6.num.fractions": q_11 as Question[],
+  "g6.num.integers": q_12 as Question[],
+  "g6.num.naturals": q_13 as Question[],
+  "tv.g1.chinhta": q_14 as Question[],
+  "tv.g1.daucau": q_15 as Question[],
+  "tv.g1.tuloai": q_16 as Question[],
+  "tv.g2.cauaithenao": q_17 as Question[],
+  "tv.g2.tudacdiem": q_18 as Question[],
+  "tv.g3.dongtrainghia": q_19 as Question[],
 };
 export const IMAGES: Record<string, unknown> = {};
 export const BADGES: Badge[] = badges_0 as Badge[];

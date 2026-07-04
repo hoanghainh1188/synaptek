@@ -1,0 +1,175 @@
+[
+  {
+    "id": "g6.geo.plane.q001",
+    "skillId": "g6.geo.shapes",
+    "grade": 6,
+    "type": "mcq",
+    "prompt": "Hình có 6 cạnh bằng nhau và 6 góc bằng nhau là hình gì?",
+    "difficulty": 1,
+    "choices": ["Tam giác đều", "Hình vuông", "Lục giác đều"],
+    "correct": "Lục giác đều",
+    "explanation": "Lục giác đều là đa giác có 6 cạnh bằng nhau và 6 góc bằng nhau."
+  },
+  {
+    "id": "g6.geo.plane.q002",
+    "skillId": "g6.geo.shapes",
+    "grade": 6,
+    "type": "true-false",
+    "prompt": "Hình vuông có 4 cạnh bằng nhau. Đúng hay sai?",
+    "difficulty": 1,
+    "correct": "true",
+    "explanation": "Hình vuông có 4 cạnh bằng nhau và 4 góc vuông — đúng."
+  },
+  {
+    "id": "g6.geo.plane.q003",
+    "skillId": "g6.geo.shapes",
+    "grade": 6,
+    "type": "mcq",
+    "prompt": "Hình có 4 cạnh bằng nhau nhưng các góc không nhất thiết là góc vuông là hình gì?",
+    "difficulty": 2,
+    "choices": ["Hình vuông", "Hình thoi", "Hình chữ nhật"],
+    "correct": "Hình thoi",
+    "explanation": "Hình thoi có 4 cạnh bằng nhau; các góc không nhất thiết vuông (hình vuông là trường hợp đặc biệt của hình thoi có góc vuông)."
+  },
+  {
+    "id": "g6.geo.plane.q004",
+    "skillId": "g6.geo.shapes",
+    "grade": 6,
+    "type": "true-false",
+    "prompt": "Tam giác đều có 3 góc bằng nhau, mỗi góc 60 độ. Đúng hay sai?",
+    "difficulty": 1,
+    "correct": "true",
+    "explanation": "Tam giác đều có 3 cạnh và 3 góc bằng nhau; tổng 3 góc là 180 độ nên mỗi góc 60 độ — đúng."
+  },
+  {
+    "id": "g6.geo.plane.q005",
+    "skillId": "g6.geo.shapes",
+    "grade": 6,
+    "type": "mcq",
+    "prompt": "Hình bình hành có mấy cặp cạnh đối song song?",
+    "difficulty": 2,
+    "choices": ["1", "2", "3"],
+    "correct": "2",
+    "explanation": "Hình bình hành có 2 cặp cạnh đối song song và bằng nhau."
+  },
+  {
+    "id": "g6.geo.plane.q006",
+    "skillId": "g6.geo.shapes",
+    "grade": 6,
+    "type": "true-false",
+    "prompt": "Hình thang cân có hai đường chéo bằng nhau. Đúng hay sai?",
+    "difficulty": 2,
+    "correct": "true",
+    "explanation": "Hình thang cân có hai cạnh bên bằng nhau và hai đường chéo bằng nhau — đúng."
+  },
+  {
+    "id": "g6.geo.plane.q007",
+    "skillId": "g6.geo.perimeter",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Hình vuông có cạnh 5 cm. Chu vi của nó bằng bao nhiêu xăng-ti-mét?",
+    "difficulty": 1,
+    "correct": "20",
+    "explanation": "Chu vi hình vuông = 4 × cạnh = 4 × 5 = 20 (cm)."
+  },
+  {
+    "id": "g6.geo.plane.q008",
+    "skillId": "g6.geo.perimeter",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Hình chữ nhật có chiều dài 6 cm, chiều rộng 4 cm. Chu vi bằng bao nhiêu xăng-ti-mét?",
+    "difficulty": 1,
+    "correct": "20",
+    "explanation": "Chu vi hình chữ nhật = 2 × (dài + rộng) = 2 × (6 + 4) = 20 (cm)."
+  },
+  {
+    "id": "g6.geo.plane.q009",
+    "skillId": "g6.geo.perimeter",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tam giác đều có cạnh 7 cm. Chu vi bằng bao nhiêu xăng-ti-mét?",
+    "difficulty": 1,
+    "correct": "21",
+    "explanation": "Chu vi tam giác đều = 3 × cạnh = 3 × 7 = 21 (cm)."
+  },
+  {
+    "id": "g6.geo.plane.q010",
+    "skillId": "g6.geo.perimeter",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Hình vuông có cạnh 9 cm. Chu vi bằng bao nhiêu xăng-ti-mét?",
+    "difficulty": 1,
+    "correct": "36",
+    "explanation": "Chu vi hình vuông = 4 × 9 = 36 (cm)."
+  },
+  {
+    "id": "g6.geo.plane.q011",
+    "skillId": "g6.geo.perimeter",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Hình chữ nhật có chiều dài 8 cm, chiều rộng 3 cm. Chu vi bằng bao nhiêu xăng-ti-mét?",
+    "difficulty": 2,
+    "correct": "22",
+    "explanation": "Chu vi = 2 × (8 + 3) = 2 × 11 = 22 (cm)."
+  },
+  {
+    "id": "g6.geo.plane.q012",
+    "skillId": "g6.geo.perimeter",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Lục giác đều có cạnh 4 cm. Chu vi bằng bao nhiêu xăng-ti-mét?",
+    "difficulty": 2,
+    "correct": "24",
+    "explanation": "Chu vi lục giác đều = 6 × cạnh = 6 × 4 = 24 (cm)."
+  },
+  {
+    "id": "g6.geo.plane.q013",
+    "skillId": "g6.geo.area",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Hình vuông có cạnh 5 cm. Diện tích bằng bao nhiêu xăng-ti-mét vuông?",
+    "difficulty": 1,
+    "correct": "25",
+    "explanation": "Diện tích hình vuông = cạnh × cạnh = 5 × 5 = 25 (cm vuông)."
+  },
+  {
+    "id": "g6.geo.plane.q014",
+    "skillId": "g6.geo.area",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Hình chữ nhật có chiều dài 6 cm, chiều rộng 4 cm. Diện tích bằng bao nhiêu xăng-ti-mét vuông?",
+    "difficulty": 1,
+    "correct": "24",
+    "explanation": "Diện tích hình chữ nhật = dài × rộng = 6 × 4 = 24 (cm vuông)."
+  },
+  {
+    "id": "g6.geo.plane.q015",
+    "skillId": "g6.geo.area",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Hình bình hành có cạnh đáy 8 cm, chiều cao 3 cm. Diện tích bằng bao nhiêu xăng-ti-mét vuông?",
+    "difficulty": 2,
+    "correct": "24",
+    "explanation": "Diện tích hình bình hành = đáy × chiều cao = 8 × 3 = 24 (cm vuông)."
+  },
+  {
+    "id": "g6.geo.plane.q016",
+    "skillId": "g6.geo.area",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Hình thoi có hai đường chéo 6 cm và 8 cm. Diện tích bằng bao nhiêu xăng-ti-mét vuông?",
+    "difficulty": 2,
+    "correct": "24",
+    "explanation": "Diện tích hình thoi = (đường chéo 1 × đường chéo 2) : 2 = (6 × 8) : 2 = 24 (cm vuông)."
+  },
+  {
+    "id": "g6.geo.plane.q017",
+    "skillId": "g6.geo.area",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Hình thang có đáy lớn 10 cm, đáy bé 6 cm, chiều cao 4 cm. Diện tích bằng bao nhiêu xăng-ti-mét vuông?",
+    "difficulty": 2,
+    "correct": "32",
+    "explanation": "Diện tích hình thang = (đáy lớn + đáy bé) × chiều cao : 2 = (10 + 6) × 4 : 2 = 32 (cm vuông)."
+  }
+]

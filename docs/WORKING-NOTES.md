@@ -4,7 +4,16 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
-**+ Nhân rộng THCS — lớp 6 Số tự nhiên ✅ (feature/thcs-g6-natural, PR đang mở):** Chủ đề THCS THỨ 4 → **TRỌN
+**+ Nhân rộng THCS — lớp 6 Hình học trực quan ✅ (feature/thcs-g6-geometry, PR đang mở):** User chọn "đổi
+mạch" (đa dạng hoá ngoài Số & Đại số). **MẠCH MỚI — strand thứ 2 của lớp 6**: `g6.geo` "Hình học và Đo
+lường". Chọn Hình học thay Thống kê-Xác suất vì hợp engine numeric (chu vi/diện tích tính số sạch; Thống kê
+cần biểu đồ/ảnh). Topic `g6.geo.plane` 3 skill: shapes (nhận biết hình + tính chất) → perimeter (chu vi) +
+area (diện tích). 17 câu mcq/true-false + numeric. **Xác nhận schema+home chịu nhiều strand không đổi code**
+(strands duyệt generic; topicsByGrade flatMap). Engine sẵn → không đổi. Gate tự-chấm áp tự động (tổng **290
+câu, 37 kỹ năng**). e2e +1 (Hình học → mcq lục giác đều). Decision Log **D63**. **Bước tiếp**: chủ repo DUYỆT
+17 câu trước merge; sau đó Thống kê-Xác suất lớp 6 (cần cân nhắc ảnh/biểu đồ) / lớp 7 / hoặc dừng THCS.
+
+**+ Nhân rộng THCS — lớp 6 Số tự nhiên ✅ (feature/thcs-g6-natural, đã merge #94):** Chủ đề THCS THỨ 4 → **TRỌN
 mạch "Số & Đại số" lớp 6** (Số tự nhiên/Số nguyên/Phân số/Số thập phân). Topic `g6.num.naturals` đặt ĐẦU
 strand (CT GDPT xếp trước Số nguyên). 3 skill: power (lũy thừa a^n + thứ tự phép tính) → divisibility (chia
 hết 2/3/5/9 · nguyên tố/hợp số) → gcdlcm (ƯCLN/BCNN); DAG NỀN, prereq rỗng (khác 3 chủ đề trước trỏ Số
