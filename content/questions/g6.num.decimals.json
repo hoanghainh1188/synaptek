@@ -1,0 +1,173 @@
+[
+  {
+    "id": "g6.num.decimals.q001",
+    "skillId": "g6.num.decimal.concept",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Số đối của 2,5 là số nào?",
+    "difficulty": 1,
+    "correct": "-2,5",
+    "explanation": "Số đối có cùng khoảng cách tới 0 nhưng khác dấu. Số đối của 2,5 là -2,5."
+  },
+  {
+    "id": "g6.num.decimals.q002",
+    "skillId": "g6.num.decimal.concept",
+    "grade": 6,
+    "type": "mcq",
+    "prompt": "Số nào lớn hơn: -1,5 hay -1,2?",
+    "difficulty": 2,
+    "choices": ["-1,5", "-1,2"],
+    "correct": "-1,2",
+    "explanation": "Với số âm, số nào gần 0 hơn thì lớn hơn. -1,2 nằm bên phải -1,5 trên trục số nên -1,2 > -1,5."
+  },
+  {
+    "id": "g6.num.decimals.q003",
+    "skillId": "g6.num.decimal.concept",
+    "grade": 6,
+    "type": "true-false",
+    "prompt": "-0,7 < -0,5. Đúng hay sai?",
+    "difficulty": 2,
+    "correct": "true",
+    "explanation": "-0,7 nằm bên trái -0,5 trên trục số nên -0,7 < -0,5 — đúng."
+  },
+  {
+    "id": "g6.num.decimals.q004",
+    "skillId": "g6.num.decimal.concept",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Làm tròn 3,456 đến hàng phần trăm.",
+    "difficulty": 2,
+    "correct": "3,46",
+    "explanation": "Chữ số hàng phần nghìn là 6 (≥5) nên làm tròn lên: 3,456 ≈ 3,46."
+  },
+  {
+    "id": "g6.num.decimals.q005",
+    "skillId": "g6.num.decimal.concept",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Làm tròn 12,7 đến hàng đơn vị.",
+    "difficulty": 1,
+    "correct": "13",
+    "explanation": "Chữ số hàng phần mười là 7 (≥5) nên làm tròn lên: 12,7 ≈ 13."
+  },
+  {
+    "id": "g6.num.decimals.q006",
+    "skillId": "g6.num.decimal.concept",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Giá trị tuyệt đối của -3,8, viết |-3,8|, bằng bao nhiêu?",
+    "difficulty": 1,
+    "correct": "3,8",
+    "explanation": "Giá trị tuyệt đối là khoảng cách tới 0, luôn không âm. |-3,8| = 3,8."
+  },
+  {
+    "id": "g6.num.decimals.q007",
+    "skillId": "g6.num.decimal.addsub",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tính: 2,5 + 1,3",
+    "difficulty": 1,
+    "correct": "3,8",
+    "explanation": "Đặt tính thẳng dấu phẩy rồi cộng: 2,5 + 1,3 = 3,8."
+  },
+  {
+    "id": "g6.num.decimals.q008",
+    "skillId": "g6.num.decimal.addsub",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tính: 5,6 - 2,1",
+    "difficulty": 1,
+    "correct": "3,5",
+    "explanation": "Đặt tính thẳng dấu phẩy rồi trừ: 5,6 - 2,1 = 3,5."
+  },
+  {
+    "id": "g6.num.decimals.q009",
+    "skillId": "g6.num.decimal.addsub",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tính: (-2,5) + 1,5",
+    "difficulty": 2,
+    "correct": "-1",
+    "explanation": "Khác dấu: lấy 2,5 - 1,5 = 1 rồi giữ dấu của số có giá trị tuyệt đối lớn hơn (-2,5). Kết quả -1."
+  },
+  {
+    "id": "g6.num.decimals.q010",
+    "skillId": "g6.num.decimal.addsub",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tính: 3,2 + (-5,7)",
+    "difficulty": 2,
+    "correct": "-2,5",
+    "explanation": "Khác dấu: lấy 5,7 - 3,2 = 2,5 rồi giữ dấu của -5,7. Kết quả -2,5."
+  },
+  {
+    "id": "g6.num.decimals.q011",
+    "skillId": "g6.num.decimal.addsub",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tính: (-1,5) + (-2,3)",
+    "difficulty": 2,
+    "correct": "-3,8",
+    "explanation": "Cùng dấu âm: cộng hai giá trị tuyệt đối 1,5 + 2,3 = 3,8 rồi giữ dấu âm. Kết quả -3,8."
+  },
+  {
+    "id": "g6.num.decimals.q012",
+    "skillId": "g6.num.decimal.addsub",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tính: 4,5 - 6,8",
+    "difficulty": 2,
+    "correct": "-2,3",
+    "explanation": "4,5 - 6,8 = 4,5 + (-6,8). Khác dấu: 6,8 - 4,5 = 2,3, giữ dấu âm. Kết quả -2,3."
+  },
+  {
+    "id": "g6.num.decimals.q013",
+    "skillId": "g6.num.decimal.muldiv",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tính: 2,5 × 4",
+    "difficulty": 1,
+    "correct": "10",
+    "explanation": "2,5 × 4 = 10 (2,5 × 4 = 10,0)."
+  },
+  {
+    "id": "g6.num.decimals.q014",
+    "skillId": "g6.num.decimal.muldiv",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tính: (-1,5) × 3",
+    "difficulty": 2,
+    "correct": "-4,5",
+    "explanation": "Nhân khác dấu được số âm: 1,5 × 3 = 4,5, kết quả -4,5."
+  },
+  {
+    "id": "g6.num.decimals.q015",
+    "skillId": "g6.num.decimal.muldiv",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tính: 6,4 : 2",
+    "difficulty": 1,
+    "correct": "3,2",
+    "explanation": "6,4 : 2 = 3,2."
+  },
+  {
+    "id": "g6.num.decimals.q016",
+    "skillId": "g6.num.decimal.muldiv",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tính: (-2,4) : (-0,6)",
+    "difficulty": 2,
+    "correct": "4",
+    "explanation": "Chia hai số cùng dấu âm được số dương: 2,4 : 0,6 = 4."
+  },
+  {
+    "id": "g6.num.decimals.q017",
+    "skillId": "g6.num.decimal.muldiv",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tính: 0,5 × (-8)",
+    "difficulty": 1,
+    "correct": "-4",
+    "explanation": "Nhân khác dấu được số âm: 0,5 × 8 = 4, kết quả -4."
+  }
+]
