@@ -4,6 +4,7 @@ import { Pressable, Text, View } from "react-native";
 import Svg, { Circle } from "react-native-svg";
 import { MathText } from "@/components/math/MathText";
 import { Mascot } from "@/components/Mascot";
+import { ratingMessage } from "@/lib/session-rating";
 
 interface WrongItem {
   id: string;
@@ -117,7 +118,7 @@ export function SessionResult({
       )}
 
       <Text className="mt-5 font-display text-lg font-semibold text-brand">
-        Em tiến bộ rồi đó! 💪
+        {ratingMessage(correct, total)}
       </Text>
 
       <View className="mt-4 w-full flex-row gap-2">
