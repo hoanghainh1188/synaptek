@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { waitSignedIn } from "./_helpers";
 
 // CẦN Supabase + functions. Câu SẮP THỨ TỰ: soạn → giao → HS thấy controls ↑↓ → nộp → chấm (có điểm).
 test("câu sắp thứ tự: soạn → giao → HS sắp xếp → chấm", async ({ browser }) => {
@@ -13,6 +14,7 @@ test("câu sắp thứ tự: soạn → giao → HS sắp xếp → chấm", asy
   await gvPage.getByPlaceholder("email@vidu.com").fill(`gvr${s}@test.local`);
   await gvPage.getByPlaceholder("••••••").fill("matkhau123");
   await gvPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(gvPage);
 
   // Soạn ordering: 1,2,3 (đúng thứ tự)
   await gvPage.goto("/questions");
@@ -44,6 +46,7 @@ test("câu sắp thứ tự: soạn → giao → HS sắp xếp → chấm", asy
   await hsPage.getByPlaceholder("email@vidu.com").fill(`hsr${s}@test.local`);
   await hsPage.getByPlaceholder("••••••").fill("matkhau123");
   await hsPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(hsPage);
   await hsPage.goto("/join");
   await hsPage.getByPlaceholder("VD: 7K2MQ9").fill(code);
   await hsPage.getByLabel("Vào lớp").click();

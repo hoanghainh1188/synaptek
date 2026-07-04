@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { waitSignedIn } from "./_helpers";
 
 // CẦN Supabase. Soạn câu biểu thức: chèn nhanh ký hiệu ( x ) vào ô đáp án + xem trước (MathText) → lưu.
 test("soạn câu: thanh chèn ký hiệu + xem trước khi nhập đáp án biểu thức", async ({ page }) => {
@@ -10,6 +11,7 @@ test("soạn câu: thanh chèn ký hiệu + xem trước khi nhập đáp án bi
   await page.getByPlaceholder("email@vidu.com").fill(`gvins${s}@test.local`);
   await page.getByPlaceholder("••••••").fill("matkhau123");
   await page.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(page);
 
   await page.goto("/questions");
   await page.getByLabel("Biểu thức").click();

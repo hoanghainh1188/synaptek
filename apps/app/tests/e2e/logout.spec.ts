@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { waitSignedIn } from "./_helpers";
 
 // CẦN Supabase. Đăng ký → Hồ sơ → Đăng xuất (xác nhận) → về guest.
 test("đăng xuất khỏi tài khoản", async ({ page }) => {
@@ -9,6 +10,7 @@ test("đăng xuất khỏi tài khoản", async ({ page }) => {
   await page.getByPlaceholder("email@vidu.com").fill(`out${s}@test.local`);
   await page.getByPlaceholder("••••••").fill("matkhau123");
   await page.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(page);
 
   await page.goto("/profile");
   await page.getByLabel("Đăng xuất", { exact: true }).click();

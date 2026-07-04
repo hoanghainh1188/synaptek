@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { waitSignedIn } from "./_helpers";
 
 // CẦN Supabase. PH gợi ý hành động: con có điểm yếu → PH thấy "💡 Gợi ý" → giao bài prefilled câu.
 test("PH gợi ý ôn điểm yếu → giao bài đã chọn sẵn câu", async ({ browser }) => {
@@ -12,6 +13,7 @@ test("PH gợi ý ôn điểm yếu → giao bài đã chọn sẵn câu", async
   await hsPage.getByPlaceholder("email@vidu.com").fill(`sug${s}@test.local`);
   await hsPage.getByPlaceholder("••••••").fill("matkhau123");
   await hsPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(hsPage);
   // Luyện 1 câu → tạo dữ liệu điểm yếu
   await hsPage.goto("/practice/g4.num.fractions");
   await hsPage.getByLabel("1/2").click();
@@ -31,6 +33,7 @@ test("PH gợi ý ôn điểm yếu → giao bài đã chọn sẵn câu", async
   await phPage.getByPlaceholder("email@vidu.com").fill(`momsug${s}@test.local`);
   await phPage.getByPlaceholder("••••••").fill("matkhau123");
   await phPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(phPage);
   await phPage.goto("/children");
   await phPage.getByPlaceholder("Mã con cung cấp").fill(code);
   await phPage.getByLabel("Liên kết").click();

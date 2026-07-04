@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { waitSignedIn } from "./_helpers";
 
 // CẦN Supabase (KHÔNG cần functions). BXH lớp: HS thấy bạn cùng lớp + XP, có đánh dấu "(em)".
 test("bảng xếp hạng lớp hiện bạn cùng lớp + XP", async ({ browser }) => {
@@ -13,6 +14,7 @@ test("bảng xếp hạng lớp hiện bạn cùng lớp + XP", async ({ browser
   await gvPage.getByPlaceholder("email@vidu.com").fill(`gvb${s}@test.local`);
   await gvPage.getByPlaceholder("••••••").fill("matkhau123");
   await gvPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(gvPage);
   await gvPage.goto("/classes");
   await gvPage.getByPlaceholder("Tên lớp (vd: Toán 4A)").fill("Lớp BXH");
   await gvPage.getByLabel("Tạo lớp").click();
@@ -28,6 +30,7 @@ test("bảng xếp hạng lớp hiện bạn cùng lớp + XP", async ({ browser
     await p.getByPlaceholder("email@vidu.com").fill(email);
     await p.getByPlaceholder("••••••").fill("matkhau123");
     await p.getByText("Đăng ký", { exact: true }).click();
+    await waitSignedIn(p);
     await p.goto("/join");
     await p.getByPlaceholder("VD: 7K2MQ9").fill(code);
     await p.getByLabel("Vào lớp").click();

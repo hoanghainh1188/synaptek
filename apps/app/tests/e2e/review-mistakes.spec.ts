@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { waitSignedIn } from "./_helpers";
 
 // CẦN Supabase (chấm client + lưu attempt qua RLS; KHÔNG cần functions). KHÔNG chạy ở CI (auth-gated).
 // HS làm sai 1 câu → trang chủ hiện "Ôn lại câu sai" → ôn lại đúng → câu được giải quyết (mất khỏi danh sách).
@@ -10,6 +11,7 @@ test("ôn lại câu sai: sai → ôn → đúng → tự loại", async ({ page
   await page.getByPlaceholder("email@vidu.com").fill(`rev${s}@test.local`);
   await page.getByPlaceholder("••••••").fill("matkhau123");
   await page.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(page);
 
   // Làm SAI câu đầu chủ đề Phân số (q001 mcq: đúng "1/2", chọn "1/3" = sai)
   await page.goto("/practice/g4.num.fractions");

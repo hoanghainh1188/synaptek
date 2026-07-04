@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { waitSignedIn } from "./_helpers";
 
 // CẦN Supabase (KHÔNG cần functions). Soạn thảo nâng cao: sửa câu tự soạn · tìm/đếm · xem trước · nhân bản.
 test("authoring nâng cao: sửa câu · tìm/đếm/preview · nhân bản bài", async ({ page }) => {
@@ -10,6 +11,7 @@ test("authoring nâng cao: sửa câu · tìm/đếm/preview · nhân bản bài
   await page.getByPlaceholder("email@vidu.com").fill(`adv${s}@test.local`);
   await page.getByPlaceholder("••••••").fill("matkhau123");
   await page.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(page);
 
   // (1) Sửa câu tự soạn + chọn MÔN
   await page.goto("/questions");

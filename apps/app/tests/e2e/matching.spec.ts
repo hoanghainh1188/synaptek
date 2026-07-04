@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { waitSignedIn } from "./_helpers";
 
 // CẦN Supabase + functions. Câu NỐI CẶP: soạn → giao → HS ghép (chạm) → nộp → chấm (có điểm).
 test("câu nối cặp: soạn → giao → HS ghép → chấm", async ({ browser }) => {
@@ -13,6 +14,7 @@ test("câu nối cặp: soạn → giao → HS ghép → chấm", async ({ brows
   await gvPage.getByPlaceholder("email@vidu.com").fill(`gvmt${s}@test.local`);
   await gvPage.getByPlaceholder("••••••").fill("matkhau123");
   await gvPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(gvPage);
 
   // Soạn nối cặp: 2+2→4, 3+3→6
   await gvPage.goto("/questions");
@@ -44,6 +46,7 @@ test("câu nối cặp: soạn → giao → HS ghép → chấm", async ({ brows
   await hsPage.getByPlaceholder("email@vidu.com").fill(`hsmt${s}@test.local`);
   await hsPage.getByPlaceholder("••••••").fill("matkhau123");
   await hsPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(hsPage);
   await hsPage.goto("/join");
   await hsPage.getByPlaceholder("VD: 7K2MQ9").fill(code);
   await hsPage.getByLabel("Vào lớp").click();

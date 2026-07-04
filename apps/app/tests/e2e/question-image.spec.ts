@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { waitSignedIn } from "./_helpers";
 import path from "node:path";
 
 // CẦN Supabase (DB + Storage). KHÔNG cần functions. Ảnh trong câu tự soạn: upload → lưu → hiện lại.
@@ -11,6 +12,7 @@ test("soạn câu có ảnh: upload Storage → lưu → ảnh hiện trong danh
   await page.getByPlaceholder("email@vidu.com").fill(`img${s}@test.local`);
   await page.getByPlaceholder("••••••").fill("matkhau123");
   await page.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(page);
 
   await page.goto("/questions");
   await page.getByLabel("Số", { exact: true }).click();

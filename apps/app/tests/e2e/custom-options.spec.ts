@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { waitSignedIn } from "./_helpers";
 
 // CẦN Supabase + functions. Fill-blank "không theo thứ tự" → HS điền đúng tập (khác vị trí) vẫn 100%.
 test("tùy chọn chấm: fill-blank không theo thứ tự", async ({ browser }) => {
@@ -13,6 +14,7 @@ test("tùy chọn chấm: fill-blank không theo thứ tự", async ({ browser }
   await gvPage.getByPlaceholder("email@vidu.com").fill(`gvo${s}@test.local`);
   await gvPage.getByPlaceholder("••••••").fill("matkhau123");
   await gvPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(gvPage);
 
   // Soạn fill-blank 3 ô (2,4,6), bật KHÔNG theo thứ tự
   await gvPage.goto("/questions");
@@ -45,6 +47,7 @@ test("tùy chọn chấm: fill-blank không theo thứ tự", async ({ browser }
   await hsPage.getByPlaceholder("email@vidu.com").fill(`hso${s}@test.local`);
   await hsPage.getByPlaceholder("••••••").fill("matkhau123");
   await hsPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(hsPage);
   await hsPage.goto("/join");
   await hsPage.getByPlaceholder("VD: 7K2MQ9").fill(code);
   await hsPage.getByLabel("Vào lớp").click();

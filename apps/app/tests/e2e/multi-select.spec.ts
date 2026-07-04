@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { waitSignedIn } from "./_helpers";
 
 // CẦN Supabase + functions (chấm). GV soạn câu CHỌN NHIỀU → giao → HS chọn đúng tập → 100%.
 test("câu chọn nhiều đáp án: soạn → giao → HS chọn đúng tập → chấm 100%", async ({ browser }) => {
@@ -13,6 +14,7 @@ test("câu chọn nhiều đáp án: soạn → giao → HS chọn đúng tập 
   await gvPage.getByPlaceholder("email@vidu.com").fill(`gvm${s}@test.local`);
   await gvPage.getByPlaceholder("••••••").fill("matkhau123");
   await gvPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(gvPage);
 
   // Soạn câu chọn nhiều: "Chọn số chẵn" → 2,3,4; đúng = 2 và 4
   await gvPage.goto("/questions");
@@ -48,6 +50,7 @@ test("câu chọn nhiều đáp án: soạn → giao → HS chọn đúng tập 
   await hsPage.getByPlaceholder("email@vidu.com").fill(`hsm${s}@test.local`);
   await hsPage.getByPlaceholder("••••••").fill("matkhau123");
   await hsPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(hsPage);
   await hsPage.goto("/join");
   await hsPage.getByPlaceholder("VD: 7K2MQ9").fill(code);
   await hsPage.getByLabel("Vào lớp").click();

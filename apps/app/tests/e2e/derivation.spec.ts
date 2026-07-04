@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { waitSignedIn } from "./_helpers";
 
 // CẦN Supabase + functions. Câu TRÌNH BÀY TỪNG BƯỚC: soạn (phương trình) → giao → HS nộp lời giải nhiều dòng
 // → chấm CHÍNH THỨC server-side qua step-grading (đạt đích x = số → 100%).
@@ -14,6 +15,7 @@ test("câu trình bày từng bước: soạn → giao → HS nộp lời giải
   await gvPage.getByPlaceholder("email@vidu.com").fill(`gvdv${s}@test.local`);
   await gvPage.getByPlaceholder("••••••").fill("matkhau123");
   await gvPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(gvPage);
 
   // Soạn câu derivation (giải phương trình 2x + 3 = 7)
   await gvPage.goto("/questions");
@@ -43,6 +45,7 @@ test("câu trình bày từng bước: soạn → giao → HS nộp lời giải
   await hsPage.getByPlaceholder("email@vidu.com").fill(`hsdv${s}@test.local`);
   await hsPage.getByPlaceholder("••••••").fill("matkhau123");
   await hsPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(hsPage);
   await hsPage.goto("/join");
   await hsPage.getByPlaceholder("VD: 7K2MQ9").fill(code);
   await hsPage.getByLabel("Vào lớp").click();

@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { waitSignedIn } from "./_helpers";
 
 // CẦN Supabase + functions. Bàn phím TOÁN có cấu trúc cho câu BIỂU THỨC: HS nhập "2(x+2)" bằng nút
 // ( ) x ^ → chấm tương đương "2x+4" (engine, D9) → 100%.
@@ -14,6 +15,7 @@ test("bàn phím cấu trúc: nhập 2(x+2) bằng nút → chấm tương đư�
   await gvPage.getByPlaceholder("email@vidu.com").fill(`gvkp${s}@test.local`);
   await gvPage.getByPlaceholder("••••••").fill("matkhau123");
   await gvPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(gvPage);
 
   // Soạn câu biểu thức (đáp án 2x+4)
   await gvPage.goto("/questions");
@@ -42,6 +44,7 @@ test("bàn phím cấu trúc: nhập 2(x+2) bằng nút → chấm tương đư�
   await hsPage.getByPlaceholder("email@vidu.com").fill(`hskp${s}@test.local`);
   await hsPage.getByPlaceholder("••••••").fill("matkhau123");
   await hsPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(hsPage);
   await hsPage.goto("/join");
   await hsPage.getByPlaceholder("VD: 7K2MQ9").fill(code);
   await hsPage.getByLabel("Vào lớp").click();

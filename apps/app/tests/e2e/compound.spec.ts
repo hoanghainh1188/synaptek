@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { waitSignedIn } from "./_helpers";
 
 // CẦN Supabase + functions. Câu NHIỀU PHẦN (a/b): soạn 2 phần (numeric + mcq) → giao → HS làm đúng
 // phần a, sai phần b → chấm CHÍNH THỨC server-side qua gradeCompound (điểm = trung bình = 50%).
@@ -16,6 +17,7 @@ test("câu nhiều phần: soạn 2 phần → giao → HS làm 1 đúng 1 sai �
   await gvPage.getByPlaceholder("email@vidu.com").fill(`gvcp${s}@test.local`);
   await gvPage.getByPlaceholder("••••••").fill("matkhau123");
   await gvPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(gvPage);
 
   // Soạn câu nhiều phần: a) numeric 3+5=? (đáp án 8) · b) mcq chọn số chẵn (đáp án 4)
   await gvPage.goto("/questions");
@@ -51,6 +53,7 @@ test("câu nhiều phần: soạn 2 phần → giao → HS làm 1 đúng 1 sai �
   await hsPage.getByPlaceholder("email@vidu.com").fill(`hscp${s}@test.local`);
   await hsPage.getByPlaceholder("••••••").fill("matkhau123");
   await hsPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(hsPage);
   await hsPage.goto("/join");
   await hsPage.getByPlaceholder("VD: 7K2MQ9").fill(code);
   await hsPage.getByLabel("Vào lớp").click();

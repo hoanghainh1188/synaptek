@@ -4,7 +4,22 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
-**+ Nhân rộng nội dung THCS — lớp 6 Phân số ✅ (feature/thcs-g6-fractions, PR đang mở):** Hướng A (user chọn
+**+ Tối ưu CI — E2E serve bản export TĨNH ✅ (chore/ci-static-e2e-server, PR đang mở):** User báo "CI càng
+lúc càng chậm". Đo thật: `E2E auth-gated` 18–24m là nút thắt (verify 4.9m + RLS 2.5m song song), nhảy từ ~9m
+do (a) mỗi feature +1 spec (41 auth + 7 guest), (b) bundle lớn dần (KaTeX). Gốc: e2e chạy **dev server**
+`expo start --web` (bundle JIT chậm + từng OOM, D53). Đổi: CI build export 1 lần → serve `dist/` bằng server
+tĩnh **zero-dep** `apps/app/scripts/serve-dist.mjs` (SPA fallback mọi route→index.html, mirror vercel.json —
+route động không 404). `playwright.config.ts` theo env CI (local giữ dev server). ci.yml e2e-auth thêm bước
+build (sau export EXPO*PUBLIC). **Phát hiện quan trọng**: serve tĩnh (nhanh) LỘ ~35 auth spec dính RACE —
+đăng ký/đăng nhập rồi `goto`/`reload` ngay, không chờ session lưu → trang ra guest → treo. Dev server chậm
+vô tình che (lỗi test thật). Fix: helper `waitSignedIn(page)` + codemod chèn sau mỗi lần bấm "Đăng ký" (34
+file, 63 chỗ). Đo local: guest ~2s; **trọn 41 auth spec ~59s** trên tĩnh (trước dev server ~18–24m). Chưa
+đụng `--workers=1` (sharding để dành). Decision Log **D58**. **Bước tiếp**: xem CI thật giảm bao nhiêu (kỳ
+vọng job e2e-auth 18–24m → ~5–6m); nếu muốn nhanh hơn nữa → sharding có cô lập dữ liệu.
+\_Bẫy debug: lúc repro local, Edge runtime bị project khác (vn-legal-ai-assistant) chiếm cổng → 19 grading
+spec fail GIẢ; dừng project kia + start synaptek sạch → 46/46 pass. Không liên quan code.*
+
+**+ Nhân rộng nội dung THCS — lớp 6 Phân số ✅ (feature/thcs-g6-fractions, đã merge #88):** Hướng A (user chọn
 "theo hướng A" — nhân rộng nội dung THCS). Chủ đề THCS THỨ 2 sau pilot Số nguyên (D55), chứng minh quy trình
 soạn→validate→duyệt nhân rộng trơn. Chọn **Phân số** qua AskUserQuestion (chương kế Số nguyên trong CT GDPT
 lớp 6 + khoe moat rõ nhất). Thêm topic `g6.num.fractions` vào `grade-6.json` (3 skill concept/addsub/muldiv,

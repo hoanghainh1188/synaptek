@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { waitSignedIn } from "./_helpers";
 
 // Giới hạn nộp (D25) — CẦN Supabase + `supabase functions serve`. KHÔNG chạy ở CI (auth-gated).
 // GV đặt "số lần nộp tối đa = 1" → HS nộp 1 lần → hết lượt (server tăng attempt_count; nút bị khoá).
@@ -14,6 +15,7 @@ test("giới hạn số lần nộp: 1 lần → hết lượt sau khi nộp", a
   await gvPage.getByPlaceholder("email@vidu.com").fill(`gv${stamp}@test.local`);
   await gvPage.getByPlaceholder("••••••").fill("matkhau123");
   await gvPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(gvPage);
 
   await gvPage.goto("/classes");
   await gvPage.getByPlaceholder("Tên lớp (vd: Toán 4A)").fill("Toán 4D");
@@ -38,6 +40,7 @@ test("giới hạn số lần nộp: 1 lần → hết lượt sau khi nộp", a
   await hsPage.getByPlaceholder("email@vidu.com").fill(`hs${stamp}@test.local`);
   await hsPage.getByPlaceholder("••••••").fill("matkhau123");
   await hsPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(hsPage);
   await hsPage.goto("/join");
   await hsPage.getByPlaceholder("VD: 7K2MQ9").fill(code);
   await hsPage.getByLabel("Vào lớp").click();

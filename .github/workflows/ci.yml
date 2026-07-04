@@ -148,6 +148,11 @@ jobs:
             sleep 2
           done
 
+      # Build export TĨNH để E2E serve `dist/` (không dùng dev server — nhanh + không OOM). Chạy SAU khi
+      # export EXPO_PUBLIC_SUPABASE_* để build nhúng đúng URL/key Supabase cục bộ (auth flow cần).
+      - name: Build web (Expo export)
+        run: npm run build:web --workspace @synaptek/app
+
       - name: Install Playwright (chromium)
         run: npx playwright install --with-deps chromium
         working-directory: apps/app
