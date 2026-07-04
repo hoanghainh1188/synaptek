@@ -4,14 +4,17 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
-**+ Tối ưu bundle web GĐ1 — lazy-load KaTeX ✅ (perf/lazy-katex, PR đang mở):** User yêu cầu tối ưu bundle,
-chốt làm từng bước (GĐ1 trước rồi xem xét). Baseline đo thật: 1 bundle 3.14MB raw / **780KB gzip, KHÔNG
-code-split** (vượt ~2.6× ngân sách 300KB). GĐ1: KaTeX (~76KB) đang import EAGER ở `KatexSpan.web.tsx` → đổi
-`import("katex")` động (cache cấp module chống nhấp nháy; fallback text "1/2"/"x^2" lúc chunk tải). **Verify
-Metro SDK 56 tách chunk thật**: entry **780→706KB gzip** (−74KB), katex file riêng 76KB. e2e math-render xanh
-(latex-render kiểm .katex+MathML; sqrt/derivation/math-keypad/compound/level-picker). Decision Log **D60**.
-**Bước tiếp**: sau khi merge, cân nhắc GĐ2 (async routes `experiments.asyncRoutes` code-split theo màn — rủi
-ro trung bình, verify SSG+toàn bộ e2e) hoặc dừng nếu đủ.
+**+ Tối ưu bundle web GĐ1 — lazy-load KaTeX ✅ (perf/lazy-katex, đã merge #91):** User yêu cầu tối ưu bundle,
+chốt làm từng bước. Baseline đo thật: 1 bundle 3.14MB raw / **780KB gzip, KHÔNG code-split** (vượt ~2.6× ngân
+sách 300KB). GĐ1: KaTeX (~76KB) đang import EAGER ở `KatexSpan.web.tsx` → đổi `import("katex")` động (cache
+cấp module chống nhấp nháy; fallback text "1/2"/"x^2" lúc chunk tải). **Verify Metro SDK 56 tách chunk thật**:
+entry **780→706KB gzip** (−74KB), katex file riêng 76KB. e2e math-render xanh. Decision Log **D60**.
+**GĐ2 (async routes) — ĐÃ THỬ, KHÔNG khả thi** (negative result, ĐỪNG thử lại): bật `experiments.asyncRoutes`
+(cả `{web:true}` lẫn `true`) → build KHÔNG đổi (entry vẫn 706KB). Log "Static rendering / Static routes (38)"
+— `expo export` với `output:static` RE-BUNDLE hết vào 1 entry; asyncRoutes chỉ tác dụng DEV-mode. Route-split
+production thật cần `output:server` (SSR + Node server) → đổi kiến trúc deploy (bỏ static Vercel), KHÔNG đáng.
+Đã revert. **Kết luận**: 706KB còn lại chủ yếu deps LÕI (react-native-web/supabase/reanimated/tanstack) cần
+sớm — cắt tiếp an toàn khó. GĐ1 (−74KB) là phần vét hợp lý.
 
 **+ Tăng tốc CI đợt 2 ✅ (chore/ci-faster-supabase, đã merge #90):** User "làm CI nhanh hơn nữa". Sau D58
 (e2e-auth 18–24m→5.3m), đo breakdown: nút thắt dịch sang SETUP — `Start Supabase` 101s lớn nhất, rồi `E2E
