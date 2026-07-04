@@ -45,15 +45,26 @@ test("difficultyOf: loại lạ → mặc định vừa (2)", () => {
   assert.equal(difficultyOf({ type: "unknown-type" }), 2);
 });
 
-// ── xpForAttempt ─────────────────────────────────────────────────────────────
-test("xpForAttempt: sai → 0 bất kể độ khó", () => {
-  for (const d of [1, 2, 3] as const) assert.equal(xpForAttempt(false, d), 0);
+// ── xpForAttempt (theo điểm 0..1) ────────────────────────────────────────────
+test("xpForAttempt: score 0 (sai) → 0 bất kể độ khó", () => {
+  for (const d of [1, 2, 3] as const) assert.equal(xpForAttempt(0, d), 0);
 });
 
-test("xpForAttempt: đúng × trọng số {1:1, 2:1.5, 3:2} trên base 10", () => {
-  assert.equal(xpForAttempt(true, 1), 10);
-  assert.equal(xpForAttempt(true, 2), 15);
-  assert.equal(xpForAttempt(true, 3), 20);
+test("xpForAttempt: score 1 (đúng trọn) × trọng số {1:1, 2:1.5, 3:2} trên base 10", () => {
+  assert.equal(xpForAttempt(1, 1), 10);
+  assert.equal(xpForAttempt(1, 2), 15);
+  assert.equal(xpForAttempt(1, 3), 20);
+});
+
+test("xpForAttempt: điểm thành phần → XP theo tỉ lệ, làm tròn", () => {
+  assert.equal(xpForAttempt(0.5, 2), 8); // round(10*1.5*0.5)=round(7.5)=8
+  assert.equal(xpForAttempt(0.5, 3), 10); // round(10*2*0.5)=10
+  assert.equal(xpForAttempt(2 / 3, 1), 7); // round(10*1*0.667)=round(6.67)=7
+});
+
+test("xpForAttempt: kẹp score ngoài [0,1]", () => {
+  assert.equal(xpForAttempt(-0.5, 2), 0);
+  assert.equal(xpForAttempt(1.5, 2), 15);
 });
 
 // ── updateStreak ─────────────────────────────────────────────────────────────

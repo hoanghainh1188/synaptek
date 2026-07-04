@@ -86,8 +86,29 @@ test("sessionResult: tổng/đúng/điểm + danh sách sai", () => {
   const r = sessionResult(s);
   assert.equal(r.total, 2);
   assert.equal(r.correct, 1);
+  assert.equal(r.partial, 0); // không có câu đúng-một-phần trong ca này
   assert.equal(r.wrong.length, 1);
   assert.equal(r.wrong[0].id, "g4.num.fractions.q002");
+});
+
+test("sessionResult: đúng MỘT PHẦN (fill-blank) → không tính correct, partial=1, điểm thành phần", () => {
+  const fb: Question = {
+    id: "fb1",
+    skillId: "s",
+    grade: 4,
+    type: "fill-blank",
+    prompt: "__ và __",
+    correct: ["1", "2"],
+    explanation: "e",
+  };
+  let s = startSession("t", [fb]);
+  s = sessionReducer(s, { type: "answer", answer: ["1", "3"] }); // đúng 1/2 chỗ
+  s = sessionReducer(s, { type: "next" });
+  const r = sessionResult(s);
+  assert.equal(r.correct, 0); // chưa đúng trọn vẹn
+  assert.equal(r.partial, 1); // đúng một phần
+  assert.equal(r.wrong.length, 1); // vẫn vào "cần ôn lại"
+  assert.ok(r.score > 0 && r.score < 1, `score=${r.score} phải trong (0,1)`);
 });
 
 test("guard: answer khi đang feedback bị bỏ qua", () => {

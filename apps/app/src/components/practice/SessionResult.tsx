@@ -14,7 +14,9 @@ interface WrongItem {
 interface SessionResultProps {
   total: number;
   correct: number;
-  score: number; // 0..1
+  /** Số câu đúng một phần (0<score<1) — chỉ hiện chip khi >0. */
+  partial?: number;
+  score: number; // 0..1 (đón điểm thành phần)
   wrong: WrongItem[];
   topicName: string;
   /** XP nhận được trong phiên (FR-009). */
@@ -27,10 +29,12 @@ interface SessionResultProps {
   onHome: () => void;
 }
 
-function Donut({ correct, total }: { correct: number; total: number }) {
+// Vòng tròn: TÂM hiện số câu đúng trọn vẹn (correct/total), CUNG + % theo ĐIỂM (score, đón điểm thành
+// phần). Khi không có câu đúng-một-phần thì score = correct/total → hiển thị y hệt trước đây.
+function Donut({ correct, total, score }: { correct: number; total: number; score: number }) {
   const r = 52;
   const circ = 2 * Math.PI * r;
-  const pct = total === 0 ? 0 : correct / total;
+  const pct = Math.max(0, Math.min(1, score));
   const offset = circ * (1 - pct);
   return (
     <View style={{ width: 176, height: 176, alignItems: "center", justifyContent: "center" }}>
@@ -67,6 +71,8 @@ function Donut({ correct, total }: { correct: number; total: number }) {
 export function SessionResult({
   total,
   correct,
+  partial = 0,
+  score,
   wrong,
   topicName,
   xpGained,
@@ -82,12 +88,25 @@ export function SessionResult({
       <Text className="text-sm font-semibold text-muted">{topicName}</Text>
 
       <View className="mt-6">
-        <Donut correct={correct} total={total} />
+        <Donut correct={correct} total={total} score={score} />
       </View>
 
-      <View className="mt-6 flex-row gap-3">
+      {/* Có câu đúng-một-phần → tách 3 ô rời (đúng/một phần/chưa đúng, không chồng chéo); không có →
+          giữ NGUYÊN "Đúng | Cần ôn" như trước (trường hợp phổ biến, không đổi giao diện). */}
+      <View className="mt-6 flex-row flex-wrap justify-center gap-3">
         <Stat value={String(correct)} label="Đúng" tone="bg-ok/10 text-ok" />
-        <Stat value={String(wrong.length)} label="Cần ôn" tone="bg-no/10 text-no" />
+        {partial > 0 ? (
+          <>
+            <Stat value={String(partial)} label="Đúng một phần" tone="bg-num/10 text-num" />
+            <Stat
+              value={String(Math.max(0, total - correct - partial))}
+              label="Chưa đúng"
+              tone="bg-no/10 text-no"
+            />
+          </>
+        ) : (
+          <Stat value={String(wrong.length)} label="Cần ôn" tone="bg-no/10 text-no" />
+        )}
         {typeof xpGained === "number" && (
           <Stat value={`+${xpGained}`} label="XP" tone="bg-brand/10 text-brand" />
         )}
@@ -118,7 +137,7 @@ export function SessionResult({
       )}
 
       <Text className="mt-5 font-display text-lg font-semibold text-brand">
-        {ratingMessage(correct, total)}
+        {ratingMessage(total === 0 ? 0 : score)}
       </Text>
 
       <View className="mt-4 w-full flex-row gap-2">

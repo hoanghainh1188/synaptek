@@ -4,8 +4,16 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
-**+ THCS Toán lớp 6 — pilot Số nguyên + gate tự-chấm nội dung ✅ vừa xong (feature/thcs-integers, PR đang
-mở):** Nội dung cấp trên ĐẦU TIÊN — kích hoạt khung 2 tầng D54, hàng "Cấp: Tiểu học/THCS" nay HIỆN thật
+**+ Đánh giá kết quả phiên + điểm thành phần ✅ vừa xong (fix/session-rating đã merge #86, fix/partial-credit
+PR đang mở):** User báo "đánh giá kết quả chưa chính xác". Hai lỗi: (1) lời đánh giá cuối phiên CỐ ĐỊNH
+"Em tiến bộ rồi đó" cho mọi điểm → `ratingMessage(ratio)` chia mức Xuất sắc/Giỏi/Khá/ôn lại/động viên
+(đã merge #86); (2) **điểm thành phần** bị bỏ (fill-blank đúng 2/3 chỗ = score 0.67 nhưng isCorrect
+false → XP=0, kết quả chỉ đếm đúng-trọn-vẹn) → `xpForAttempt(score)` thay boolean, `sessionResult` thêm
+`partial`, donut/%/rating dùng `score`, chip "Đúng một phần" (chỉ khi >0). **Tương thích ngược tuyệt
+đối**: không có partial → score=correct/total → hiển thị Y HỆT trước (verify screenshot 2 ca). KHÔNG đụng
+BKT mastery (Bayesian nhị phân theo thiết kế). Decision Log **D56**.
+
+**+ THCS Toán lớp 6 — pilot Số nguyên + gate tự-chấm nội dung ✅ (feature/thcs-integers, đã merge #84):** Nội dung cấp trên ĐẦU TIÊN — kích hoạt khung 2 tầng D54, hàng "Cấp: Tiểu học/THCS" nay HIỆN thật
 trên home (trước dormant). **Quy trình đã chốt (user chọn qua AskUserQuestion)**: AI nháp câu bám CT
 GDPT + làm tooling; **chủ repo tự DUYỆT** trước merge (cửa bắt buộc cho nội dung trẻ em, D14). Pilot:
 `content/curriculum/grade-6.json` (mạch "Số và Đại số", chủ đề "Số nguyên", 3 skill) + 17 câu numeric số

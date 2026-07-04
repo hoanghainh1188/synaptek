@@ -144,6 +144,7 @@ export function SessionRunner({
       <SessionResult
         total={r.total}
         correct={r.correct}
+        partial={r.partial}
         score={r.score}
         wrong={r.wrong.map((q) => ({ id: q.id, prompt: q.prompt }))}
         topicName={label}

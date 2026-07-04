@@ -84,7 +84,7 @@ export default function Practice() {
     const events = state.records.map((rec) => {
       const q = state.questions.find((qq) => qq.id === rec.questionId);
       return {
-        isCorrect: rec.isCorrect,
+        score: rec.score,
         difficulty: difficultyOf({ type: q?.type ?? "", difficulty: q?.difficulty }),
       };
     });
@@ -152,6 +152,7 @@ export default function Practice() {
         data: JSON.stringify({
           total: r.total,
           correct: r.correct,
+          partial: r.partial,
           score: r.score,
           wrong: r.wrong.map((w) => ({ id: w.id, prompt: w.prompt })),
           xpGained,

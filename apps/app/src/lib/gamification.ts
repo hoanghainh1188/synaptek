@@ -20,7 +20,8 @@ export const INITIAL_GAMIFICATION: GamificationState = {
 
 /** Một câu trong phiên đã resolve độ khó (route dùng difficultyOf + getQuestionById). */
 export interface SessionEvent {
-  isCorrect: boolean;
+  /** Điểm 0..1 (đón điểm thành phần — vd fill-blank đúng 2/3 chỗ = 0.67). */
+  score: number;
   difficulty: Difficulty;
 }
 
@@ -45,9 +46,9 @@ export interface GamificationOutcome {
   newBadges: string[];
 }
 
-/** Tổng XP nhận được trong phiên (câu sai = 0). */
+/** Tổng XP nhận được trong phiên (theo điểm từng câu, đón điểm thành phần). */
 export function xpForSession(events: SessionEvent[]): number {
-  return events.reduce((sum, e) => sum + xpForAttempt(e.isCorrect, e.difficulty), 0);
+  return events.reduce((sum, e) => sum + xpForAttempt(e.score, e.difficulty), 0);
 }
 
 /** Gộp một phiên: cộng XP → cập nhật streak → đánh giá huy hiệu mới. Bất biến với `prior`. */

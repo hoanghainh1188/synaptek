@@ -9,6 +9,7 @@ import { Celebrate } from "@/components/gamification/Celebrate";
 interface ParsedResult {
   total: number;
   correct: number;
+  partial: number;
   score: number;
   wrong: { id: string; prompt: string }[];
   xpGained?: number;
@@ -20,7 +21,7 @@ export default function Result() {
   const insets = useSafeAreaInsets();
   const params = useLocalSearchParams<{ data: string; topic: string; topicId: string }>();
 
-  let parsed: ParsedResult = { total: 0, correct: 0, score: 0, wrong: [] };
+  let parsed: ParsedResult = { total: 0, correct: 0, partial: 0, score: 0, wrong: [] };
   try {
     parsed = { ...parsed, ...JSON.parse(params.data ?? "{}") };
   } catch {
@@ -43,6 +44,7 @@ export default function Result() {
       <SessionResult
         total={parsed.total}
         correct={parsed.correct}
+        partial={parsed.partial}
         score={parsed.score}
         wrong={parsed.wrong}
         topicName={String(params.topic ?? "")}
