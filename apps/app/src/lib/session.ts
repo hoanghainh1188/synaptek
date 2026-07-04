@@ -26,8 +26,11 @@ export interface SessionState {
 
 export interface SessionResult {
   total: number;
+  /** Số câu đúng TRỌN VẸN (score = 1). */
   correct: number;
-  /** Điểm trung bình 0..1. */
+  /** Số câu đúng MỘT PHẦN (0 < score < 1) — thường chỉ fill-blank nhiều chỗ. */
+  partial: number;
+  /** Điểm trung bình 0..1 (đón điểm thành phần). */
   score: number;
   wrong: Question[];
 }
@@ -107,8 +110,10 @@ export function sessionReducer(state: SessionState, action: SessionAction): Sess
 export function sessionResult(state: SessionState): SessionResult {
   const total = state.records.length;
   const correct = state.records.filter((r) => r.isCorrect).length;
+  const partial = state.records.filter((r) => !r.isCorrect && r.score > 0).length;
   const score = total === 0 ? 0 : state.records.reduce((s, r) => s + r.score, 0) / total;
+  // "Cần ôn lại" = mọi câu CHƯA đúng trọn vẹn (gồm cả đúng một phần — vẫn nên xem lại).
   const wrongIds = new Set(state.records.filter((r) => !r.isCorrect).map((r) => r.questionId));
   const wrong = state.questions.filter((q) => wrongIds.has(q.id));
-  return { total, correct, score, wrong };
+  return { total, correct, partial, score, wrong };
 }

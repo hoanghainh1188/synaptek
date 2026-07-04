@@ -52,9 +52,12 @@ export function difficultyOf(q: { type: string; difficulty?: Difficulty }): Diff
   return q.difficulty ?? TYPE_DIFFICULTY[q.type] ?? 2;
 }
 
-/** XP cho một câu: sai → 0; đúng → base × trọng số độ khó (FR-009). */
-export function xpForAttempt(isCorrect: boolean, difficulty: Difficulty): number {
-  return isCorrect ? XP_BASE * DIFFICULTY_WEIGHT[difficulty] : 0;
+/** XP cho một câu theo ĐIỂM (0..1, đón điểm thành phần) × trọng số độ khó (FR-009). score=1 đúng trọn
+ *  vẹn (như cũ: base × trọng số), 0 = sai, 0<score<1 = đúng một phần (vd fill-blank 2/3 chỗ) → XP theo
+ *  tỉ lệ, làm tròn. Nhị phân (score ∈ {0,1}) cho KẾT QUẢ Y HỆT trước đây → tương thích ngược. */
+export function xpForAttempt(score: number, difficulty: Difficulty): number {
+  const s = Math.max(0, Math.min(1, score));
+  return Math.round(XP_BASE * DIFFICULTY_WEIGHT[difficulty] * s);
 }
 
 // ── Streak ─────────────────────────────────────────────────────────────────────

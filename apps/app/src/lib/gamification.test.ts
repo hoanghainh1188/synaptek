@@ -25,13 +25,21 @@ function test(name: string, fn: () => void) {
 
 console.log("app · gamification Tests\n");
 
-test("xpForSession: cộng XP các câu đúng theo độ khó (bỏ câu sai)", () => {
+test("xpForSession: cộng XP theo điểm từng câu (câu sai = 0)", () => {
   const xp = xpForSession([
-    { isCorrect: true, difficulty: 1 }, // 10
-    { isCorrect: true, difficulty: 3 }, // 20
-    { isCorrect: false, difficulty: 2 }, // 0
+    { score: 1, difficulty: 1 }, // 10
+    { score: 1, difficulty: 3 }, // 20
+    { score: 0, difficulty: 2 }, // 0
   ]);
   assert.equal(xp, 30);
+});
+
+test("xpForSession: điểm thành phần → XP theo tỉ lệ", () => {
+  const xp = xpForSession([
+    { score: 1, difficulty: 2 }, // 15
+    { score: 0.5, difficulty: 2 }, // round(15*0.5)=8
+  ]);
+  assert.equal(xp, 23);
 });
 
 const catalog: Badge[] = [
@@ -42,7 +50,7 @@ const catalog: Badge[] = [
 test("summarizeSession: ΔXP + tổng XP + streak mới + huy hiệu mới", () => {
   const out = summarizeSession({
     prior: { ...INITIAL_GAMIFICATION, totalXp: 90 },
-    events: [{ isCorrect: true, difficulty: 1 }], // +10 → 100
+    events: [{ score: 1, difficulty: 1 }], // +10 → 100
     dayKeyVN: "2026-06-26",
     badgeCtx: { mastery: new Map(), correctCount: 1, masteredTopics: new Set() },
     catalog,
@@ -62,7 +70,7 @@ test("summarizeSession: huy hiệu đã đạt không mở lại", () => {
       currentStreak: 1,
       lastPracticedOn: "2026-06-26",
     },
-    events: [{ isCorrect: true, difficulty: 1 }],
+    events: [{ score: 1, difficulty: 1 }],
     dayKeyVN: "2026-06-26", // cùng ngày → streak giữ 1
     badgeCtx: { mastery: new Map(), correctCount: 2, masteredTopics: new Set() },
     catalog,
@@ -77,7 +85,7 @@ test("summarizeSession: không đột biến prior", () => {
   const snap = JSON.stringify(prior);
   summarizeSession({
     prior,
-    events: [{ isCorrect: true, difficulty: 2 }],
+    events: [{ score: 1, difficulty: 2 }],
     dayKeyVN: "2026-06-26",
     badgeCtx: { mastery: new Map(), correctCount: 0, masteredTopics: new Set() },
     catalog,
