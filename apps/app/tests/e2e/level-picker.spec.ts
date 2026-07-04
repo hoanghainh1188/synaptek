@@ -85,3 +85,18 @@ test("THCS lớp 6 Hình học: nhận biết hình → chấm đúng", async ({
   await page.getByText("Kiểm tra").click();
   await expect(page.getByText(/Tuyệt vời/)).toBeVisible({ timeout: 10_000 });
 });
+
+// THCS Toán lớp 6 (Xác suất) — mạch mới thứ 3 "Thống kê và Xác suất", chấm đúng câu đếm kết quả.
+test("THCS lớp 6 Xác suất: đếm kết quả có thể → chấm đúng", async ({ page }) => {
+  await page.goto("/");
+  await page.getByLabel("Cấp THCS").click();
+  // exact: skill name chứa "Thống kê"/"Xác suất" (cold-start reco).
+  await expect(page.getByLabel("Thống kê", { exact: true })).toBeVisible({ timeout: 10_000 });
+  await page.getByLabel("Xác suất", { exact: true }).click();
+  await expect(page).toHaveURL(/practice\/g6\.sta\.prob/, { timeout: 10_000 });
+  // Câu đầu "Gieo một con xúc xắc 6 mặt. Có mấy kết quả có thể xảy ra?" → 6.
+  await expect(page.getByText(/mấy kết quả có thể/)).toBeVisible({ timeout: 10_000 });
+  await page.getByLabel("Phím 6").click();
+  await page.getByText("Kiểm tra").click();
+  await expect(page.getByText(/Tuyệt vời/)).toBeVisible({ timeout: 10_000 });
+});

@@ -988,6 +988,74 @@ export const ANSWER_KEYS: Record<string, AnswerKey> = {
     "type": "numeric",
     "correct": "5"
   },
+  "g6.sta.prob.q001": {
+    "type": "numeric",
+    "correct": "6"
+  },
+  "g6.sta.prob.q002": {
+    "type": "numeric",
+    "correct": "2"
+  },
+  "g6.sta.prob.q003": {
+    "type": "true-false",
+    "correct": "false"
+  },
+  "g6.sta.prob.q004": {
+    "type": "mcq",
+    "correct": "Chắc chắn"
+  },
+  "g6.sta.prob.q005": {
+    "type": "mcq",
+    "correct": "Không thể"
+  },
+  "g6.sta.prob.q006": {
+    "type": "fraction",
+    "correct": "11/20"
+  },
+  "g6.sta.prob.q007": {
+    "type": "fraction",
+    "correct": "1/5"
+  },
+  "g6.sta.prob.q008": {
+    "type": "fraction",
+    "correct": "3/5"
+  },
+  "g6.sta.prob.q009": {
+    "type": "fraction",
+    "correct": "1/4"
+  },
+  "g6.sta.prob.q010": {
+    "type": "fraction",
+    "correct": "1/6"
+  },
+  "g6.sta.prob.q011": {
+    "type": "fraction",
+    "correct": "1/2"
+  },
+  "g6.sta.stats.q001": {
+    "type": "numeric",
+    "correct": "10"
+  },
+  "g6.sta.stats.q002": {
+    "type": "numeric",
+    "correct": "3"
+  },
+  "g6.sta.stats.q003": {
+    "type": "numeric",
+    "correct": "27"
+  },
+  "g6.sta.stats.q004": {
+    "type": "numeric",
+    "correct": "6"
+  },
+  "g6.sta.stats.q005": {
+    "type": "numeric",
+    "correct": "15"
+  },
+  "g6.sta.stats.q006": {
+    "type": "numeric",
+    "correct": "4"
+  },
   "tv.g1.chinhta.q001": {
     "type": "mcq",
     "correct": "kẻ"

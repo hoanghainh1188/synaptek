@@ -24,12 +24,14 @@ import q_10 from "../../../../content/questions/g6.num.decimals.json";
 import q_11 from "../../../../content/questions/g6.num.fractions.json";
 import q_12 from "../../../../content/questions/g6.num.integers.json";
 import q_13 from "../../../../content/questions/g6.num.naturals.json";
-import q_14 from "../../../../content/questions/tv.g1.chinhta.json";
-import q_15 from "../../../../content/questions/tv.g1.daucau.json";
-import q_16 from "../../../../content/questions/tv.g1.tuloai.json";
-import q_17 from "../../../../content/questions/tv.g2.cauaithenao.json";
-import q_18 from "../../../../content/questions/tv.g2.tudacdiem.json";
-import q_19 from "../../../../content/questions/tv.g3.dongtrainghia.json";
+import q_14 from "../../../../content/questions/g6.sta.prob.json";
+import q_15 from "../../../../content/questions/g6.sta.stats.json";
+import q_16 from "../../../../content/questions/tv.g1.chinhta.json";
+import q_17 from "../../../../content/questions/tv.g1.daucau.json";
+import q_18 from "../../../../content/questions/tv.g1.tuloai.json";
+import q_19 from "../../../../content/questions/tv.g2.cauaithenao.json";
+import q_20 from "../../../../content/questions/tv.g2.tudacdiem.json";
+import q_21 from "../../../../content/questions/tv.g3.dongtrainghia.json";
 import badges_0 from "../../../../content/gamification/badges.json";
 
 export const CURRICULA: Grade[] = [cur_0 as Grade, cur_1 as Grade, cur_2 as Grade, cur_3 as Grade, cur_4 as Grade, cur_5 as Grade, cur_6 as Grade, cur_7 as Grade, cur_8 as Grade];
@@ -48,12 +50,14 @@ export const QUESTIONS: Record<string, Question[]> = {
   "g6.num.fractions": q_11 as Question[],
   "g6.num.integers": q_12 as Question[],
   "g6.num.naturals": q_13 as Question[],
-  "tv.g1.chinhta": q_14 as Question[],
-  "tv.g1.daucau": q_15 as Question[],
-  "tv.g1.tuloai": q_16 as Question[],
-  "tv.g2.cauaithenao": q_17 as Question[],
-  "tv.g2.tudacdiem": q_18 as Question[],
-  "tv.g3.dongtrainghia": q_19 as Question[],
+  "g6.sta.prob": q_14 as Question[],
+  "g6.sta.stats": q_15 as Question[],
+  "tv.g1.chinhta": q_16 as Question[],
+  "tv.g1.daucau": q_17 as Question[],
+  "tv.g1.tuloai": q_18 as Question[],
+  "tv.g2.cauaithenao": q_19 as Question[],
+  "tv.g2.tudacdiem": q_20 as Question[],
+  "tv.g3.dongtrainghia": q_21 as Question[],
 };
 export const IMAGES: Record<string, unknown> = {};
 export const BADGES: Badge[] = badges_0 as Badge[];

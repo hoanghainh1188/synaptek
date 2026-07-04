@@ -1,0 +1,62 @@
+[
+  {
+    "id": "g6.sta.stats.q001",
+    "skillId": "g6.sta.data",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Điểm kiểm tra của 5 bạn lần lượt là: 6, 8, 7, 9, 10. Điểm cao nhất là bao nhiêu?",
+    "difficulty": 1,
+    "correct": "10",
+    "explanation": "So sánh các giá trị trong danh sách, số lớn nhất là 10."
+  },
+  {
+    "id": "g6.sta.stats.q002",
+    "skillId": "g6.sta.data",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Số con của 6 gia đình lần lượt là: 1, 2, 2, 3, 2, 1. Có mấy gia đình có đúng 2 con?",
+    "difficulty": 2,
+    "correct": "3",
+    "explanation": "Đếm số lần xuất hiện của giá trị 2 (tần số của 2): có 3 gia đình có 2 con."
+  },
+  {
+    "id": "g6.sta.stats.q003",
+    "skillId": "g6.sta.data",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Nhiệt độ 4 ngày (độ C) lần lượt là: 28, 30, 27, 31. Nhiệt độ thấp nhất là bao nhiêu độ?",
+    "difficulty": 1,
+    "correct": "27",
+    "explanation": "Số nhỏ nhất trong danh sách là 27."
+  },
+  {
+    "id": "g6.sta.stats.q004",
+    "skillId": "g6.sta.data",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Số học sinh vắng mỗi ngày trong tuần lần lượt là: 2, 0, 1, 3, 0. Tổng số lượt vắng cả tuần là bao nhiêu?",
+    "difficulty": 1,
+    "correct": "6",
+    "explanation": "Cộng tất cả: 2 + 0 + 1 + 3 + 0 = 6 lượt."
+  },
+  {
+    "id": "g6.sta.stats.q005",
+    "skillId": "g6.sta.data",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Số quả trên 5 cây lần lượt là: 10, 12, 8, 15, 5. Cây nhiều quả nhất có bao nhiêu quả?",
+    "difficulty": 1,
+    "correct": "15",
+    "explanation": "Giá trị lớn nhất trong danh sách là 15."
+  },
+  {
+    "id": "g6.sta.stats.q006",
+    "skillId": "g6.sta.data",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Màu áo của 7 bạn lần lượt là: đỏ, xanh, đỏ, đỏ, xanh, vàng, đỏ. Có mấy bạn mặc áo đỏ?",
+    "difficulty": 2,
+    "correct": "4",
+    "explanation": "Đếm số lần xuất hiện của màu đỏ: có 4 bạn mặc áo đỏ."
+  }
+]

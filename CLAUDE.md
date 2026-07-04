@@ -80,7 +80,7 @@ nhật `docs/WORKING-NOTES.md` (điểm tiếp tục) + Decision Log/spec/file l
   thị · đăng xuất thiết bị khác · avatar ảnh thật (lựa chọn thêm cạnh emoji-XP) · xóa tài khoản (soft
   delete, GV còn lớp có HS bị chặn) — cả 5 việc này KHÔNG phụ thuộc domain, hoạt động đầy đủ; **LaTeX
   render thật qua KaTeX** (web-only, chỉ nâng hiển thị, D53); **khung cấp học 2 tầng** (Tiểu học/THCS/THPT
-  suy ra từ số lớp, D54) + **THCS Toán lớp 6** (trọn mạch Số & Đại số: Số tự nhiên D62/Số nguyên D55/Phân số D57/Số thập phân D61 + mạch Hình học D63) +
+  suy ra từ số lớp, D54) + **THCS Toán lớp 6** (3 mạch: Số & Đại số D55/D57/D61/D62 + Hình học D63 + Thống kê-Xác suất D64) +
   **gate tự-chấm nội dung** (validate:content chạy engine trên đáp án). Quy trình nội dung cấp trên: AI nháp
   bám CT GDPT + tooling, chủ repo DUYỆT trước merge (cửa bắt buộc, D14/D55).
   **Còn lại**: M5 native/store (chờ tài khoản, `docs/M5-NATIVE.md`) - nhóm "Tương lai còn lại" (mở rộng
@@ -108,6 +108,10 @@ nhật `docs/WORKING-NOTES.md` (điểm tiếp tục) + Decision Log/spec/file l
 
 ## Recent Changes
 
+- **Nhân rộng THCS — lớp 6 Thống kê & Xác suất (sau M4)**: **MẠCH THỨ 3** (`g6.sta`, 2 topic Thống kê + Xác
+  suất). Phán đoán CT: trung bình cộng/mốt là LỚP 7 → cố ý không đưa vào; giữ Thống kê ở mức đọc/xử lí dữ
+  liệu (dữ liệu bằng CHỮ để né ảnh biểu đồ) + Xác suất (khả năng xảy ra + xác suất phân số → moat). 17 câu.
+  Engine sẵn → không đổi; gate tự-chấm áp tự động (tổng **307 câu, 40 kỹ năng**). e2e +1. Decision Log **D64**.
 - **Nhân rộng THCS — lớp 6 Hình học trực quan (sau M4)**: **MẠCH MỚI** — strand thứ 2 của lớp 6 (`g6.geo`
   "Hình học và Đo lường"), đa dạng hoá ngoài Số & Đại số. 3 skill: nhận biết hình → chu vi + diện tích. 17
   câu (mcq/true-false nhận biết + numeric chu vi/diện tích). Chọn Hình học thay Thống kê-Xác suất vì hợp

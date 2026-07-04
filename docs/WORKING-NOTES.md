@@ -4,7 +4,16 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
-**+ Nhân rộng THCS — lớp 6 Hình học trực quan ✅ (feature/thcs-g6-geometry, PR đang mở):** User chọn "đổi
+**+ Nhân rộng THCS — lớp 6 Thống kê & Xác suất ✅ (feature/thcs-g6-stats, PR đang mở):** MẠCH THỨ 3 của lớp 6
+(`g6.sta`, 2 topic Thống kê + Xác suất). **Phán đoán CT quan trọng**: trung bình cộng/mốt/trung vị là LỚP 7
+→ cố ý KHÔNG đưa vào lớp 6; giữ Thống kê ở mức đọc/xử lí dữ liệu (tần số/max/min/tổng, **dữ liệu bằng chữ để
+né ảnh biểu đồ** — điểm "cần cân nhắc" user nêu). 3 skill: data · chance (chắc chắn/có thể/không thể + đếm kết
+quả) · probability (xác suất thực nghiệm + biến cố đồng khả năng, dạng PHÂN SỐ → moat 8/40=1/5=0,2). 17 câu
+numeric+mcq+true-false+fraction. Engine sẵn → không đổi. Gate tự-chấm áp tự động (tổng **307 câu, 40 kỹ
+năng**). e2e +1 (Xác suất → đếm kết quả xúc xắc=6). Decision Log **D64**. **Bước tiếp**: chủ repo DUYỆT 17 câu
+trước merge; sau đó lớp 7 / bổ sung biểu đồ (cần ảnh) / hoặc dừng THCS lớp 6 (nay 3 mạch, 6 chủ đề).
+
+**+ Nhân rộng THCS — lớp 6 Hình học trực quan ✅ (feature/thcs-g6-geometry, đã merge #95):** User chọn "đổi
 mạch" (đa dạng hoá ngoài Số & Đại số). **MẠCH MỚI — strand thứ 2 của lớp 6**: `g6.geo` "Hình học và Đo
 lường". Chọn Hình học thay Thống kê-Xác suất vì hợp engine numeric (chu vi/diện tích tính số sạch; Thống kê
 cần biểu đồ/ảnh). Topic `g6.geo.plane` 3 skill: shapes (nhận biết hình + tính chất) → perimeter (chu vi) +
