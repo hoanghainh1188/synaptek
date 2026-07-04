@@ -58,3 +58,17 @@ test("THCS lớp 6 Số thập phân: nhập số thập phân âm (phẩy VN) �
   await page.getByText("Kiểm tra").click();
   await expect(page.getByText(/Tuyệt vời/)).toBeVisible({ timeout: 10_000 });
 });
+
+// THCS Toán lớp 6 (Số tự nhiên) — luyện + chấm đúng câu lũy thừa.
+test("THCS lớp 6 Số tự nhiên: luyện lũy thừa → chấm đúng", async ({ page }) => {
+  await page.goto("/");
+  await page.getByLabel("Cấp THCS").click();
+  // exact: tránh khớp nhầm skill lớp 4 chứa "số tự nhiên" (cold-start reco).
+  await page.getByLabel("Số tự nhiên", { exact: true }).click();
+  await expect(page).toHaveURL(/practice\/g6\.num\.naturals/, { timeout: 10_000 });
+  // Câu đầu "Tính giá trị lũy thừa: 2^3" → 8. MathText render "2^3" thành mũ → assert text liền trước.
+  await expect(page.getByText(/Tính giá trị lũy thừa/)).toBeVisible({ timeout: 10_000 });
+  await page.getByLabel("Phím 8").click();
+  await page.getByText("Kiểm tra").click();
+  await expect(page.getByText(/Tuyệt vời/)).toBeVisible({ timeout: 10_000 });
+});

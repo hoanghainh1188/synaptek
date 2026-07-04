@@ -1,0 +1,176 @@
+[
+  {
+    "id": "g6.num.naturals.q001",
+    "skillId": "g6.num.natural.power",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tính giá trị lũy thừa: 2^3",
+    "difficulty": 1,
+    "correct": "8",
+    "explanation": "2^3 = 2 × 2 × 2 = 8."
+  },
+  {
+    "id": "g6.num.naturals.q002",
+    "skillId": "g6.num.natural.power",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tính giá trị lũy thừa: 5^2",
+    "difficulty": 1,
+    "correct": "25",
+    "explanation": "5^2 = 5 × 5 = 25."
+  },
+  {
+    "id": "g6.num.naturals.q003",
+    "skillId": "g6.num.natural.power",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tính giá trị lũy thừa: 10^3",
+    "difficulty": 1,
+    "correct": "1000",
+    "explanation": "10^3 = 10 × 10 × 10 = 1000."
+  },
+  {
+    "id": "g6.num.naturals.q004",
+    "skillId": "g6.num.natural.power",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tính: 2 + 3 × 4",
+    "difficulty": 1,
+    "correct": "14",
+    "explanation": "Nhân trước, cộng sau: 3 × 4 = 12, rồi 2 + 12 = 14."
+  },
+  {
+    "id": "g6.num.naturals.q005",
+    "skillId": "g6.num.natural.power",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tính: (2 + 3) × 4",
+    "difficulty": 1,
+    "correct": "20",
+    "explanation": "Trong ngoặc trước: 2 + 3 = 5, rồi 5 × 4 = 20."
+  },
+  {
+    "id": "g6.num.naturals.q006",
+    "skillId": "g6.num.natural.power",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tính: 2^3 + 3^2",
+    "difficulty": 2,
+    "correct": "17",
+    "explanation": "Lũy thừa trước: 2^3 = 8 và 3^2 = 9, rồi 8 + 9 = 17."
+  },
+  {
+    "id": "g6.num.naturals.q007",
+    "skillId": "g6.num.natural.divisibility",
+    "grade": 6,
+    "type": "mcq",
+    "prompt": "Số nào chia hết cho 3?",
+    "difficulty": 2,
+    "choices": ["124", "126", "128"],
+    "correct": "126",
+    "explanation": "Một số chia hết cho 3 khi tổng các chữ số chia hết cho 3. 1+2+6 = 9 chia hết cho 3 nên 126 chia hết cho 3."
+  },
+  {
+    "id": "g6.num.naturals.q008",
+    "skillId": "g6.num.natural.divisibility",
+    "grade": 6,
+    "type": "true-false",
+    "prompt": "45 chia hết cho 5. Đúng hay sai?",
+    "difficulty": 1,
+    "correct": "true",
+    "explanation": "Số có chữ số tận cùng là 0 hoặc 5 thì chia hết cho 5. 45 tận cùng là 5 → chia hết cho 5 — đúng."
+  },
+  {
+    "id": "g6.num.naturals.q009",
+    "skillId": "g6.num.natural.divisibility",
+    "grade": 6,
+    "type": "mcq",
+    "prompt": "Số nào là số nguyên tố?",
+    "difficulty": 2,
+    "choices": ["15", "17", "21"],
+    "correct": "17",
+    "explanation": "Số nguyên tố chỉ có 2 ước là 1 và chính nó. 15 = 3×5, 21 = 3×7 (hợp số); 17 chỉ chia hết cho 1 và 17 → nguyên tố."
+  },
+  {
+    "id": "g6.num.naturals.q010",
+    "skillId": "g6.num.natural.divisibility",
+    "grade": 6,
+    "type": "true-false",
+    "prompt": "1 là số nguyên tố. Đúng hay sai?",
+    "difficulty": 2,
+    "correct": "false",
+    "explanation": "Số nguyên tố phải có đúng 2 ước khác nhau. Số 1 chỉ có 1 ước (chính nó) nên KHÔNG phải số nguyên tố — sai."
+  },
+  {
+    "id": "g6.num.naturals.q011",
+    "skillId": "g6.num.natural.divisibility",
+    "grade": 6,
+    "type": "mcq",
+    "prompt": "Số nào chia hết cho cả 2 và 5?",
+    "difficulty": 2,
+    "choices": ["30", "35", "42"],
+    "correct": "30",
+    "explanation": "Chia hết cho cả 2 và 5 khi tận cùng là 0. 30 tận cùng là 0 → chia hết cho cả 2 và 5."
+  },
+  {
+    "id": "g6.num.naturals.q012",
+    "skillId": "g6.num.natural.divisibility",
+    "grade": 6,
+    "type": "mcq",
+    "prompt": "Số nào là hợp số?",
+    "difficulty": 2,
+    "choices": ["7", "11", "15"],
+    "correct": "15",
+    "explanation": "Hợp số có nhiều hơn 2 ước. 7 và 11 là số nguyên tố; 15 = 3 × 5 nên là hợp số."
+  },
+  {
+    "id": "g6.num.naturals.q013",
+    "skillId": "g6.num.natural.gcdlcm",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tìm ƯCLN(12, 18).",
+    "difficulty": 2,
+    "correct": "6",
+    "explanation": "12 = 2^2 × 3, 18 = 2 × 3^2. ƯCLN lấy thừa số chung với số mũ nhỏ nhất: 2 × 3 = 6."
+  },
+  {
+    "id": "g6.num.naturals.q014",
+    "skillId": "g6.num.natural.gcdlcm",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tìm ƯCLN(24, 36).",
+    "difficulty": 2,
+    "correct": "12",
+    "explanation": "24 = 2^3 × 3, 36 = 2^2 × 3^2. ƯCLN = 2^2 × 3 = 12."
+  },
+  {
+    "id": "g6.num.naturals.q015",
+    "skillId": "g6.num.natural.gcdlcm",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tìm BCNN(4, 6).",
+    "difficulty": 2,
+    "correct": "12",
+    "explanation": "4 = 2^2, 6 = 2 × 3. BCNN lấy thừa số chung và riêng với số mũ lớn nhất: 2^2 × 3 = 12."
+  },
+  {
+    "id": "g6.num.naturals.q016",
+    "skillId": "g6.num.natural.gcdlcm",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tìm BCNN(3, 5).",
+    "difficulty": 1,
+    "correct": "15",
+    "explanation": "3 và 5 là hai số nguyên tố khác nhau nên BCNN = 3 × 5 = 15."
+  },
+  {
+    "id": "g6.num.naturals.q017",
+    "skillId": "g6.num.natural.gcdlcm",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tìm ƯCLN(15, 25).",
+    "difficulty": 1,
+    "correct": "5",
+    "explanation": "15 = 3 × 5, 25 = 5^2. Thừa số chung là 5 (số mũ nhỏ nhất) → ƯCLN = 5."
+  }
+]
