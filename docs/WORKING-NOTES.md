@@ -4,7 +4,16 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
-**+ Tăng tốc CI đợt 2 ✅ (chore/ci-faster-supabase, PR đang mở):** User "làm CI nhanh hơn nữa". Sau D58
+**+ Tối ưu bundle web GĐ1 — lazy-load KaTeX ✅ (perf/lazy-katex, PR đang mở):** User yêu cầu tối ưu bundle,
+chốt làm từng bước (GĐ1 trước rồi xem xét). Baseline đo thật: 1 bundle 3.14MB raw / **780KB gzip, KHÔNG
+code-split** (vượt ~2.6× ngân sách 300KB). GĐ1: KaTeX (~76KB) đang import EAGER ở `KatexSpan.web.tsx` → đổi
+`import("katex")` động (cache cấp module chống nhấp nháy; fallback text "1/2"/"x^2" lúc chunk tải). **Verify
+Metro SDK 56 tách chunk thật**: entry **780→706KB gzip** (−74KB), katex file riêng 76KB. e2e math-render xanh
+(latex-render kiểm .katex+MathML; sqrt/derivation/math-keypad/compound/level-picker). Decision Log **D60**.
+**Bước tiếp**: sau khi merge, cân nhắc GĐ2 (async routes `experiments.asyncRoutes` code-split theo màn — rủi
+ro trung bình, verify SSG+toàn bộ e2e) hoặc dừng nếu đủ.
+
+**+ Tăng tốc CI đợt 2 ✅ (chore/ci-faster-supabase, đã merge #90):** User "làm CI nhanh hơn nữa". Sau D58
 (e2e-auth 18–24m→5.3m), đo breakdown: nút thắt dịch sang SETUP — `Start Supabase` 101s lớn nhất, rồi `E2E
 run` 93s. 3 đòn bẩy ít rủi ro: (1) `supabase start -x studio,imgproxy,meta,vector,analytics,realtime` (bỏ
 service e2e không dùng; verify local trọn 41 spec pass, local start 101s→~25s); (2) bỏ bước `Stop Supabase`
