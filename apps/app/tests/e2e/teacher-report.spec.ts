@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { waitSignedIn } from "./_helpers";
 
 // CẦN Supabase + functions serve (chấm). KHÔNG chạy ở CI (auth-gated).
 // GV tạo lớp + giao bài → HS nộp (100%) → GV xem "Báo cáo lớp" thấy HS + 100%.
@@ -14,6 +15,7 @@ test("GV xem báo cáo lớp (HS × bài + điểm)", async ({ browser }) => {
   await gvPage.getByPlaceholder("email@vidu.com").fill(`gvr${s}@test.local`);
   await gvPage.getByPlaceholder("••••••").fill("matkhau123");
   await gvPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(gvPage);
 
   await gvPage.goto("/classes");
   await gvPage.getByPlaceholder("Tên lớp (vd: Toán 4A)").fill("Lớp BC");
@@ -36,6 +38,7 @@ test("GV xem báo cáo lớp (HS × bài + điểm)", async ({ browser }) => {
   await hsPage.getByPlaceholder("email@vidu.com").fill(`hsr${s}@test.local`);
   await hsPage.getByPlaceholder("••••••").fill("matkhau123");
   await hsPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(hsPage);
   await hsPage.goto("/join");
   await hsPage.getByPlaceholder("VD: 7K2MQ9").fill(code);
   await hsPage.getByLabel("Vào lớp").click();

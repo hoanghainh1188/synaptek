@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { waitSignedIn } from "./_helpers";
 
 // CẦN Supabase + functions. Câu NHIỀU PHẦN LỒNG derivation (D44): a) numeric · b) trình bày từng
 // bước (giải PT) → giao → HS làm đúng cả 2 phần → chấm CHÍNH THỨC server (gradeCompoundParts) → 100%.
@@ -16,6 +17,7 @@ test("câu nhiều phần lồng derivation: soạn a) numeric b) từng bước
   await gvPage.getByPlaceholder("email@vidu.com").fill(`gvcd${s}@test.local`);
   await gvPage.getByPlaceholder("••••••").fill("matkhau123");
   await gvPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(gvPage);
 
   // Soạn câu nhiều phần: a) numeric 3+5=? (đáp án 8) · b) từng bước — giải 2x + 3 = 7
   await gvPage.goto("/questions");
@@ -50,6 +52,7 @@ test("câu nhiều phần lồng derivation: soạn a) numeric b) từng bước
   await hsPage.getByPlaceholder("email@vidu.com").fill(`hscd${s}@test.local`);
   await hsPage.getByPlaceholder("••••••").fill("matkhau123");
   await hsPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(hsPage);
   await hsPage.goto("/join");
   await hsPage.getByPlaceholder("VD: 7K2MQ9").fill(code);
   await hsPage.getByLabel("Vào lớp").click();

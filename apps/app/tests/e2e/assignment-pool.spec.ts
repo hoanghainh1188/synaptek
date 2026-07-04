@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { waitSignedIn } from "./_helpers";
 
 // CẦN Supabase (KHÔNG cần functions cho phần đếm). Pool: GV giao 3 câu, mỗi HS nhận 2 ngẫu nhiên.
 test("ngẫu nhiên hoá pool: HS chỉ nhận N câu từ pool", async ({ browser }) => {
@@ -14,6 +15,7 @@ test("ngẫu nhiên hoá pool: HS chỉ nhận N câu từ pool", async ({ brows
   await gvPage.getByPlaceholder("email@vidu.com").fill(`gvp${s}@test.local`);
   await gvPage.getByPlaceholder("••••••").fill("matkhau123");
   await gvPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(gvPage);
   await gvPage.goto("/classes");
   await gvPage.getByPlaceholder("Tên lớp (vd: Toán 4A)").fill("Lớp Pool");
   await gvPage.getByLabel("Tạo lớp").click();
@@ -40,6 +42,7 @@ test("ngẫu nhiên hoá pool: HS chỉ nhận N câu từ pool", async ({ brows
   await hsPage.getByPlaceholder("email@vidu.com").fill(`hsp${s}@test.local`);
   await hsPage.getByPlaceholder("••••••").fill("matkhau123");
   await hsPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(hsPage);
   await hsPage.goto("/join");
   await hsPage.getByPlaceholder("VD: 7K2MQ9").fill(code);
   await hsPage.getByLabel("Vào lớp").click();

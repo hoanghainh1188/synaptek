@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { waitSignedIn } from "./_helpers";
 
 // M3 US2 (T025) — CẦN Supabase + `supabase functions serve grade-assignment`. KHÔNG chạy ở CI (auth-gated).
 // GV (vai trò Giáo viên) tạo lớp + giao bài Phân số; HS vào lớp + nộp → chấm chính thức server-side hiện điểm.
@@ -15,6 +16,7 @@ test("GV giao bài → HS nộp → chấm chính thức hiện điểm", async 
   await gvPage.getByPlaceholder("email@vidu.com").fill(`gv${stamp}@test.local`);
   await gvPage.getByPlaceholder("••••••").fill("matkhau123");
   await gvPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(gvPage);
 
   await gvPage.goto("/classes");
   await gvPage.getByPlaceholder("Tên lớp (vd: Toán 4A)").fill("Toán 4B");
@@ -40,6 +42,7 @@ test("GV giao bài → HS nộp → chấm chính thức hiện điểm", async 
   await hsPage.getByPlaceholder("email@vidu.com").fill(`hs${stamp}@test.local`);
   await hsPage.getByPlaceholder("••••••").fill("matkhau123");
   await hsPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(hsPage);
 
   await hsPage.goto("/join");
   await hsPage.getByPlaceholder("VD: 7K2MQ9").fill(code);

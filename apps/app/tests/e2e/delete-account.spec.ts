@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { waitSignedIn } from "./_helpers";
 
 // CẦN Supabase (DB + auth + Edge Functions). Xóa tài khoản (D52, soft delete qua Edge Function
 // service-role): HS/PH xóa được ngay; GV còn lớp có HS bị CHẶN (bảo vệ dữ liệu HS khỏi mất đột ngột).
@@ -43,6 +44,7 @@ test("GV còn lớp có HS → bị chặn xóa tài khoản, HS không còn l�
   await gvPage.getByPlaceholder("email@vidu.com").fill(`gvdel${s}@test.local`);
   await gvPage.getByPlaceholder("••••••").fill("matkhau123");
   await gvPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(gvPage);
   await gvPage.goto("/");
   await gvPage.getByLabel("Lớp của tôi").click();
   await gvPage.getByPlaceholder("Tên lớp (vd: Toán 4A)").fill("Lớp Xóa TK");
@@ -59,6 +61,7 @@ test("GV còn lớp có HS → bị chặn xóa tài khoản, HS không còn l�
   await hsPage.getByPlaceholder("email@vidu.com").fill(`hsdel${s}@test.local`);
   await hsPage.getByPlaceholder("••••••").fill("matkhau123");
   await hsPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(hsPage);
   await hsPage.goto("/join");
   await hsPage.getByPlaceholder("VD: 7K2MQ9").fill(code);
   await hsPage.getByLabel("Vào lớp").click();

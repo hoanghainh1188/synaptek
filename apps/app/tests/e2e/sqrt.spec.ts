@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { waitSignedIn } from "./_helpers";
 
 // CẦN Supabase + functions. Căn bậc hai (√, D45): câu numeric đáp án "4", HS gõ "√16" bằng bàn
 // phím cấu trúc (nút √ mới) → chấm tương đương "4" (engine numericScalar căn hằng số) → 100%.
@@ -14,6 +15,7 @@ test("căn bậc hai: HS gõ √16 bằng bàn phím cấu trúc → chấm tư�
   await gvPage.getByPlaceholder("email@vidu.com").fill(`gvsq${s}@test.local`);
   await gvPage.getByPlaceholder("••••••").fill("matkhau123");
   await gvPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(gvPage);
 
   // Soạn câu số (đáp án 4 — HS có thể gõ căn hoặc số đã tính)
   await gvPage.goto("/questions");
@@ -42,6 +44,7 @@ test("căn bậc hai: HS gõ √16 bằng bàn phím cấu trúc → chấm tư�
   await hsPage.getByPlaceholder("email@vidu.com").fill(`hssq${s}@test.local`);
   await hsPage.getByPlaceholder("••••••").fill("matkhau123");
   await hsPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(hsPage);
   await hsPage.goto("/join");
   await hsPage.getByPlaceholder("VD: 7K2MQ9").fill(code);
   await hsPage.getByLabel("Vào lớp").click();

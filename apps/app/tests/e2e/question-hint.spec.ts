@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { waitSignedIn } from "./_helpers";
 
 // CẦN Supabase (KHÔNG cần functions). Gợi ý kèm câu: GV soạn có gợi ý → HS thấy "💡" khi làm.
 test("gợi ý kèm câu: HS thấy gợi ý khi làm bài", async ({ browser }) => {
@@ -14,6 +15,7 @@ test("gợi ý kèm câu: HS thấy gợi ý khi làm bài", async ({ browser })
   await gvPage.getByPlaceholder("email@vidu.com").fill(`gvh${s}@test.local`);
   await gvPage.getByPlaceholder("••••••").fill("matkhau123");
   await gvPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(gvPage);
 
   // Soạn câu số có gợi ý
   await gvPage.goto("/questions");
@@ -44,6 +46,7 @@ test("gợi ý kèm câu: HS thấy gợi ý khi làm bài", async ({ browser })
   await hsPage.getByPlaceholder("email@vidu.com").fill(`hsh${s}@test.local`);
   await hsPage.getByPlaceholder("••••••").fill("matkhau123");
   await hsPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(hsPage);
   await hsPage.goto("/join");
   await hsPage.getByPlaceholder("VD: 7K2MQ9").fill(code);
   await hsPage.getByLabel("Vào lớp").click();

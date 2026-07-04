@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { waitSignedIn } from "./_helpers";
 
 // Polish sprint — CẦN Supabase. KHÔNG chạy ở CI (auth-gated).
 // (1) GV: tạo bài → SỬA tên → XOÁ. (2) Đổi vai trò trong Hồ sơ (student → teacher).
@@ -12,6 +13,7 @@ test("GV sửa + xoá bài tập", async ({ page }) => {
   await page.getByPlaceholder("email@vidu.com").fill(`gve${s}@test.local`);
   await page.getByPlaceholder("••••••").fill("matkhau123");
   await page.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(page);
 
   await page.goto("/classes");
   await page.getByPlaceholder("Tên lớp (vd: Toán 4A)").fill("Lớp Edit");
@@ -47,6 +49,7 @@ test("đổi vai trò trong Hồ sơ (HS → GV)", async ({ page }) => {
   await page.getByPlaceholder("email@vidu.com").fill(`role${s}@test.local`);
   await page.getByPlaceholder("••••••").fill("matkhau123");
   await page.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(page);
 
   await page.goto("/profile");
   // HS: thấy "Bài được giao"

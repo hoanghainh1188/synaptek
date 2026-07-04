@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { waitSignedIn } from "./_helpers";
 
 // M4 — CẦN Supabase. KHÔNG chạy ở CI (auth-gated).
 // HS tạo mã → PH nhập → con hiện trong "Con của tôi" → PH mở bảng theo dõi (read-only).
@@ -14,6 +15,7 @@ test("PH liên kết con bằng mã + mở bảng theo dõi", async ({ browser }
   await hsPage.getByPlaceholder("email@vidu.com").fill(`kid${s}@test.local`);
   await hsPage.getByPlaceholder("••••••").fill("matkhau123");
   await hsPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(hsPage);
 
   await hsPage.goto("/profile");
   await hsPage.getByLabel("Tạo mã liên kết phụ huynh").click();
@@ -31,6 +33,7 @@ test("PH liên kết con bằng mã + mở bảng theo dõi", async ({ browser }
   await phPage.getByPlaceholder("email@vidu.com").fill(`mom${s}@test.local`);
   await phPage.getByPlaceholder("••••••").fill("matkhau123");
   await phPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(phPage);
 
   await phPage.goto("/children");
   await phPage.getByPlaceholder("Mã con cung cấp").fill(code);

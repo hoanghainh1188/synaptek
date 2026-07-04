@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { waitSignedIn } from "./_helpers";
 
 // CẦN Supabase. Avatar: HS mới (0 XP) chọn avatar miễn phí; avatar cao XP bị khoá; lưu lại sau reload.
 test("chọn avatar miễn phí; avatar cao XP bị khoá; lưu lại", async ({ page }) => {
@@ -9,6 +10,7 @@ test("chọn avatar miễn phí; avatar cao XP bị khoá; lưu lại", async ({
   await page.getByPlaceholder("email@vidu.com").fill(`av${s}@test.local`);
   await page.getByPlaceholder("••••••").fill("matkhau123");
   await page.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(page);
 
   await page.goto("/profile");
   await expect(page.getByText("Avatar của em")).toBeVisible({ timeout: 20_000 });

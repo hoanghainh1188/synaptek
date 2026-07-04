@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { waitSignedIn } from "./_helpers";
 
 // CẦN Supabase + functions serve (chấm). KHÔNG chạy ở CI (auth-gated).
 // PH liên kết con → giao bài tại nhà → HS thấy & nộp → chấm server-side → PH thấy bài đã giao.
@@ -14,6 +15,7 @@ test("PH giao bài tại nhà → HS làm → chấm", async ({ browser }) => {
   await hsPage.getByPlaceholder("email@vidu.com").fill(`kid${s}@test.local`);
   await hsPage.getByPlaceholder("••••••").fill("matkhau123");
   await hsPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(hsPage);
   await hsPage.goto("/profile");
   await hsPage.getByLabel("Tạo mã liên kết phụ huynh").click();
   const code = (await hsPage.locator("text=/^[0-9A-Z]{6}$/").first().textContent())?.trim() ?? "";
@@ -28,6 +30,7 @@ test("PH giao bài tại nhà → HS làm → chấm", async ({ browser }) => {
   await phPage.getByPlaceholder("email@vidu.com").fill(`dad${s}@test.local`);
   await phPage.getByPlaceholder("••••••").fill("matkhau123");
   await phPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(phPage);
   await phPage.goto("/children");
   await phPage.getByPlaceholder("Mã con cung cấp").fill(code);
   await phPage.getByLabel("Liên kết").click();

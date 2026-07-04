@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { waitSignedIn } from "./_helpers";
 
 // CẦN Supabase. LaTeX thật qua KaTeX (D53, web-only): soạn câu có phân số + lũy thừa trong đề bài →
 // lưu → xem lại trong danh sách → phải render qua KaTeX thật (class .katex), không phải chữ thô
@@ -13,6 +14,7 @@ test("soạn câu có phân số + lũy thừa trong đề bài → render qua K
   await page.getByPlaceholder("email@vidu.com").fill(`latex${s}@test.local`);
   await page.getByPlaceholder("••••••").fill("matkhau123");
   await page.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(page);
 
   await page.goto("/questions");
   await page.getByLabel("Số", { exact: true }).click();

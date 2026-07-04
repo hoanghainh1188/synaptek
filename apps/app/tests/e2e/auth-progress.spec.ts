@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { waitSignedIn } from "./_helpers";
 
 // US2 — CẦN Supabase (đăng nhập + lưu attempt). Chạy ở CI job e2e-auth.
 test("đăng ký → làm bài → tiến độ được lưu", async ({ page }) => {
@@ -10,6 +11,7 @@ test("đăng ký → làm bài → tiến độ được lưu", async ({ page })
   await page.getByPlaceholder("email@vidu.com").fill(email);
   await page.getByPlaceholder("••••••").fill("matkhau123");
   await page.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(page);
 
   // Đã đăng nhập → trang chủ hiện avatar "Hồ sơ"
   await expect(page.getByLabel("Hồ sơ", { exact: true })).toBeVisible({ timeout: 25_000 });

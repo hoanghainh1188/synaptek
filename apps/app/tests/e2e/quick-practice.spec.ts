@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { waitSignedIn } from "./_helpers";
 
 // CẦN Supabase. Luyện nhanh: từ home → mở phiên trộn câu (điểm yếu/đến hạn) → có câu để làm.
 test("luyện nhanh mở phiên có câu", async ({ page }) => {
@@ -9,6 +10,7 @@ test("luyện nhanh mở phiên có câu", async ({ page }) => {
   await page.getByPlaceholder("email@vidu.com").fill(`quick${s}@test.local`);
   await page.getByPlaceholder("••••••").fill("matkhau123");
   await page.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(page);
 
   // Từ home bấm "Luyện nhanh" (chờ nút xuất hiện = đã đăng nhập)
   await page.getByLabel("Luyện nhanh").click({ timeout: 25_000 });

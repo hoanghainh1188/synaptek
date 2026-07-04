@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { waitSignedIn } from "./_helpers";
 
 // M3 US1 (T015) — CẦN Supabase chạy + apps/app/.env. KHÔNG chạy ở CI (như auth-progress).
 // Luồng: GV đăng ký (vai trò Giáo viên) → tạo lớp → lấy mã; HS (context khác) đăng ký → /join nhập mã →
@@ -16,6 +17,7 @@ test("GV tạo lớp + HS vào bằng mã → GV thấy roster", async ({ browse
   await gvPage.getByPlaceholder("email@vidu.com").fill(`gv${stamp}@test.local`);
   await gvPage.getByPlaceholder("••••••").fill("matkhau123");
   await gvPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(gvPage);
 
   // Trang chủ GV phải có lối vào "Lớp của tôi" (khác HS) — discoverability.
   await gvPage.goto("/");
@@ -39,6 +41,7 @@ test("GV tạo lớp + HS vào bằng mã → GV thấy roster", async ({ browse
   await hsPage.getByPlaceholder("email@vidu.com").fill(`hs${stamp}@test.local`);
   await hsPage.getByPlaceholder("••••••").fill("matkhau123");
   await hsPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(hsPage);
 
   await hsPage.goto("/join");
   await hsPage.getByPlaceholder("VD: 7K2MQ9").fill(code);

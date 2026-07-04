@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { waitSignedIn } from "./_helpers";
 
 // CẦN Supabase + functions serve (chấm). KHÔNG chạy ở CI (auth-gated).
 // GV soạn câu tự tạo → giao cho lớp → HS làm → chấm server-side (đáp án ẩn, lấy từ DB).
@@ -15,6 +16,7 @@ test("GV soạn câu → giao → HS làm → chấm", async ({ browser }) => {
   await gvPage.getByPlaceholder("email@vidu.com").fill(`gvq${s}@test.local`);
   await gvPage.getByPlaceholder("••••••").fill("matkhau123");
   await gvPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(gvPage);
 
   await gvPage.goto("/questions");
   await gvPage.getByLabel("Đề bài").fill("Tự soạn: 2 + 2 = ?");
@@ -46,6 +48,7 @@ test("GV soạn câu → giao → HS làm → chấm", async ({ browser }) => {
   await hsPage.getByPlaceholder("email@vidu.com").fill(`hsq${s}@test.local`);
   await hsPage.getByPlaceholder("••••••").fill("matkhau123");
   await hsPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(hsPage);
   await hsPage.goto("/join");
   await hsPage.getByPlaceholder("VD: 7K2MQ9").fill(code);
   await hsPage.getByLabel("Vào lớp").click();
@@ -73,6 +76,7 @@ test("GV soạn câu Đúng/Sai → giao → HS làm → chấm", async ({ brows
   await gvPage.getByPlaceholder("email@vidu.com").fill(`gvtf${s}@test.local`);
   await gvPage.getByPlaceholder("••••••").fill("matkhau123");
   await gvPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(gvPage);
 
   // Soạn câu true-false (đáp án Đúng)
   await gvPage.goto("/questions");
@@ -103,6 +107,7 @@ test("GV soạn câu Đúng/Sai → giao → HS làm → chấm", async ({ brows
   await hsPage.getByPlaceholder("email@vidu.com").fill(`hstf${s}@test.local`);
   await hsPage.getByPlaceholder("••••••").fill("matkhau123");
   await hsPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(hsPage);
   await hsPage.goto("/join");
   await hsPage.getByPlaceholder("VD: 7K2MQ9").fill(code);
   await hsPage.getByLabel("Vào lớp").click();
@@ -130,6 +135,7 @@ test("GV soạn câu Điền chỗ trống → giao → HS làm → chấm", asy
   await gvPage.getByPlaceholder("email@vidu.com").fill(`gvfb${s}@test.local`);
   await gvPage.getByPlaceholder("••••••").fill("matkhau123");
   await gvPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(gvPage);
 
   await gvPage.goto("/questions");
   await gvPage.getByLabel("Điền chỗ trống").click();
@@ -158,6 +164,7 @@ test("GV soạn câu Điền chỗ trống → giao → HS làm → chấm", asy
   await hsPage.getByPlaceholder("email@vidu.com").fill(`hsfb${s}@test.local`);
   await hsPage.getByPlaceholder("••••••").fill("matkhau123");
   await hsPage.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(hsPage);
   await hsPage.goto("/join");
   await hsPage.getByPlaceholder("VD: 7K2MQ9").fill(code);
   await hsPage.getByLabel("Vào lớp").click();
