@@ -80,9 +80,9 @@ nhật `docs/WORKING-NOTES.md` (điểm tiếp tục) + Decision Log/spec/file l
   thị · đăng xuất thiết bị khác · avatar ảnh thật (lựa chọn thêm cạnh emoji-XP) · xóa tài khoản (soft
   delete, GV còn lớp có HS bị chặn) — cả 5 việc này KHÔNG phụ thuộc domain, hoạt động đầy đủ; **LaTeX
   render thật qua KaTeX** (web-only, chỉ nâng hiển thị, D53); **khung cấp học 2 tầng** (Tiểu học/THCS/THPT
-  suy ra từ số lớp, D54) + **pilot THCS Toán lớp 6 Số nguyên** (17 câu, D55) + **gate tự-chấm nội dung**
-  (validate:content chạy engine trên đáp án). Quy trình nội dung cấp trên: AI nháp bám CT GDPT + tooling,
-  chủ repo DUYỆT trước merge (cửa bắt buộc, D14/D55).
+  suy ra từ số lớp, D54) + **THCS Toán lớp 6** (Số nguyên D55 + **Phân số** D57, gồm phân số âm/hỗn số) +
+  **gate tự-chấm nội dung** (validate:content chạy engine trên đáp án). Quy trình nội dung cấp trên: AI nháp
+  bám CT GDPT + tooling, chủ repo DUYỆT trước merge (cửa bắt buộc, D14/D55).
   **Còn lại**: M5 native/store (chờ tài khoản, `docs/M5-NATIVE.md`) - nhóm "Tương lai còn lại" (mở rộng
   THCS/THPT sâu hơn từ pilot · môn mới Lý/Hóa/Anh — Tiếng Anh cần bộ chấm khác moat · gia sư AI mở rộng
   chat tự do — cần quyết định phạm vi/an toàn) - auth còn thiếu: xác thực email/đổi email (chặn bởi domain,
@@ -108,6 +108,12 @@ nhật `docs/WORKING-NOTES.md` (điểm tiếp tục) + Decision Log/spec/file l
 
 ## Recent Changes
 
+- **Nhân rộng THCS — lớp 6 Phân số (sau M4, hướng A)**: chủ đề THCS thứ 2 sau pilot Số nguyên — thêm topic
+  `g6.num.fractions` (3 skill concept/addsub/muldiv, DAG **liên chủ đề** trỏ sang Số nguyên vì phân số lớp 6
+  dùng tử/mẫu số nguyên có âm) + 17 câu (rút gọn/so sánh/±/×÷ phân số, gồm phân số âm + hỗn số). Engine đã hỗ
+  trợ tương đương phân số/hỗn số/số âm sẵn → không đổi engine; gate tự-chấm D55 áp tự động (tổng **239 câu, 28
+  kỹ năng**). e2e +1 test khoe moat (nhập `9/12` cho câu 6/8→3/4 vẫn đúng). Chủ repo DUYỆT trước merge (D14/D55).
+  Decision Log **D57**.
 - **THCS Toán lớp 6 pilot (Số nguyên) + gate tự-chấm nội dung (sau M4)**: nội dung cấp trên đầu tiên —
   `content/curriculum/grade-6.json` (mạch "Số và Đại số", chủ đề "Số nguyên", 3 skill) + 17 câu numeric
   số nguyên âm. Kích hoạt khung 2 tầng D54 → hàng "Cấp: THCS" nay HIỆN thật trên home. `validate:content`

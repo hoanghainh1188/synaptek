@@ -648,6 +648,74 @@ export const ANSWER_KEYS: Record<string, AnswerKey> = {
     "type": "numeric",
     "correct": "10"
   },
+  "g6.num.fractions.q001": {
+    "type": "fraction",
+    "correct": "3/4"
+  },
+  "g6.num.fractions.q002": {
+    "type": "fraction",
+    "correct": "3/5"
+  },
+  "g6.num.fractions.q003": {
+    "type": "fraction",
+    "correct": "-2/3"
+  },
+  "g6.num.fractions.q004": {
+    "type": "mcq",
+    "correct": "2/4"
+  },
+  "g6.num.fractions.q005": {
+    "type": "mcq",
+    "correct": "3/4"
+  },
+  "g6.num.fractions.q006": {
+    "type": "true-false",
+    "correct": "true"
+  },
+  "g6.num.fractions.q007": {
+    "type": "fraction",
+    "correct": "1/2"
+  },
+  "g6.num.fractions.q008": {
+    "type": "fraction",
+    "correct": "5/6"
+  },
+  "g6.num.fractions.q009": {
+    "type": "fraction",
+    "correct": "1/4"
+  },
+  "g6.num.fractions.q010": {
+    "type": "fraction",
+    "correct": "1/6"
+  },
+  "g6.num.fractions.q011": {
+    "type": "fraction",
+    "correct": "-1/2"
+  },
+  "g6.num.fractions.q012": {
+    "type": "fraction",
+    "correct": "1/2"
+  },
+  "g6.num.fractions.q013": {
+    "type": "fraction",
+    "correct": "1/2"
+  },
+  "g6.num.fractions.q014": {
+    "type": "numeric",
+    "correct": "6"
+  },
+  "g6.num.fractions.q015": {
+    "type": "numeric",
+    "correct": "2"
+  },
+  "g6.num.fractions.q016": {
+    "type": "fraction",
+    "correct": "-2/5"
+  },
+  "g6.num.fractions.q017": {
+    "type": "fraction",
+    "correct": "5/2"
+  },
   "g6.num.integers.q001": {
     "type": "numeric",
     "correct": "9"

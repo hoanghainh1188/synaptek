@@ -10,11 +10,13 @@ test("bộ chọn 2 tầng: Tiểu học 1–5 ↔ THCS 6–9, chuyển cấp đ
   for (const g of [1, 2, 3, 4, 5]) await expect(page.getByLabel(`Lớp ${g}`)).toBeVisible();
   await expect(page.getByLabel("Lớp 6")).toHaveCount(0);
 
-  // Chuyển THCS: dải lớp đổi sang 6–9, mất 1–5.
+  // Chuyển THCS: dải lớp đổi sang 6–9, mất 1–5. Lớp 6 có 2 chủ đề: Số nguyên + Phân số.
   await page.getByLabel("Cấp THCS").click();
   for (const g of [6, 7, 8, 9]) await expect(page.getByLabel(`Lớp ${g}`)).toBeVisible();
   await expect(page.getByLabel("Lớp 1")).toHaveCount(0);
   await expect(page.getByLabel("Số nguyên")).toBeVisible();
+  // exact: tránh khớp nhầm thẻ gợi ý "Khái niệm phân số" (cold-start reco chứa chuỗi "phân số").
+  await expect(page.getByLabel("Phân số", { exact: true })).toBeVisible();
 });
 
 // THCS Toán lớp 6 (Số nguyên) — chấm đúng câu số nguyên âm (engine đã hỗ trợ số âm, D45-style).
@@ -26,6 +28,20 @@ test("THCS lớp 6 Số nguyên: luyện + chấm đúng câu số âm", async (
   // Câu đầu "Số đối của -9 là số nào?" → 9.
   await expect(page.getByText("Số đối của -9")).toBeVisible({ timeout: 10_000 });
   await page.getByLabel("Phím 9").click();
+  await page.getByText("Kiểm tra").click();
+  await expect(page.getByText(/Tuyệt vời/)).toBeVisible({ timeout: 10_000 });
+});
+
+// THCS Toán lớp 6 (Phân số) — khoe moat: HS nhập phân số CHƯA rút gọn tương đương vẫn chấm ĐÚNG.
+test("THCS lớp 6 Phân số: nhập phân số tương đương vẫn đúng (moat)", async ({ page }) => {
+  await page.goto("/");
+  await page.getByLabel("Cấp THCS").click();
+  await page.getByLabel("Phân số", { exact: true }).click();
+  await expect(page).toHaveURL(/practice\/g6\.num\.fractions/, { timeout: 10_000 });
+  // Câu đầu "Rút gọn phân số 6/8 về tối giản" → 3/4. Engine chấm theo GIÁ TRỊ nên 9/12 (=3/4) cũng đúng.
+  // MathText render "6/8" thành phân số (tách node) → chỉ khớp phần text liền trước.
+  await expect(page.getByText(/Rút gọn phân số/)).toBeVisible({ timeout: 10_000 });
+  for (const k of ["9", "/", "1", "2"]) await page.getByLabel(`Phím ${k}`).click();
   await page.getByText("Kiểm tra").click();
   await expect(page.getByText(/Tuyệt vời/)).toBeVisible({ timeout: 10_000 });
 });

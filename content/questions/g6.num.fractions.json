@@ -1,0 +1,174 @@
+[
+  {
+    "id": "g6.num.fractions.q001",
+    "skillId": "g6.num.fraction.concept",
+    "grade": 6,
+    "type": "fraction",
+    "prompt": "Rút gọn phân số 6/8 về tối giản.",
+    "difficulty": 1,
+    "correct": "3/4",
+    "explanation": "Chia cả tử và mẫu cho ước chung 2: 6/8 = 3/4. Vì 3 và 4 không còn ước chung nào khác 1 nên 3/4 là tối giản."
+  },
+  {
+    "id": "g6.num.fractions.q002",
+    "skillId": "g6.num.fraction.concept",
+    "grade": 6,
+    "type": "fraction",
+    "prompt": "Rút gọn phân số 15/25 về tối giản.",
+    "difficulty": 1,
+    "correct": "3/5",
+    "explanation": "Chia cả tử và mẫu cho ước chung lớn nhất 5: 15/25 = 3/5."
+  },
+  {
+    "id": "g6.num.fractions.q003",
+    "skillId": "g6.num.fraction.concept",
+    "grade": 6,
+    "type": "fraction",
+    "prompt": "Rút gọn phân số -4/6 về tối giản.",
+    "difficulty": 2,
+    "correct": "-2/3",
+    "explanation": "Phân số âm rút gọn như thường, giữ nguyên dấu: chia tử và mẫu cho 2 được -2/3."
+  },
+  {
+    "id": "g6.num.fractions.q004",
+    "skillId": "g6.num.fraction.concept",
+    "grade": 6,
+    "type": "mcq",
+    "prompt": "Phân số nào bằng 1/2?",
+    "difficulty": 1,
+    "choices": ["2/4", "2/5", "3/5"],
+    "correct": "2/4",
+    "explanation": "2/4 rút gọn (chia cho 2) được 1/2 nên 2/4 = 1/2."
+  },
+  {
+    "id": "g6.num.fractions.q005",
+    "skillId": "g6.num.fraction.concept",
+    "grade": 6,
+    "type": "mcq",
+    "prompt": "So sánh: phân số nào lớn hơn, 2/3 hay 3/4?",
+    "difficulty": 2,
+    "choices": ["2/3", "3/4"],
+    "correct": "3/4",
+    "explanation": "Quy đồng mẫu 12: 2/3 = 8/12 và 3/4 = 9/12. Vì 9/12 > 8/12 nên 3/4 lớn hơn."
+  },
+  {
+    "id": "g6.num.fractions.q006",
+    "skillId": "g6.num.fraction.concept",
+    "grade": 6,
+    "type": "true-false",
+    "prompt": "-3/5 < -2/5. Đúng hay sai?",
+    "difficulty": 2,
+    "correct": "true",
+    "explanation": "Cùng mẫu dương, phân số nào có tử nhỏ hơn thì nhỏ hơn: -3 < -2 nên -3/5 < -2/5 — đúng."
+  },
+  {
+    "id": "g6.num.fractions.q007",
+    "skillId": "g6.num.fraction.addsub",
+    "grade": 6,
+    "type": "fraction",
+    "prompt": "Tính: 1/6 + 2/6",
+    "difficulty": 1,
+    "correct": "1/2",
+    "explanation": "Cùng mẫu: cộng tử số, 1/6 + 2/6 = 3/6 = 1/2."
+  },
+  {
+    "id": "g6.num.fractions.q008",
+    "skillId": "g6.num.fraction.addsub",
+    "grade": 6,
+    "type": "fraction",
+    "prompt": "Tính: 2/3 + 1/6",
+    "difficulty": 2,
+    "correct": "5/6",
+    "explanation": "Quy đồng mẫu 6: 2/3 = 4/6. Vậy 4/6 + 1/6 = 5/6."
+  },
+  {
+    "id": "g6.num.fractions.q009",
+    "skillId": "g6.num.fraction.addsub",
+    "grade": 6,
+    "type": "fraction",
+    "prompt": "Tính: 3/4 - 1/2",
+    "difficulty": 1,
+    "correct": "1/4",
+    "explanation": "Quy đồng mẫu 4: 1/2 = 2/4. Vậy 3/4 - 2/4 = 1/4."
+  },
+  {
+    "id": "g6.num.fractions.q010",
+    "skillId": "g6.num.fraction.addsub",
+    "grade": 6,
+    "type": "fraction",
+    "prompt": "Tính: 1/2 + (-1/3)",
+    "difficulty": 2,
+    "correct": "1/6",
+    "explanation": "Quy đồng mẫu 6: 1/2 = 3/6 và -1/3 = -2/6. Vậy 3/6 + (-2/6) = 1/6."
+  },
+  {
+    "id": "g6.num.fractions.q011",
+    "skillId": "g6.num.fraction.addsub",
+    "grade": 6,
+    "type": "fraction",
+    "prompt": "Tính: (-1/4) + (-1/4)",
+    "difficulty": 2,
+    "correct": "-1/2",
+    "explanation": "Cùng mẫu, cộng hai tử âm: (-1) + (-1) = -2, được -2/4 = -1/2."
+  },
+  {
+    "id": "g6.num.fractions.q012",
+    "skillId": "g6.num.fraction.addsub",
+    "grade": 6,
+    "type": "fraction",
+    "prompt": "Tính: 5/6 - 1/3",
+    "difficulty": 2,
+    "correct": "1/2",
+    "explanation": "Quy đồng mẫu 6: 1/3 = 2/6. Vậy 5/6 - 2/6 = 3/6 = 1/2."
+  },
+  {
+    "id": "g6.num.fractions.q013",
+    "skillId": "g6.num.fraction.muldiv",
+    "grade": 6,
+    "type": "fraction",
+    "prompt": "Tính: 2/3 × 3/4",
+    "difficulty": 1,
+    "correct": "1/2",
+    "explanation": "Nhân tử với tử, mẫu với mẫu: (2×3)/(3×4) = 6/12 = 1/2."
+  },
+  {
+    "id": "g6.num.fractions.q014",
+    "skillId": "g6.num.fraction.muldiv",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tính: 3/4 × 8",
+    "difficulty": 1,
+    "correct": "6",
+    "explanation": "3/4 của 8 bằng (3 × 8) : 4 = 24 : 4 = 6."
+  },
+  {
+    "id": "g6.num.fractions.q015",
+    "skillId": "g6.num.fraction.muldiv",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tính: 1/2 : 1/4",
+    "difficulty": 2,
+    "correct": "2",
+    "explanation": "Chia phân số bằng nhân với phân số nghịch đảo: 1/2 : 1/4 = 1/2 × 4/1 = 4/2 = 2."
+  },
+  {
+    "id": "g6.num.fractions.q016",
+    "skillId": "g6.num.fraction.muldiv",
+    "grade": 6,
+    "type": "fraction",
+    "prompt": "Tính: (-2/3) × 3/5",
+    "difficulty": 2,
+    "correct": "-2/5",
+    "explanation": "Nhân tử với tử, mẫu với mẫu rồi giữ dấu âm: (-2×3)/(3×5) = -6/15 = -2/5."
+  },
+  {
+    "id": "g6.num.fractions.q017",
+    "skillId": "g6.num.fraction.muldiv",
+    "grade": 6,
+    "type": "fraction",
+    "prompt": "Viết hỗn số 2 1/2 dưới dạng phân số.",
+    "difficulty": 2,
+    "correct": "5/2",
+    "explanation": "Hỗn số 2 1/2 = 2 + 1/2 = 4/2 + 1/2 = 5/2."
+  }
+]
