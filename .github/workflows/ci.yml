@@ -74,6 +74,12 @@ jobs:
         run: npm run build:web --workspace @synaptek/app
 
       # E2E web — chỉ luồng KHÁCH (không cần Supabase). Luồng đăng nhập ở job e2e-auth.
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('apps/app/package.json') }}
+
       - name: Install Playwright (chromium)
         run: npx playwright install --with-deps chromium
         working-directory: apps/app
@@ -96,7 +102,7 @@ jobs:
           version: 2.108.0
 
       - name: Start Supabase (áp migrations)
-        run: supabase start
+        run: supabase start -x studio,imgproxy,meta,vector,analytics,realtime
 
       - name: Run RLS tests (rls-*.sql)
         run: |
@@ -105,10 +111,6 @@ jobs:
             echo "== $f =="
             docker exec -i supabase_db_synaptek psql -U postgres -d postgres -v ON_ERROR_STOP=1 < "$f"
           done
-
-      - name: Stop Supabase
-        if: always()
-        run: supabase stop
 
   # E2E luồng CÓ ĐĂNG NHẬP (GV/HS/PH): chạy thật trên Supabase (DB + auth + Edge functions) trong CI.
   e2e-auth:
@@ -131,8 +133,11 @@ jobs:
         with:
           version: 2.108.0
 
+      # Bỏ service KHÔNG dùng trong e2e (studio/imgproxy/meta/vector/analytics/realtime) → start nhanh
+      # hơn nhiều. Giữ: db, auth, rest, edge-runtime/functions, storage (upload ảnh), inbucket (email
+      # quên mật khẩu), kong. Đã verify local: trọn 41 auth spec pass với bộ service giảm này.
       - name: Start Supabase (DB + auth + Edge functions)
-        run: supabase start
+        run: supabase start -x studio,imgproxy,meta,vector,analytics,realtime
 
       - name: Export Supabase env cho app (EXPO_PUBLIC nhúng lúc build)
         run: |
@@ -152,6 +157,14 @@ jobs:
       # export EXPO_PUBLIC_SUPABASE_* để build nhúng đúng URL/key Supabase cục bộ (auth flow cần).
       - name: Build web (Expo export)
         run: npm run build:web --workspace @synaptek/app
+
+      # Cache trình duyệt Playwright (key theo version trong package.json — không lockfile) → né tải
+      # ~100MB mỗi lần. --with-deps vẫn chạy (apt idempotent, nhanh khi deps sẵn).
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('apps/app/package.json') }}
 
       - name: Install Playwright (chromium)
         run: npx playwright install --with-deps chromium
@@ -202,7 +215,3 @@ jobs:
             tests/e2e/delete-account.spec.ts \
             tests/e2e/latex-render.spec.ts
         working-directory: apps/app
-
-      - name: Stop Supabase
-        if: always()
-        run: supabase stop

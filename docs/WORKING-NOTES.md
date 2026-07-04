@@ -4,7 +4,15 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
-**+ Tối ưu CI — E2E serve bản export TĨNH ✅ (chore/ci-static-e2e-server, PR đang mở):** User báo "CI càng
+**+ Tăng tốc CI đợt 2 ✅ (chore/ci-faster-supabase, PR đang mở):** User "làm CI nhanh hơn nữa". Sau D58
+(e2e-auth 18–24m→5.3m), đo breakdown: nút thắt dịch sang SETUP — `Start Supabase` 101s lớn nhất, rồi `E2E
+run` 93s. 3 đòn bẩy ít rủi ro: (1) `supabase start -x studio,imgproxy,meta,vector,analytics,realtime` (bỏ
+service e2e không dùng; verify local trọn 41 spec pass, local start 101s→~25s); (2) bỏ bước `Stop Supabase`
+(runner ephemeral tự huỷ, cắt 20s critical path); (3) cache trình duyệt Playwright. KHÔNG shard `--workers`
+(rủi ro rate-limit + đụng seed, để dành). Decision Log **D59**. **Bước tiếp**: xem CI thật (kỳ vọng ~5.3m →
+~3.5m); muốn nữa → sharding có cô lập dữ liệu là đòn bẩy còn lại.
+
+**+ Tối ưu CI — E2E serve bản export TĨNH ✅ (chore/ci-static-e2e-server, đã merge #89):** User báo "CI càng
 lúc càng chậm". Đo thật: `E2E auth-gated` 18–24m là nút thắt (verify 4.9m + RLS 2.5m song song), nhảy từ ~9m
 do (a) mỗi feature +1 spec (41 auth + 7 guest), (b) bundle lớn dần (KaTeX). Gốc: e2e chạy **dev server**
 `expo start --web` (bundle JIT chậm + từng OOM, D53). Đổi: CI build export 1 lần → serve `dist/` bằng server
