@@ -20,6 +20,12 @@
             "g6.num.fraction.addsub",
             "g6.num.fraction.muldiv"
           ]
+        },
+        {
+          "id": "g6.num.decimals",
+          "name": "Số thập phân",
+          "grade": 6,
+          "skillIds": ["g6.num.decimal.concept", "g6.num.decimal.addsub", "g6.num.decimal.muldiv"]
         }
       ]
     }
@@ -60,6 +66,24 @@
       "name": "Nhân, chia phân số và hỗn số",
       "description": "Nhân/chia phân số (kể cả âm), phân số của một số, đổi giữa hỗn số và phân số.",
       "prerequisites": ["g6.num.fraction.addsub", "g6.num.integer.muldiv"]
+    },
+    {
+      "id": "g6.num.decimal.concept",
+      "name": "Số thập phân âm, so sánh và làm tròn",
+      "description": "Số thập phân âm, số đối, giá trị tuyệt đối, so sánh và làm tròn số thập phân.",
+      "prerequisites": ["g6.num.integer.concept"]
+    },
+    {
+      "id": "g6.num.decimal.addsub",
+      "name": "Cộng, trừ số thập phân",
+      "description": "Cộng/trừ số thập phân, kể cả số thập phân âm (dùng dấu phẩy thập phân kiểu Việt Nam).",
+      "prerequisites": ["g6.num.decimal.concept", "g6.num.integer.addsub"]
+    },
+    {
+      "id": "g6.num.decimal.muldiv",
+      "name": "Nhân, chia số thập phân",
+      "description": "Nhân/chia số thập phân, kể cả số thập phân âm; quy tắc dấu.",
+      "prerequisites": ["g6.num.decimal.addsub", "g6.num.integer.muldiv"]
     }
   ]
 }

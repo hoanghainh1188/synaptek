@@ -45,3 +45,16 @@ test("THCS lớp 6 Phân số: nhập phân số tương đương vẫn đúng (
   await page.getByText("Kiểm tra").click();
   await expect(page.getByText(/Tuyệt vời/)).toBeVisible({ timeout: 10_000 });
 });
+
+// THCS Toán lớp 6 (Số thập phân) — chấm đúng số thập phân ÂM nhập bằng dấu phẩy VN (D8).
+test("THCS lớp 6 Số thập phân: nhập số thập phân âm (phẩy VN) → chấm đúng", async ({ page }) => {
+  await page.goto("/");
+  await page.getByLabel("Cấp THCS").click();
+  await page.getByLabel("Số thập phân", { exact: true }).click();
+  await expect(page).toHaveURL(/practice\/g6\.num\.decimals/, { timeout: 10_000 });
+  // Câu đầu "Số đối của 2,5 là số nào?" → -2,5. Bàn phím numeric có phím '-' và ',' (D8/D45).
+  await expect(page.getByText(/Số đối của 2,5/)).toBeVisible({ timeout: 10_000 });
+  for (const k of ["-", "2", ",", "5"]) await page.getByLabel(`Phím ${k}`).click();
+  await page.getByText("Kiểm tra").click();
+  await expect(page.getByText(/Tuyệt vời/)).toBeVisible({ timeout: 10_000 });
+});

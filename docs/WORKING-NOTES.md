@@ -4,6 +4,14 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
+**+ Nhân rộng THCS — lớp 6 Số thập phân ✅ (feature/thcs-g6-decimals, PR đang mở):** Chủ đề THCS THỨ 3 (sau
+Số nguyên D55, Phân số D57), cùng pipeline soạn→validate→duyệt. Topic `g6.num.decimals` (3 skill concept/
+addsub/muldiv, DAG liên chủ đề trỏ Số nguyên vì số thập phân lớp 6 có ÂM) + 17 câu (số đối/so sánh/**làm
+tròn**/±/×÷, gồm số thập phân ÂM). **Dấu phẩy VN** (D8): đáp án "2,5"/"-3,8"; engine chuẩn hoá số kiểu VN +
+số âm sẵn → KHÔNG đổi engine. Gate tự-chấm D55 áp tự động (17 câu pass; tổng **256 câu, 31 kỹ năng**). e2e +1
+test khoe phẩy VN + số âm (HS nhập `-2,5` cho "số đối của 2,5" → đúng). Decision Log **D61**. **Bước tiếp**:
+chủ repo DUYỆT 17 câu trước merge; sau đó tiếp tục nhân rộng (Số tự nhiên ƯCLN/BCNN / Hình học lớp 6 / lớp 7).
+
 **+ Tối ưu bundle web GĐ1 — lazy-load KaTeX ✅ (perf/lazy-katex, đã merge #91):** User yêu cầu tối ưu bundle,
 chốt làm từng bước. Baseline đo thật: 1 bundle 3.14MB raw / **780KB gzip, KHÔNG code-split** (vượt ~2.6× ngân
 sách 300KB). GĐ1: KaTeX (~76KB) đang import EAGER ở `KatexSpan.web.tsx` → đổi `import("katex")` động (cache

@@ -80,7 +80,7 @@ nhật `docs/WORKING-NOTES.md` (điểm tiếp tục) + Decision Log/spec/file l
   thị · đăng xuất thiết bị khác · avatar ảnh thật (lựa chọn thêm cạnh emoji-XP) · xóa tài khoản (soft
   delete, GV còn lớp có HS bị chặn) — cả 5 việc này KHÔNG phụ thuộc domain, hoạt động đầy đủ; **LaTeX
   render thật qua KaTeX** (web-only, chỉ nâng hiển thị, D53); **khung cấp học 2 tầng** (Tiểu học/THCS/THPT
-  suy ra từ số lớp, D54) + **THCS Toán lớp 6** (Số nguyên D55 + **Phân số** D57, gồm phân số âm/hỗn số) +
+  suy ra từ số lớp, D54) + **THCS Toán lớp 6** (Số nguyên D55 + Phân số D57 + **Số thập phân** D61, gồm số âm/hỗn số/phẩy VN) +
   **gate tự-chấm nội dung** (validate:content chạy engine trên đáp án). Quy trình nội dung cấp trên: AI nháp
   bám CT GDPT + tooling, chủ repo DUYỆT trước merge (cửa bắt buộc, D14/D55).
   **Còn lại**: M5 native/store (chờ tài khoản, `docs/M5-NATIVE.md`) - nhóm "Tương lai còn lại" (mở rộng
@@ -108,6 +108,11 @@ nhật `docs/WORKING-NOTES.md` (điểm tiếp tục) + Decision Log/spec/file l
 
 ## Recent Changes
 
+- **Nhân rộng THCS — lớp 6 Số thập phân (sau M4)**: chủ đề THCS thứ 3 — topic `g6.num.decimals` (3 skill,
+  DAG liên chủ đề trỏ Số nguyên vì có số thập phân âm) + 17 câu (số đối/so sánh/làm tròn/±/×÷, gồm số âm).
+  **Dấu phẩy VN** (D8) — engine chuẩn hoá số kiểu VN + số âm sẵn → không đổi engine; gate tự-chấm áp tự động
+  (tổng **256 câu, 31 kỹ năng**). e2e +1 test (nhập `-2,5` phẩy VN → đúng). Chủ repo DUYỆT trước merge.
+  Decision Log **D61**.
 - **Nhân rộng THCS — lớp 6 Phân số (sau M4, hướng A)**: chủ đề THCS thứ 2 sau pilot Số nguyên — thêm topic
   `g6.num.fractions` (3 skill concept/addsub/muldiv, DAG **liên chủ đề** trỏ sang Số nguyên vì phân số lớp 6
   dùng tử/mẫu số nguyên có âm) + 17 câu (rút gọn/so sánh/±/×÷ phân số, gồm phân số âm + hỗn số). Engine đã hỗ

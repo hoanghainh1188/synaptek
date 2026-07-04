@@ -648,6 +648,74 @@ export const ANSWER_KEYS: Record<string, AnswerKey> = {
     "type": "numeric",
     "correct": "10"
   },
+  "g6.num.decimals.q001": {
+    "type": "numeric",
+    "correct": "-2,5"
+  },
+  "g6.num.decimals.q002": {
+    "type": "mcq",
+    "correct": "-1,2"
+  },
+  "g6.num.decimals.q003": {
+    "type": "true-false",
+    "correct": "true"
+  },
+  "g6.num.decimals.q004": {
+    "type": "numeric",
+    "correct": "3,46"
+  },
+  "g6.num.decimals.q005": {
+    "type": "numeric",
+    "correct": "13"
+  },
+  "g6.num.decimals.q006": {
+    "type": "numeric",
+    "correct": "3,8"
+  },
+  "g6.num.decimals.q007": {
+    "type": "numeric",
+    "correct": "3,8"
+  },
+  "g6.num.decimals.q008": {
+    "type": "numeric",
+    "correct": "3,5"
+  },
+  "g6.num.decimals.q009": {
+    "type": "numeric",
+    "correct": "-1"
+  },
+  "g6.num.decimals.q010": {
+    "type": "numeric",
+    "correct": "-2,5"
+  },
+  "g6.num.decimals.q011": {
+    "type": "numeric",
+    "correct": "-3,8"
+  },
+  "g6.num.decimals.q012": {
+    "type": "numeric",
+    "correct": "-2,3"
+  },
+  "g6.num.decimals.q013": {
+    "type": "numeric",
+    "correct": "10"
+  },
+  "g6.num.decimals.q014": {
+    "type": "numeric",
+    "correct": "-4,5"
+  },
+  "g6.num.decimals.q015": {
+    "type": "numeric",
+    "correct": "3,2"
+  },
+  "g6.num.decimals.q016": {
+    "type": "numeric",
+    "correct": "4"
+  },
+  "g6.num.decimals.q017": {
+    "type": "numeric",
+    "correct": "-4"
+  },
   "g6.num.fractions.q001": {
     "type": "fraction",
     "correct": "3/4"
