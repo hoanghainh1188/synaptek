@@ -6,6 +6,16 @@
       "name": "Số và Đại số",
       "topics": [
         {
+          "id": "g6.num.naturals",
+          "name": "Số tự nhiên",
+          "grade": 6,
+          "skillIds": [
+            "g6.num.natural.power",
+            "g6.num.natural.divisibility",
+            "g6.num.natural.gcdlcm"
+          ]
+        },
+        {
           "id": "g6.num.integers",
           "name": "Số nguyên",
           "grade": 6,
@@ -31,6 +41,24 @@
     }
   ],
   "skills": [
+    {
+      "id": "g6.num.natural.power",
+      "name": "Lũy thừa với số mũ tự nhiên và thứ tự thực hiện phép tính",
+      "description": "Lũy thừa a^n, tính giá trị lũy thừa; thứ tự thực hiện các phép tính (ngoặc, lũy thừa, nhân chia, cộng trừ).",
+      "prerequisites": []
+    },
+    {
+      "id": "g6.num.natural.divisibility",
+      "name": "Chia hết, dấu hiệu chia hết, số nguyên tố",
+      "description": "Quan hệ chia hết, dấu hiệu chia hết cho 2/3/5/9, số nguyên tố và hợp số.",
+      "prerequisites": ["g6.num.natural.power"]
+    },
+    {
+      "id": "g6.num.natural.gcdlcm",
+      "name": "Ước chung lớn nhất và bội chung nhỏ nhất",
+      "description": "Tìm ƯCLN và BCNN của hai số tự nhiên (qua phân tích ra thừa số nguyên tố).",
+      "prerequisites": ["g6.num.natural.divisibility"]
+    },
     {
       "id": "g6.num.integer.concept",
       "name": "Số nguyên âm, tập hợp ℤ, so sánh và số đối",

@@ -852,6 +852,74 @@ export const ANSWER_KEYS: Record<string, AnswerKey> = {
     "type": "numeric",
     "correct": "-6"
   },
+  "g6.num.naturals.q001": {
+    "type": "numeric",
+    "correct": "8"
+  },
+  "g6.num.naturals.q002": {
+    "type": "numeric",
+    "correct": "25"
+  },
+  "g6.num.naturals.q003": {
+    "type": "numeric",
+    "correct": "1000"
+  },
+  "g6.num.naturals.q004": {
+    "type": "numeric",
+    "correct": "14"
+  },
+  "g6.num.naturals.q005": {
+    "type": "numeric",
+    "correct": "20"
+  },
+  "g6.num.naturals.q006": {
+    "type": "numeric",
+    "correct": "17"
+  },
+  "g6.num.naturals.q007": {
+    "type": "mcq",
+    "correct": "126"
+  },
+  "g6.num.naturals.q008": {
+    "type": "true-false",
+    "correct": "true"
+  },
+  "g6.num.naturals.q009": {
+    "type": "mcq",
+    "correct": "17"
+  },
+  "g6.num.naturals.q010": {
+    "type": "true-false",
+    "correct": "false"
+  },
+  "g6.num.naturals.q011": {
+    "type": "mcq",
+    "correct": "30"
+  },
+  "g6.num.naturals.q012": {
+    "type": "mcq",
+    "correct": "15"
+  },
+  "g6.num.naturals.q013": {
+    "type": "numeric",
+    "correct": "6"
+  },
+  "g6.num.naturals.q014": {
+    "type": "numeric",
+    "correct": "12"
+  },
+  "g6.num.naturals.q015": {
+    "type": "numeric",
+    "correct": "12"
+  },
+  "g6.num.naturals.q016": {
+    "type": "numeric",
+    "correct": "15"
+  },
+  "g6.num.naturals.q017": {
+    "type": "numeric",
+    "correct": "5"
+  },
   "tv.g1.chinhta.q001": {
     "type": "mcq",
     "correct": "kẻ"

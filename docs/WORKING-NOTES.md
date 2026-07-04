@@ -4,7 +4,16 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
-**+ Nhân rộng THCS — lớp 6 Số thập phân ✅ (feature/thcs-g6-decimals, PR đang mở):** Chủ đề THCS THỨ 3 (sau
+**+ Nhân rộng THCS — lớp 6 Số tự nhiên ✅ (feature/thcs-g6-natural, PR đang mở):** Chủ đề THCS THỨ 4 → **TRỌN
+mạch "Số & Đại số" lớp 6** (Số tự nhiên/Số nguyên/Phân số/Số thập phân). Topic `g6.num.naturals` đặt ĐẦU
+strand (CT GDPT xếp trước Số nguyên). 3 skill: power (lũy thừa a^n + thứ tự phép tính) → divisibility (chia
+hết 2/3/5/9 · nguyên tố/hợp số) → gcdlcm (ƯCLN/BCNN); DAG NỀN, prereq rỗng (khác 3 chủ đề trước trỏ Số
+nguyên). 17 câu (numeric + mcq + true-false). Engine sẵn → không đổi. Gate tự-chấm áp tự động (tổng **273
+câu, 34 kỹ năng**). e2e +1 test (lũy thừa 2^3→8). `{exact}` tránh trùng skill lớp 4 "số tự nhiên". Decision
+Log **D62**. **Bước tiếp**: chủ repo DUYỆT 17 câu trước merge; sau đó Hình học lớp 6 / Thống kê-Xác suất lớp
+6 / hoặc sang lớp 7.
+
+**+ Nhân rộng THCS — lớp 6 Số thập phân ✅ (feature/thcs-g6-decimals, đã merge #93):** Chủ đề THCS THỨ 3 (sau
 Số nguyên D55, Phân số D57), cùng pipeline soạn→validate→duyệt. Topic `g6.num.decimals` (3 skill concept/
 addsub/muldiv, DAG liên chủ đề trỏ Số nguyên vì số thập phân lớp 6 có ÂM) + 17 câu (số đối/so sánh/**làm
 tròn**/±/×÷, gồm số thập phân ÂM). **Dấu phẩy VN** (D8): đáp án "2,5"/"-3,8"; engine chuẩn hoá số kiểu VN +
