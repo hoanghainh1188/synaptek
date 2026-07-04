@@ -4,7 +4,14 @@
 
 ## Đang ở đâu (cập nhật mới nhất)
 
-**+ Hướng dẫn soạn trong màn import ✅ (feature/import-help-guide, PR đang mở):** User hỏi "markdown có theo
+**+ Khoá vai trò học sinh — bảo mật ✅ (feature/lock-student-role, PR đang mở):** User: "học sinh không nên
+cho chuyển đổi vai trò". Phát hiện lỗ bảo mật: role tự-chọn (D22) update thẳng `profiles.role` qua RLS
+`update_own` → BẤT KỲ user (kể cả trẻ em) tự leo lên GV/PH qua API, ẩn UI không đủ. **Bảo mật 2 lớp**: (1)
+migration **0026** trigger `guard_student_role` chặn chính chủ (`auth.uid()=id`) đổi to/from 'student'
+(student cố định 2 chiều, tránh footgun; admin/service_role bỏ qua). Role set lúc INSERT (handle_new_user 0005) nên KHÔNG phá đăng ký GV/PH. (2) UI profile ẩn nút đổi cho HS; GV/PH chỉ đổi giữa GV↔PH. Rewrite test
+polish-sprint (bỏ HS→GV) + rls-0026 (5 ca). Decision Log **D67**. Verify local: RLS 5/5, e2e 3/3.
+
+**+ Hướng dẫn soạn trong màn import ✅ (feature/import-help-guide, đã merge #99):** User hỏi "markdown có theo
 chuẩn nào không" → giải thích: format là **tự chế** (mượn GFM heading + task-list `* [x]`; `answer:`/`|` là
 quy ước riêng), không theo GIFT/Aiken/QTI (đánh đổi: mất liên thông Moodle, đổi lại đơn giản + hợp engine +
 phẩy VN). User muốn có **help hướng dẫn người soạn** → nâng block "Xem cú pháp" (D65) từ vắn tắt thành hướng

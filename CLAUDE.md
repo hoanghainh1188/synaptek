@@ -95,8 +95,8 @@ nhật `docs/WORKING-NOTES.md` (điểm tiếp tục) + Decision Log/spec/file l
   nạp qua `public/katex/` — static asset, KHÔNG qua Metro module graph, xem D53). Vendor assets TỰ
   ĐỘNG đồng bộ: `npm run sync:edge` (engine↔Edge) + `npm run sync:katex` (`node_modules/katex` →
   `public/katex/`) — cả hai có gate CI `git diff` chống lệch (D13).
-- **Storage**: Supabase — migrations **`0001`–`0025`** (mới nhất: 0023 nhiều phần a/b/c · 0024 avatar ảnh
-  thật · 0025 xóa tài khoản). RLS chéo vai trò qua helper `SECURITY DEFINER` (D24/D26/D30/D32). Edge
+- **Storage**: Supabase — migrations **`0001`–`0026`** (mới nhất: 0024 avatar ảnh thật · 0025 xóa tài khoản ·
+  0026 khoá vai trò học sinh, D67). RLS chéo vai trò qua helper `SECURITY DEFINER` (D24/D26/D30/D32). Edge
   Functions: `grade` · `grade-assignment` · `review-scheduler` · `ai-tutor-explain` (D46, Gemini, cần
   secret `GEMINI_API_KEY` riêng) · `delete-account` (D52, service-role, soft delete) · `generate-questions`
   (D66, Gemini, AI nháp câu → Markdown; cùng `GEMINI_API_KEY`). Auth SMTP: Resend
