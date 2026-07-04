@@ -1,0 +1,114 @@
+[
+  {
+    "id": "g6.sta.prob.q001",
+    "skillId": "g6.sta.chance",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Gieo một con xúc xắc 6 mặt. Có mấy kết quả có thể xảy ra?",
+    "difficulty": 1,
+    "correct": "6",
+    "explanation": "Các kết quả có thể là số chấm 1, 2, 3, 4, 5, 6 — tất cả 6 kết quả."
+  },
+  {
+    "id": "g6.sta.prob.q002",
+    "skillId": "g6.sta.chance",
+    "grade": 6,
+    "type": "numeric",
+    "prompt": "Tung một đồng xu. Có mấy kết quả có thể xảy ra?",
+    "difficulty": 1,
+    "correct": "2",
+    "explanation": "Hai kết quả có thể là mặt ngửa và mặt sấp."
+  },
+  {
+    "id": "g6.sta.prob.q003",
+    "skillId": "g6.sta.chance",
+    "grade": 6,
+    "type": "true-false",
+    "prompt": "Khi tung một đồng xu, chắc chắn xuất hiện mặt ngửa. Đúng hay sai?",
+    "difficulty": 2,
+    "correct": "false",
+    "explanation": "Tung đồng xu có thể ra mặt ngửa hoặc mặt sấp, nên KHÔNG chắc chắn ra mặt ngửa — sai."
+  },
+  {
+    "id": "g6.sta.prob.q004",
+    "skillId": "g6.sta.chance",
+    "grade": 6,
+    "type": "mcq",
+    "prompt": "Một hộp chỉ toàn bi đỏ. Lấy 1 bi từ hộp, việc \"lấy được bi đỏ\" là sự kiện gì?",
+    "difficulty": 2,
+    "choices": ["Chắc chắn", "Có thể", "Không thể"],
+    "correct": "Chắc chắn",
+    "explanation": "Hộp chỉ có bi đỏ nên chắc chắn lấy được bi đỏ."
+  },
+  {
+    "id": "g6.sta.prob.q005",
+    "skillId": "g6.sta.chance",
+    "grade": 6,
+    "type": "mcq",
+    "prompt": "Gieo một con xúc xắc 6 mặt, việc \"xuất hiện mặt 7 chấm\" là sự kiện gì?",
+    "difficulty": 2,
+    "choices": ["Chắc chắn", "Có thể", "Không thể"],
+    "correct": "Không thể",
+    "explanation": "Xúc xắc chỉ có các mặt từ 1 đến 6 chấm, không có mặt 7 chấm nên không thể xảy ra."
+  },
+  {
+    "id": "g6.sta.prob.q006",
+    "skillId": "g6.sta.probability",
+    "grade": 6,
+    "type": "fraction",
+    "prompt": "Tung một đồng xu 20 lần, mặt ngửa xuất hiện 11 lần. Xác suất thực nghiệm của mặt ngửa là bao nhiêu?",
+    "difficulty": 2,
+    "correct": "11/20",
+    "explanation": "Xác suất thực nghiệm = số lần ngửa : tổng số lần tung = 11/20."
+  },
+  {
+    "id": "g6.sta.prob.q007",
+    "skillId": "g6.sta.probability",
+    "grade": 6,
+    "type": "fraction",
+    "prompt": "Gieo một con xúc xắc 40 lần, mặt 5 chấm xuất hiện 8 lần. Xác suất thực nghiệm của mặt 5 chấm là bao nhiêu?",
+    "difficulty": 2,
+    "correct": "1/5",
+    "explanation": "Xác suất thực nghiệm = 8 : 40 = 8/40 = 1/5. (Nhập 8/40 hay 0,2 đều đúng vì bằng giá trị.)"
+  },
+  {
+    "id": "g6.sta.prob.q008",
+    "skillId": "g6.sta.probability",
+    "grade": 6,
+    "type": "fraction",
+    "prompt": "Tung một đồng xu 50 lần, mặt sấp xuất hiện 30 lần. Xác suất thực nghiệm của mặt sấp là bao nhiêu?",
+    "difficulty": 2,
+    "correct": "3/5",
+    "explanation": "Xác suất thực nghiệm = 30 : 50 = 30/50 = 3/5. (Nhập 30/50 hay 0,6 đều đúng.)"
+  },
+  {
+    "id": "g6.sta.prob.q009",
+    "skillId": "g6.sta.probability",
+    "grade": 6,
+    "type": "fraction",
+    "prompt": "Một hộp có 1 bi đỏ và 3 bi xanh, lấy ngẫu nhiên 1 bi. Xác suất lấy được bi đỏ là bao nhiêu?",
+    "difficulty": 2,
+    "correct": "1/4",
+    "explanation": "Có 1 bi đỏ trong tổng 4 bi, các bi đồng khả năng: xác suất = 1/4."
+  },
+  {
+    "id": "g6.sta.prob.q010",
+    "skillId": "g6.sta.probability",
+    "grade": 6,
+    "type": "fraction",
+    "prompt": "Gieo một con xúc xắc 6 mặt cân đối, lấy ngẫu nhiên. Xác suất xuất hiện mặt 6 chấm là bao nhiêu?",
+    "difficulty": 2,
+    "correct": "1/6",
+    "explanation": "Có 1 mặt 6 chấm trong tổng 6 mặt đồng khả năng: xác suất = 1/6."
+  },
+  {
+    "id": "g6.sta.prob.q011",
+    "skillId": "g6.sta.probability",
+    "grade": 6,
+    "type": "fraction",
+    "prompt": "Một túi có 5 kẹo cam và 5 kẹo dâu, lấy ngẫu nhiên 1 viên. Xác suất lấy được kẹo cam là bao nhiêu?",
+    "difficulty": 1,
+    "correct": "1/2",
+    "explanation": "Có 5 kẹo cam trong tổng 10 viên: xác suất = 5/10 = 1/2."
+  }
+]

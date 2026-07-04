@@ -50,6 +50,24 @@
           "skillIds": ["g6.geo.shapes", "g6.geo.perimeter", "g6.geo.area"]
         }
       ]
+    },
+    {
+      "id": "g6.sta",
+      "name": "Một số yếu tố Thống kê và Xác suất",
+      "topics": [
+        {
+          "id": "g6.sta.stats",
+          "name": "Thống kê",
+          "grade": 6,
+          "skillIds": ["g6.sta.data"]
+        },
+        {
+          "id": "g6.sta.prob",
+          "name": "Xác suất",
+          "grade": 6,
+          "skillIds": ["g6.sta.chance", "g6.sta.probability"]
+        }
+      ]
     }
   ],
   "skills": [
@@ -142,6 +160,24 @@
       "name": "Diện tích các hình phẳng",
       "description": "Tính diện tích hình vuông, hình chữ nhật, hình bình hành, hình thoi, hình thang.",
       "prerequisites": ["g6.geo.shapes"]
+    },
+    {
+      "id": "g6.sta.data",
+      "name": "Đọc và xử lí dữ liệu thống kê",
+      "description": "Đọc dữ liệu từ bảng/danh sách: tần số, giá trị lớn nhất/nhỏ nhất, tổng, đếm theo điều kiện.",
+      "prerequisites": []
+    },
+    {
+      "id": "g6.sta.chance",
+      "name": "Khả năng xảy ra của một sự kiện",
+      "description": "Kết quả có thể xảy ra của một phép thử; sự kiện chắc chắn, có thể, không thể xảy ra.",
+      "prerequisites": []
+    },
+    {
+      "id": "g6.sta.probability",
+      "name": "Xác suất thực nghiệm và xác suất đơn giản",
+      "description": "Xác suất thực nghiệm (số lần xảy ra chia tổng số lần) và xác suất của biến cố với các kết quả đồng khả năng, viết dưới dạng phân số.",
+      "prerequisites": ["g6.sta.chance"]
     }
   ]
 }
