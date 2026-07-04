@@ -9,8 +9,13 @@
 // RÒ RỈ BỘ NHỚ khi bundle lại CSS này qua nhiều request trong 1 lượt e2e dài → OOM crash, xác minh
 // bằng so sánh A/B: bỏ import CSS này thì hết OOM). Coi katex.min.css như static asset thuần, tách
 // hẳn khỏi Metro module graph.
-import { useEffect, useMemo } from "react";
-import katex from "katex";
+//
+// KaTeX (~76KB gzip) nạp LƯỜI qua import() động (D-tối-ưu-bundle) → Metro tách thành chunk riêng, khỏi
+// bundle CHÍNH: đa số màn (home/luyện tập cơ bản/hồ sơ/lớp) không có công thức nên không tải katex.
+// Lần render toán ĐẦU TIÊN hiện `fallback` (text gọn: "1/2", "x^2") trong lúc chunk tải (~ms); sau đó
+// module được cache ở cấp module → mọi KatexSpan tiếp theo render đồng bộ, KHÔNG nhấp nháy.
+import { useEffect, useMemo, useState } from "react";
+import type KatexType from "katex";
 
 const KATEX_CSS_HREF = "/katex/katex.min.css";
 
@@ -22,27 +27,61 @@ function ensureKatexCss() {
   document.head.appendChild(link);
 }
 
+// Cache cấp module: promise chia sẻ (nạp 1 lần) + tham chiếu đồng bộ sau khi resolve (khởi tạo state
+// tức thì cho các instance sau → không flash).
+let katexModule: typeof KatexType | null = null;
+let katexPromise: Promise<typeof KatexType> | null = null;
+function loadKatex(): Promise<typeof KatexType> {
+  if (!katexPromise) {
+    katexPromise = import("katex").then((m) => {
+      katexModule = m.default;
+      return m.default;
+    });
+  }
+  return katexPromise;
+}
+
 interface KatexSpanProps {
   latex: string;
   color?: string;
   size?: number;
+  /** Text gọn hiển thị trong lúc chờ katex nạp (lần đầu). Mặc định là chuỗi latex thô. */
+  fallback?: string;
 }
 
-export function KatexSpan({ latex, color = "#18181b", size = 22 }: KatexSpanProps) {
+export function KatexSpan({ latex, color = "#18181b", size = 22, fallback }: KatexSpanProps) {
+  const [katex, setKatex] = useState<typeof KatexType | null>(katexModule);
+
   useEffect(() => {
     ensureKatexCss();
-  }, []);
+    if (katex) return;
+    let alive = true;
+    loadKatex().then((k) => {
+      if (alive) setKatex(k);
+    });
+    return () => {
+      alive = false;
+    };
+  }, [katex]);
 
   const html = useMemo(() => {
+    if (!katex) return null;
     try {
       // output mặc định (htmlAndMathml) — thêm MathML ẩn giúp trình đọc màn hình đọc đúng phân số/lũy
       // thừa (accessibility) thay vì chỉ đọc chữ phẳng vô nghĩa; cũng dùng để e2e verify thứ tự tử/mẫu
       // không phụ thuộc CSS (xem latex-render.spec.ts).
       return katex.renderToString(latex, { throwOnError: false, trust: false });
     } catch {
-      return latex;
+      return null;
     }
-  }, [latex]);
+  }, [katex, latex]);
+
+  // Chờ katex nạp (lần đầu) hoặc render lỗi → fallback text gọn.
+  if (!html) {
+    return (
+      <span style={{ color, fontSize: size, display: "inline-block" }}>{fallback ?? latex}</span>
+    );
+  }
 
   return (
     <span

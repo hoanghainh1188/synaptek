@@ -20,7 +20,14 @@ export function MathText({ value, color = "#18181b", size = 22, weight = "600" }
   segs.forEach((seg, i) => {
     const latex = segmentToLatex(seg);
     if (latex) {
-      items.push(<KatexSpan key={i} latex={latex} color={color} size={size} />);
+      // fallback text gọn trong lúc chunk katex tải lần đầu (tránh nháy chuỗi latex thô "\frac{1}{2}").
+      const fallback =
+        seg.kind === "frac"
+          ? `${seg.num}/${seg.den}`
+          : seg.kind === "sup"
+            ? `${seg.base}^${seg.exp}`
+            : latex;
+      items.push(<KatexSpan key={i} latex={latex} color={color} size={size} fallback={fallback} />);
     } else if (seg.kind === "text") {
       seg.value.split(/(\s+)/).forEach((w, j) => {
         if (w.length === 0) return;
