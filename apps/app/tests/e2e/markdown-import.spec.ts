@@ -49,3 +49,21 @@ test("Markdown: câu đáp án sai bị đánh dấu lỗi ở xem trước", as
   await expect(page.getByText(/Chưa đánh dấu/)).toBeVisible({ timeout: 10_000 });
   await expect(page.getByText(/0\/0 câu hợp lệ/)).toBeVisible();
 });
+
+// AI nháp: chưa cấu hình GEMINI_API_KEY → báo graceful (không gọi API thật; như ai-tutor.spec).
+test("AI nháp: chưa cấu hình key → báo thân thiện", async ({ page }) => {
+  const s = Date.now();
+  await page.goto("/login");
+  await page.getByText("Chưa có tài khoản? Đăng ký").click();
+  await page.getByPlaceholder("Tên của em").fill("Cô MD3");
+  await page.getByLabel("Giáo viên").click();
+  await page.getByPlaceholder("email@vidu.com").fill(`md3${s}@test.local`);
+  await page.getByPlaceholder("••••••").fill("matkhau123");
+  await page.getByText("Đăng ký", { exact: true }).click();
+  await waitSignedIn(page);
+
+  await page.goto("/questions-import");
+  await page.getByLabel("Chủ đề AI nháp").fill("lớp 6, cộng trừ số nguyên");
+  await page.getByLabel("Sinh câu bằng AI").click();
+  await expect(page.getByText(/chưa sẵn sàng/)).toBeVisible({ timeout: 15_000 });
+});

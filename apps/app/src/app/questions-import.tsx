@@ -8,6 +8,7 @@ import { router } from "expo-router";
 import { grade } from "@synaptek/grading-engine";
 import { parseQuestionsMarkdown, type ParsedQuestion } from "@/lib/markdown-questions";
 import { useCreateCustomQuestion } from "@/lib/supabase/custom-questions";
+import { useGenerateQuestions } from "@/lib/supabase/generate-questions";
 import { SUBJECTS, subjectLabel, DEFAULT_SUBJECT } from "@/lib/subjects";
 import { MathText } from "@/components/math/MathText";
 
@@ -55,11 +56,32 @@ function selfCheck(q: ParsedQuestion): boolean {
 export default function QuestionsImport() {
   const insets = useSafeAreaInsets();
   const create = useCreateCustomQuestion();
+  const genAi = useGenerateQuestions();
   const [md, setMd] = useState("");
   const [subject, setSubject] = useState(DEFAULT_SUBJECT);
   const [showHelp, setShowHelp] = useState(false);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
+  const [aiTopic, setAiTopic] = useState("");
+  const [aiCount, setAiCount] = useState("5");
+  const [aiMsg, setAiMsg] = useState<string | null>(null);
+
+  // AI nháp → sinh khối Markdown → đổ vào ô (nối tiếp nếu đã có nội dung) để GV sửa rồi xem trước/lưu.
+  const runAi = async () => {
+    setAiMsg(null);
+    const count = Math.max(1, Math.min(20, Number(aiCount) || 5));
+    try {
+      const out = await genAi.mutateAsync({
+        topic: aiTopic.trim(),
+        count,
+        subject: subject === DEFAULT_SUBJECT ? undefined : subjectLabel(subject),
+      });
+      setMd((prev) => (prev.trim() ? `${prev.trim()}\n\n${out}` : out));
+      setAiMsg("AI đã nháp xong — hãy xem trước và sửa nếu cần.");
+    } catch (e) {
+      setAiMsg(e instanceof Error ? e.message : "AI nháp thất bại.");
+    }
+  };
 
   const parsed = useMemo(() => parseQuestionsMarkdown(md), [md]);
   const checked = useMemo(() => parsed.questions.map((q) => ({ q, ok: selfCheck(q) })), [parsed]);
@@ -116,6 +138,45 @@ export default function QuestionsImport() {
       <Text className="mt-1 text-sm text-muted">
         Dán nhiều câu cùng lúc, hệ thống tự nhận loại và kiểm đáp án trước khi lưu.
       </Text>
+
+      {/* AI nháp — sinh khối Markdown theo chủ đề, GV sửa rồi xem trước/lưu (D-authoring-ai) */}
+      <View className="mt-4 rounded-lg border-2 border-brand/40 bg-brand/5 p-3">
+        <Text className="font-display text-sm font-bold text-brand">🤖 AI nháp câu hỏi</Text>
+        <Text className="mt-1 text-xs text-muted">
+          Mô tả chủ đề, AI soạn sẵn khối Markdown. Bạn xem trước, sửa và lưu — AI chỉ nháp.
+        </Text>
+        <TextInput
+          value={aiTopic}
+          onChangeText={setAiTopic}
+          accessibilityLabel="Chủ đề AI nháp"
+          placeholder="vd: lớp 6, cộng trừ số nguyên"
+          placeholderTextColor="#a1a1aa"
+          className="mt-2 min-h-[44px] rounded-md border-2 border-line bg-surface px-3 text-base text-ink"
+        />
+        <View className="mt-2 flex-row items-center gap-2">
+          <Text className="text-sm text-muted">Số câu</Text>
+          <TextInput
+            value={aiCount}
+            onChangeText={setAiCount}
+            accessibilityLabel="Số câu AI nháp"
+            keyboardType="number-pad"
+            className="min-h-[44px] w-16 rounded-md border-2 border-line bg-surface px-2 text-center text-base text-ink"
+          />
+          <Pressable
+            onPress={runAi}
+            disabled={genAi.isPending || aiTopic.trim() === ""}
+            accessibilityLabel="Sinh câu bằng AI"
+            className={`min-h-[44px] flex-1 items-center justify-center rounded-md ${
+              genAi.isPending || aiTopic.trim() === "" ? "bg-line" : "bg-brand"
+            }`}
+          >
+            <Text className="font-display text-sm font-bold text-white">
+              {genAi.isPending ? "Đang nháp…" : "Sinh câu"}
+            </Text>
+          </Pressable>
+        </View>
+        {aiMsg && <Text className="mt-2 text-xs font-semibold text-ink">{aiMsg}</Text>}
+      </View>
 
       {/* Trợ giúp cú pháp (mở/đóng) */}
       <Pressable

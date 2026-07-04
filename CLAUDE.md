@@ -98,7 +98,8 @@ nhật `docs/WORKING-NOTES.md` (điểm tiếp tục) + Decision Log/spec/file l
 - **Storage**: Supabase — migrations **`0001`–`0025`** (mới nhất: 0023 nhiều phần a/b/c · 0024 avatar ảnh
   thật · 0025 xóa tài khoản). RLS chéo vai trò qua helper `SECURITY DEFINER` (D24/D26/D30/D32). Edge
   Functions: `grade` · `grade-assignment` · `review-scheduler` · `ai-tutor-explain` (D46, Gemini, cần
-  secret `GEMINI_API_KEY` riêng) · `delete-account` (D52, service-role, soft delete). Auth SMTP: Resend
+  secret `GEMINI_API_KEY` riêng) · `delete-account` (D52, service-role, soft delete) · `generate-questions`
+  (D66, Gemini, AI nháp câu → Markdown; cùng `GEMINI_API_KEY`). Auth SMTP: Resend
   (D47, cần secret `RESEND_API_KEY` + domain — TẠM DỪNG), cấu hình qua Management API trong
   `deploy-supabase.yml`. Deploy: web Vercel auto + backend GitHub Action auto (db push + functions
   deploy + ensure auth config) từ `develop`.
@@ -108,6 +109,12 @@ nhật `docs/WORKING-NOTES.md` (điểm tiếp tục) + Decision Log/spec/file l
 
 ## Recent Changes
 
+- **Tăng tốc soạn nội dung cho GV/PH — Markdown import + AI nháp (sau M4)**: user hỏi "làm sao GV/PH lấp nội
+  dung nhanh". **PR1 (D65)**: parser thuần `markdown-questions.ts` (dán Markdown → suy loại tự động 6 loại
+  text-friendly) + màn `questions-import.tsx` (xem trước có **tự-chấm** chạy engine → ✓/⚠ per câu → lưu hàng
+  loạt). Điền nhiều ô ngăn bằng `|` (né phẩy VN). **PR2 (D66)**: Edge `generate-questions` (Gemini) sinh khối
+  Markdown theo chủ đề → GV sửa → dùng lại parser+preview. An toàn: AI nháp → engine tự-chấm lọc → người
+  duyệt. Chờ `GEMINI_API_KEY` thật để bật AI. +21 unit + 8 Deno + 3 e2e.
 - **Nhân rộng THCS — lớp 6 Thống kê & Xác suất (sau M4)**: **MẠCH THỨ 3** (`g6.sta`, 2 topic Thống kê + Xác
   suất). Phán đoán CT: trung bình cộng/mốt là LỚP 7 → cố ý không đưa vào; giữ Thống kê ở mức đọc/xử lí dữ
   liệu (dữ liệu bằng CHỮ để né ảnh biểu đồ) + Xác suất (khả năng xảy ra + xác suất phân số → moat). 17 câu.
